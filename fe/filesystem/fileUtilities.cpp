@@ -8,7 +8,7 @@
     #define stat _stat
 #endif // !WIN32
 
-long long fe::lastTimeModified(const char *filename)
+__time64_t fe::lastTimeModified(const char *filename)
     {
         struct stat result;
         if (stat(filename, &result) == 0)

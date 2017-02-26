@@ -9,5 +9,5 @@
 
 namespace fe
     {
-        long long FLAT_ENGINE_API lastTimeModified(const char *filename);
+        __time64_t FLAT_ENGINE_API lastTimeModified(const char *filename);
     }
