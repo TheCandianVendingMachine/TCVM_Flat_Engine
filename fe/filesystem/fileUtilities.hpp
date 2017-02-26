@@ -9,5 +9,7 @@
 
 namespace fe
     {
-        __time64_t FLAT_ENGINE_API lastTimeModified(const char *filename);
+        // Get the last time since epoch when a file was modified
+        // Returns -1 if file does not exist
+        FLAT_ENGINE_API __time64_t lastTimeModified(const char *filename);
     }
