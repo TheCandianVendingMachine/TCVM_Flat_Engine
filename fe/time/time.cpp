@@ -8,7 +8,7 @@ fe::time::time()
 float fe::time::asSeconds()
     {
         // 0.000001 = 1e-6
-        return static_cast<long double>(m_time) * 0.000001;
+        return static_cast<float>(static_cast<long double>(m_time) * 0.000001);
     }
 
 int32_t fe::time::asMilliseconds()

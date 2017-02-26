@@ -4,8 +4,8 @@
 #include <experimental/filesystem>
 #include <fstream>
 
-#define FLAT_ENGINE_EXPORTS
-#include "../flatEngineExports.hpp"
+#define FLAT_ENGINE_EXPORT
+#include "../../flatEngineInclude.hpp"
 
 namespace fe
     {

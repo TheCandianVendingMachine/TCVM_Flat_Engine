@@ -2,7 +2,7 @@
 // a high-res clock to be able to get the current time in seconds, milliseconds, microseconds
 #pragma once
 #define FLAT_ENGINE_EXPORT
-#include "../flatEngineExports.hpp"
+#include "../flatEngineInclude.hpp"
 #include "time.hpp"
 
 namespace fe
