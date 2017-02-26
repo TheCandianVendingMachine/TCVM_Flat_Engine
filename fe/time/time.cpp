@@ -5,11 +5,6 @@ fe::time::time()
         m_time = 0;
     }
 
-fe::time::time(const fe::time &copy)
-    {
-        m_time = copy.m_time;
-    }
-
 float fe::time::asSeconds()
     {
         // 0.000001 = 1e-6
@@ -24,30 +19,6 @@ int32_t fe::time::asMilliseconds()
 int64_t fe::time::asMicroseconds()
     {
         return int64_t(m_time);
-    }
-
-fe::time fe::time::operator+(const long long rhs)
-    {
-        fe::time ret;
-        ret.m_time = m_time + rhs;
-        return ret;
-    }
-
-fe::time fe::time::operator-(const long long rhs)
-    {
-        fe::time ret;
-        ret.m_time = m_time - rhs;
-        return ret;
-    }
-
-void fe::time::operator+=(const long long rhs)
-    {
-        m_time += rhs;
-    }
-
-void fe::time::operator-=(const long long rhs)
-    {
-        m_time -= rhs;
     }
 
 fe::time fe::time::operator+(const fe::time &rhs)
@@ -68,11 +39,6 @@ void fe::time::operator+=(const fe::time &rhs)
 void fe::time::operator-=(const fe::time &rhs)
     {
         m_time -= rhs.m_time;
-    }
-
-bool fe::time::operator==(const long long rhs)
-    {
-        return m_time == rhs;
     }
 
 bool fe::time::operator==(const fe::time &rhs)

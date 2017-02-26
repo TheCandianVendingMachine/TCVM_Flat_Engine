@@ -19,23 +19,16 @@ namespace fe
 
                 public:
                     time();
-                    time(const fe::time &copy);
 
                     float asSeconds();
                     int32_t asMilliseconds();
                     int64_t asMicroseconds();
-
-                    fe::time operator+(const long long rhs);
-                    fe::time operator-(const long long rhs);
-                    void operator+=(const long long rhs);
-                    void operator-=(const long long rhs);
 
                     fe::time operator+(const fe::time &rhs);
                     fe::time operator-(const fe::time & rhs);
                     void operator+=(const fe::time &rhs);
                     void operator-=(const fe::time &rhs);
 
-                    bool operator==(const long long rhs);
                     bool operator==(const fe::time &rhs);
 
             };
