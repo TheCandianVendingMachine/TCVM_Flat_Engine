@@ -12,6 +12,8 @@ void fe::memoryManager::startUp()
                 m_allocatedMemory = static_cast<char*>(malloc(m_bufferSize));
 
                 // start up the different types of memory allocation
+                size_t stackSize = sizeof(char) * 512;
+                m_stackAllocater.startUp(static_cast<char*>(alloc(stackSize)), stackSize);
             }
     }
 
@@ -20,7 +22,7 @@ void fe::memoryManager::shutDown()
         if (m_allocatedMemory)
             {
                 // shut down all types of memory allocation and free the pointers allocated inside them
-                
+                m_stackAllocater.clear();
 
                 free(m_allocatedMemory);
                 m_allocatedMemory = nullptr;
@@ -45,4 +47,9 @@ void *fe::memoryManager::alloc(size_t size)
 
         FE_ASSERT(false, "Out of memory");
         return nullptr;
+    }
+
+fe::stackAllocater &fe::memoryManager::getStackAllocater()
+    {
+        return m_stackAllocater;
     }
