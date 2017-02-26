@@ -39,7 +39,7 @@ namespace fe
                     // returns the current time formatted into a char array
                     // Arguments:
                     // Format -> The format which the string will be returned. Defined at http://en.cppreference.com/w/cpp/io/manip/put_time
-                    static const char* getCurrentTime(const char *format);
+                    static const char* getFormattedTime(const char *format);
 
             };
     }

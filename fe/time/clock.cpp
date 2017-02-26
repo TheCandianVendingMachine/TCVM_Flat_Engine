@@ -50,7 +50,7 @@ fe::time fe::clock::getTimeSinceEpoch()
         return fe::microseconds(currentTime.time_since_epoch().count());
     }
 
-const char *fe::clock::getCurrentTime(const char *format)
+const char *fe::clock::getFormattedTime(const char *format)
     {
         std::time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
         
