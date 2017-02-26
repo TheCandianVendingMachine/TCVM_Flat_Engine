@@ -8,7 +8,8 @@ void fe::memoryManager::startUp()
         if (!m_instance)
             {
                 m_instance = this;
-                m_allocatedMemory = static_cast<char*>(malloc(sizeof(char) * 1024 * 1024));
+                m_bufferSize = sizeof(char) * 1024 * 1024;
+                m_allocatedMemory = static_cast<char*>(malloc(m_bufferSize));
 
                 // start up the different types of memory allocation
             }
@@ -31,4 +32,17 @@ void fe::memoryManager::shutDown()
 fe::memoryManager &fe::memoryManager::get()
     {
         return *m_instance;
+    }
+
+void *fe::memoryManager::alloc(size_t size)
+    {
+        if (m_currentOffset + size <= m_bufferSize)
+            {
+                void *memReturn = m_allocatedMemory + m_currentOffset;
+                m_currentOffset += size;
+                return memReturn;
+            }
+
+        FE_ASSERT(false, "Out of memory");
+        return nullptr;
     }
