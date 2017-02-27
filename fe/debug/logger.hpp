@@ -3,12 +3,12 @@
 #pragma once
 #define FLAT_ENGINE_EXPORT
 #include "../flatEngineExport.hpp"
-#include "../subsystems/filesystem/fileUtilities.hpp"
 #include "../time/clock.hpp"
 
 #include <sstream>
 #include <iostream>
 #include <utility>
+#include <fstream>
 
 namespace fe
     {
