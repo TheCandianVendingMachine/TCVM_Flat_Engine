@@ -1,31 +1,33 @@
 #include "memoryManager.hpp"
 #include <cstdlib>
+#include <iostream>
 
 fe::memoryManager *fe::memoryManager::m_instance = nullptr;
 
-void fe::memoryManager::startUp()
+void fe::memoryManager::startUp(size_t bufferSize, size_t stackSize)
     {
         if (!m_instance)
             {
                 m_instance = this;
-                m_bufferSize = sizeof(char) * 1024 * 1024;
-                m_allocatedMemory = static_cast<char*>(malloc(m_bufferSize));
+                m_bufferSize = bufferSize;
+                m_allocatedBuffer = static_cast<char*>(malloc(m_bufferSize));
 
-                // start up the different types of memory allocation
-                size_t stackSize = sizeof(char) * 512;
+                // start up the different types of memory allocaters
                 m_stackAllocater.startUp(static_cast<char*>(alloc(stackSize)), stackSize);
             }
+
+        m_shutDown = false;
     }
 
 void fe::memoryManager::shutDown()
     {
-        if (m_allocatedMemory)
+        if (m_allocatedBuffer)
             {
                 // shut down all types of memory allocation and free the pointers allocated inside them
                 m_stackAllocater.clear();
 
-                free(m_allocatedMemory);
-                m_allocatedMemory = nullptr;
+                free(m_allocatedBuffer);
+                m_allocatedBuffer = nullptr;
 
                 m_shutDown = true;
             }
@@ -40,16 +42,26 @@ void *fe::memoryManager::alloc(size_t size)
     {
         if (m_currentOffset + size <= m_bufferSize)
             {
-                void *memReturn = m_allocatedMemory + m_currentOffset;
+                void *memReturn = m_allocatedBuffer + m_currentOffset;
                 m_currentOffset += size;
                 return memReturn;
             }
 
-        FE_ASSERT(false, "Out of memory");
+        FE_ASSERT(false, "Error: Memory Manager - Out of memory");
         return nullptr;
     }
 
 fe::stackAllocater &fe::memoryManager::getStackAllocater()
     {
         return m_stackAllocater;
+    }
+
+char *fe::memoryManager::getBuffer() const
+    {
+        return m_allocatedBuffer;
+    }
+
+fe::memoryManager::~memoryManager()
+    {
+        FE_ASSERT(m_shutDown, "Error: Memory Manager not shut down. Possible memory leaks");
     }
