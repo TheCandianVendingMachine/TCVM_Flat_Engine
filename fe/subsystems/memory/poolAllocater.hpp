@@ -31,6 +31,7 @@ namespace fe
                     void clear();
 
             };
+
         template<typename T>
         void poolAllocater<T>::startUp(const unsigned int objectCount, char *buffer)
             {

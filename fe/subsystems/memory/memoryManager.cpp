@@ -1,6 +1,6 @@
 #include "memoryManager.hpp"
 #include <cstdlib>
-#include <iostream>
+#include "../../feAssert.hpp"
 
 fe::memoryManager *fe::memoryManager::m_instance = nullptr;
 
