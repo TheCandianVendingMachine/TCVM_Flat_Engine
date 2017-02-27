@@ -47,7 +47,7 @@ void *fe::memoryManager::alloc(size_t size)
                 return memReturn;
             }
 
-        FE_ASSERT(false, "Error: Memory Manager - Out of memory");
+        FE_ASSERT(false, "Memory Manager - Out of memory");
         return nullptr;
     }
 
@@ -63,5 +63,5 @@ char *fe::memoryManager::getBuffer() const
 
 fe::memoryManager::~memoryManager()
     {
-        FE_ASSERT(m_shutDown, "Error: Memory Manager not shut down. Possible memory leaks");
+        FE_ASSERT(m_shutDown, "Memory Manager not shut down. Possible memory leaks");
     }

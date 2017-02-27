@@ -2,7 +2,7 @@
 // a timer which will start its count at a set time, and when it reaches zero the user must check to see if its zero
 #pragma once
 #define FLAT_ENGINE_EXPORT
-#include "../flatEngineInclude.hpp"
+#include "../flatEngineExport.hpp"
 #include "clock.hpp"
 #include "time.hpp"
 

@@ -2,7 +2,7 @@
 // Allows the user to allocate a specific amount of memory without having to allocaate each frame
 #pragma once
 #define FLAT_ENGINE_EXPORT
-#include "../../flatEngineInclude.hpp"
+#include "../../flatEngineExport.hpp"
 #include <cstdint>
 
 namespace fe

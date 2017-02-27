@@ -5,7 +5,7 @@
 #include <fstream>
 
 #define FLAT_ENGINE_EXPORT
-#include "../../flatEngineInclude.hpp"
+#include "../../flatEngineExport.hpp"
 
 namespace fe
     {

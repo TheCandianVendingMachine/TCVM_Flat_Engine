@@ -2,7 +2,7 @@
 // A memory allocater that will allow the user to define an object in which to pool memory blocks for
 #pragma once
 #define FLAT_ENGINE_EXPORT
-#include "../../flatEngineInclude.hpp"
+#include "../../flatEngineExport.hpp"
 #include "memoryManager.hpp"
 
 namespace fe
@@ -60,7 +60,7 @@ namespace fe
                         return static_cast<T*>(retMem);
                     }
 
-                FE_ASSERT(false, "Error: Pool Allocater out of memory");
+                FE_ASSERT(false, "Pool Allocater out of memory");
                 return nullptr;
             }
 

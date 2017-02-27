@@ -2,7 +2,7 @@
 // a sub-system that allocates a block of memory on startup to be used around the program
 #pragma once
 #define FLAT_ENGINE_EXPORT
-#include "../../flatEngineInclude.hpp"
+#include "../../flatEngineExport.hpp"
 #include "stackAllocater.hpp"
 
 namespace fe 

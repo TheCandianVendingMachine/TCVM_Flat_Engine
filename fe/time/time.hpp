@@ -2,7 +2,7 @@
 // A class to store time values
 #pragma once
 #define FLAT_ENGINE_EXPORT
-#include "../flatEngineInclude.hpp"
+#include "../flatEngineExport.hpp"
 #include <cstdint>
 
 namespace fe 
