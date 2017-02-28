@@ -6,6 +6,15 @@
 
 namespace fe
     {
+        namespace resourceObjectType
+            {
+                enum resourceObjectType
+                    {
+                        RESOURCE_NULL       = 1 << 0,
+                        RESOURCE_TEXTURE    = 1 << 1,
+                    };
+            }
+
         struct resourceObject
             {
                 char *m_filepath;
@@ -17,6 +26,6 @@ namespace fe
 
         struct imageObject : public resourceObject
             {
-                FLAT_ENGINE_API void load(const char *filepath);
+                FLAT_ENGINE_API void load(const char *filepath) override;
             };
     }

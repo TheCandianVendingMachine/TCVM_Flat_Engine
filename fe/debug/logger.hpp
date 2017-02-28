@@ -12,7 +12,7 @@
 
 namespace fe
     {
-        class FLAT_ENGINE_API logger
+        class logger
             {
                 private:
                     std::ofstream m_output;
@@ -20,26 +20,26 @@ namespace fe
 
                 public:
                     // start the logger at the directory
-                    void startUp(const char *directory);
+                    FLAT_ENGINE_API void startUp(const char *directory);
                     // close the ofstream and make sure everything logged
-                    void shutDown();
+                    FLAT_ENGINE_API void shutDown();
 
-                    static logger &get();
+                    FLAT_ENGINE_API static logger &get();
 
                     // print a log to file
                     template<typename ...Args>
-                    void log(Args &&...args);
+                    FLAT_ENGINE_API void log(Args &&...args);
 
                     // print a log to console and file
                     template<typename ...Args>
-                    void logToConsole(Args &&...args);
+                    FLAT_ENGINE_API void logToConsole(Args &&...args);
 
             };
 
         template<typename ...Args>
         void logger::log(Args &&...args)
             {
-                if (!m_instance) assert(false && "Error: Logger not open");
+                assert(m_instance && "Error: Logger not open");
 
                 m_output << fe::clock::getFormattedTime("%b %Y %H:%M:%S %p") << " - ";
 
@@ -54,7 +54,7 @@ namespace fe
         void logger::logToConsole(Args &&...args)
             {
             #if _DEBUG
-                if (!m_instance) assert(false && "Error: Logger not open");
+                assert(m_instance && "Error: Logger not open");
                 std::cout << "<CNSL> " << fe::clock::getFormattedTime("%b %Y %H:%M:%S %p") << " - ";
 
                 using expanded = int[];

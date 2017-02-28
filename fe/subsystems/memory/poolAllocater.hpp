@@ -3,8 +3,9 @@
 #pragma once
 #define FLAT_ENGINE_EXPORT
 #include "../../flatEngineExport.hpp"
-#include "memoryManager.hpp"
 #include "../../debug/logger.hpp"
+#include "../../feAssert.hpp"
+#include "memoryManager.hpp"
 
 namespace fe
     {
@@ -24,7 +25,8 @@ namespace fe
                     void startUp(const unsigned int objectCount, char *buffer);
 
                     // allocates a block of memory for the wanted object
-                    T *alloc();
+                    template<typename TRet = T>
+                    TRet *alloc();
 
                     // Frees the object at the address it is allocated to
                     void free(T *address);
@@ -39,10 +41,10 @@ namespace fe
             {
                 m_canAllocate = false;
 
-                auto memManager = memoryManager::get();
+                auto *memManager = &memoryManager::get();
                 if (memManager)
                     {
-                        m_freeIndicies = static_cast<bool*>(memManager.alloc(objectCount * sizeof(T)));
+                        m_freeIndicies = static_cast<bool*>(memManager->alloc(objectCount * sizeof(T)));
                         m_buffer = buffer;
                         m_bufferSize = objectCount * sizeof(T);
                         m_objectCount = objectCount;
@@ -53,8 +55,11 @@ namespace fe
             }
 
         template<typename T>
-        T *poolAllocater<T>::alloc()
+        template<typename TRet>
+        TRet *poolAllocater<T>::alloc()
             {
+                FE_ASSERT(sizeof(T) == sizeof(TRet), "Objects in memory pool are not equal sizes. Cannot allocate safely");
+
                 if (!m_canAllocate)
                     {
                         FE_LOG_WARNING("Cannot allocate memory in pool");
@@ -71,8 +76,8 @@ namespace fe
                     {
                         m_freeIndicies[index] = false;
 
-                        void *retMem = m_buffer + (index * sizeof(T));
-                        return static_cast<T*>(retMem);
+                        TRet *retMem = new(m_buffer + (index * sizeof(T))) TRet();
+                        return retMem;
                     }
 
                 FE_ASSERT(m_objectCount == 0, "Pool Allocater out of memory");
