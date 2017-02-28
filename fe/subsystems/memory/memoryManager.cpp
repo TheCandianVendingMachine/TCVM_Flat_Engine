@@ -68,5 +68,10 @@ char *fe::memoryManager::getBuffer() const
 
 fe::memoryManager::~memoryManager()
     {
-        FE_ASSERT(m_shutDown, "Memory Manager not shut down. Possible memory leaks");
+		if (!m_shutDown && this == m_instance)
+			{
+				shutDown();
+				m_shutDown = false;
+			}
+        FE_ASSERT(m_shutDown, "Memory Manager not shut down manually.");
     }
