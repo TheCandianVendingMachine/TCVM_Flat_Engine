@@ -39,6 +39,8 @@ namespace fe
         template<typename ...Args>
         void logger::log(Args &&...args)
             {
+                if (!m_instance) assert(false && "Error: Logger not open");
+
                 m_output << fe::clock::getFormattedTime("%b %Y %H:%M:%S %p") << " - ";
 
                 using expanded = int[];
@@ -52,6 +54,7 @@ namespace fe
         void logger::logToConsole(Args &&...args)
             {
             #if _DEBUG
+                if (!m_instance) assert(false && "Error: Logger not open");
                 std::cout << "<CNSL> " << fe::clock::getFormattedTime("%b %Y %H:%M:%S %p") << " - ";
 
                 using expanded = int[];

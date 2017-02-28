@@ -1,6 +1,8 @@
 #include "logger.hpp"
 #include "../feAssert.hpp"
 
+#include <SFML/System/Err.hpp>
+
 fe::logger *fe::logger::m_instance = nullptr;
 
 void fe::logger::startUp(const char *directory)
@@ -9,7 +11,9 @@ void fe::logger::startUp(const char *directory)
             {
                 m_instance = this;
                 m_output.open(directory);
-                FE_ASSERT(m_output.is_open(), "Error: Logger cannot be opened");
+                assert(m_output.is_open() && "Error: Logger cannot be opened");
+
+                sf::err().rdbuf(m_output.rdbuf());
             }
     }
 

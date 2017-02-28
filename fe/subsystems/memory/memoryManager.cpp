@@ -35,6 +35,11 @@ void fe::memoryManager::shutDown()
 
 fe::memoryManager &fe::memoryManager::get()
     {
+        if (!m_instance)
+            {
+                FE_LOG_WARNING("Memory manager not started. Returning nullptr");
+            }
+
         return *m_instance;
     }
 

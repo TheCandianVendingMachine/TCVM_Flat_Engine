@@ -4,6 +4,7 @@
 #define FLAT_ENGINE_EXPORT
 #include "../../flatEngineExport.hpp"
 #include "memoryManager.hpp"
+#include "../../debug/logger.hpp"
 
 namespace fe
     {
@@ -15,6 +16,7 @@ namespace fe
 
                     unsigned int m_objectCount;
 
+                    bool m_canAllocate;
                     bool *m_freeIndicies;
                     char *m_buffer;
 
@@ -35,17 +37,30 @@ namespace fe
         template<typename T>
         void poolAllocater<T>::startUp(const unsigned int objectCount, char *buffer)
             {
-                m_freeIndicies = static_cast<bool*>(memoryManager::get().alloc(objectCount * sizeof(T)));
-                m_buffer = buffer;
-                m_bufferSize = objectCount * sizeof(T);
-                m_objectCount = objectCount;
+                m_canAllocate = false;
 
-                clear();
+                auto memManager = memoryManager::get();
+                if (memManager)
+                    {
+                        m_freeIndicies = static_cast<bool*>(memManager.alloc(objectCount * sizeof(T)));
+                        m_buffer = buffer;
+                        m_bufferSize = objectCount * sizeof(T);
+                        m_objectCount = objectCount;
+
+                        m_canAllocate = true;
+                        clear();
+                    }
             }
 
         template<typename T>
         T *poolAllocater<T>::alloc()
             {
+                if (!m_canAllocate)
+                    {
+                        FE_LOG_WARNING("Cannot allocate memory in pool");
+                        return nullptr;
+                    }
+
                 int index = 0;
                 while (!m_freeIndicies[index])
                     {
@@ -60,7 +75,8 @@ namespace fe
                         return static_cast<T*>(retMem);
                     }
 
-                FE_ASSERT(false, "Pool Allocater out of memory");
+                FE_ASSERT(m_objectCount == 0, "Pool Allocater out of memory");
+                FE_LOG_WARNING("No memory allocated in pool");
                 return nullptr;
             }
 
