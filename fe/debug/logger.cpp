@@ -1,6 +1,5 @@
 #include "logger.hpp"
 #include "../feAssert.hpp"
-
 #include <SFML/System/Err.hpp>
 
 fe::logger *fe::logger::m_instance = nullptr;
