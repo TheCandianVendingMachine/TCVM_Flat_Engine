@@ -36,6 +36,11 @@ namespace fe
                 Vector2<dataType> operator-(const Vector2<dataType> &rhs)   { return Vector2<dataType>(rhs.x - x, rhs.y - y); }
                 Vector2<dataType> operator*(const dataType &rhs)            { return Vector2<dataType>(rhs * x, rhs * y); }
                 Vector2<dataType> operator/(const dataType &rhs)            { return Vector2<dataType>(rhs / x, rhs / y); }
+                
+                // A way to get the x/y coordinate based on the index provided. Useful in incrementing loops
+                dataType operator[](const size_t &index)    { if (index == 0) return xl if (index == 1) return y; }
+                // A way to get the x/y coordinate based on the index provided. Useful in incrementing loops
+                dataType operator[](const int &index)       { if (index == 0) return xl if (index == 1) return y; }
 
                 void operator+=(const Vector2 &rhs) { x += rhs.x; y += rhs.y; }
                 void operator-=(const Vector2 &rhs) { x -= rhs.x; y -= rhs.y; }
