@@ -7,7 +7,7 @@
 
 namespace fe 
     {
-        class FLAT_ENGINE_API time
+        class time
             {
                 private:
                     // time as microseconds
@@ -18,18 +18,18 @@ namespace fe
                     friend FLAT_ENGINE_API fe::time microseconds(const long long in);
 
                 public:
-                    time();
+                    FLAT_ENGINE_API time();
 
-                    float asSeconds();
-                    int32_t asMilliseconds();
-                    int64_t asMicroseconds();
+                    FLAT_ENGINE_API float asSeconds();
+                    FLAT_ENGINE_API int32_t asMilliseconds();
+                    FLAT_ENGINE_API int64_t asMicroseconds();
 
-                    fe::time operator+(const fe::time &rhs);
-                    fe::time operator-(const fe::time & rhs);
-                    void operator+=(const fe::time &rhs);
-                    void operator-=(const fe::time &rhs);
+                    FLAT_ENGINE_API fe::time operator+(const fe::time &rhs);
+                    FLAT_ENGINE_API fe::time operator-(const fe::time & rhs);
+                    FLAT_ENGINE_API void operator+=(const fe::time &rhs);
+                    FLAT_ENGINE_API void operator-=(const fe::time &rhs);
 
-                    bool operator==(const fe::time &rhs);
+                    FLAT_ENGINE_API bool operator==(const fe::time &rhs);
 
             };
 

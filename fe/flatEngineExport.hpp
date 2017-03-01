@@ -1,7 +1,6 @@
 // flatEngineImport.hpp
 // defines many useful macros to be used throughout the engine
 #pragma once
-#include <assert.h>
 
 #ifdef FLAT_ENGINE_EXPORT
     #define FLAT_ENGINE_API __declspec(dllexport)

@@ -8,7 +8,7 @@
 
 namespace fe 
     {
-        class FLAT_ENGINE_API countdown
+        class countdown
             {
                 private:
                     fe::clock m_timer;
@@ -16,13 +16,13 @@ namespace fe
 
                 public:
                     // starts the timer for the length provided
-                    void start(fe::time length);
+                    FLAT_ENGINE_API void start(fe::time length);
                     
                     // returns true if the countdown has completed
-                    bool isDone();
+                    FLAT_ENGINE_API bool isDone();
 
                     // returns how long the timer has to completion
-                    fe::time timeUntilCompletion();
+                    FLAT_ENGINE_API fe::time timeUntilCompletion();
 
             };
     }
