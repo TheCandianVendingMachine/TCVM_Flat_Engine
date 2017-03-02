@@ -1,4 +1,5 @@
 #include "collisionManager.hpp"
+#include <algorithm>
 
 bool fe::doesCollide(const AABB &first, const AABB &second)
     {
@@ -28,14 +29,27 @@ bool fe::doesRayIntersect(AABB &first, Vector2d &origin, Vector2d &direction)
                 if (abs(direction[i]) < EPSILON)
                     {
                         // Ray is parallel to slab. Doesnt hit if its not inside
-                        if (origin[i] < first.m_min[i] || p[i] > first.m_max[i]) return false;
+                        if (origin[i] < first.m_min[i] || origin[i] > first.m_max[i]) return false;
+                    }
+                else
+                    {
+                        float ood = 1.f / direction[i];
+                        float t1 = (first.m_min[i] - origin[i]) * ood;
+                        float t2 = (first.m_max[i] - origin[i]) * ood;
+
+                        if (t1 > t2)
+                            {
+                                float temp = t2;
+                                t2 = t1;
+                                t1 = temp; 
+                            }
+
+                        tMin = std::max(tMin, t1);
+                        tMax = std::min(tMax, t2);
+
+                        if (tMin > tMax) return false;
                     }
             }
 
-        return bool();
-    }
-
-bool fe::doesSegmentIntersect(AABB &first, Vector2d &positionA, Vector2d &positionB)
-    {
-        return bool();
+        return true;
     }

@@ -8,7 +8,9 @@ void fe::resourceManager::startUp(size_t amountOfResources)
 
 void fe::resourceManager::add(const std::string &id, const std::string &filepath, fe::resourceObjectType::resourceObjectType type)
     {
-        resourceObject *allocated = nullptr;
+        resourceObject *allocated = get(id);
+        if (allocated) return;
+
         switch (type)
             {
                 case fe::resourceObjectType::RESOURCE_NULL:

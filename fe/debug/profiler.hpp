@@ -3,30 +3,35 @@
 #pragma once
 #include "../time/time.hpp"
 #include "../time/clock.hpp"
+#include "../subsystems/memory/memoryManager.hpp"
+#include <iostream>
 #include <cstring>
 
 namespace fe
-{
-	struct profiler
-	{
-		fe::time m_startTime;
-		fe::time m_endTime;
+    {
+	    struct profiler
+	        {
+		        fe::time m_startTime;
+		        fe::time m_endTime;
 		
-		const char *m_name;
+		        char *m_name;
 		
-		profiler(const char *name) 
-		{
-			strcpy(m_name, name);
-			m_startTime = fe::clock::getTimeSinceEpoch();
-		}
+		        profiler(const char *name) 
+		            {
+                        m_name = static_cast<char*>(FE_ALLOC_STACK(sizeof(name)));
+			            strcpy(m_name, name);
+			            m_startTime = fe::clock::getTimeSinceEpoch();
+		            }
 		
-		~profiler()
-		{
-			m_endTime = fe::clock::getTimeSinceEpoch();
-			fe::time runtime = m_endTime - m_startTime;
-		}
-	}
-}
+		        ~profiler()
+		            {
+			            m_endTime = fe::clock::getTimeSinceEpoch();
+			            fe::time runtime = m_endTime - m_startTime;
+
+                        //std::cout << m_name << "\nMicroseconds: " << runtime.asMicroseconds() << "\nMilliseconds: " << runtime.asMilliseconds() << "\nSeconds: " << runtime.asSeconds() << "\n\n";
+		            }
+	        };
+    }
 
 #define PROFILE(name) { fe::profiler t(name);
 #define END_PROFILE() }

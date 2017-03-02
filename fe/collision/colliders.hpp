@@ -15,6 +15,7 @@ namespace fe
         struct AABB : public collider
             {
                 AABB(Vector2d &position) : collider(position) {}
+                AABB(Vector2d &position, const Vector2d &size) : collider(position), m_max(size) {}
 
                 Vector2d m_min;
                 Vector2d m_max;

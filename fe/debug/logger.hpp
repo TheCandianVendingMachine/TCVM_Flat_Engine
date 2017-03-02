@@ -9,6 +9,7 @@
 #include <iostream>
 #include <utility>
 #include <fstream>
+#include <assert.h>
 
 namespace fe
     {
@@ -39,8 +40,6 @@ namespace fe
         template<typename ...Args>
         void logger::log(Args &&...args)
             {
-                assert(m_instance && "Error: Logger not open");
-
                 m_output << fe::clock::getFormattedTime("%b %Y %H:%M:%S %p") << " - ";
 
                 using expanded = int[];
@@ -54,7 +53,6 @@ namespace fe
         void logger::logToConsole(Args &&...args)
             {
             #if _DEBUG
-                assert(m_instance && "Error: Logger not open");
                 std::cout << "<CNSL> " << fe::clock::getFormattedTime("%b %Y %H:%M:%S %p") << " - ";
 
                 using expanded = int[];
