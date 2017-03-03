@@ -17,6 +17,7 @@ void fe::memoryManager::startUp(size_t bufferSize, size_t stackSize)
             }
 
         m_shutDown = false;
+        m_memoryLogger.startUp(bufferSize, stackSize);
     }
 
 void fe::memoryManager::shutDown()
@@ -52,6 +53,7 @@ void *fe::memoryManager::alloc(size_t size)
                 return memReturn;
             }
 
+        printDebugInformation();
         FE_ASSERT(false, "Memory Manager - Out of memory");
         return nullptr;
     }
@@ -64,6 +66,34 @@ fe::stackAllocater &fe::memoryManager::getStackAllocater()
 char *fe::memoryManager::getBuffer() const
     {
         return m_allocatedBuffer;
+    }
+
+void fe::memoryManager::logAllocation(const char *id, const size_t size, memoryLogger::allocationTypes type)
+    {
+        m_memoryLogger.allocation(id, size, type);
+    }
+
+void fe::memoryManager::logDeallocation(const char *id, const size_t size, memoryLogger::allocationTypes type)
+    {
+        m_memoryLogger.deallocation(id, size, type);
+    }
+
+fe::memoryLogger &fe::memoryManager::getMemoryLogger()
+    {
+        return m_memoryLogger;
+    }
+
+void fe::memoryManager::printDebugInformation()
+    {
+        FE_LOG( "Memory Debug Data\n",          m_memoryLogger.getLog(),
+                "\nMemory Allocated: ",         m_memoryLogger.getMemoryAllocated(),
+                "\nMemory Left: ",              m_memoryLogger.getMemoryLeft(), "\n",
+
+                "\nMemory Allocated Stack: ",   m_memoryLogger.getMemoryAllocatedStack(),
+                "\nMemory Left Stack: ",        m_memoryLogger.getMemoryLeftStack(), "\n",
+
+                "\nMemory Allocated Direct: ",  m_memoryLogger.getMemoryAllocatedDirect(),
+                "\nMemory Left Direct: ",       m_memoryLogger.getMemoryLeftDirect());
     }
 
 fe::memoryManager::~memoryManager()

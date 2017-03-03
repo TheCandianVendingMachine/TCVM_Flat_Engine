@@ -15,10 +15,11 @@ void fe::imageObject::load(const char *filepath)
             }
         else
             {
-                m_resourceData = FE_ALLOC_STACK(sizeof(imageLoaded.getPixelsPtr()));
+                m_resourceData = FE_ALLOC_STACK("ImageResourceData", sizeof(imageLoaded.getPixelsPtr()));
                 memcpy(m_resourceData, imageLoaded.getPixelsPtr(), sizeof(m_resourceData));
             }
 
-        m_filepath = static_cast<char*>(FE_ALLOC_STACK(sizeof(filepath)));
+        void *memory = FE_ALLOC_STACK("ImageResourceFilepath", sizeof(filepath));
+        m_filepath = static_cast<char*>(memory);
         strcpy(m_filepath, filepath);
     }

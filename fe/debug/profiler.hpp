@@ -18,7 +18,8 @@ namespace fe
 		
 		        profiler(const char *name) 
 		            {
-                        m_name = static_cast<char*>(FE_ALLOC_STACK(sizeof(name)));
+                        void *alloc = FE_ALLOC_STACK("Profiler", sizeof(name));
+                        m_name = static_cast<char*>(alloc);
 			            strcpy(m_name, name);
 			            m_startTime = fe::clock::getTimeSinceEpoch();
 		            }
@@ -34,4 +35,4 @@ namespace fe
     }
 
 #define PROFILE(name) { fe::profiler t(name);
-#define END_PROFILE() }
+#define END_PROFILE }

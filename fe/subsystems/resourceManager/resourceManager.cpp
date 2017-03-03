@@ -4,6 +4,7 @@
 void fe::resourceManager::startUp(size_t amountOfResources)
     {
         m_resourceAllocater.startUp(amountOfResources, static_cast<char*>(fe::memoryManager::get().alloc(amountOfResources * sizeof(resourceObject))));
+        fe::memoryManager::get().logAllocation("ResourceManager", amountOfResources * sizeof(resourceObject), fe::memoryLogger::ALLOC_DIRECT);
     }
 
 void fe::resourceManager::add(const std::string &id, const std::string &filepath, fe::resourceObjectType::resourceObjectType type)
