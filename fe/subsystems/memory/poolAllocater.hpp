@@ -45,6 +45,8 @@ namespace fe
                 if (memManager)
                     {
                         m_freeIndicies = static_cast<bool*>(memManager->alloc(objectCount * sizeof(T)));
+                        memManager->logAllocation("PoolAllocater", objectCount * sizeof(T), fe::memoryLogger::ALLOC_DIRECT);
+
                         m_buffer = buffer;
                         m_bufferSize = objectCount * sizeof(T);
                         m_objectCount = objectCount;

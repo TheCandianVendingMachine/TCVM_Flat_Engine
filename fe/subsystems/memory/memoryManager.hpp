@@ -29,6 +29,7 @@ namespace fe
                     FLAT_ENGINE_API static memoryManager &get();
 
                     // allocate memory from the "heap" of specific size
+                    // IF YOU CALL THIS YOU MUST LOG IT MANUALLY.
                     FLAT_ENGINE_API void *alloc(size_t size);
 
                     // not to be used

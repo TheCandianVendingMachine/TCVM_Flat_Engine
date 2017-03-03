@@ -86,14 +86,18 @@ fe::memoryLogger &fe::memoryManager::getMemoryLogger()
 void fe::memoryManager::printDebugInformation()
     {
         FE_LOG( "Memory Debug Data\n",          m_memoryLogger.getLog(),
+
                 "\nMemory Allocated: ",         m_memoryLogger.getMemoryAllocated(),
-                "\nMemory Left: ",              m_memoryLogger.getMemoryLeft(), "\n",
+                "\nMemory Left: ",              m_memoryLogger.getMemoryLeft(),
+                "\nTotal Memory: ",             m_memoryLogger.getMemory(), "\n"
 
                 "\nMemory Allocated Stack: ",   m_memoryLogger.getMemoryAllocatedStack(),
-                "\nMemory Left Stack: ",        m_memoryLogger.getMemoryLeftStack(), "\n",
+                "\nMemory Left Stack: ",        m_memoryLogger.getMemoryLeftStack(),
+                "\nTotal Stack Memory: ",       m_memoryLogger.getMemoryStack(), "\n"
 
                 "\nMemory Allocated Direct: ",  m_memoryLogger.getMemoryAllocatedDirect(),
-                "\nMemory Left Direct: ",       m_memoryLogger.getMemoryLeftDirect());
+                "\nMemory Left Direct: ",       m_memoryLogger.getMemoryLeftDirect(),
+                "\nTotal Memory Direct: ",      m_memoryLogger.getMemoryDirect(), "\n");
     }
 
 fe::memoryManager::~memoryManager()

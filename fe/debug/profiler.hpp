@@ -29,7 +29,7 @@ namespace fe
 			            m_endTime = fe::clock::getTimeSinceEpoch();
 			            fe::time runtime = m_endTime - m_startTime;
 
-                        //std::cout << m_name << "\nMicroseconds: " << runtime.asMicroseconds() << "\nMilliseconds: " << runtime.asMilliseconds() << "\nSeconds: " << runtime.asSeconds() << "\n\n";
+                        std::cout << "\n" << m_name << "\nMicroseconds: " << runtime.asMicroseconds() << "\nMilliseconds: " << runtime.asMilliseconds() << "\nSeconds: " << runtime.asSeconds() << "\n\n";
 		            }
 	        };
     }

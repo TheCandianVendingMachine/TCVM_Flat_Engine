@@ -22,11 +22,11 @@ void fe::memoryLogger::allocation(const std::string &id, size_t size, allocation
         switch (type)
             {
                 case fe::memoryLogger::ALLOC_STACK:
-                    m_memoryLog[id] = std::make_pair("Allocated Stack", size);
+                    m_memoryLog[id] = std::make_pair("Allocated Stack", m_memoryLog[id].second + size);
                     m_memoryAllocatedStack += size;
                     break;
                 case fe::memoryLogger::ALLOC_DIRECT:
-                    m_memoryLog[id] = std::make_pair("Allocated Direct", size);
+                    m_memoryLog[id] = std::make_pair("Allocated Direct", m_memoryLog[id].second + size);
                     m_memoryAllocatedDirect += size;
                     break;
                 default:
@@ -41,11 +41,11 @@ void fe::memoryLogger::deallocation(const std::string &id, size_t size, allocati
         switch (type)
             {
                 case fe::memoryLogger::ALLOC_STACK:
-                    m_memoryLog[id] = std::make_pair("Deallocated Stack", size);
+                    m_memoryLog[id] = std::make_pair("Deallocated Stack", m_memoryLog[id].second - size);
                     m_memoryAllocatedStack -= size;
                     break;
                 case fe::memoryLogger::ALLOC_DIRECT:
-                    m_memoryLog[id] = std::make_pair("Deallocated Direct", size);
+                    m_memoryLog[id] = std::make_pair("Deallocated Direct", m_memoryLog[id].second - size);
                     m_memoryAllocatedDirect -= size;
                     break;
                 default:
@@ -77,6 +77,11 @@ const size_t fe::memoryLogger::getMemoryLeftStack() const
         return m_stackMemory - m_memoryAllocatedStack;
     }
 
+const size_t fe::memoryLogger::getMemoryStack() const
+    {
+        return m_stackMemory;
+    }
+
 const size_t fe::memoryLogger::getMemoryAllocatedDirect() const
     {
         return m_memoryAllocatedDirect;
@@ -87,6 +92,11 @@ const size_t fe::memoryLogger::getMemoryLeftDirect() const
         return m_directMemory - m_memoryAllocatedDirect;
     }
 
+const size_t fe::memoryLogger::getMemoryDirect() const
+    {
+        return m_directMemory;
+    }
+
 const size_t fe::memoryLogger::getMemoryAllocated() const
     {
         return m_totalMemoryAllocated;
@@ -95,4 +105,9 @@ const size_t fe::memoryLogger::getMemoryAllocated() const
 const size_t fe::memoryLogger::getMemoryLeft() const
     {
         return m_totalMemory - m_totalMemoryAllocated;
+    }
+
+const size_t fe::memoryLogger::getMemory() const
+    {
+        return m_totalMemory;
     }

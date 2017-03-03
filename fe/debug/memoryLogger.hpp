@@ -40,12 +40,15 @@ namespace fe
 
                     FLAT_ENGINE_API const size_t getMemoryAllocatedStack() const;
                     FLAT_ENGINE_API const size_t getMemoryLeftStack() const;
+                    FLAT_ENGINE_API const size_t getMemoryStack() const;
 
                     FLAT_ENGINE_API const size_t getMemoryAllocatedDirect() const;
                     FLAT_ENGINE_API const size_t getMemoryLeftDirect() const;
+                    FLAT_ENGINE_API const size_t getMemoryDirect() const;
 
                     FLAT_ENGINE_API const size_t getMemoryAllocated() const;
                     FLAT_ENGINE_API const size_t getMemoryLeft() const;
+                    FLAT_ENGINE_API const size_t getMemory() const;
 
             };
     }
