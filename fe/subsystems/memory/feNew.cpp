@@ -3,7 +3,7 @@
 
 void *feAlloc(size_t bytes)
     {
-        fe::memoryManager::get().logAllocation("OverloadedNew", bytes, fe::memoryLogger::ALLOC_DIRECT);
+        fe::memoryManager::get().getMemoryLogger().allocateOverloadedNew(bytes);
         return fe::memoryManager::get().alloc(bytes);
     }
 

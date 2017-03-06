@@ -1,7 +1,6 @@
 #include "clock.hpp"
 #include <chrono>
 #include <iomanip>
-#include <sstream>
 
 fe::time fe::clock::m_getCurrentTime()
     {
@@ -53,12 +52,10 @@ fe::time fe::clock::getTimeSinceEpoch()
 const char *fe::clock::getFormattedTime(const char *format)
     {
         std::time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-        
-        std::stringstream out;
-        out << std::put_time(std::localtime(&now), format);
-        static char lastTimeAsked[500];
+        auto timeInfo = std::localtime(&now);
 
-        strcpy(lastTimeAsked, out.str().c_str());
+        static char lastTimeAsked[500];
+        strftime(lastTimeAsked, 25, format, timeInfo);
 
         return lastTimeAsked;
     }

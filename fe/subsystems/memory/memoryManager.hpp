@@ -9,11 +9,13 @@
 
 namespace fe 
     {
+        class logger;
+
         class memoryManager
             {
                 private:
                     stackAllocater m_stackAllocater;
-                    memoryLogger m_memoryLogger;
+                    memoryLogger *m_memoryLogger;
 
                     size_t m_bufferSize;
                     size_t m_currentOffset;

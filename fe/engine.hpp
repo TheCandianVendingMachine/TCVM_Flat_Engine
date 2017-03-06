@@ -11,10 +11,13 @@ namespace fe
         class engine
             {
                 private:
-                    fe::logger m_logger;
                     fe::memoryManager m_memoryManager;
 
+                    fe::logger *m_logger;
+
                 public:
+                    FLAT_ENGINE_API engine();
+
                     FLAT_ENGINE_API void startUp();
                     FLAT_ENGINE_API void shutDown();
             };

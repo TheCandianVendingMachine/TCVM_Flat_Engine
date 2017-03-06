@@ -6,7 +6,8 @@ fe::memoryLogger::memoryLogger() :
     m_directMemory(0),
     m_memoryAllocatedStack(0),
     m_memoryAllocatedDirect(0),
-    m_totalMemoryAllocated(0)
+    m_totalMemoryAllocated(0),
+    m_memoryAllocatedNew(0)
     {
     }
 
@@ -84,12 +85,12 @@ const size_t fe::memoryLogger::getMemoryStack() const
 
 const size_t fe::memoryLogger::getMemoryAllocatedDirect() const
     {
-        return m_memoryAllocatedDirect;
+        return m_memoryAllocatedDirect + m_memoryAllocatedNew;
     }
 
 const size_t fe::memoryLogger::getMemoryLeftDirect() const
     {
-        return m_directMemory - m_memoryAllocatedDirect;
+        return m_directMemory - m_memoryAllocatedDirect - m_memoryAllocatedNew;
     }
 
 const size_t fe::memoryLogger::getMemoryDirect() const
@@ -99,15 +100,28 @@ const size_t fe::memoryLogger::getMemoryDirect() const
 
 const size_t fe::memoryLogger::getMemoryAllocated() const
     {
-        return m_totalMemoryAllocated;
+        return m_totalMemoryAllocated + m_memoryAllocatedNew;
     }
 
 const size_t fe::memoryLogger::getMemoryLeft() const
     {
-        return m_totalMemory - m_totalMemoryAllocated;
+        return m_totalMemory - m_totalMemoryAllocated - m_memoryAllocatedNew;
     }
 
 const size_t fe::memoryLogger::getMemory() const
     {
         return m_totalMemory;
+    }
+
+const size_t fe::memoryLogger::memoryAllocatedOverloadedNew() const
+    {
+        return m_memoryAllocatedNew;
+    }
+
+void fe::memoryLogger::allocateOverloadedNew(size_t size)
+    {
+        if (this) 
+            {
+                m_memoryAllocatedNew += size;
+            }
     }

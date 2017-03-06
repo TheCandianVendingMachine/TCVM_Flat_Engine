@@ -21,6 +21,8 @@ namespace fe
                 private:
                     std::unordered_map<std::string, std::pair<std::string, size_t>> m_memoryLog;
 
+                    size_t m_memoryAllocatedNew;
+
                     size_t m_memoryAllocatedStack;
                     size_t m_memoryAllocatedDirect;
                     size_t m_totalMemoryAllocated;
@@ -49,6 +51,12 @@ namespace fe
                     FLAT_ENGINE_API const size_t getMemoryAllocated() const;
                     FLAT_ENGINE_API const size_t getMemoryLeft() const;
                     FLAT_ENGINE_API const size_t getMemory() const;
+
+                    FLAT_ENGINE_API const size_t memoryAllocatedOverloadedNew() const;
+
+                    // DO NOT CALL EVER
+                    // Used to log the amount of memory the memory log is taking up
+                    FLAT_ENGINE_API void allocateOverloadedNew(size_t size);
 
             };
     }

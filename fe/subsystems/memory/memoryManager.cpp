@@ -14,10 +14,11 @@ void fe::memoryManager::startUp(size_t bufferSize, size_t stackSize)
 
                 // start up the different types of memory allocaters
                 m_stackAllocater.startUp(static_cast<char*>(alloc(stackSize)), stackSize);
+                m_memoryLogger = new(alloc(sizeof(memoryLogger))) memoryLogger;
             }
 
         m_shutDown = false;
-        m_memoryLogger.startUp(bufferSize, stackSize);
+        m_memoryLogger->startUp(bufferSize, stackSize);
     }
 
 void fe::memoryManager::shutDown()
@@ -70,34 +71,35 @@ char *fe::memoryManager::getBuffer() const
 
 void fe::memoryManager::logAllocation(const char *id, const size_t size, memoryLogger::allocationTypes type)
     {
-        m_memoryLogger.allocation(id, size, type);
+        m_memoryLogger->allocation(id, size, type);
     }
 
 void fe::memoryManager::logDeallocation(const char *id, const size_t size, memoryLogger::allocationTypes type)
     {
-        m_memoryLogger.deallocation(id, size, type);
+        m_memoryLogger->deallocation(id, size, type);
     }
 
 fe::memoryLogger &fe::memoryManager::getMemoryLogger()
     {
-        return m_memoryLogger;
+        return *m_memoryLogger;
     }
 
 void fe::memoryManager::printDebugInformation()
     {
-        FE_LOG( "Memory Debug Data\n",          m_memoryLogger.getLog(),
+        FE_LOG( "Memory Debug Data\n",          m_memoryLogger->getLog(),
 
-                "\nMemory Allocated: ",         m_memoryLogger.getMemoryAllocated(),
-                "\nMemory Left: ",              m_memoryLogger.getMemoryLeft(),
-                "\nTotal Memory: ",             m_memoryLogger.getMemory(), "\n"
+                "\nMemory Allocated: ",         m_memoryLogger->getMemoryAllocated(),
+                "\nMemory Left: ",              m_memoryLogger->getMemoryLeft(),
+                "\nTotal Memory: ",             m_memoryLogger->getMemory(), "\n"
 
-                "\nMemory Allocated Stack: ",   m_memoryLogger.getMemoryAllocatedStack(),
-                "\nMemory Left Stack: ",        m_memoryLogger.getMemoryLeftStack(),
-                "\nTotal Stack Memory: ",       m_memoryLogger.getMemoryStack(), "\n"
+                "\nMemory Allocated Stack: ",   m_memoryLogger->getMemoryAllocatedStack(),
+                "\nMemory Left Stack: ",        m_memoryLogger->getMemoryLeftStack(),
+                "\nTotal Stack Memory: ",       m_memoryLogger->getMemoryStack(), "\n"
 
-                "\nMemory Allocated Direct: ",  m_memoryLogger.getMemoryAllocatedDirect(),
-                "\nMemory Left Direct: ",       m_memoryLogger.getMemoryLeftDirect(),
-                "\nTotal Memory Direct: ",      m_memoryLogger.getMemoryDirect(), "\n");
+                "\nMemory Allocated Direct: ",  m_memoryLogger->getMemoryAllocatedDirect(),
+                "\nMemory Left Direct: ",       m_memoryLogger->getMemoryLeftDirect(),
+                "\nTotal Memory Direct: ",      m_memoryLogger->getMemoryDirect(), "\n",
+                "\nMemory Allocated Via New: ", m_memoryLogger->memoryAllocatedOverloadedNew(), "\n");
     }
 
 fe::memoryManager::~memoryManager()
