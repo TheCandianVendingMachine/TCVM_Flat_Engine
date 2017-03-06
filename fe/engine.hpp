@@ -18,7 +18,7 @@ namespace fe
                 public:
                     FLAT_ENGINE_API engine();
 
-                    FLAT_ENGINE_API void startUp();
+                    FLAT_ENGINE_API void startUp(unsigned long long totalMemory = 128_MiB, unsigned long long stackMemory = (128_MiB / 4));
                     FLAT_ENGINE_API void shutDown();
             };
     }

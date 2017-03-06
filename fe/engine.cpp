@@ -4,9 +4,9 @@
 fe::engine::engine() : m_logger(nullptr)
     {}
 
-void fe::engine::startUp()
+void fe::engine::startUp(unsigned long long totalMemory, unsigned long long stackMemory)
     {
-        m_memoryManager.startUp(sizeof(char) * 1024, 512);
+        m_memoryManager.startUp(totalMemory, stackMemory);
 
 
         m_logger = new logger;

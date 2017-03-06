@@ -9,8 +9,27 @@
 
 namespace fe 
     {
-        class logger;
+        // User defined literals for easy conversion between bytes to other memory units
 
+        // Return the inputted bytes to Gigabytes (Really Gibibytes)
+        constexpr unsigned long long operator "" _GiB(unsigned long long bytes)
+            {
+                return bytes * 1073741824; // return the bytes * 1 Gibibyte (Gigabyte but the official name for it)
+            }
+
+        // Return the inputted bytes to Megabytes (Really Mibibytes)
+        constexpr unsigned long long operator "" _MiB(unsigned long long bytes)
+            {
+                return bytes * 1048576;
+            }
+
+        // Return the inputted bytes to Kilobytes (Really Kibibytes)
+        constexpr unsigned long long operator "" _KiB(unsigned long long bytes)
+            {
+                return bytes * 1024;
+            }
+
+        class logger;
         class memoryManager
             {
                 private:
