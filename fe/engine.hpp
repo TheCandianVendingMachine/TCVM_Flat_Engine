@@ -22,11 +22,7 @@ namespace fe
                     fe::logger *m_logger;
                     fe::inputManager *m_inputManager;
 
-                    sf::RectangleShape *test;
-
                     sf::RenderWindow *m_renderWindow;
-
-                    fe::Vector2d velocity;
 
                 private:
                     float m_deltaTime;
