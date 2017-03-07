@@ -25,3 +25,4 @@ fe::logger &fe::logger::get()
     {
         return *m_instance;
     }
+

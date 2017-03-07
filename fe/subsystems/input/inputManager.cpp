@@ -2,6 +2,8 @@
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Mouse.hpp>
 
+fe::inputManager *fe::inputManager::m_instance = nullptr;
+
 void fe::inputManager::startUp()
     {
         if (!m_instance)

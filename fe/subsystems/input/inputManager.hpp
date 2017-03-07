@@ -16,7 +16,7 @@ namespace fe
                     std::unordered_map<std::string, input<sf::Keyboard::Key>> m_keyboardInputs;
                     std::unordered_map<std::string, input<sf::Mouse::Button>> m_mouseInputs;
 
-                    inputManager *m_instance;
+                    static inputManager *m_instance;
 
                 public:
                     FLAT_ENGINE_API void startUp();
@@ -24,7 +24,7 @@ namespace fe
 
                     FLAT_ENGINE_API void handleEvents(const sf::Event &event);
 
-                    FLAT_ENGINE_API inputManager &get();
+                    FLAT_ENGINE_API static inputManager &get();
 
                     FLAT_ENGINE_API void add(const std::string &id, input<sf::Keyboard::Key> input);
                     FLAT_ENGINE_API void add(const std::string &id, input<sf::Mouse::Button> input);
