@@ -7,9 +7,7 @@
 #include "subsystems/memory/feNew.hpp"
 #include "debug/logger.hpp"
 #include "subsystems/input/inputManager.hpp"
-
-#include <SFML/Graphics/RenderWindow.hpp>
-#include <SFML/Graphics/RectangleShape.hpp>
+#include "subsystems/graphic/renderer.hpp"
 
 #include "math/Vector2.hpp"
 
@@ -19,10 +17,10 @@ namespace fe
             {
                 private:
                     fe::memoryManager m_memoryManager;
+                    fe::renderer m_renderer;
+
                     fe::logger *m_logger;
                     fe::inputManager *m_inputManager;
-
-                    sf::RenderWindow *m_renderWindow;
 
                 private:
                     float m_deltaTime;
@@ -35,8 +33,6 @@ namespace fe
 
                 public:
                     FLAT_ENGINE_API engine(const float updateRate = 1.f / 60.f);
-
-                    FLAT_ENGINE_API void loadWindow();
 
                     FLAT_ENGINE_API void startUp(unsigned long long totalMemory = 256_MiB, unsigned long long stackMemory = (256_MiB / 4));
                     FLAT_ENGINE_API void shutDown();

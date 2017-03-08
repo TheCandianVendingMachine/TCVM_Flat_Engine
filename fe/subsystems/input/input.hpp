@@ -17,6 +17,7 @@ namespace fe
 
                 input() {}
                 input(TInput input) : m_input(input) { }
+
                 void handleEvent(const sf::Event &event)
                     {
                         m_eventPressed = event.type == m_pressed;
