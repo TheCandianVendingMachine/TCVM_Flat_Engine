@@ -21,6 +21,7 @@ void fe::renderer::load()
 
 void fe::renderer::draw(const sf::Drawable &draw)
     {
+        m_renderWindow->draw(draw);
     }
 
 sf::RenderWindow &fe::renderer::getRenderWindow()

@@ -70,12 +70,12 @@ std::string fe::memoryLogger::getLog()
 
 const size_t fe::memoryLogger::getMemoryAllocatedStack() const
     {
-        return m_memoryAllocatedStack;
+        return m_memoryAllocatedStack + m_memoryAllocatedNew;;
     }
 
 const size_t fe::memoryLogger::getMemoryLeftStack() const
     {
-        return m_stackMemory - m_memoryAllocatedStack;
+        return m_stackMemory - m_memoryAllocatedStack - m_memoryAllocatedNew;
     }
 
 const size_t fe::memoryLogger::getMemoryStack() const
@@ -85,12 +85,12 @@ const size_t fe::memoryLogger::getMemoryStack() const
 
 const size_t fe::memoryLogger::getMemoryAllocatedDirect() const
     {
-        return m_memoryAllocatedDirect + m_memoryAllocatedNew;
+        return m_memoryAllocatedDirect;
     }
 
 const size_t fe::memoryLogger::getMemoryLeftDirect() const
     {
-        return m_directMemory - m_memoryAllocatedDirect - m_memoryAllocatedNew;
+        return m_directMemory - m_memoryAllocatedDirect;
     }
 
 const size_t fe::memoryLogger::getMemoryDirect() const

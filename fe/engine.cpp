@@ -28,6 +28,16 @@ void fe::engine::draw()
     {
         m_renderer.getRenderWindow().clear(sf::Color::Black);
 
+        if (m_sceneGraph) 
+            {
+                auto nextDraw = m_sceneGraph->getNextDrawable();
+                while (nextDraw)
+                    {
+                        m_renderer.draw(*nextDraw);
+                        nextDraw = m_sceneGraph->getNextDrawable();
+                    }
+            }
+
         m_renderer.getRenderWindow().display();
     }
 
@@ -46,6 +56,9 @@ void fe::engine::startUp(unsigned long long totalMemory, unsigned long long stac
         m_renderer.startUp();
         m_renderer.load();
 
+        m_sceneGraph = new sceneGraph;
+        m_sceneGraph->startUp();
+
         m_inputManager = new inputManager;
         m_inputManager->startUp();
     }
@@ -53,6 +66,7 @@ void fe::engine::startUp(unsigned long long totalMemory, unsigned long long stac
 void fe::engine::shutDown()
     {
         m_inputManager->shutDown();
+        m_sceneGraph->shutDown();
         m_renderer.shutDown();
         m_logger->shutDown();
         m_memoryManager.shutDown();
@@ -75,6 +89,17 @@ void fe::engine::run()
 
                 handleEvents();
                 update();
+
+                if (m_sceneGraph) 
+                    {
+                        m_sceneGraph->postUpdate();
+                    }
+
                 draw();
             }
+    }
+
+fe::sceneGraph *fe::engine::getSceneGraph() const
+    {
+        return m_sceneGraph;
     }
