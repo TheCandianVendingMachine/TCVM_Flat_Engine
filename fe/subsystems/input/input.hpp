@@ -23,17 +23,17 @@ namespace fe
                 void (*m_callback)(void);
 
                 input() {}
-                input(bool realTime, bool onPress, TInput input) : m_input(input), m_callback(nullptr), m_realTime(realTime), m_inverse(!onPress) { }
-                input(bool realTime, bool onPress, TInput input, void (*callback)(void)) : m_input(input), m_callback(callback), m_realTime(realTime), m_inverse(!onPress) { }
+                input(bool realTime, bool onPress, TInput input) : m_input(input), m_callback(nullptr), m_realTime(realTime), m_inverse(onPress) { }
+                input(bool realTime, bool onPress, TInput input, void (*callback)(void)) : m_input(input), m_callback(callback), m_realTime(realTime), m_inverse(onPress) { }
 
                 void handleEvent(const sf::Event &event)
                     {
                         bool correctKey = m_isKeyboard ? m_input == event.key.code : m_input == event.mouseButton.button;
                         m_eventPressed = event.type == m_pressed && correctKey;
 
-                        if (m_callback && !m_realTime &&
-                            ((m_eventPressed && correctKey && !m_inverse) ||
-                            (!m_eventPressed && correctKey && m_inverse)))
+                        if (m_callback && !m_realTime && correctKey &&
+                            ((m_eventPressed && !m_inverse) ||
+                            (!m_eventPressed && m_inverse)))
                             {
                                 m_callback();
                             }
