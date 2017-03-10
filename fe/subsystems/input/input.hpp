@@ -23,15 +23,17 @@ namespace fe
                 void (*m_callback)(void);
 
                 input() {}
-                input(bool realTime, bool onEvent, TInput input) : m_input(input), m_callback(nullptr), m_realTime(realTime), m_inverse(!onEvent) { }
-                input(bool realTime, bool onEvent, TInput input, void (*callback)(void)) : m_input(input), m_callback(callback), m_realTime(realTime), m_inverse(!onEvent) { }
+                input(bool realTime, bool onPress, TInput input) : m_input(input), m_callback(nullptr), m_realTime(realTime), m_inverse(!onPress) { }
+                input(bool realTime, bool onPress, TInput input, void (*callback)(void)) : m_input(input), m_callback(callback), m_realTime(realTime), m_inverse(!onPress) { }
 
                 void handleEvent(const sf::Event &event)
                     {
                         bool correctKey = m_isKeyboard ? m_input == event.key.code : m_input == event.mouseButton.button;
                         m_eventPressed = event.type == m_pressed && correctKey;
 
-                        if (m_callback && m_eventPressed && correctKey && !m_realTime)
+                        if (m_callback && !m_realTime &&
+                            ((m_eventPressed && correctKey && !m_inverse) ||
+                            (!m_eventPressed && correctKey && m_inverse)))
                             {
                                 m_callback();
                             }
@@ -45,7 +47,9 @@ namespace fe
                                           sf::Keyboard::isKeyPressed(static_cast<sf::Keyboard::Key>(m_input)) :
                                           sf::Mouse::isButtonPressed(static_cast<sf::Mouse::Button>(m_input)));
 
-                        if (m_realTime && isPressed)
+                        if (m_callback && m_realTime &&
+                            ((isPressed && !m_inverse) ||
+                            (!isPressed && m_inverse)))
                             {
                                 m_callback();
                             }
