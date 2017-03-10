@@ -30,6 +30,19 @@ void fe::inputManager::handleEvents(const sf::Event &event)
             }
     }
 
+void fe::inputManager::handleKeyPress()
+    {
+        for (auto &key : m_keyboardInputs)
+            {
+                key.second.checkPressed();
+            }
+
+        for (auto &button : m_mouseInputs)
+            {
+                button.second.checkPressed();
+            }
+    }
+
 fe::inputManager &fe::inputManager::get()
     {
         return *m_instance;

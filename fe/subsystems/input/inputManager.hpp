@@ -23,6 +23,7 @@ namespace fe
                     FLAT_ENGINE_API void shutDown();
 
                     FLAT_ENGINE_API void handleEvents(const sf::Event &event);
+                    FLAT_ENGINE_API void handleKeyPress();
 
                     FLAT_ENGINE_API static inputManager &get();
 
