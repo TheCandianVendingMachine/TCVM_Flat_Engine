@@ -4,13 +4,24 @@
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 
+fe::renderer *fe::renderer::m_instance = nullptr;
+
 void fe::renderer::startUp()
     {
-        m_renderWindow = new sf::RenderWindow;
+        if (!m_instance) 
+            {
+                m_renderWindow = new sf::RenderWindow;
+                m_instance = this;
+            }
     }
 
 void fe::renderer::shutDown()
     {
+    }
+
+fe::renderer &fe::renderer::get()
+    {
+        return *m_instance;
     }
 
 void fe::renderer::load()
