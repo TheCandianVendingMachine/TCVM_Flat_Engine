@@ -5,12 +5,11 @@
 #include "flatEngineExport.hpp"
 #include "subsystems/memory/memoryManager.hpp"
 #include "subsystems/memory/feNew.hpp"
-#include "debug/logger.hpp"
 #include "subsystems/input/inputManager.hpp"
 #include "subsystems/graphic/renderer.hpp"
 #include "subsystems/graphic/sceneGraph.hpp"
-
-#include "math/Vector2.hpp"
+#include "subsystems/gameState/gameStateMachine.hpp"
+#include "debug/logger.hpp"
 
 namespace fe
     {
@@ -23,9 +22,11 @@ namespace fe
                     fe::logger *m_logger;
                     fe::inputManager *m_inputManager;
                     fe::sceneGraph *m_sceneGraph;
+                    fe::gameStateMachine *m_gameStateMachine;
 
                 private:
-                    float m_deltaTime;
+                    const float m_deltaTime;
+                    static float m_deltaTimeStatic;
                     float m_accumulator;
                                         
                 private:
@@ -43,5 +44,9 @@ namespace fe
                     FLAT_ENGINE_API void run();
 
                     FLAT_ENGINE_API sceneGraph *getSceneGraph() const;
+
+
+                    // Static getters for various useful variables in the engine
+                    FLAT_ENGINE_API const static float getDeltaTime();
             };
     }

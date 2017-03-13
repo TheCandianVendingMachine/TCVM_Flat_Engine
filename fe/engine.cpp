@@ -2,6 +2,8 @@
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 
+float fe::engine::m_deltaTimeStatic = 0.f;
+
 void fe::engine::handleEvents()
     {
         sf::Event currentEvent;
@@ -18,18 +20,20 @@ void fe::engine::handleEvents()
 
 void fe::engine::update()
     {
+        m_gameStateMachine->preUpdate();
         while (m_accumulator >= m_deltaTime)
             {
                 m_inputManager->handleKeyPress();
-
+                m_gameStateMachine->update(m_deltaTime);
                 m_accumulator -= m_deltaTime;
             }
+        m_gameStateMachine->postUpdate();
     }
 
 void fe::engine::draw()
     {
+        m_gameStateMachine->preDraw();
         m_renderer.getRenderWindow().clear(sf::Color::Black);
-
         if (m_sceneGraph) 
             {
                 auto nextDraw = m_sceneGraph->getNextDrawable();
@@ -39,14 +43,18 @@ void fe::engine::draw()
                         nextDraw = m_sceneGraph->getNextDrawable();
                     }
             }
-
+        m_gameStateMachine->draw(m_renderer.getRenderWindow());
         m_renderer.getRenderWindow().display();
+
+        m_gameStateMachine->postDraw();
     }
 
 fe::engine::engine(const float updateRate) :
     m_logger(nullptr),
     m_deltaTime(updateRate)
-    {}
+    {
+        m_deltaTimeStatic = updateRate;
+    }
 
 void fe::engine::startUp(unsigned long long totalMemory, unsigned long long stackMemory)
     {
@@ -63,10 +71,14 @@ void fe::engine::startUp(unsigned long long totalMemory, unsigned long long stac
 
         m_inputManager = new inputManager;
         m_inputManager->startUp();
+
+        m_gameStateMachine = new gameStateMachine;
+        m_gameStateMachine->startUp();
     }
 
 void fe::engine::shutDown()
     {
+        m_gameStateMachine->shutDown();
         m_inputManager->shutDown();
         m_sceneGraph->shutDown();
         m_renderer.shutDown();
@@ -104,4 +116,9 @@ void fe::engine::run()
 fe::sceneGraph *fe::engine::getSceneGraph() const
     {
         return m_sceneGraph;
+    }
+
+const float fe::engine::getDeltaTime()
+    {
+        return m_deltaTimeStatic;
     }
