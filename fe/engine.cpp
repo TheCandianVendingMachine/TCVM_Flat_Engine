@@ -118,3 +118,8 @@ const float fe::engine::getDeltaTime()
     {
         return m_deltaTimeStatic;
     }
+
+void fe::engine::queueState(gameState *state)
+    {
+        m_gameStateMachine->queuePush(state);
+    }

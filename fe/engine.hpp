@@ -45,8 +45,7 @@ namespace fe
 
                     FLAT_ENGINE_API sceneGraph *getSceneGraph() const;
 
-
-                    // Static getters for various useful variables in the engine
                     FLAT_ENGINE_API const static float getDeltaTime();
+                    FLAT_ENGINE_API void queueState(gameState *state);
             };
     }

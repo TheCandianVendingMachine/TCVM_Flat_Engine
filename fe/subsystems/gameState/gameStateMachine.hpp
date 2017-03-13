@@ -12,6 +12,7 @@ namespace sf
 namespace fe
     {
         class gameState;
+        class sceneGraph;
         
         class gameStateMachine
             {
