@@ -3,6 +3,7 @@
 #pragma once
 #define FLAT_ENGINE_EXPORT
 #include "../../flatEngineExport.hpp"
+#include "../graphic/sceneGraph.hpp"
 
 namespace sf
     {
@@ -14,7 +15,11 @@ namespace fe
         class gameState
             {
                 private:
+                    fe::sceneGraph m_sceneGraph;
+
                 public:
+                    FLAT_ENGINE_API virtual void init() {}
+
                     FLAT_ENGINE_EXPORT void preUpdate();
                     FLAT_ENGINE_EXPORT void update(float deltaTime);
                     FLAT_ENGINE_EXPORT void postUpdate();
@@ -22,5 +27,9 @@ namespace fe
                     FLAT_ENGINE_EXPORT void preDraw();
                     FLAT_ENGINE_EXPORT void draw(sf::RenderWindow &app);
                     FLAT_ENGINE_EXPORT void postDraw();
+
+                    FLAT_ENGINE_API virtual void deinit() {}
+
+                    FLAT_ENGINE_API fe::sceneGraph *getSceneGraph() { return &m_sceneGraph; }
             };
     }

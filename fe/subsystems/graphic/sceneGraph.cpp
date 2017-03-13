@@ -1,13 +1,5 @@
 #include "sceneGraph.hpp"
 
-void fe::sceneGraph::startUp()
-    {
-    }
-
-void fe::sceneGraph::shutDown()
-    {
-    }
-
 void fe::sceneGraph::postUpdate()
     {
         for (auto &drawable : m_drawables)

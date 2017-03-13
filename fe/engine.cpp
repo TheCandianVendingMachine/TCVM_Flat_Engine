@@ -66,9 +66,6 @@ void fe::engine::startUp(unsigned long long totalMemory, unsigned long long stac
         m_renderer.startUp();
         m_renderer.load();
 
-        m_sceneGraph = new sceneGraph;
-        m_sceneGraph->startUp();
-
         m_inputManager = new inputManager;
         m_inputManager->startUp();
 
@@ -80,7 +77,6 @@ void fe::engine::shutDown()
     {
         m_gameStateMachine->shutDown();
         m_inputManager->shutDown();
-        m_sceneGraph->shutDown();
         m_renderer.shutDown();
         m_logger->shutDown();
         m_memoryManager.shutDown();

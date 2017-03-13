@@ -49,5 +49,7 @@ namespace fe
                     FLAT_ENGINE_API void draw(sf::RenderWindow &app);
                     FLAT_ENGINE_API void postDraw();
 
+                    FLAT_ENGINE_API fe::sceneGraph *getSceneGraph();
+
             };
     }

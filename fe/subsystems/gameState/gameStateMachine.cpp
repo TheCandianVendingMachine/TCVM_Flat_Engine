@@ -31,10 +31,12 @@ void fe::gameStateMachine::push(gameState *newState)
     {
         pop();
         m_currentState = newState;
+        m_currentState->init();
     }
 
 void fe::gameStateMachine::pop()
     {
+        m_currentState->deinit();
         FE_FREE_STACK("StateMachine", m_stateMarker);
         m_stateMarker = fe::memoryManager::get().getStackAllocater().getMarker();
         m_currentState = nullptr;
@@ -108,4 +110,9 @@ void fe::gameStateMachine::postDraw()
             {
                 m_currentState->postDraw();
             }
+    }
+
+fe::sceneGraph *fe::gameStateMachine::getSceneGraph()
+    {
+        return m_currentState->getSceneGraph();
     }

@@ -20,9 +20,6 @@ namespace fe
                     std::queue<sf::Drawable*> m_nextDrawable;
 
                 public:
-                    FLAT_ENGINE_API void startUp();
-                    FLAT_ENGINE_API void shutDown();
-
                     FLAT_ENGINE_API void postUpdate();
 
                     FLAT_ENGINE_API void addDrawable(sf::Drawable *draw);
