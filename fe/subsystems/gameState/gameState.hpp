@@ -20,13 +20,13 @@ namespace fe
                 public:
                     FLAT_ENGINE_API virtual void init() {}
 
-                    FLAT_ENGINE_EXPORT void preUpdate();
+                    FLAT_ENGINE_EXPORT virtual void preUpdate();
                     FLAT_ENGINE_EXPORT void update(float deltaTime);
-                    FLAT_ENGINE_EXPORT void postUpdate();
+                    FLAT_ENGINE_EXPORT virtual void postUpdate();
 
-                    FLAT_ENGINE_EXPORT void preDraw();
+                    FLAT_ENGINE_EXPORT virtual void preDraw();
                     FLAT_ENGINE_EXPORT void draw(sf::RenderWindow &app);
-                    FLAT_ENGINE_EXPORT void postDraw();
+                    FLAT_ENGINE_EXPORT virtual void postDraw();
 
                     FLAT_ENGINE_API virtual void deinit() {}
 
