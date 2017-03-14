@@ -4,7 +4,6 @@
 #define FLAT_ENGINE_EXPORT
 #include "../../flatEngineExport.hpp"
 #include "../graphic/sceneGraph.hpp"
-#include "../memory/poolAllocater.hpp"
 #include "../../entity/baseEntity.hpp"
 
 namespace sf
@@ -17,7 +16,6 @@ namespace fe
         class baseGameState
             {
                 private:
-                    fe::poolAllocater<baseEntity> m_entityPool;
                     fe::sceneGraph m_sceneGraph;
 
                 protected:
@@ -46,7 +44,8 @@ namespace fe
         template<typename T>
         inline void baseGameState::addEntity()
             {
-                T *ent = m_entityPool.alloc<T>();
+                auto mem = FE_ALLOC_STACK("GameStateEntity", sizeof(T));
+                T *ent = new(mem) T;
                 m_sceneGraph.addEntity(ent);
             }
     }
