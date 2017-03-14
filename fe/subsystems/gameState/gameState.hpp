@@ -14,7 +14,7 @@ namespace sf
 
 namespace fe
     {
-        class gameState
+        class baseGameState
             {
                 private:
                     fe::poolAllocater<baseEntity> m_entityPool;
@@ -39,10 +39,12 @@ namespace fe
                     FLAT_ENGINE_API virtual void deinit() {}
 
                     FLAT_ENGINE_API fe::sceneGraph *getSceneGraph();
+
+                    FLAT_ENGINE_API virtual ~baseGameState() {}
             };
 
         template<typename T>
-        inline void gameState::addEntity()
+        inline void baseGameState::addEntity()
             {
                 T *ent = m_entityPool.alloc<T>();
                 m_sceneGraph.addEntity(ent);

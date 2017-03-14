@@ -70,11 +70,22 @@ void fe::engine::startUp(unsigned long long totalMemory, unsigned long long stac
 
 void fe::engine::shutDown()
     {
+        // We manually call the destructors because we want them to go out of scope now
+
         m_gameStateMachine->shutDown();
+        m_gameStateMachine->~gameStateMachine();
+
         m_inputManager->shutDown();
+        m_inputManager->~inputManager();
+
         m_renderer.shutDown();
+        m_renderer.~renderer();
+
         m_logger->shutDown();
+        m_logger->~logger();
+
         m_memoryManager.shutDown();
+        m_memoryManager.~memoryManager();
     }
 
 void fe::engine::run()
@@ -102,13 +113,22 @@ fe::sceneGraph *fe::engine::getSceneGraph() const
     {
         return m_sceneGraph;
     }
+	
+fe::renderer *fe::engine::getRenderer()
+	{
+		return &m_renderer;
+	}
 
 const float fe::engine::getDeltaTime()
     {
         return m_deltaTimeStatic;
     }
 
-void fe::engine::queueState(gameState *state)
+void fe::engine::queueState(baseGameState *state)
     {
         m_gameStateMachine->queuePush(state);
+    }
+void fe::engine::queuePop()
+    {
+        m_gameStateMachine->queuePop();
     }

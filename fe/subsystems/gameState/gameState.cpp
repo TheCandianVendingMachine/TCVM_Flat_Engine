@@ -1,21 +1,21 @@
 #include "gameState.hpp"
 
-void fe::gameState::removeEntity(baseEntity *entity)
+void fe::baseGameState::removeEntity(baseEntity *entity)
     {
         m_sceneGraph.removeEntity(entity);
     }
 
-void fe::gameState::update(float deltaTime)
+void fe::baseGameState::update(float deltaTime)
     {
         m_sceneGraph.update(deltaTime);
     }
 
-void fe::gameState::draw(sf::RenderWindow &app)
+void fe::baseGameState::draw(sf::RenderWindow &app)
     {
         m_sceneGraph.draw(app);
     }
 
-fe::sceneGraph *fe::gameState::getSceneGraph()
+fe::sceneGraph *fe::baseGameState::getSceneGraph()
     {
         return &m_sceneGraph;
     }

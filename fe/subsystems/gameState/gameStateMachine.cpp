@@ -19,7 +19,7 @@ void fe::gameStateMachine::startUp()
 
 void fe::gameStateMachine::shutDown()
     {
-        FE_FREE_STACK("StateMachine", m_stateMarker);
+        pop();
     }
 
 fe::gameStateMachine &fe::gameStateMachine::get()
@@ -27,7 +27,7 @@ fe::gameStateMachine &fe::gameStateMachine::get()
         return *m_instance;
     }
 
-void fe::gameStateMachine::push(gameState *newState)
+void fe::gameStateMachine::push(baseGameState *newState)
     {
         pop();
         m_currentState = newState;
@@ -36,13 +36,17 @@ void fe::gameStateMachine::push(gameState *newState)
 
 void fe::gameStateMachine::pop()
     {
-        m_currentState->deinit();
+        if (m_currentState) 
+            {
+                m_currentState->deinit();
+                m_currentState->~baseGameState();
+            }
         FE_FREE_STACK("StateMachine", m_stateMarker);
         m_stateMarker = fe::memoryManager::get().getStackAllocater().getMarker();
         m_currentState = nullptr;
     }
 
-void fe::gameStateMachine::queuePush(gameState *newState)
+void fe::gameStateMachine::queuePush(baseGameState *newState)
     {
         m_nextState = newState;
     }

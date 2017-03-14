@@ -11,7 +11,7 @@ namespace sf
 
 namespace fe
     {
-        class gameState;
+        class baseGameState;
         class sceneGraph;
         
         class gameStateMachine
@@ -21,8 +21,8 @@ namespace fe
                     fe::stackAllocater::Marker m_stateMarker; // this marker is from m_previousState
                     bool m_pop;
 
-                    gameState *m_currentState;
-                    gameState *m_nextState;
+                    baseGameState *m_currentState;
+                    baseGameState *m_nextState;
 
                     static gameStateMachine *m_instance;
 
@@ -33,12 +33,12 @@ namespace fe
                     FLAT_ENGINE_API gameStateMachine &get();
 
                     // push the state as the current state
-                    FLAT_ENGINE_API void push(gameState *newState);
+                    FLAT_ENGINE_API void push(baseGameState *newState);
                     // pop the current state
                     FLAT_ENGINE_API void pop();
 
                     // Queue a push to happen next frame
-                    FLAT_ENGINE_API void queuePush(gameState *newState);
+                    FLAT_ENGINE_API void queuePush(baseGameState *newState);
                     // Queue a pop to happen next frame
                     FLAT_ENGINE_API void queuePop();
 
@@ -51,6 +51,8 @@ namespace fe
                     FLAT_ENGINE_API void postDraw();
 
                     FLAT_ENGINE_API fe::sceneGraph *getSceneGraph();
+
+                    FLAT_ENGINE_API virtual ~gameStateMachine() {}
 
             };
     }

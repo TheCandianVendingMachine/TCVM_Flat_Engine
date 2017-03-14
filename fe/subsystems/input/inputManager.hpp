@@ -35,6 +35,8 @@ namespace fe
 
                     FLAT_ENGINE_API bool keyEventPress(const std::string &id);
                     FLAT_ENGINE_API bool buttonEventPress(const std::string &id);
+                    
+                    FLAT_ENGINE_API virtual ~inputManager() {}
 
             };
     }

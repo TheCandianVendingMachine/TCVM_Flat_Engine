@@ -35,6 +35,8 @@ namespace fe
                     template<typename ...Args>
                     FLAT_ENGINE_API void logToConsole(Args &&...args);
 
+                    FLAT_ENGINE_API virtual ~logger() {}
+
             };
 
         template<typename ...Args>

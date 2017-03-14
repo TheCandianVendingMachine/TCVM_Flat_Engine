@@ -44,8 +44,10 @@ namespace fe
                     FLAT_ENGINE_API void run();
 
                     FLAT_ENGINE_API sceneGraph *getSceneGraph() const;
-
+					FLAT_ENGINE_API renderer *getRenderer();
+					
                     FLAT_ENGINE_API const static float getDeltaTime();
-                    FLAT_ENGINE_API void queueState(gameState *state);
+                    FLAT_ENGINE_API void queueState(baseGameState *state);
+					FLAT_ENGINE_API void queuePop();
             };
     }
