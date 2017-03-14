@@ -1,26 +1,30 @@
 #include "sceneGraph.hpp"
+#include "../../entity/baseEntity.hpp"
 
-void fe::sceneGraph::postUpdate()
+#include <algorithm>
+
+void fe::sceneGraph::update(float deltaTime)
     {
-        for (auto &drawable : m_drawables)
+        for (auto &ent : m_entities)
             {
-                m_nextDrawable.push(drawable);
+                ent->update(deltaTime);
             }
     }
 
-void fe::sceneGraph::addDrawable(sf::Drawable *draw)
+void fe::sceneGraph::addEntity(fe::baseEntity *ent)
     {
-        m_drawables.push_back(draw);
+        m_entities.push_back(ent);
     }
 
-sf::Drawable *fe::sceneGraph::getNextDrawable()
+void fe::sceneGraph::removeEntity(fe::baseEntity *ent)
     {
-        if (!m_nextDrawable.empty()) 
-            {
-                auto next = m_nextDrawable.front();
-                m_nextDrawable.pop();
-                return next;
-            }
+        m_entities.erase(std::remove(m_entities.begin(), m_entities.end(), ent), m_entities.end());
+    }
 
-        return nullptr;
+void fe::sceneGraph::draw(sf::RenderWindow &app)
+    {
+        for (auto &ent : m_entities)
+            {
+                ent->draw(app);
+            }
     }

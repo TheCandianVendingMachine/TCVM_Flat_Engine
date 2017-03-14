@@ -1,5 +1,5 @@
-// flatEngineImport.hpp
-// defines many useful macros to be used throughout the engine
+// flatEngineExport.hpp
+// just the macro to allow for exporting DLL's
 #pragma once
 
 #ifdef FLAT_ENGINE_EXPORT

@@ -36,12 +36,7 @@ void fe::engine::draw()
         m_renderer.getRenderWindow().clear(sf::Color::Black);
         if (m_sceneGraph) 
             {
-                auto nextDraw = m_sceneGraph->getNextDrawable();
-                while (nextDraw)
-                    {
-                        m_renderer.draw(*nextDraw);
-                        nextDraw = m_sceneGraph->getNextDrawable();
-                    }
+                m_sceneGraph->draw(m_renderer.getRenderWindow());
             }
         m_gameStateMachine->draw(m_renderer.getRenderWindow());
         m_renderer.getRenderWindow().display();
@@ -99,12 +94,6 @@ void fe::engine::run()
 
                 handleEvents();
                 update();
-
-                if (m_sceneGraph) 
-                    {
-                        m_sceneGraph->postUpdate();
-                    }
-
                 draw();
             }
     }
