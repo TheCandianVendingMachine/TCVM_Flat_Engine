@@ -15,7 +15,6 @@ namespace fe
                 static const bool m_isKeyboard = std::is_same<TInput, sf::Keyboard::Key>::value;
                 
                 TInput m_input;
-                bool m_eventPressed;
 
                 bool m_realTime;
                 bool m_inverse;
@@ -29,11 +28,11 @@ namespace fe
                 void handleEvent(const sf::Event &event)
                     {
                         bool correctKey = m_isKeyboard ? m_input == event.key.code : m_input == event.mouseButton.button;
-                        m_eventPressed = event.type == m_pressed && correctKey;
+                        bool eventPressed = event.type == m_pressed && correctKey;
 
                         if (m_callback && !m_realTime && correctKey &&
-                            ((m_eventPressed && !m_inverse) ||
-                            (!m_eventPressed && m_inverse)))
+                            ((eventPressed && !m_inverse) ||
+                            (!eventPressed && m_inverse)))
                             {
                                 m_callback();
                             }
@@ -54,6 +53,5 @@ namespace fe
                                 m_callback();
                             }
                     }
-
             };
     }

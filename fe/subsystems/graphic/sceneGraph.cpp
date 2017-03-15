@@ -23,8 +23,8 @@ void fe::sceneGraph::removeEntity(fe::baseEntity *ent)
 
 void fe::sceneGraph::draw(sf::RenderWindow &app)
     {
-        for (auto &ent : m_entities)
+        for (auto it = m_entities.begin(); it != m_entities.end(); ++it)
             {
-                ent->draw(app);
+                (*it)->draw(app);
             }
     }

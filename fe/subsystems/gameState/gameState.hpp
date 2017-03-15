@@ -42,10 +42,17 @@ namespace fe
             };
 
         template<typename T>
-        inline void baseGameState::addEntity()
+        void baseGameState::addEntity()
             {
                 auto mem = FE_ALLOC_STACK("GameStateEntity", sizeof(T));
-                T *ent = new(mem) T;
-                m_sceneGraph.addEntity(ent);
+                if (mem) 
+                    {
+                        T *ent = new(mem) T;
+                        m_sceneGraph.addEntity(ent);
+                    }
+                else
+                    {
+                        FE_LOG_ERROR("Cannot add entity");
+                    }
             }
     }

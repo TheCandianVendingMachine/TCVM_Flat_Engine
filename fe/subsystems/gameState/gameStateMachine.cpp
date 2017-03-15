@@ -29,7 +29,6 @@ fe::gameStateMachine &fe::gameStateMachine::get()
 
 void fe::gameStateMachine::push(baseGameState *newState)
     {
-        pop();
         m_currentState = newState;
         m_currentState->init();
     }
@@ -40,8 +39,11 @@ void fe::gameStateMachine::pop()
             {
                 m_currentState->deinit();
                 m_currentState->~baseGameState();
+
+                // This must be in this scope because if we free to the marker and there isnt a state, the marker will be pointing to an area made
+                // AFTER CONSTRUCTION. This will cause a ton of errors
+                FE_FREE_STACK("StateMachine", m_stateMarker);
             }
-        FE_FREE_STACK("StateMachine", m_stateMarker);
         m_stateMarker = fe::memoryManager::get().getStackAllocater().getMarker();
         m_currentState = nullptr;
     }

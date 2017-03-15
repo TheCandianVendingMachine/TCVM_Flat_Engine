@@ -86,7 +86,8 @@ fe::memoryLogger &fe::memoryManager::getMemoryLogger()
 
 void fe::memoryManager::printDebugInformation()
     {
-        FE_LOG( "Memory Debug Data\n",          m_memoryLogger->getLog(),
+        FE_LOG( "Memory Debug Data\n",
+                "Memory Allocation Log: ",      m_memoryLogger->getLog(),
 
                 "\nMemory Allocated: ",         m_memoryLogger->getMemoryAllocated(),
                 "\nMemory Left: ",              m_memoryLogger->getMemoryLeft(),

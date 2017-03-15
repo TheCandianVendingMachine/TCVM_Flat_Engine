@@ -34,10 +34,6 @@ void fe::engine::draw()
     {
         m_gameStateMachine->preDraw();
         m_renderer.getRenderWindow().clear(sf::Color::Black);
-        if (m_sceneGraph) 
-            {
-                m_sceneGraph->draw(m_renderer.getRenderWindow());
-            }
         m_gameStateMachine->draw(m_renderer.getRenderWindow());
         m_renderer.getRenderWindow().display();
 
@@ -52,9 +48,9 @@ fe::engine::engine(const float updateRate) :
     }
 
 void fe::engine::startUp(unsigned long long totalMemory, unsigned long long stackMemory)
-    {
+    { 
         m_memoryManager.startUp(totalMemory, stackMemory);
-
+ 
         m_logger = new logger;
         m_logger->startUp("log.log");
 

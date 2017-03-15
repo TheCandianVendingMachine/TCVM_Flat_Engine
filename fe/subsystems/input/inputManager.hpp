@@ -4,17 +4,15 @@
 #define FLAT_ENGINE_EXPORT
 #include "../../flatEngineExport.hpp"
 #include "input.hpp"
-
-#include <unordered_map>
-#include <string>
+#include <vector>
 
 namespace fe
     {
         class inputManager
             {
                 private:
-                    std::unordered_map<std::string, input<sf::Keyboard::Key>> m_keyboardInputs;
-                    std::unordered_map<std::string, input<sf::Mouse::Button>> m_mouseInputs;
+                    std::vector<input<sf::Keyboard::Key>> m_keyboardInputs;
+                    std::vector<input<sf::Mouse::Button>> m_mouseInputs;
 
                     static inputManager *m_instance;
 
@@ -27,15 +25,9 @@ namespace fe
 
                     FLAT_ENGINE_API static inputManager &get();
 
-                    FLAT_ENGINE_API void add(const std::string &id, input<sf::Keyboard::Key> input);
-                    FLAT_ENGINE_API void add(const std::string &id, input<sf::Mouse::Button> input);
+                    FLAT_ENGINE_API void add(input<sf::Keyboard::Key> input);
+                    FLAT_ENGINE_API void add(input<sf::Mouse::Button> input);
 
-                    FLAT_ENGINE_API bool isKeyPressed(const std::string &id);
-                    FLAT_ENGINE_API bool isButtonPressed(const std::string &id);
-
-                    FLAT_ENGINE_API bool keyEventPress(const std::string &id);
-                    FLAT_ENGINE_API bool buttonEventPress(const std::string &id);
-                    
                     FLAT_ENGINE_API virtual ~inputManager() {}
 
             };
