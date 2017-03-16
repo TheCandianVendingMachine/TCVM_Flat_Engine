@@ -77,5 +77,37 @@ namespace fe
                         values[7] /= rhs;
                         values[8] /= rhs;
                     }
+
+                void operator*=(const matrix3d &rhs)
+                    {
+                        /*
+                            [x1a1, y1a2, z1a3]
+                            [x2b1, y2b2, z2b3]
+                            [x3c1, y3c2, z3c3]
+                        */
+
+                        values[0] *= rhs.values[0];
+                        values[1] *= rhs.values[3];
+                        values[2] *= rhs.values[6];
+                        values[3] *= rhs.values[1];
+                        values[4] *= rhs.values[4];
+                        values[5] *= rhs.values[7];
+                        values[6] *= rhs.values[2];
+                        values[7] *= rhs.values[5];
+                        values[8] *= rhs.values[8];
+                    }
+                void operator/=(const matrix3d &rhs)
+                    {
+                        values[0] /= rhs.values[0];
+                        values[1] /= rhs.values[3];
+                        values[2] /= rhs.values[6];
+                        values[3] /= rhs.values[1];
+                        values[4] /= rhs.values[4];
+                        values[5] /= rhs.values[7];
+                        values[6] /= rhs.values[2];
+                        values[7] /= rhs.values[5];
+                        values[8] /= rhs.values[8];
+                    }
+
             };
     }
