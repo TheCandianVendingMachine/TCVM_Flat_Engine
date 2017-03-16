@@ -3,6 +3,7 @@
 #pragma once
 #define FLAT_ENGINE_EXPORT
 #include "../flatEngineExport.hpp"
+#include "Vector2.hpp"
 #include <utility>
 
 namespace fe 
@@ -105,8 +106,19 @@ namespace fe
                                a[6]*b[0] + a[7]*b[3] + a[8]*b[6], a[6]*b[1] + a[7]*b[4] + a[8]*b[7], a[6]*b[2] + a[7]*b[5] + a[8]*b[8]
                             };
 
+                        // if this becomes a problem we can modify the results in value[] directly
                         std::memcpy(values, result, sizeof(result));
                     }
  
+                fe::Vector2d translatePoint(const fe::Vector2d &point)
+                    {
+                        fe::Vector2d returnVector;
+
+                        returnVector.x = values[0] * point.x + values[3] * point.x + values[6] * point.x;
+                        returnVector.y = values[0] * point.y + values[3] * point.y + values[6] * point.y;
+
+                        return returnVector;
+                    }
+
             };
     }
