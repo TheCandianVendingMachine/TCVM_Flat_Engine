@@ -3,11 +3,19 @@
 #pragma once
 #include <SFML/Window/Event.hpp>
 #include <type_traits>
+#include "../../misc/function.hpp"
 
 namespace fe
     {
-        template<typename TInput>
-        struct input
+        // Really bad work around to be able to store inputs that may have a class member as a callback
+        struct inputBase 
+            {
+                virtual void handleEvent(const sf::Event &eve) {}
+                virtual void checkPressed() {}
+            };
+
+        template<typename TInput, typename Object = void>
+        struct input : public inputBase
             {
                 static constexpr sf::Event::EventType m_release = (std::is_same<TInput, sf::Keyboard::Key>::value) ? sf::Event::KeyReleased : sf::Event::MouseButtonReleased;
                 static constexpr sf::Event::EventType m_pressed = (std::is_same<TInput, sf::Keyboard::Key>::value) ? sf::Event::KeyPressed : sf::Event::MouseButtonPressed;
@@ -19,11 +27,11 @@ namespace fe
                 bool m_realTime;
                 bool m_inverse;
 
-                void (*m_callback)(void);
+                fe::function<void(Object)> m_callback;
 
                 input() {}
-                input(bool realTime, bool onPress, TInput input) : m_input(input), m_callback(nullptr), m_realTime(realTime), m_inverse(onPress) { }
-                input(bool realTime, bool onPress, TInput input, void (*callback)(void)) : m_input(input), m_callback(callback), m_realTime(realTime), m_inverse(onPress) { }
+                input(bool realTime, bool onPress, TInput input, fe::function<void(Object)> callback) : m_input(input), m_callback(callback), m_realTime(realTime), m_inverse(!onPress) { }
+                input(bool realTime, bool onPress, TInput input, void(*callback)()) : m_input(input), m_callback(callback), m_realTime(realTime), m_inverse(!onPress) { }
 
                 void handleEvent(const sf::Event &event)
                     {

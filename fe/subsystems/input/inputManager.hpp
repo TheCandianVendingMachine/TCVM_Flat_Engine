@@ -4,6 +4,7 @@
 #define FLAT_ENGINE_EXPORT
 #include "../../flatEngineExport.hpp"
 #include "input.hpp"
+#include "../memory/memoryManager.hpp"
 #include <vector>
 
 namespace fe
@@ -11,9 +12,7 @@ namespace fe
         class inputManager
             {
                 private:
-                    std::vector<input<sf::Keyboard::Key>> m_keyboardInputs;
-                    std::vector<input<sf::Mouse::Button>> m_mouseInputs;
-
+                    std::vector<inputBase*> m_inputs;
                     static inputManager *m_instance;
 
                 public:
@@ -28,7 +27,33 @@ namespace fe
                     FLAT_ENGINE_API void add(input<sf::Keyboard::Key> input);
                     FLAT_ENGINE_API void add(input<sf::Mouse::Button> input);
 
+                    template<typename Obj>
+                    void add(input<sf::Keyboard::Key, Obj*> input);
+                    template<typename Obj>
+                    void add(input<sf::Mouse::Button, Obj*> input);
+
                     FLAT_ENGINE_API virtual ~inputManager() {}
 
             };
+
+        template<typename Obj>
+        void fe::inputManager::add(input<sf::Keyboard::Key, Obj*> input)
+            {
+                void *mem = FE_ALLOC_STACK("InputManager", sizeof(fe::input<sf::Keyboard::Key, Obj*>));
+                fe::input<sf::Keyboard::Key, Obj*> *inputAlloc = new(mem) fe::input<sf::Keyboard::Key, Obj*>;
+
+                *inputAlloc = input;
+                m_inputs.push_back(inputAlloc);
+            }
+
+        template<typename Obj>
+        void fe::inputManager::add(input<sf::Mouse::Button, Obj*> input)
+            {
+                void *mem = FE_ALLOC_STACK("InputManager", sizeof(fe::input<sf::Mouse::Button, Obj*>));
+                fe::input<sf::Mouse::Button, Obj*> *inputAlloc = new(mem) fe::input<sf::Mouse::Button, Obj*>;
+
+                *inputAlloc = input;
+                m_inputs.push_back(inputAlloc);
+            }
+
     }

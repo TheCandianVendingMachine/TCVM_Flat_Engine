@@ -13,14 +13,25 @@ namespace fe
         struct function<Func(Args...)>
             {
                 Func(*fPtr)(Args...);
+
+                function()
+                    {
+                        fPtr = nullptr;
+                    }
+
                 function(Func(*function)(Args...))
                     {
                         fPtr = function;
                     }
 
-                Func operator()(Args... args)
+                Func operator()(Args &&...args)
                     {
                         return fPtr(args...);
+                    }
+
+                operator bool()
+                    {
+                        return fPtr != nullptr;
                     }
             };
 
@@ -30,12 +41,22 @@ namespace fe
                 Func(Obj::*fPtr)(Args...);
                 Obj *instance;
 
+                function()
+                    {
+                        fPtr = nullptr;
+                    }
+
                 function(Obj *inst, Func(Obj::*function)(Args...)) : fPtr(function), instance(inst)
                     {}
 
-                Func operator()(Args... args)
+                Func operator()(Args &&...args)
                     {
                         return (instance->*fPtr)(args...);
+                    }
+
+                operator bool()
+                    {
+                        return fPtr != nullptr;
                     }
             };
     }
