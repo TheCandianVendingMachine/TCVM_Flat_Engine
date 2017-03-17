@@ -4,7 +4,20 @@
 #define FLAT_ENGINE_EXPORT
 #include "../flatEngineExport.hpp"
 #include "Vector2.hpp"
-#include <utility>
+#include <cstring>
+#include <cmath>
+
+// Converts the wanted degrees to radians
+constexpr float operator "" _Deg(long double degrees)
+    {
+        return degrees * 3.14159f / 180.f;
+    }
+
+// Converts the wanted degrees to radians
+constexpr float operator "" _Deg(unsigned long long degrees)
+    {
+        return static_cast<long double>(degrees) * 3.14159f / 180.f;
+    }
 
 namespace fe 
     {
@@ -17,6 +30,7 @@ namespace fe
             {
                 typedef float matrix[9];
                 matrix values;
+                fe::Vector2d origin;
 
                 matrix3d()
                     {
@@ -146,11 +160,83 @@ namespace fe
                         values[8] = z;
                     }
 
+                matrix3d operator*(const matrix3d &rhs)
+                    {
+                        matrix3d ret;
+
+                        float x = values[0] * rhs.values[0] + values[1] * rhs.values[3] + values[2] * rhs.values[6]; // 11
+                        float y = values[0] * rhs.values[1] + values[1] * rhs.values[4] + values[2] * rhs.values[7]; // 21
+                        float z = values[0] * rhs.values[2] + values[1] * rhs.values[5] + values[2] * rhs.values[8]; // 31
+
+                        ret.values[0] = x;
+                        ret.values[1] = y;
+                        ret.values[2] = z;
+
+                        x = values[3] * rhs.values[0] + values[4] * rhs.values[3] + values[5] * rhs.values[6]; // 12
+                        y = values[3] * rhs.values[1] + values[4] * rhs.values[4] + values[5] * rhs.values[7]; // 22
+                        z = values[3] * rhs.values[2] + values[4] * rhs.values[5] + values[5] * rhs.values[8]; // 32
+
+                        ret.values[3] = x;
+                        ret.values[4] = y;
+                        ret.values[5] = z;
+
+                        x = values[6] * rhs.values[0] + values[7] * rhs.values[3] + values[8] * rhs.values[6]; // 13
+                        y = values[6] * rhs.values[1] + values[7] * rhs.values[4] + values[8] * rhs.values[7]; // 23
+                        z = values[6] * rhs.values[2] + values[7] * rhs.values[5] + values[8] * rhs.values[8]; // 33
+
+                        ret.values[6] = x;
+                        ret.values[7] = y;
+                        ret.values[8] = z;
+
+                        return ret;
+                    }
+
                 matrix3d transpose()
                     {
                         return matrix3d(values[0], values[3], values[6],
                                         values[1], values[4], values[7],
                                         values[2], values[5], values[8]);
+                    }
+
+                void translate(const fe::Vector2d &translation)
+                    {
+                        values[6] += translation.x;
+                        values[7] += translation.y;
+                    }
+
+                void rotate(float radians)
+                    {
+                        *this *= fe::matrix3d(cos(radians), -sin(radians), 0,
+                                              sin(radians), cos(radians),  0,
+                                              0,            0,             1);
+                    }
+
+                fe::Vector2d translatePoint(const fe::Vector2d &point)
+                    {
+                        return fe::Vector2d(values[6] + point.x, values[7] + point.y);
+                    }
+
+                fe::Vector2d rotatePoint(const fe::Vector2d &point)
+                    {
+                        return fe::Vector2d((point.x - origin.x) * values[0] + (point.y - origin.y) * values[1],
+                                            (point.x - origin.x) * values[3] + (point.y - origin.y) * values[4]);
+                    }
+
+                fe::Vector2d rotatePoint(const fe::Vector2d &point, float radians)
+                    {
+                        return (*this * fe::matrix3d(cos(radians), -sin(radians), 0,
+                                                     sin(radians), cos(radians),  0,
+                                                     0,            0,             1)).rotatePoint(point);
+                    }
+
+                // combines the rotation, scale, and translation of the matrix and applies it to the point
+                fe::Vector2d transformPoint(const fe::Vector2d &point)
+                    {
+                        fe::Vector2d transformed = point;
+                        transformed = translatePoint(transformed);
+                        transformed = rotatePoint(transformed);
+
+                        return transformed;
                     }
 
             };
