@@ -8,10 +8,14 @@
 
 namespace fe 
     {
+        struct matrix3d;
+        matrix3d operator*(float lhs, const matrix3d &rhs);
+        matrix3d operator+(float lhs, const matrix3d &rhs);
+        matrix3d operator-(float lhs, const matrix3d &rhs);
+
         struct matrix3d
             {
                 typedef float matrix[9];
-
                 matrix values;
 
                 matrix3d()
@@ -56,6 +60,27 @@ namespace fe
                         return *this;
                     }
 
+                matrix3d operator*(const float &rhs)
+                    {
+                        return matrix3d(values[0] * rhs, values[1] * rhs, values[2] * rhs,
+                                        values[3] * rhs, values[4] * rhs, values[5] * rhs,
+                                        values[6] * rhs, values[7] * rhs, values[8] * rhs);
+                    }
+
+                matrix3d operator+(const float &rhs)
+                    {
+                        return matrix3d(values[0] + rhs, values[1] + rhs, values[2] + rhs,
+                                        values[3] + rhs, values[4] + rhs, values[5] + rhs,
+                                        values[6] + rhs, values[7] + rhs, values[8] + rhs);
+                    }
+
+                matrix3d operator-(const float &rhs)
+                    {
+                        return matrix3d(values[0] - rhs, values[1] - rhs, values[2] - rhs,
+                                        values[3] - rhs, values[4] - rhs, values[5] - rhs,
+                                        values[6] - rhs, values[7] - rhs, values[8] - rhs);
+                    }
+
                 void operator+=(const matrix3d &other)
                     {
                         values[0] += other.values[0];
@@ -93,18 +118,6 @@ namespace fe
                         values[7] *= rhs;
                         values[8] *= rhs;
                     }
-                void operator/=(const float &rhs)
-                    {
-                        values[0] /= rhs;
-                        values[1] /= rhs;
-                        values[2] /= rhs;
-                        values[3] /= rhs;
-                        values[4] /= rhs;
-                        values[5] /= rhs;
-                        values[6] /= rhs;
-                        values[7] /= rhs;
-                        values[8] /= rhs;
-                    }
 
                 void operator*=(const matrix3d &rhs)
                     {
@@ -133,8 +146,34 @@ namespace fe
                         values[8] = z;
                     }
 
-
+                matrix3d transpose()
+                    {
+                        return matrix3d(values[0], values[3], values[6],
+                                        values[1], values[4], values[7],
+                                        values[2], values[5], values[8]);
+                    }
 
             };
+
+        matrix3d operator*(float lhs, const matrix3d &rhs)
+            {
+                return matrix3d(rhs.values[0] * lhs, rhs.values[1] * lhs, rhs.values[2] * lhs,
+                                rhs.values[3] * lhs, rhs.values[4] * lhs, rhs.values[5] * lhs,
+                                rhs.values[6] * lhs, rhs.values[7] * lhs, rhs.values[8] * lhs);
+            }
+
+        matrix3d operator+(float lhs, const matrix3d &rhs)
+            {
+                return matrix3d(rhs.values[0] + lhs, rhs.values[1] + lhs, rhs.values[2] + lhs,
+                                rhs.values[3] + lhs, rhs.values[4] + lhs, rhs.values[5] + lhs,
+                                rhs.values[6] + lhs, rhs.values[7] + lhs, rhs.values[8] + lhs);
+            }
+
+        matrix3d operator-(float lhs, const matrix3d &rhs)
+            {
+                return matrix3d(rhs.values[0] - lhs, rhs.values[1] - lhs, rhs.values[2] - lhs,
+                                rhs.values[3] - lhs, rhs.values[4] - lhs, rhs.values[5] - lhs,
+                                rhs.values[6] - lhs, rhs.values[7] - lhs, rhs.values[8] - lhs);
+            }
 
     }
