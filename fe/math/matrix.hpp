@@ -15,23 +15,35 @@ namespace fe
                 matrix values;
 
                 matrix3d()
-                    {}
-
-                matrix3d(float x1, float y1, float z1,
-                         float x2, float y2, float z2,
-                         float x3, float y3, float z3)
                     {
-                        values[0] = x1;
-                        values[1] = y1;
-                        values[2] = z1;
+                        // creates an identiy matrix
+                        values[0] = 1.f;
+                        values[4] = 1.f;
+                        values[8] = 1.f;
 
-                        values[3] = x2;
-                        values[4] = y2;
-                        values[5] = z2;
+                        values[1] = 0.f;
+                        values[2] = 0.f;
+                        values[3] = 0.f;
+                        values[5] = 0.f;
+                        values[6] = 0.f;
+                        values[7] = 0.f;
+                    }
 
-                        values[6] = x3;
-                        values[7] = y3;
-                        values[8] = z3;
+                matrix3d(float x11, float y12, float z13,
+                         float x21, float y22, float z23,
+                         float x31, float y32, float z33)
+                    {
+                        values[0] = x11;
+                        values[1] = y12;
+                        values[2] = z13;
+
+                        values[3] = x21;
+                        values[4] = y22;
+                        values[5] = z23;
+
+                        values[6] = x31;
+                        values[7] = y32;
+                        values[8] = z33;
                     }
 
                 matrix3d &operator=(const matrix3d &rhs)
@@ -96,29 +108,33 @@ namespace fe
 
                 void operator*=(const matrix3d &rhs)
                     {
-                        const matrix &a = values;
-                        const matrix &b = rhs.values;
+                        float x = values[0] * rhs.values[0] + values[1] * rhs.values[3] + values[2] * rhs.values[6]; // 11
+                        float y = values[0] * rhs.values[1] + values[1] * rhs.values[4] + values[2] * rhs.values[7]; // 21
+                        float z = values[0] * rhs.values[2] + values[1] * rhs.values[5] + values[2] * rhs.values[8]; // 31
 
-                        matrix result = 
-                            {
-                               a[0]*b[0] + a[1]*b[3] + a[2]*b[6], a[0]*b[1] + a[1]*b[4] + a[2]*b[7], a[0]*b[2] + a[1]*b[5] + a[2]*b[8],
-                               a[3]*b[0] + a[4]*b[3] + a[5]*b[6], a[3]*b[1] + a[4]*b[4] + a[5]*b[7], a[3]*b[2] + a[4]*b[5] + a[5]*b[8],
-                               a[6]*b[0] + a[7]*b[3] + a[8]*b[6], a[6]*b[1] + a[7]*b[4] + a[8]*b[7], a[6]*b[2] + a[7]*b[5] + a[8]*b[8]
-                            };
+                        values[0] = x;
+                        values[1] = y;
+                        values[2] = z;
 
-                        // if this becomes a problem we can modify the results in value[] directly
-                        std::memcpy(values, result, sizeof(result));
+                        x = values[3] * rhs.values[0] + values[4] * rhs.values[3] + values[5] * rhs.values[6]; // 12
+                        y = values[3] * rhs.values[1] + values[4] * rhs.values[4] + values[5] * rhs.values[7]; // 22
+                        z = values[3] * rhs.values[2] + values[4] * rhs.values[5] + values[5] * rhs.values[8]; // 32
+
+                        values[3] = x;
+                        values[4] = y;
+                        values[5] = z;
+
+                        x = values[6] * rhs.values[0] + values[7] * rhs.values[3] + values[8] * rhs.values[6]; // 13
+                        y = values[6] * rhs.values[1] + values[7] * rhs.values[4] + values[8] * rhs.values[7]; // 23
+                        z = values[6] * rhs.values[2] + values[7] * rhs.values[5] + values[8] * rhs.values[8]; // 33
+
+                        values[6] = x;
+                        values[7] = y;
+                        values[8] = z;
                     }
- 
-                fe::Vector2d translatePoint(const fe::Vector2d &point)
-                    {
-                        fe::Vector2d returnVector;
 
-                        returnVector.x = values[0] * point.x + values[3] * point.x + values[6] * point.x;
-                        returnVector.y = values[0] * point.y + values[3] * point.y + values[6] * point.y;
 
-                        return returnVector;
-                    }
 
             };
+
     }
