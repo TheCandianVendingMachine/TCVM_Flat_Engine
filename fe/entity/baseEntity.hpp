@@ -3,6 +3,8 @@
 #pragma once
 #define FLAT_ENGINE_EXPORT
 #include "../flatEngineExport.hpp"
+#include "transformable.hpp"
+#include "drawable.hpp"
 
 namespace sf
     {
@@ -11,7 +13,7 @@ namespace sf
 
 namespace fe
     {
-        class baseEntity
+        class baseEntity : public fe::transformable, public fe::drawable
             {
                 public:
                     FLAT_ENGINE_API baseEntity();
@@ -19,10 +21,6 @@ namespace fe
 
                     // update functions
                     FLAT_ENGINE_API virtual void update(float deltaTime) = 0;
-
-                    // Draw functions
-                    FLAT_ENGINE_API virtual void draw(sf::RenderWindow &app) {}
-
 
             };
     }

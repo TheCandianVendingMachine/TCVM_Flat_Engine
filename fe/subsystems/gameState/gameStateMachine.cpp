@@ -2,6 +2,9 @@
 #include "../memory/memoryManager.hpp"
 #include "gameState.hpp"
 
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/RenderTarget.hpp>
+
 fe::gameStateMachine *fe::gameStateMachine::m_instance = nullptr;
 
 void fe::gameStateMachine::startUp()
@@ -91,6 +94,7 @@ void fe::gameStateMachine::postUpdate()
         if (m_currentState)
             {
                 m_currentState->postUpdate();
+                m_currentState->sceneGraphUpdate();
             }
     }
 

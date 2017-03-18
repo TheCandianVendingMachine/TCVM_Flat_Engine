@@ -21,7 +21,6 @@ namespace fe
 
                     fe::logger *m_logger;
                     fe::inputManager *m_inputManager;
-                    fe::sceneGraph *m_sceneGraph;
                     fe::gameStateMachine *m_gameStateMachine;
 
                 private:
@@ -43,7 +42,6 @@ namespace fe
 
                     FLAT_ENGINE_API void run();
 
-                    FLAT_ENGINE_API sceneGraph *getSceneGraph() const;
 					FLAT_ENGINE_API renderer *getRenderer();
 					
                     FLAT_ENGINE_API const static float getDeltaTime();

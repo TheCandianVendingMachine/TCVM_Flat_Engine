@@ -105,11 +105,6 @@ void fe::engine::run()
             }
     }
 
-fe::sceneGraph *fe::engine::getSceneGraph() const
-    {
-        return m_sceneGraph;
-    }
-	
 fe::renderer *fe::engine::getRenderer()
 	{
 		return &m_renderer;

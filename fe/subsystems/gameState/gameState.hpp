@@ -8,7 +8,7 @@
 
 namespace sf
     {
-        class RenderWindow;
+        class RenderTarget;
     }
 
 namespace fe
@@ -28,10 +28,11 @@ namespace fe
 
                     FLAT_ENGINE_API virtual void preUpdate() {}
                     FLAT_ENGINE_API void update(float deltaTime);
+                    FLAT_ENGINE_API void sceneGraphUpdate();
                     FLAT_ENGINE_API virtual void postUpdate() {}
 
                     FLAT_ENGINE_API virtual void preDraw() {}
-                    FLAT_ENGINE_API void draw(sf::RenderWindow &app);
+                    FLAT_ENGINE_API void draw(sf::RenderTarget &app);
                     FLAT_ENGINE_API virtual void postDraw() {}
 
                     FLAT_ENGINE_API virtual void deinit() {}
