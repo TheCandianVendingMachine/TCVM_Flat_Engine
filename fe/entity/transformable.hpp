@@ -15,6 +15,8 @@ namespace fe
                     fe::Vector2d m_position;
                     float m_rotation;
 
+                    bool m_update;
+
                 public:
                     FLAT_ENGINE_API transformable();
 

@@ -24,6 +24,8 @@ namespace fe
                     fe::gameStateMachine *m_gameStateMachine;
 
                 private:
+                    static fe::time m_elapsedFrameTime; // used to calculate fps
+
                     const float m_deltaTime;
                     static float m_deltaTimeStatic;
                     float m_accumulator;
@@ -45,6 +47,8 @@ namespace fe
 					FLAT_ENGINE_API renderer *getRenderer();
 					
                     FLAT_ENGINE_API const static float getDeltaTime();
+                    FLAT_ENGINE_API const static float getFPS();
+
                     FLAT_ENGINE_API void queueState(baseGameState *state);
 					FLAT_ENGINE_API void queuePop();
             };

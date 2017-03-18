@@ -18,6 +18,10 @@ namespace fe
             {
                 private:
                     sf::VertexArray m_batch;
+                    unsigned int m_maxVertexCount; // optimization to resize the batch after every clear so we can avoid dynamic allocations
+                    unsigned int m_lastVertexCount;
+
+                    unsigned int m_index; // index of the current sprite
 
                 public:
                     FLAT_ENGINE_API spriteBatch();

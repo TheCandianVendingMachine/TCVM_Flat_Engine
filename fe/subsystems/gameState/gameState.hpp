@@ -19,8 +19,8 @@ namespace fe
                     fe::sceneGraph m_sceneGraph;
 
                 protected:
-                    template<typename T>
-                    FLAT_ENGINE_API void addEntity();
+                    template<typename T, typename ...Args>
+                    FLAT_ENGINE_API void addEntity(Args &&...args);
                     FLAT_ENGINE_API void removeEntity(baseEntity *entity);
 
                 public:
@@ -42,13 +42,13 @@ namespace fe
                     FLAT_ENGINE_API virtual ~baseGameState() {}
             };
 
-        template<typename T>
-        void baseGameState::addEntity()
+        template<typename T, typename ...Args>
+        void baseGameState::addEntity(Args &&...args)
             {
                 auto mem = FE_ALLOC_STACK("GameStateEntity", sizeof(T));
                 if (mem) 
                     {
-                        T *ent = new(mem) T;
+                        T *ent = new(mem) T(args...);
                         m_sceneGraph.addEntity(ent);
                     }
                 else

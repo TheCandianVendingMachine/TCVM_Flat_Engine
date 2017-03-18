@@ -13,9 +13,9 @@ namespace fe
                     // time as microseconds
                     long long m_time;
 
-                    friend FLAT_ENGINE_API fe::time seconds(const long long in);
-                    friend FLAT_ENGINE_API fe::time milliseconds(const long long in);
-                    friend FLAT_ENGINE_API fe::time microseconds(const long long in);
+                    friend FLAT_ENGINE_API fe::time seconds(const long double in);
+                    friend FLAT_ENGINE_API fe::time milliseconds(const long double in);
+                    friend FLAT_ENGINE_API fe::time microseconds(const long double in);
 
                 public:
                     FLAT_ENGINE_API time();
@@ -29,12 +29,14 @@ namespace fe
                     FLAT_ENGINE_API void operator+=(const fe::time &rhs);
                     FLAT_ENGINE_API void operator-=(const fe::time &rhs);
 
+                    FLAT_ENGINE_API fe::time &operator=(const fe::time &rhs);
+
                     FLAT_ENGINE_API bool operator==(const fe::time &rhs);
 
             };
 
-        FLAT_ENGINE_API fe::time seconds(const long long in);
-        FLAT_ENGINE_API fe::time milliseconds(const long long in);
-        FLAT_ENGINE_API fe::time microseconds(const long long in);
+        FLAT_ENGINE_API fe::time seconds(const long double in);
+        FLAT_ENGINE_API fe::time milliseconds(const long double in);
+        FLAT_ENGINE_API fe::time microseconds(const long double in);
         FLAT_ENGINE_API fe::time zero();
     }

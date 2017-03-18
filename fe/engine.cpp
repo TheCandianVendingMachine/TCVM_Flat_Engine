@@ -3,6 +3,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 
 float fe::engine::m_deltaTimeStatic = 0.f;
+fe::time fe::engine::m_elapsedFrameTime = fe::time();
 
 void fe::engine::handleEvents()
     {
@@ -27,6 +28,7 @@ void fe::engine::update()
                 m_gameStateMachine->update(m_deltaTime);
                 m_accumulator -= m_deltaTime;
             }
+
         m_gameStateMachine->postUpdate();
     }
 
@@ -102,6 +104,8 @@ void fe::engine::run()
                 handleEvents();
                 update();
                 draw();
+
+                m_elapsedFrameTime = fe::seconds(frameTime);
             }
     }
 
@@ -113,6 +117,11 @@ fe::renderer *fe::engine::getRenderer()
 const float fe::engine::getDeltaTime()
     {
         return m_deltaTimeStatic;
+    }
+
+const float fe::engine::getFPS()
+    {
+        return (1000000.0f / m_elapsedFrameTime.asMicroseconds());
     }
 
 void fe::engine::queueState(baseGameState *state)

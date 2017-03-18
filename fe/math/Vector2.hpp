@@ -54,10 +54,10 @@ namespace fe
                 friend void operator*=(const dataType &lhs, Vector2<dataType> &rhs);
                 friend void operator/=(const dataType &lhs, Vector2<dataType> &rhs);
 
-                float magnitude()    { return std::sqrt(x * x + y * y); }
-                float magnitudeSqr() { return x * x + y * y; }
+                float magnitude() const { return std::sqrt(x * x + y * y); }
+                float magnitudeSqr() const { return x * x + y * y; }
 
-                Vector2<dataType> normalize() 
+                Vector2<dataType> normalize() const
                     { 
                         float mag = magnitude();
                         if (mag != 0.f)
@@ -67,12 +67,12 @@ namespace fe
                         return Vector2<dataType>();
                     }
 
-                Vector2<dataType> normal() { return Vector2(-y, x); }
+                Vector2<dataType> normal() const { return Vector2(-y, x); }
 
-                float dot(const Vector2<dataType> &other) { return x * other.x + y * other.y; }
-                float cross(const Vector2<dataType> &other) { return x * other.y - y * other.x; }
+                float dot(const Vector2<dataType> &other) const { return x * other.x + y * other.y; }
+                float cross(const Vector2<dataType> &other) const { return x * other.y - y * other.x; }
 
-                Vector2<dataType> project(Vector2<dataType> &other) 
+                Vector2<dataType> project(Vector2<dataType> &other) const
                     {   
                         float mag = other.magnitudeSqr();
                         if (mag != 0) 

@@ -41,27 +41,36 @@ void fe::time::operator-=(const fe::time &rhs)
         m_time -= rhs.m_time;
     }
 
+fe::time &fe::time::operator=(const fe::time &rhs)
+    {
+        if (this != &rhs)
+            {
+                m_time = rhs.m_time;
+            }
+        return *this;
+    }
+
 bool fe::time::operator==(const fe::time &rhs)
     {
         return m_time = rhs.m_time;
     }
 
 
-fe::time fe::seconds(const long long in)
+fe::time fe::seconds(const long double in)
     {
         fe::time ret;
-        ret.m_time = static_cast<long long>(static_cast<long double>(in) / 0.000001);
+        ret.m_time = static_cast<long long>(in / 0.000001);
         return ret;
     }
 
-fe::time fe::milliseconds(const long long in)
+fe::time fe::milliseconds(const long double in)
     {
         fe::time ret;
-        ret.m_time = static_cast<long long>(static_cast<long double>(in) / 0.001);
+        ret.m_time = static_cast<long long>(in / 0.001);
         return ret;
     }
 
-fe::time fe::microseconds(const long long in)
+fe::time fe::microseconds(const long double in)
     {
         fe::time ret;
         ret.m_time = in;
