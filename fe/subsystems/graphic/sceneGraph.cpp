@@ -10,6 +10,7 @@
 
 void fe::sceneGraph::update(float deltaTime)
     {
+        m_batch.clear();
         for (auto &ent : m_entities)
             {
                 ent->update(deltaTime);

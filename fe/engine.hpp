@@ -24,7 +24,7 @@ namespace fe
                     fe::gameStateMachine *m_gameStateMachine;
 
                 private:
-                    static fe::time m_elapsedFrameTime; // used to calculate fps
+                    static float m_fps; // used to calculate fps
 
                     const float m_deltaTime;
                     static float m_deltaTimeStatic;

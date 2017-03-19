@@ -3,7 +3,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 
 float fe::engine::m_deltaTimeStatic = 0.f;
-fe::time fe::engine::m_elapsedFrameTime = fe::time();
+float fe::engine::m_fps = 0.f;
 
 void fe::engine::handleEvents()
     {
@@ -90,7 +90,9 @@ void fe::engine::run()
     {
         fe::clock updateClock;
         float currentTime = updateClock.getTime().asSeconds();
+        float startTime = currentTime;
 
+        int framesPassed = 0;
         while (m_renderer.getRenderWindow().isOpen())
             {
                 float newTime = updateClock.getTime().asSeconds();
@@ -105,7 +107,9 @@ void fe::engine::run()
                 update();
                 draw();
 
-                m_elapsedFrameTime = fe::seconds(frameTime);
+                framesPassed++;
+                m_fps = framesPassed / (updateClock.getTime().asSeconds() - startTime);
+                framesPassed = 0;
             }
     }
 
@@ -121,7 +125,7 @@ const float fe::engine::getDeltaTime()
 
 const float fe::engine::getFPS()
     {
-        return (1000000.0f / m_elapsedFrameTime.asMicroseconds());
+        return m_fps;
     }
 
 void fe::engine::queueState(baseGameState *state)
