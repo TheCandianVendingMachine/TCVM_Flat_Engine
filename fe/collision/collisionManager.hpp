@@ -14,6 +14,6 @@ namespace fe
         FLAT_ENGINE_API bool doesContain(const AABB &first, const Vector2d &point);
 
         // Ray-Collider functions
-        FLAT_ENGINE_API bool doesRayIntersect(AABB &first, Vector2d &origin, Vector2d &direction);
+        FLAT_ENGINE_API bool doesRayIntersect(const AABB &first, const Vector2d &origin, const Vector2d &direction);
 
     }

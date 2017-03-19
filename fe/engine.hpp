@@ -25,9 +25,11 @@ namespace fe
 
                 private:
                     static float m_fps; // used to calculate fps
+                    static float m_deltaTimeStatic;
+
+                    static fe::Vector2d m_mousePosition;
 
                     const float m_deltaTime;
-                    static float m_deltaTimeStatic;
                     float m_accumulator;
                                         
                 private:
@@ -48,6 +50,8 @@ namespace fe
 					
                     FLAT_ENGINE_API const static float getDeltaTime();
                     FLAT_ENGINE_API const static float getFPS();
+
+                    FLAT_ENGINE_API static const fe::Vector2d getMousePos();
 
                     FLAT_ENGINE_API void queueState(baseGameState *state);
 					FLAT_ENGINE_API void queuePop();

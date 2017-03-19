@@ -16,7 +16,7 @@ bool fe::doesContain(const AABB &first, const Vector2d &point)
                point.y > first.m_min.y + first.m_position.y && point.y < first.m_max.y + first.m_position.y;
     }
 
-bool fe::doesRayIntersect(AABB &first, Vector2d &origin, Vector2d &direction)
+bool fe::doesRayIntersect(const AABB &first, const Vector2d &origin, const Vector2d &direction)
     {
         float tMin = 0.f;
         float tMax = 500000.f; // max distance ray can travel
@@ -29,13 +29,13 @@ bool fe::doesRayIntersect(AABB &first, Vector2d &origin, Vector2d &direction)
                 if (abs(direction[i]) < EPSILON)
                     {
                         // Ray is parallel to slab. Doesnt hit if its not inside
-                        if (origin[i] < first.m_min[i] || origin[i] > first.m_max[i]) return false;
+                        if (origin[i] < (first.m_min[i] + first.m_position[i]) || origin[i] > (first.m_max[i] + first.m_position[i])) return false;
                     }
                 else
                     {
                         float ood = 1.f / direction[i];
-                        float t1 = (first.m_min[i] - origin[i]) * ood;
-                        float t2 = (first.m_max[i] - origin[i]) * ood;
+                        float t1 = ((first.m_min[i] + first.m_position[i]) - origin[i]) * ood;
+                        float t2 = ((first.m_max[i] + first.m_position[i]) - origin[i]) * ood;
 
                         if (t1 > t2)
                             {

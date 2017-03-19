@@ -4,6 +4,7 @@
 
 float fe::engine::m_deltaTimeStatic = 0.f;
 float fe::engine::m_fps = 0.f;
+fe::Vector2d fe::engine::m_mousePosition = fe::Vector2d();
 
 void fe::engine::handleEvents()
     {
@@ -13,6 +14,10 @@ void fe::engine::handleEvents()
                 if (currentEvent.type == sf::Event::Closed)
                     {
                         m_renderer.getRenderWindow().close();
+                    }
+                else if (currentEvent.type == sf::Event::MouseMoved)
+                    {
+                        m_mousePosition = m_renderer.getRenderWindow().mapPixelToCoords({ currentEvent.mouseMove.x, currentEvent.mouseMove.y });
                     }
 
                 m_inputManager->handleEvents(currentEvent);
@@ -126,6 +131,11 @@ const float fe::engine::getDeltaTime()
 const float fe::engine::getFPS()
     {
         return m_fps;
+    }
+
+const fe::Vector2d fe::engine::getMousePos()
+    {
+        return m_mousePosition;
     }
 
 void fe::engine::queueState(baseGameState *state)
