@@ -21,7 +21,7 @@ void fe::transformable::setOrigin(const fe::Vector2d &origin)
         m_update |= true;
     }
 
-fe::Vector2d fe::transformable::getPosition()
+const fe::Vector2d &fe::transformable::getPosition()
     {
         return m_position;
     }

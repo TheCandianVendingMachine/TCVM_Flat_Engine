@@ -28,7 +28,7 @@ namespace fe
                     FLAT_ENGINE_API void setOrigin(const fe::Vector2d &origin);
 
                     // Get the position in the world
-                    FLAT_ENGINE_API fe::Vector2d getPosition();
+                    FLAT_ENGINE_API const fe::Vector2d &getPosition();
                     // Get the position in radians
                     FLAT_ENGINE_API float getRotation();
 
