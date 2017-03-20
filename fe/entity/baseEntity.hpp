@@ -5,6 +5,7 @@
 #include "../flatEngineExport.hpp"
 #include "transformable.hpp"
 #include "drawable.hpp"
+#include "../collision/colliders.hpp"
 
 namespace sf
     {
@@ -13,6 +14,7 @@ namespace sf
 
 namespace fe
     {
+        struct collider;
         class baseEntity : public fe::transformable, public fe::drawable
             {
                 public:
@@ -22,5 +24,7 @@ namespace fe
                     // update functions
                     FLAT_ENGINE_API virtual void update(float deltaTime) = 0;
 
+                    // Returns the collider that the object has
+                    FLAT_ENGINE_API virtual const fe::collider &getCollider() = 0;
             };
     }

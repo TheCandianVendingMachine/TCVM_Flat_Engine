@@ -7,18 +7,17 @@
 
 namespace fe
     {
-        class collider;
-
+        struct collider;
         class collisonHandler
             {
                 private:
-                    std::vector<collider*> m_colliders;
+                    std::vector<const collider*> m_colliders;
 
                 public:
-                    void add(collider *collider);
-                    void remove(collider *collider);
+                    FLAT_ENGINE_API void add(const collider *collider);
+                    FLAT_ENGINE_API void remove(const collider *collider);
 
-                    void handleCollisions();
+                    FLAT_ENGINE_API void handleCollisions();
 
             };
     }

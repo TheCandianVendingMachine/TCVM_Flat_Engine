@@ -94,7 +94,7 @@ void fe::gameStateMachine::postUpdate()
         if (m_currentState)
             {
                 m_currentState->postUpdate();
-                m_currentState->sceneGraphUpdate();
+                m_currentState->postUpdateDefined();
             }
     }
 

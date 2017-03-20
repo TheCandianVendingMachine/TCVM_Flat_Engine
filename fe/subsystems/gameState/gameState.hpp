@@ -5,6 +5,7 @@
 #include "../../flatEngineExport.hpp"
 #include "../graphic/sceneGraph.hpp"
 #include "../../entity/baseEntity.hpp"
+#include "../collision/collisionHandler.hpp"
 
 namespace sf
     {
@@ -17,6 +18,7 @@ namespace fe
             {
                 private:
                     fe::sceneGraph m_sceneGraph;
+                    fe::collisonHandler m_collisionHandler;
 
                 protected:
                     template<typename T, typename ...Args>
@@ -28,7 +30,7 @@ namespace fe
 
                     FLAT_ENGINE_API virtual void preUpdate() {}
                     FLAT_ENGINE_API void update(float deltaTime);
-                    FLAT_ENGINE_API void sceneGraphUpdate();
+                    FLAT_ENGINE_API void postUpdateDefined();
                     FLAT_ENGINE_API virtual void postUpdate() {}
 
                     FLAT_ENGINE_API virtual void preDraw() {}
@@ -50,6 +52,8 @@ namespace fe
                     {
                         T *ent = new(mem) T(args...);
                         m_sceneGraph.addEntity(ent);
+                        auto c = ent->getCollider();
+                        m_collisionHandler.add(&c);
                     }
                 else
                     {

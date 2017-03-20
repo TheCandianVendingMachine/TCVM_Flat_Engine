@@ -5,6 +5,7 @@
 float fe::engine::m_deltaTimeStatic = 0.f;
 float fe::engine::m_fps = 0.f;
 fe::Vector2d fe::engine::m_mousePosition = fe::Vector2d();
+fe::Vector2d fe::engine::m_screenSize = fe::Vector2d();
 
 void fe::engine::handleEvents()
     {
@@ -69,6 +70,8 @@ void fe::engine::startUp(unsigned long long totalMemory, unsigned long long stac
 
         m_gameStateMachine = new gameStateMachine;
         m_gameStateMachine->startUp();
+
+        m_screenSize = m_renderer.getWindowSize();
     }
 
 void fe::engine::shutDown()
@@ -131,6 +134,11 @@ const float fe::engine::getDeltaTime()
 const float fe::engine::getFPS()
     {
         return m_fps;
+    }
+
+const fe::Vector2d fe::engine::getWindowSize()
+    {
+        return m_screenSize;
     }
 
 const fe::Vector2d fe::engine::getMousePos()
