@@ -6,13 +6,13 @@ fe::transformable::transformable() : m_rotation(0.f), m_update(true)
 void fe::transformable::setPosition(const fe::Vector2d &position)
     {
         m_position = position;
-        m_update |= (position.magnitudeSqr() != 0.f);
+        m_update = true;
     }
 
 void fe::transformable::setRotation(const float &radians)
     {
         m_rotation = radians;
-        m_update |= (radians != 0.f);
+        m_update = true;
     }
 
 void fe::transformable::setOrigin(const fe::Vector2d &origin)
