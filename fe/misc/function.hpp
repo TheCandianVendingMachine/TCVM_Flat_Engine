@@ -33,6 +33,13 @@ namespace fe
                     {
                         return fPtr != nullptr;
                     }
+
+                // Defines the operator that casts to void* to return the function pointer bound to the object
+                // Hacky way to be able to assing a function pointer this type
+                void(*getFPtr())(Args...)
+                    {
+                        return fPtr;
+                    }
             };
 
         template<typename Obj, typename Func, typename ...Args>
@@ -57,6 +64,13 @@ namespace fe
                 operator bool()
                     {
                         return fPtr != nullptr;
+                    }
+
+                // Defines the operator that casts to void* to return the function pointer bound to the object
+                // Hacky way to be able to assing a function pointer this type
+                void(Obj::*getFPtr())(Args...)
+                    {
+                        return fPtr;
                     }
             };
     }

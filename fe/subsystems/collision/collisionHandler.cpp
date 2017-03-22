@@ -1,7 +1,7 @@
 #include "collisionHandler.hpp"
-#include <algorithm>
 #include "../../collision/colliders.hpp"
- 
+#include <algorithm>
+
 void fe::collisonHandler::add(const collider *collider)
     {
         m_colliders.push_back(collider);
@@ -14,4 +14,20 @@ void fe::collisonHandler::remove(const collider *collider)
  
 void fe::collisonHandler::handleCollisions()
     {
+        for (auto &collider : m_colliders)
+            {
+                for (auto &testCollider : m_colliders)
+                    {
+                        if (collider != testCollider)
+                            {
+                                if (collider->collide(*testCollider))
+                                    {
+                                        if (collider->m_callback) 
+                                            {
+                                                collider->m_callback();
+                                            }
+                                    }
+                            }
+                    }
+            }
     }
