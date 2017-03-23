@@ -17,15 +17,14 @@ namespace fe
 
         struct collider
             {
-                void(*m_callback)();
                 colliderType m_type;
 
                 const Vector2d &m_position;
 
                 collider(const Vector2d &position) :
                     m_position(position),
-                    m_type(colliderType::NONE),
-                    m_callback(nullptr) {}
+                    m_type(colliderType::NONE)
+                    {}
 
                 virtual bool collide(const collider &other) const = 0;
                 virtual bool doesContain(const fe::Vector2d &point) const = 0;

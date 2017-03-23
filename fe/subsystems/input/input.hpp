@@ -27,11 +27,24 @@ namespace fe
                 bool m_realTime;
                 bool m_inverse;
 
-                fe::function<void(Object)> m_callback;
+                fe::function<void, Object> m_callback;
 
                 input() {}
-                input(bool realTime, bool onPress, TInput input, fe::function<void(Object)> callback) : m_input(input), m_callback(callback), m_realTime(realTime), m_inverse(!onPress) { }
+                input(bool realTime, bool onPress, TInput input, fe::function<void, Object> callback) : m_input(input), m_callback(callback), m_realTime(realTime), m_inverse(!onPress) { }
                 input(bool realTime, bool onPress, TInput input, void(*callback)()) : m_input(input), m_callback(callback), m_realTime(realTime), m_inverse(!onPress) { }
+
+                input &operator=(const input &rhs)
+                    {
+                        if (this != &rhs)
+                            {
+                                m_callback = rhs.m_callback;
+                                m_input = rhs.m_input;
+                                m_realTime = rhs.m_realTime;
+                                m_inverse = rhs.m_inverse;
+                            }
+
+                        return *this;
+                    }
 
                 void handleEvent(const sf::Event &event)
                     {

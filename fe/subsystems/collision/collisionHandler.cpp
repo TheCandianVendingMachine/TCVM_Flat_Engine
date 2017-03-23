@@ -22,10 +22,7 @@ void fe::collisonHandler::handleCollisions()
                             {
                                 if (collider->collide(*testCollider))
                                     {
-                                        if (collider->m_callback) 
-                                            {
-                                                collider->m_callback();
-                                            }
+                                        
                                     }
                             }
                     }

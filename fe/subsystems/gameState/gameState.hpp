@@ -52,7 +52,7 @@ namespace fe
                     {
                         T *ent = new(mem) T(args...);
                         m_sceneGraph.addEntity(ent);
-                        auto c = ent->getCollider();
+                        auto &c = ent->getCollider();
                         m_collisionHandler.add(&c);
                     }
                 else
