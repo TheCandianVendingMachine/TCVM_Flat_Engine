@@ -18,7 +18,6 @@ namespace fe
         struct collider
             {
                 colliderType m_type;
-
                 const Vector2d &m_position;
 
                 collider(const Vector2d &position) :
@@ -26,17 +25,24 @@ namespace fe
                     m_type(colliderType::NONE)
                     {}
 
+                virtual void operator()() const = 0;
+
                 virtual bool collide(const collider &other) const = 0;
                 virtual bool doesContain(const fe::Vector2d &point) const = 0;
                 virtual bool doesRayIntersect(const Vector2d &origin, const Vector2d &direction) const = 0;
             };
 
+        template<typename Obj>
         struct AABB : public collider
             {
+                fe::function<void, Obj> m_callback;
+            
                 AABB(const Vector2d &position) : collider(position) {}
                 AABB(const Vector2d &position, const Vector2d &size) :
                     collider(position),
                     m_max(size) { m_type = colliderType::AABB; }
+
+                void operator()() const { m_callback(); }
 
                 FLAT_ENGINE_API bool collide(const collider &other) const;
                 FLAT_ENGINE_API bool doesContain(const fe::Vector2d &point) const;
@@ -46,3 +52,5 @@ namespace fe
                 Vector2d m_max;
             };
     }
+
+#include "colliders.inl"

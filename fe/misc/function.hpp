@@ -13,7 +13,7 @@ namespace fe
                 Obj *instance = nullptr;
                 Func(*funcPtr)(Args...);
 
-                Func operator()(Args ...args)
+                Func operator()(Args ...args) const
                     {
                         return funcPtr(args...);
                     }
@@ -39,7 +39,7 @@ namespace fe
                             }
                     }
 
-                Func operator()(Args ...args)
+                Func operator()(Args ...args) const
                     {
                         return (instance->*funcPtr)(args...);
                     }
@@ -65,7 +65,7 @@ namespace fe
                         m_fPtr = function;
                     }
 
-                Func operator()(Args &&...args)
+                Func operator()(Args &&...args) const
                     {
                         return m_fPtr(args...);
                     }
