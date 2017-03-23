@@ -71,7 +71,7 @@ std::vector<std::string> fe::getAllFilesInDirectory(const char *directory, const
         return returnVector;
     }
 
-std::vector<std::string> fe::getFilesInDirectory(const char * directory)
+std::vector<std::string> fe::getFilesInDirectory(const char *directory)
     {
         std::vector<std::string> returnVector;
         for (auto &file : std::experimental::filesystem::directory_iterator(directory))
@@ -91,7 +91,7 @@ std::vector<std::string> fe::getFilesInDirectory(const char * directory)
         return returnVector;
     }
 
-std::vector<std::string> fe::getFilesInDirectory(const char * directory, const char * extension)
+std::vector<std::string> fe::getFilesInDirectory(const char *directory, const char *extension)
     {
         std::vector<std::string> returnVector;
         for (auto &file : std::experimental::filesystem::directory_iterator(directory))

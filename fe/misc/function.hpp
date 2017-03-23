@@ -15,6 +15,7 @@ namespace fe
 
                 Func operator()(Args ...args) const
                     {
+                        if (!funcPtr) return Func();
                         return funcPtr(args...);
                     }
             };
@@ -41,6 +42,7 @@ namespace fe
 
                 Func operator()(Args ...args) const
                     {
+                        if (!instance || !funcPtr) return Func();
                         return (instance->*funcPtr)(args...);
                     }
             };
@@ -68,6 +70,16 @@ namespace fe
                 Func operator()(Args &&...args) const
                     {
                         return m_fPtr(args...);
+                    }
+
+                function &operator=(const function &rhs)
+                    {
+                        if (&rhs != this)
+                            {
+                                this->m_fPtr = rhs.m_fPtr;
+                            }
+
+                        return *this;
                     }
 
                 operator bool()
