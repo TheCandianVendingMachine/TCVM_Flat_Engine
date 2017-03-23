@@ -6,6 +6,8 @@
 #include "../graphic/sceneGraph.hpp"
 #include "../../entity/baseEntity.hpp"
 #include "../collision/collisionHandler.hpp"
+#include "../memory/memoryManager.hpp"
+#include "../../debug/logger.hpp"
 
 namespace sf
     {

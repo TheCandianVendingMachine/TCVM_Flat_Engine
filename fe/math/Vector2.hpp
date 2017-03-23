@@ -31,12 +31,12 @@ namespace fe
 				Vector2(const sf::Vector2<dataType> &copy) : x(copy.x), y(copy.y) {}
 
                 Vector2 &operator=(const Vector2<dataType> &copy) { if (&copy != this) { x = copy.x; y = copy.y; } return *this; }
-                bool operator==(const Vector2<dataType> &rhs) { return rhs.x == x && rhs.y == y; }
+                bool operator==(const Vector2<dataType> &rhs) const { return rhs.x == x && rhs.y == y; }
 
-                Vector2<dataType> operator+(const Vector2<dataType> &rhs)   { return Vector2<dataType>(rhs.x + x, rhs.y + y); }
-                Vector2<dataType> operator-(const Vector2<dataType> &rhs)   { return Vector2<dataType>(rhs.x - x, rhs.y - y); }
-                Vector2<dataType> operator*(const dataType &rhs)            { return Vector2<dataType>(rhs * x, rhs * y); }
-                Vector2<dataType> operator/(const dataType &rhs)            { return Vector2<dataType>(rhs / x, rhs / y); }
+                Vector2<dataType> operator+(const Vector2<dataType> &rhs) const { return Vector2<dataType>(rhs.x + x, rhs.y + y); }
+                Vector2<dataType> operator-(const Vector2<dataType> &rhs) const { return Vector2<dataType>(x - rhs.x, y - rhs.y); }
+                Vector2<dataType> operator*(const dataType &rhs) const          { return Vector2<dataType>(rhs * x, rhs * y); }
+                Vector2<dataType> operator/(const dataType &rhs) const          { return Vector2<dataType>(x / rhs, y / rhs); }
                 
                 // A way to get the x/y coordinate based on the index provided. Useful in incrementing loops
                 dataType operator[](const size_t &index) const  { if (index == 0) return x; if (index == 1) return y; return 0.f; }
