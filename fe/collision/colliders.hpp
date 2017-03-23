@@ -25,7 +25,7 @@ namespace fe
                     m_type(colliderType::NONE)
                     {}
 
-                virtual void operator()() const = 0;
+                virtual void operator()(const collider*) const = 0;
 
                 virtual bool collide(const collider &other) const = 0;
                 virtual bool doesContain(const fe::Vector2d &point) const = 0;
@@ -35,14 +35,14 @@ namespace fe
         template<typename Obj>
         struct AABB : public collider
             {
-                fe::function<void, Obj> m_callback;
+                fe::function<void, Obj, const collider*> m_callback;
             
                 AABB(const Vector2d &position) : collider(position) {}
                 AABB(const Vector2d &position, const Vector2d &size) :
                     collider(position),
                     m_max(size) { m_type = colliderType::AABB; }
 
-                void operator()() const { m_callback(); }
+                void operator()(const collider *collided) const { m_callback(collided); }
 
                 FLAT_ENGINE_API bool collide(const collider &other) const;
                 FLAT_ENGINE_API bool doesContain(const fe::Vector2d &point) const;
