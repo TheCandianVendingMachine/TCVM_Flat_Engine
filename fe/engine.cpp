@@ -48,9 +48,22 @@ void fe::engine::draw()
         m_gameStateMachine->postDraw();
     }
 
+void fe::engine::calcFPS()
+    {
+        m_elapsedFrames++;
+        if (m_fpsClock.getTime().asSeconds() > 1.f)
+            {
+                int timeElapsed = m_fpsClock.getTime().asMilliseconds();
+                m_fps = 1000.f / ((float)timeElapsed / (float)m_elapsedFrames);
+                m_elapsedFrames = 0;
+                m_fpsClock.restart();
+            }
+    }
+
 fe::engine::engine(const float updateRate) :
     m_logger(nullptr),
-    m_deltaTime(updateRate)
+    m_deltaTime(updateRate),
+    m_elapsedFrames(0)
     {
         m_deltaTimeStatic = updateRate;
     }
@@ -98,7 +111,6 @@ void fe::engine::run()
     {
         fe::clock updateClock;
         float currentTime = updateClock.getTime().asSeconds();
-        float startTime = currentTime;
 
         int framesPassed = 0;
         while (m_renderer.getRenderWindow().isOpen())
@@ -115,9 +127,7 @@ void fe::engine::run()
                 update();
                 draw();
 
-                framesPassed++;
-                m_fps = framesPassed / (updateClock.getTime().asSeconds() - startTime);
-                framesPassed = 0;
+                calcFPS();
             }
     }
 

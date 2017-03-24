@@ -24,19 +24,23 @@ namespace fe
                     fe::gameStateMachine *m_gameStateMachine;
 
                 private:
+                    fe::clock m_fpsClock;
+                    int m_elapsedFrames;
+
+                    const float m_deltaTime;
+                    float m_accumulator;
+
                     static float m_fps; // used to calculate fps
                     static float m_deltaTimeStatic;
 
                     static fe::Vector2d m_screenSize;
                     static fe::Vector2d m_mousePosition;
-
-                    const float m_deltaTime;
-                    float m_accumulator;
                                         
                 private:
                     FLAT_ENGINE_API void handleEvents();
                     FLAT_ENGINE_API void update();
                     FLAT_ENGINE_API void draw();
+                    FLAT_ENGINE_API void calcFPS();
 
                 public:
                     FLAT_ENGINE_API engine(const float updateRate = 1.f / 60.f);
