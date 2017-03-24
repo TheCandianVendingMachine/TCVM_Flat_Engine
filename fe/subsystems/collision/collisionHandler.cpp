@@ -14,16 +14,18 @@ void fe::collisonHandler::remove(const collider *collider)
  
 void fe::collisonHandler::handleCollisions()
     {
-        for (auto &collider : m_colliders)
+        auto it1 = m_colliders.begin();
+        auto it2 = it1 + 1;
+
+        for (; it1 != m_colliders.end(); ++it1)
             {
-                for (auto &testCollider : m_colliders)
+                it2 = it1 + 1;
+                for (; it2 != m_colliders.end(); ++it2)
                     {
-                        if (collider != testCollider)
+                        if ((*it2)->collide(**it1))
                             {
-                                if (collider->collide(*testCollider))
-                                    {
-                                        (*collider)(*testCollider);
-                                    }
+                                (*it1)->operator()(**it2);
+                                (*it2)->operator()(**it1);
                             }
                     }
             }

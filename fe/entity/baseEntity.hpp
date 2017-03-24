@@ -26,5 +26,6 @@ namespace fe
 
                     // Returns the collider that the object has
                     FLAT_ENGINE_API virtual const fe::collider &getCollider() = 0;
+                    FLAT_ENGINE_API virtual void collision(const fe::collider &testCollider) {}
             };
     }

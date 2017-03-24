@@ -38,9 +38,18 @@ namespace fe
                 fe::function<void, Obj, const collider&> m_callback;
             
                 AABB(const Vector2d &position) : collider(position) {}
-                AABB(const Vector2d &position, const Vector2d &size) :
+
+                // If the object has an instance, provide one
+                AABB(const Vector2d &position, const Vector2d &size, Obj *instance = nullptr) :
                     collider(position),
-                    m_max(size) { m_type = colliderType::AABB; }
+                    m_max(size) 
+                    {
+                        m_type = colliderType::AABB;
+                        if (instance)
+                            {
+                                m_callback = fe::function<void, Obj, const fe::collider&>(fe::fPtr<true, Obj, void, const fe::collider&>(instance, &Obj::collision));
+                            }
+                    }
 
                 void operator()(const collider &collided) const { m_callback(collided); }
 
