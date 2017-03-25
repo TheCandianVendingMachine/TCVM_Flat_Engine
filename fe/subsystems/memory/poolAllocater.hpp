@@ -25,8 +25,8 @@ namespace fe
                     void startUp(const unsigned int objectCount, char *buffer);
 
                     // allocates a block of memory for the wanted object
-                    template<typename TRet = T>
-                    TRet *alloc();
+                    template<typename TRet = T, typename ...Args>
+                    TRet *alloc(Args ...args);
 
                     // Frees the object at the address it is allocated to
                     void free(T *address);
@@ -57,10 +57,14 @@ namespace fe
             }
 
         template<typename T>
-        template<typename TRet>
-        TRet *poolAllocater<T>::alloc()
+        template<typename TRet, typename ...Args>
+        TRet *poolAllocater<T>::alloc(Args ...args)
             {
-                FE_ASSERT(sizeof(T) == sizeof(TRet), "Objects in memory pool are not equal sizes. Cannot allocate safely");
+                if (sizeof(TRet) % sizeof(T) != 0)
+                    {
+                        // if the size of the defined type, and the actual size are not the same we are going to allocate as much as we need, and then some
+                        FE_LOG_WARNING("Objects in memory pool are not equal sizes. Buffer not guarenteed to be continious. Memory difference: ", sizeof(TRet) % sizeof(T));
+                    }
 
                 if (!m_canAllocate)
                     {
@@ -71,14 +75,15 @@ namespace fe
                 int index = 0;
                 while (!m_freeIndicies[index])
                     {
-                        index += 1;
+                        index++;
                     }
 
                 if (index <= m_objectCount)
                     {
-                        m_freeIndicies[index] = false;
+                        int maxIndex = index + (sizeof(TRet) / sizeof(T)) + (sizeof(TRet) % sizeof(T));
+                        std::memset(m_freeIndicies, false, maxIndex * sizeof(T));
 
-                        TRet *retMem = new(m_buffer + (index * sizeof(T))) TRet();
+                        TRet *retMem = new(m_buffer + (index * sizeof(T))) TRet(args...);
                         return retMem;
                     }
 

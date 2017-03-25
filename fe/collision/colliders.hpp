@@ -18,11 +18,9 @@ namespace fe
         struct collider
             {
                 colliderType m_type;
-                const Vector2d &m_position;
+                fe::Vector2d m_position;
 
-                collider(const Vector2d &position) :
-                    m_position(position),
-                    m_type(colliderType::NONE)
+                collider() : m_type(colliderType::NONE)
                     {}
 
                 virtual void operator()(const collider&) const = 0;
@@ -40,9 +38,7 @@ namespace fe
                 AABB(const Vector2d &position) : collider(position) {}
 
                 // If the object has an instance, provide one
-                AABB(const Vector2d &position, const Vector2d &size, Obj *instance = nullptr) :
-                    collider(position),
-                    m_max(size) 
+                AABB(const Vector2d &size, Obj *instance = nullptr) : m_max(size) 
                     {
                         m_type = colliderType::AABB;
                         if (instance)

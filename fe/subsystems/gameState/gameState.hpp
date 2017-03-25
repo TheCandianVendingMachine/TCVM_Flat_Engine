@@ -41,7 +41,8 @@ namespace fe
 
                     FLAT_ENGINE_API virtual void deinit() {}
 
-                    FLAT_ENGINE_API fe::sceneGraph *getSceneGraph();
+                    FLAT_ENGINE_API fe::sceneGraph &getSceneGraph();
+                    FLAT_ENGINE_API fe::collisonHandler &getCollisionHandler();
 
                     FLAT_ENGINE_API virtual ~baseGameState() {}
             };
@@ -54,8 +55,7 @@ namespace fe
                     {
                         T *ent = new(mem) T(args...);
                         m_sceneGraph.addEntity(ent);
-                        auto &c = ent->getCollider();
-                        m_collisionHandler.add(&c);
+                        ent->onAdd(*this);
                     }
                 else
                     {

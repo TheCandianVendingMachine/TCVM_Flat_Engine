@@ -3,7 +3,7 @@
 
 void fe::baseGameState::removeEntity(baseEntity *entity)
     {
-        m_collisionHandler.remove(&entity->getCollider());
+        entity->onRemove(*this);
         m_sceneGraph.removeEntity(entity);
     }
 
@@ -23,7 +23,12 @@ void fe::baseGameState::draw(sf::RenderTarget &app)
         m_sceneGraph.draw(app);
     }
 
-fe::sceneGraph *fe::baseGameState::getSceneGraph()
+fe::sceneGraph &fe::baseGameState::getSceneGraph()
     {
-        return &m_sceneGraph;
+        return m_sceneGraph;
+    }
+
+fe::collisonHandler &fe::baseGameState::getCollisionHandler()
+    {
+        return m_collisionHandler;
     }

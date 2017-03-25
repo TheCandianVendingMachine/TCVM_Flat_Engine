@@ -3,6 +3,7 @@
 #pragma once
 #define FLAT_ENGINE_EXPORT
 #include "../../flatEngineExport.hpp"
+#include "../memory/poolAllocater.hpp"
 #include <vector>
 
 namespace fe
@@ -11,13 +12,25 @@ namespace fe
         class collisonHandler
             {
                 private:
-                    std::vector<const collider*> m_colliders;
+                    fe::poolAllocater<collider> m_colliderPool;
+                    std::vector<collider*> m_colliders;
 
                 public:
-                    FLAT_ENGINE_API void add(const collider *collider);
+                    FLAT_ENGINE_API collisonHandler();
+
+                    template<typename T, typename ...Args>
+                    FLAT_ENGINE_API T *add(Args ...args);
                     FLAT_ENGINE_API void remove(const collider *collider);
 
                     FLAT_ENGINE_API void handleCollisions();
 
             };
+
+        template<typename T, typename ...Args>
+        T *collisonHandler::add(Args ...args)
+            {
+                T *ref = m_colliderPool.alloc<T>(args...);
+                m_colliders.emplace_back(ref);
+                return ref;
+            }
     }

@@ -20,6 +20,10 @@ void fe::sceneGraph::update(float deltaTime)
 
 void fe::sceneGraph::postUpdate()
     {
+        for (auto &ent : m_entities)
+            {
+                ent->getCollider().m_position = ent->getPosition();
+            }
     }
 
 void fe::sceneGraph::addEntity(fe::baseEntity *ent)

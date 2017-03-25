@@ -13,6 +13,8 @@ namespace fe
                 Obj *instance = nullptr;
                 Func(*funcPtr)(Args...);
 
+                fPtr() : instance(nullptr), funcPtr(nullptr) {}
+
                 Func operator()(Args ...args) const
                     {
                         if (!funcPtr) return Func();
@@ -26,7 +28,7 @@ namespace fe
                 Obj *instance = nullptr;
                 Func(Obj::*funcPtr)(Args...);
 
-                fPtr() {}
+                fPtr() : instance(nullptr), funcPtr(nullptr) {}
 
                 fPtr(Obj *instance, Func(Obj::*funcPtr)(Args...)) : instance(instance), funcPtr(funcPtr)
                     {}

@@ -122,7 +122,7 @@ void fe::gameStateMachine::postDraw()
             }
     }
 
-fe::sceneGraph *fe::gameStateMachine::getSceneGraph()
+fe::sceneGraph &fe::gameStateMachine::getSceneGraph()
     {
         return m_currentState->getSceneGraph();
     }
