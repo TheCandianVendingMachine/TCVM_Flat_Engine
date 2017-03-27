@@ -1,10 +1,19 @@
 #include "gameState.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 
-void fe::baseGameState::removeEntity(baseEntity *entity)
+void fe::baseGameState::removeEntity(fe::sceneGraph::EntityHandle handle)
     {
-        entity->onRemove(*this);
-        m_sceneGraph.removeEntity(entity);
+        auto ent = getEntity(handle);
+        if (ent) 
+            {
+                ent->onRemove(*this);
+                m_sceneGraph.removeEntity(handle);
+            }
+    }
+
+fe::baseEntity *fe::baseGameState::getEntity(fe::sceneGraph::EntityHandle handle)
+    {
+        return m_sceneGraph.getEntity(handle);
     }
 
 void fe::baseGameState::update(float deltaTime)

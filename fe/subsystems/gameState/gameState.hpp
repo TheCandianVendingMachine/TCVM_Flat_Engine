@@ -24,8 +24,10 @@ namespace fe
 
                 protected:
                     template<typename T, typename ...Args>
-                    FLAT_ENGINE_API void addEntity(Args &&...args);
-                    FLAT_ENGINE_API void removeEntity(baseEntity *entity);
+                    FLAT_ENGINE_API fe::sceneGraph::EntityHandle addEntity(Args &&...args);
+                    FLAT_ENGINE_API void removeEntity(fe::sceneGraph::EntityHandle handle);
+
+                    FLAT_ENGINE_API fe::baseEntity *getEntity(fe::sceneGraph::EntityHandle handle);
 
                 public:
                     FLAT_ENGINE_API virtual void init() {}
@@ -48,18 +50,21 @@ namespace fe
             };
 
         template<typename T, typename ...Args>
-        void baseGameState::addEntity(Args &&...args)
+        fe::sceneGraph::EntityHandle baseGameState::addEntity(Args &&...args)
             {
                 auto mem = FE_ALLOC_STACK("GameStateEntity", sizeof(T));
                 if (mem) 
                     {
                         T *ent = new(mem) T(args...);
-                        m_sceneGraph.addEntity(ent);
+                        auto handle = m_sceneGraph.addEntity(ent);
                         ent->onAdd(*this);
+                        return handle;
                     }
                 else
                     {
                         FE_LOG_ERROR("Cannot add entity");
                     }
+
+                return 0;
             }
     }

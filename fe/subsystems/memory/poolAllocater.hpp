@@ -81,7 +81,7 @@ namespace fe
                 if (index <= m_objectCount)
                     {
                         int maxIndex = index + (sizeof(TRet) / sizeof(T)) + (sizeof(TRet) % sizeof(T));
-                        std::memset(m_freeIndicies, false, maxIndex * sizeof(T));
+                        std::memset(m_freeIndicies + index, false, maxIndex * sizeof(T));
 
                         TRet *retMem = new(m_buffer + (index * sizeof(T))) TRet(args...);
                         return retMem;
