@@ -24,13 +24,16 @@ void fe::collisonHandler::handleCollisions()
 
         for (; it1 != m_colliders.end(); ++it1)
             {
-                it2 = it1 + 1;
-                for (; it2 != m_colliders.end(); ++it2)
+                if ((*it1)->m_collisonEnabled)
                     {
-                        if ((*it2)->collide(**it1))
+                        it2 = it1 + 1;
+                        for (; it2 != m_colliders.end(); ++it2)
                             {
-                                (*it1)->operator()(**it2);
-                                (*it2)->operator()(**it1);
+                                if ((*it2)->m_collisonEnabled && (*it2)->collide(**it1))
+                                    {
+                                        (*it1)->operator()(**it2);
+                                        (*it2)->operator()(**it1);
+                                    }
                             }
                     }
             }

@@ -19,8 +19,9 @@ namespace fe
             {
                 colliderType m_type;
                 fe::Vector2d m_position;
+                bool m_collisonEnabled;
 
-                collider() : m_type(colliderType::NONE)
+                collider() : m_type(colliderType::NONE), m_collisonEnabled(true)
                     {}
 
                 virtual void operator()(const collider&) const = 0;
