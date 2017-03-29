@@ -37,7 +37,3 @@ fe::collisonHandler &fe::baseGameState::getCollisionHandler()
         return m_collisionHandler;
     }
 
-fe::baseEntity *fe::baseGameState::getEntity(fe::sceneGraph::EntityHandle handle) const
-    {
-        return m_sceneGraph.getEntity(handle);
-    }

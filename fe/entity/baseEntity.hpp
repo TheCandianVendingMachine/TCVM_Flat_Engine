@@ -29,6 +29,8 @@ namespace fe
                     FLAT_ENGINE_API baseEntity();
                     FLAT_ENGINE_API virtual ~baseEntity();
 
+                    FLAT_ENGINE_API void enableCollision(bool value);
+
                     FLAT_ENGINE_API virtual void onAdd(baseGameState &state) {}
                     FLAT_ENGINE_API virtual void onRemove(baseGameState &state) {}
 

@@ -44,7 +44,8 @@ namespace fe
                     FLAT_ENGINE_API fe::sceneGraph &getSceneGraph();
                     FLAT_ENGINE_API fe::collisonHandler &getCollisionHandler();
 
-                    FLAT_ENGINE_API fe::baseEntity *getEntity(fe::sceneGraph::EntityHandle handle) const;
+                    template<typename T = fe::baseEntity>
+                    FLAT_ENGINE_API T *getEntity(fe::sceneGraph::EntityHandle handle) const;
 
                     FLAT_ENGINE_API virtual ~baseGameState() {}
             };
@@ -66,5 +67,11 @@ namespace fe
                     }
 
                 return 0;
+            }
+
+        template<typename T>
+        T *baseGameState::getEntity(fe::sceneGraph::EntityHandle handle) const
+            {
+            return static_cast<T*>(m_sceneGraph.getEntity(handle));
             }
     }
