@@ -129,3 +129,8 @@ fe::sceneGraph &fe::gameStateMachine::getSceneGraph()
     {
         return m_currentState->getSceneGraph();
     }
+
+const fe::baseGameState &fe::gameStateMachine::getCurrentState()
+    {
+        return *m_currentState;
+    }

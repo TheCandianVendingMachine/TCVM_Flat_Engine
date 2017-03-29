@@ -13,7 +13,7 @@ fe::baseEntity::~baseEntity()
     {
     }
 
-fe::collider &fe::baseEntity::getCollider()
+fe::collider &fe::baseEntity::getCollider() const
     {
         return *m_collider;
     }

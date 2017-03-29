@@ -175,6 +175,11 @@ void fe::engine::queuePop()
         m_gameStateMachine->queuePop();
     }
 
+const fe::baseGameState &fe::engine::getCurrentState() const
+    {
+        return m_gameStateMachine->getCurrentState();
+    }
+
 fe::eventSender *fe::engine::getEventSender() const
     {
         return m_eventSender;

@@ -11,11 +11,6 @@ void fe::baseGameState::removeEntity(fe::sceneGraph::EntityHandle handle)
             }
     }
 
-fe::baseEntity *fe::baseGameState::getEntity(fe::sceneGraph::EntityHandle handle)
-    {
-        return m_sceneGraph.getEntity(handle);
-    }
-
 void fe::baseGameState::update(float deltaTime)
     {
         m_sceneGraph.update(deltaTime);
@@ -40,4 +35,9 @@ fe::sceneGraph &fe::baseGameState::getSceneGraph()
 fe::collisonHandler &fe::baseGameState::getCollisionHandler()
     {
         return m_collisionHandler;
+    }
+
+fe::baseEntity *fe::baseGameState::getEntity(fe::sceneGraph::EntityHandle handle) const
+    {
+        return m_sceneGraph.getEntity(handle);
     }

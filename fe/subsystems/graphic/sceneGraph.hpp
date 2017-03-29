@@ -32,7 +32,7 @@ namespace fe
 
                     FLAT_ENGINE_API fe::sceneGraph::EntityHandle addEntity(fe::baseEntity *ent);
                     FLAT_ENGINE_API void removeEntity(fe::sceneGraph::EntityHandle handle);
-                    FLAT_ENGINE_API fe::baseEntity *getEntity(fe::sceneGraph::EntityHandle handle);
+                    FLAT_ENGINE_API fe::baseEntity *getEntity(fe::sceneGraph::EntityHandle handle) const;
 
                     FLAT_ENGINE_API void draw(sf::RenderTarget &app);
 

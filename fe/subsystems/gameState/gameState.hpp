@@ -27,8 +27,6 @@ namespace fe
                     FLAT_ENGINE_API fe::sceneGraph::EntityHandle addEntity(Args &&...args);
                     FLAT_ENGINE_API void removeEntity(fe::sceneGraph::EntityHandle handle);
 
-                    FLAT_ENGINE_API fe::baseEntity *getEntity(fe::sceneGraph::EntityHandle handle);
-
                 public:
                     FLAT_ENGINE_API virtual void init() {}
 
@@ -45,6 +43,8 @@ namespace fe
 
                     FLAT_ENGINE_API fe::sceneGraph &getSceneGraph();
                     FLAT_ENGINE_API fe::collisonHandler &getCollisionHandler();
+
+                    FLAT_ENGINE_API fe::baseEntity *getEntity(fe::sceneGraph::EntityHandle handle) const;
 
                     FLAT_ENGINE_API virtual ~baseGameState() {}
             };

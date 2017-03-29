@@ -49,7 +49,7 @@ void fe::sceneGraph::removeEntity(fe::sceneGraph::EntityHandle handle)
             }
     }
 
-fe::baseEntity *fe::sceneGraph::getEntity(fe::sceneGraph::EntityHandle handle)
+fe::baseEntity *fe::sceneGraph::getEntity(fe::sceneGraph::EntityHandle handle) const
     {
         if (handle >= m_handles.size())
             {
