@@ -72,6 +72,12 @@ namespace fe
 #define FE_LOG_ERROR(...) fe::logger::get().log("Error: ", __VA_ARGS__)
 // Log values to the output file with a warning prefix
 #define FE_LOG_WARNING(...) fe::logger::get().log("Warning: ", __VA_ARGS__)
+// Log values taht will only happe in debug mode
+#ifdef _DEBUG
+    #define FE_LOG_DEBUG(...) fe::logger::get().log("Debug: ", __VA_ARGS__)
+#else
+    #define FE_LOG_DEBUG(...) ;
+#endif
 
 // Log values to the console
 #define FE_CONSOLE_LOG(...) fe::logger::get().logToConsole(__VA_ARGS__)
