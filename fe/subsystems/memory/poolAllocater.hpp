@@ -18,7 +18,7 @@ namespace fe
                     unsigned int m_objectCount;
 
                     bool m_canAllocate;
-                    bool *m_freeIndicies;
+                    bool *m_freeIndicies; // if there is a block that can be allocated, the corresponding index in this array will be "true"
                     char *m_buffer;
 
                 public:
@@ -46,6 +46,8 @@ namespace fe
                     {
                         m_freeIndicies = static_cast<bool*>(memManager->alloc(objectCount * sizeof(T)));
                         memManager->logAllocation("PoolAllocater", objectCount * sizeof(T), fe::memoryLogger::ALLOC_DIRECT);
+
+                        std::memset(m_freeIndicies, true, sizeof(m_freeIndicies));
 
                         m_buffer = buffer;
                         m_bufferSize = objectCount * sizeof(T);
@@ -78,17 +80,18 @@ namespace fe
                         index++;
                     }
 
+                FE_LOG_DEBUG(sizeof(TRet));
                 if (index <= m_objectCount)
                     {
                         int maxIndex = index + (sizeof(TRet) / sizeof(T)) + (sizeof(TRet) % sizeof(T));
-                        std::memset(m_freeIndicies + index, false, maxIndex * sizeof(T));
+                        std::memset(m_freeIndicies + index, false, maxIndex);
 
                         TRet *retMem = new(m_buffer + (index * sizeof(T))) TRet(args...);
                         return retMem;
                     }
 
+                FE_LOG_WARNING("No memory allocated in pool. Attempted allocation of", sizeof(sizeof(TRet)), "bytes");
                 FE_ASSERT(m_objectCount == 0, "Pool Allocater out of memory");
-                FE_LOG_WARNING("No memory allocated in pool");
                 return nullptr;
             }
 
