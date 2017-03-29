@@ -18,6 +18,8 @@ bool fe::AABB<T>::collide(const collider &other) const
                 default:
                     break;
             }
+
+        return false;
     }
 
 template<typename T>

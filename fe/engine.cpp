@@ -1,11 +1,13 @@
 #include "engine.hpp"
+#include "subsystems/gameState/gameStateMachine.hpp"
+#include "subsystems/messaging/eventSender.hpp"
+#include "subsystems/input/inputManager.hpp"
+#include "debug/logger.hpp"
+
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 
-float fe::engine::m_deltaTimeStatic = 0.f;
-float fe::engine::m_fps = 0.f;
-fe::Vector2d fe::engine::m_mousePosition = fe::Vector2d();
-fe::Vector2d fe::engine::m_screenSize = fe::Vector2d();
+fe::engine *fe::engine::m_instance = nullptr;
 
 void fe::engine::handleEvents()
     {
@@ -35,6 +37,7 @@ void fe::engine::update()
                 m_accumulator -= m_deltaTime;
             }
 
+        m_eventSender->sendEvents();
         m_gameStateMachine->postUpdate();
     }
 
@@ -64,27 +67,32 @@ fe::engine::engine(const float updateRate) :
     m_logger(nullptr),
     m_deltaTime(updateRate),
     m_elapsedFrames(0)
-    {
-        m_deltaTimeStatic = updateRate;
-    }
+    {}
 
 void fe::engine::startUp(unsigned long long totalMemory, unsigned long long stackMemory)
     { 
-        m_memoryManager.startUp(totalMemory, stackMemory);
+        if (!m_instance)
+            {
+                m_memoryManager.startUp(totalMemory, stackMemory);
  
-        m_logger = new logger;
-        m_logger->startUp("log.log");
+                m_logger = new logger;
+                m_logger->startUp("log.log");
 
-        m_renderer.startUp();
-        m_renderer.load();
+                m_renderer.startUp();
+                m_renderer.load();
 
-        m_inputManager = new inputManager;
-        m_inputManager->startUp();
+                m_inputManager = new inputManager;
+                m_inputManager->startUp();
 
-        m_gameStateMachine = new gameStateMachine;
-        m_gameStateMachine->startUp();
+                m_eventSender = new fe::eventSender;
 
-        m_screenSize = m_renderer.getWindowSize();
+                m_gameStateMachine = new gameStateMachine;
+                m_gameStateMachine->startUp();
+
+                m_screenSize = m_renderer.getWindowSize();
+
+                m_instance = this;
+            }
     }
 
 void fe::engine::shutDown()
@@ -93,6 +101,8 @@ void fe::engine::shutDown()
 
         m_gameStateMachine->shutDown();
         m_gameStateMachine->~gameStateMachine();
+
+        m_eventSender->~eventSender();
 
         m_inputManager->shutDown();
         m_inputManager->~inputManager();
@@ -105,6 +115,11 @@ void fe::engine::shutDown()
 
         m_memoryManager.shutDown();
         m_memoryManager.~memoryManager();
+    }
+
+const fe::engine &fe::engine::get()
+    {
+        return *m_instance;
     }
 
 void fe::engine::run()
@@ -131,36 +146,36 @@ void fe::engine::run()
             }
     }
 
-fe::renderer *fe::engine::getRenderer()
-	{
-		return &m_renderer;
-	}
-
-const float fe::engine::getDeltaTime()
+const float fe::engine::getDeltaTime() const
     {
-        return m_deltaTimeStatic;
+        return m_deltaTime;
     }
 
-const float fe::engine::getFPS()
+const float fe::engine::getFPS() const
     {
         return m_fps;
     }
 
-const fe::Vector2d fe::engine::getWindowSize()
+const fe::Vector2d fe::engine::getWindowSize() const
     {
         return m_screenSize;
     }
 
-const fe::Vector2d fe::engine::getMousePos()
+const fe::Vector2d fe::engine::getMousePos() const
     {
         return m_mousePosition;
     }
 
-void fe::engine::queueState(baseGameState *state)
+void fe::engine::queueState(fe::baseGameState *state)
     {
         m_gameStateMachine->queuePush(state);
     }
 void fe::engine::queuePop()
     {
         m_gameStateMachine->queuePop();
+    }
+
+fe::eventSender *fe::engine::getEventSender() const
+    {
+        return m_eventSender;
     }

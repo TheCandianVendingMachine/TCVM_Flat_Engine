@@ -31,6 +31,8 @@ namespace fe
                     FLAT_ENGINE_API void sendEvent(gameEvent &msg);
 
                 public:
+                    FLAT_ENGINE_API eventSender();
+
                     FLAT_ENGINE_API void subscribe(eventHandler *handler);
                     FLAT_ENGINE_API void subscribe(eventHandler *handler, int messageType);
 
@@ -57,6 +59,8 @@ namespace fe
                     FLAT_ENGINE_API void sendGlobal(gameEvent event, int frame);
 
                     FLAT_ENGINE_API void sendEvents();
+
+                    FLAT_ENGINE_API ~eventSender() = default;
 
             };
 

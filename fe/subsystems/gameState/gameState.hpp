@@ -9,8 +9,6 @@
 #include "../memory/memoryManager.hpp"
 #include "../../debug/logger.hpp"
 
-#include "../messaging/eventSender.hpp"
-
 namespace sf
     {
         class RenderTarget;

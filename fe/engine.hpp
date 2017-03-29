@@ -5,14 +5,17 @@
 #include "flatEngineExport.hpp"
 #include "subsystems/memory/memoryManager.hpp"
 #include "subsystems/memory/feNew.hpp"
-#include "subsystems/input/inputManager.hpp"
 #include "subsystems/graphic/renderer.hpp"
-#include "subsystems/graphic/sceneGraph.hpp"
-#include "subsystems/gameState/gameStateMachine.hpp"
-#include "debug/logger.hpp"
+#include "time/clock.hpp"
 
 namespace fe
     {
+        class logger;
+        class inputManager;
+        class gameStateMachine;
+        class eventSender;
+        class baseGameState;
+
         class engine
             {
                 private:
@@ -22,6 +25,7 @@ namespace fe
                     fe::logger *m_logger;
                     fe::inputManager *m_inputManager;
                     fe::gameStateMachine *m_gameStateMachine;
+                    fe::eventSender *m_eventSender;
 
                 private:
                     fe::clock m_fpsClock;
@@ -29,12 +33,12 @@ namespace fe
 
                     const float m_deltaTime;
                     float m_accumulator;
+                    float m_fps; // used to calculate fps
 
-                    static float m_fps; // used to calculate fps
-                    static float m_deltaTimeStatic;
+                    fe::Vector2d m_screenSize;
+                    fe::Vector2d m_mousePosition;
 
-                    static fe::Vector2d m_screenSize;
-                    static fe::Vector2d m_mousePosition;
+                    static fe::engine *m_instance;
                                         
                 private:
                     FLAT_ENGINE_API void handleEvents();
@@ -49,17 +53,20 @@ namespace fe
                                                  unsigned long long stackMemory = 256_MiB * (9.f / 10.f));
                     FLAT_ENGINE_API void shutDown();
 
+                    FLAT_ENGINE_API static const engine &get();
+
                     FLAT_ENGINE_API void run();
 
-					FLAT_ENGINE_API renderer *getRenderer();
-					
-                    FLAT_ENGINE_API const static float getDeltaTime();
-                    FLAT_ENGINE_API const static float getFPS();
-                    FLAT_ENGINE_API const static fe::Vector2d getWindowSize();
+                    FLAT_ENGINE_API const float getDeltaTime() const;
+                    FLAT_ENGINE_API const float getFPS() const;
+                    FLAT_ENGINE_API const fe::Vector2d getWindowSize() const;
 
-                    FLAT_ENGINE_API static const fe::Vector2d getMousePos();
+                    FLAT_ENGINE_API const fe::Vector2d getMousePos() const;
 
-                    FLAT_ENGINE_API void queueState(baseGameState *state);
+                    FLAT_ENGINE_API void queueState(fe::baseGameState *state);
 					FLAT_ENGINE_API void queuePop();
+
+
+                    FLAT_ENGINE_API fe::eventSender *getEventSender() const;
             };
     }

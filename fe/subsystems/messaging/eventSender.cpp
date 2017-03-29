@@ -36,6 +36,10 @@ void fe::eventSender::sendEvent(gameEvent &msg)
             }
     }
 
+fe::eventSender::eventSender() : m_currentFrame(0)
+    {
+    }
+
 void fe::eventSender::subscribe(eventHandler *handler)
     {
         m_handlers[handler->id()] = handler;
@@ -101,7 +105,7 @@ void fe::eventSender::send(gameEvent event, unsigned int to, int frame)
         event.sendTimeType = fe::gameEvent::timeVar::FRAME;
         event.sendTimeVar.FRAME = frame + m_currentFrame;
                 
-        m_eventQueueTimed.push(event);
+        m_eventQueueFrame.push(event);
     }
 
 
@@ -122,7 +126,7 @@ void fe::eventSender::send(gameEvent event, int eventType, float time)
         event.sendTimeType = fe::gameEvent::timeVar::TIME;
         event.sendTimeVar.TIME = time + m_elapsedTime.getTime().asMilliseconds();
 
-        sendEvent(event);
+        m_eventQueueTimed.push(event);
     }
 
 
@@ -131,9 +135,9 @@ void fe::eventSender::send(gameEvent event, int eventType, int frame)
         event.sendType = fe::sendType::SEND_TO_EVENT;
 
         event.sendTimeType = fe::gameEvent::timeVar::FRAME;
-        event.sendTimeVar.TIME = frame + m_currentFrame;
+        event.sendTimeVar.FRAME = frame + m_currentFrame;
 
-        sendEvent(event);
+        m_eventQueueFrame.push(event);
     }
 
 
@@ -152,7 +156,7 @@ void fe::eventSender::sendGlobal(gameEvent event, float time)
         event.sendTimeType = fe::gameEvent::timeVar::TIME;
         event.sendTimeVar.TIME = time + m_elapsedTime.getTime().asMilliseconds();
 
-        sendEvent(event);
+        m_eventQueueTimed.push(event);
     }
 
 void fe::eventSender::sendGlobal(gameEvent event, int frame)
@@ -160,9 +164,9 @@ void fe::eventSender::sendGlobal(gameEvent event, int frame)
         event.sendType = fe::sendType::SEND_TO_ALL;
 
         event.sendTimeType = fe::gameEvent::timeVar::FRAME;
-        event.sendTimeVar.TIME = frame + m_currentFrame;
+        event.sendTimeVar.FRAME = frame + m_currentFrame;
 
-        sendEvent(event);
+        m_eventQueueFrame.push(event);
     }
 
 void fe::eventSender::sendEvents()
