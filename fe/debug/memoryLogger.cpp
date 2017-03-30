@@ -18,7 +18,7 @@ void fe::memoryLogger::startUp(const size_t totalMemory, const size_t stackMemor
         m_directMemory = m_totalMemory - m_stackMemory;
     }
 
-void fe::memoryLogger::allocation(const std::string &id, size_t size, allocationTypes type)
+void fe::memoryLogger::allocation(const char *id, size_t size, allocationTypes type)
     {
         switch (type)
             {
@@ -37,7 +37,7 @@ void fe::memoryLogger::allocation(const std::string &id, size_t size, allocation
         m_totalMemoryAllocated += size;
     }
 
-void fe::memoryLogger::deallocation(const std::string &id, size_t size, allocationTypes type)
+void fe::memoryLogger::deallocation(const char *id, size_t size, allocationTypes type)
     {
         switch (type)
             {
@@ -56,13 +56,23 @@ void fe::memoryLogger::deallocation(const std::string &id, size_t size, allocati
         m_totalMemoryAllocated -= size;
     }
 
-std::string fe::memoryLogger::getLog()
+const char *fe::memoryLogger::getLog()
     {
-        std::string returnLog;
+        const size_t MAX_LOG_SIZE = 2048;
+
+        char returnLog[MAX_LOG_SIZE];
+        int end = 0;
 
         for (auto &log : m_memoryLog)
             {
-                returnLog += log.first + " --" + log.second.first + "-- " + std::to_string(log.second.second) + " Bytes\n";
+                std::strncpy(returnLog, log.first, sizeof(log.first));
+                std::strncpy(returnLog, " --", 4u);
+                std::strncpy(returnLog, log.second.first, sizeof(log.second.first));
+                std::strncpy(returnLog, "-- ", 4u);
+
+                char buf[128];
+                std::strncpy(returnLog, itoa(log.second.second, buf, sizeof(log.second.second)), sizeof(log.second.second)); // itoa is non-portable, but it will work on MSVC.
+                std::strncpy(returnLog, " Bytes\n", 8u);
             }
 
         return returnLog;

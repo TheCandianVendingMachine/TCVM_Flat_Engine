@@ -19,7 +19,7 @@ namespace fe
                         };
 
                 private:
-                    std::unordered_map<std::string, std::pair<std::string, size_t>> m_memoryLog;
+                    std::unordered_map<const char*, std::pair<const char*, size_t>> m_memoryLog;
 
                     size_t m_memoryAllocatedNew;
 
@@ -35,10 +35,10 @@ namespace fe
                     FLAT_ENGINE_API memoryLogger();
                     FLAT_ENGINE_API void startUp(const size_t totalMemory, const size_t stackMemory);
 
-                    FLAT_ENGINE_API void allocation(const std::string &id, size_t size, allocationTypes type);
-                    FLAT_ENGINE_API void deallocation(const std::string &id, size_t size, allocationTypes type);
+                    FLAT_ENGINE_API void allocation(const char *id, size_t size, allocationTypes type);
+                    FLAT_ENGINE_API void deallocation(const char *id, size_t size, allocationTypes type);
 
-                    FLAT_ENGINE_API std::string getLog();
+                    FLAT_ENGINE_API const char* getLog();
 
                     FLAT_ENGINE_API const size_t getMemoryAllocatedStack() const;
                     FLAT_ENGINE_API const size_t getMemoryLeftStack() const;
