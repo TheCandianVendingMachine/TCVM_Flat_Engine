@@ -20,6 +20,7 @@ void *fe::stackAllocater::alloc(size_t size)
                 return retMem;
             }
 
+        FE_ASSERT(m_offset + size <= m_bufferSize, "Stack Allocator out of Memory");
         FE_LOG_ERROR("Stack Allocater Out of Memory");
         return nullptr;
     }
