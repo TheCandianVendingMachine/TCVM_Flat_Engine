@@ -4,9 +4,7 @@
 #include <algorithm>
 
 fe::collisonHandler::collisonHandler()
-    {
-        m_colliderPool.startUp(1000);
-    }
+    {}
 
 void fe::collisonHandler::remove(const collider *collider)
     {

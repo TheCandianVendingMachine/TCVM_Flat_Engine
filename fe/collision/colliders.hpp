@@ -23,6 +23,7 @@ namespace fe
 
                 collider() : m_type(colliderType::NONE), m_collisonEnabled(true)
                     {}
+                virtual ~collider() = default;
 
                 virtual void operator()(const collider&) const = 0;
 

@@ -3,7 +3,7 @@
 
 void fe::resourceManager::startUp(size_t amountOfResources)
     {
-        m_resourceAllocater.startUp(amountOfResources, static_cast<char*>(fe::memoryManager::get().alloc(amountOfResources * sizeof(resourceObject))));
+        m_resourceAllocater.startUp(amountOfResources);
         fe::memoryManager::get().logAllocation("ResourceManager", amountOfResources * sizeof(resourceObject), fe::memoryLogger::ALLOC_DIRECT);
     }
 
@@ -23,7 +23,7 @@ void fe::resourceManager::add(const std::string &id, const std::string &filepath
                     break;
                 case fe::resourceObjectType::RESOURCE_TEXTURE:
                     {
-                        imageObject *obj = m_resourceAllocater.alloc<imageObject>();
+                        imageObject *obj = new(m_resourceAllocater.alloc()) imageObject();
                         obj->load(filepath.c_str());
                         allocated = obj;
                     }
