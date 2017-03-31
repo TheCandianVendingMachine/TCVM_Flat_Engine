@@ -5,9 +5,7 @@
 
 fe::collisonHandler::collisonHandler()
     {
-        // expecting a lot of colliders to be in game, so we allocate a ton of memory beforehand
-        auto buffer = FE_ALLOC_STACK("CollisonHandlerInit", sizeof(fe::collider) * 1000);
-        m_colliderPool.startUp(1000, static_cast<char*>(buffer));
+        m_colliderPool.startUp(1000);
     }
 
 void fe::collisonHandler::remove(const collider *collider)
