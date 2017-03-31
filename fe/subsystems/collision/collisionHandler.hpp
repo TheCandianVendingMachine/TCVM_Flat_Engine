@@ -28,6 +28,9 @@ namespace fe
         template<typename T, typename ...Args>
         T *collisonHandler::add(Args ...args)
             {
-                return nullptr;
+                auto buf = FE_ALLOC_STACK("CollisionHandler", sizeof(T));
+                auto ret = new(buf) T(args...);
+                m_colliders.push_back(ret);
+                return ret;
             }
     }
