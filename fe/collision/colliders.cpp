@@ -1,13 +1,24 @@
+#include "colliders.hpp"
 #include <algorithm>
 
-template<typename T>
-bool fe::AABB<T>::collide(const collider &other) const
+fe::AABB::AABB(const Vector2d &size) : m_max(size)
+    {
+        m_type = colliderType::AABB;
+    }
+
+fe::AABB::AABB(const Vector2d &size, std::function<void(const collider&)> callback) : m_max(size)
+    {
+        m_type = colliderType::AABB;
+        m_callback = callback;
+    }
+
+bool fe::AABB::collide(const collider &other) const
     {
         switch (other.m_type)
             {
                 case fe::colliderType::AABB:
                     {
-                        auto &second = static_cast<const fe::AABB<T>&>(other);
+                        auto &second = static_cast<const fe::AABB&>(other);
                         // Check if any axis doesnt collide another
                         if (m_max.x + m_position.x < second.m_min.x + second.m_position.x || m_min.x + m_position.x > second.m_max.x + second.m_position.x) return false;
                         if (m_max.y + m_position.y < second.m_min.y + second.m_position.y || m_min.y + m_position.y > second.m_max.y + second.m_position.y) return false;
@@ -22,15 +33,13 @@ bool fe::AABB<T>::collide(const collider &other) const
         return false;
     }
 
-template<typename T>
-bool fe::AABB<T>::doesContain(const fe::Vector2d &point) const
+bool fe::AABB::doesContain(const fe::Vector2d &point) const
     {
         return point.x > m_min.x + m_position.x && point.x < m_max.x + m_position.x &&
                point.y > m_min.y + m_position.y && point.y < m_max.y + m_position.y;
     }
 
-template<typename T>
-bool fe::AABB<T>::doesRayIntersect(const Vector2d &origin, const Vector2d &direction) const
+bool fe::AABB::doesRayIntersect(const Vector2d &origin, const Vector2d &direction) const
     {
         float tMin = 0.f;
         float tMax = 500000.f; // max distance ray can travel

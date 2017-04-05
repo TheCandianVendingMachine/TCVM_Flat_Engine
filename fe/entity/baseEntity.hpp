@@ -38,6 +38,8 @@ namespace fe
                     FLAT_ENGINE_API virtual void update(float deltaTime) = 0;
 
                     FLAT_ENGINE_API fe::collider &getCollider() const;
+                    FLAT_ENGINE_API bool hasCollider() const;
+
                     FLAT_ENGINE_API virtual void collision(const fe::collider &testCollider) {}
             };
     }

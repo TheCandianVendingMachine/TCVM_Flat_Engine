@@ -3,18 +3,18 @@
 #pragma once
 #include <SFML/Window/Event.hpp>
 #include <type_traits>
-#include "../../misc/function.hpp"
+#include <functional>
 
 namespace fe
     {
-        // Really bad work around to be able to store inputs that may have a class member as a callback
-        struct inputBase 
+        // a base class so we can store any type of input as a pointer
+        struct inputBase
             {
                 virtual void handleEvent(const sf::Event &eve) {}
                 virtual void checkPressed() {}
             };
 
-        template<typename TInput, typename Object = void>
+        template<typename TInput>
         struct input : public inputBase
             {
                 static constexpr sf::Event::EventType m_release = (std::is_same<TInput, sf::Keyboard::Key>::value) ? sf::Event::KeyReleased : sf::Event::MouseButtonReleased;
@@ -27,11 +27,10 @@ namespace fe
                 bool m_realTime;
                 bool m_inverse;
 
-                fe::function<void, Object> m_callback;
+                std::function<void()> m_callback;
 
                 input() {}
-                input(bool realTime, bool onPress, TInput input, fe::function<void, Object> callback) : m_input(input), m_callback(callback), m_realTime(realTime), m_inverse(!onPress) { }
-                input(bool realTime, bool onPress, TInput input, void(*callback)()) : m_input(input), m_callback(callback), m_realTime(realTime), m_inverse(!onPress) { }
+                input(bool realTime, bool onPress, TInput input, std::function<void()> callback) : m_input(input), m_callback(callback), m_realTime(realTime), m_inverse(!onPress) { }
 
                 input &operator=(const input &rhs)
                     {

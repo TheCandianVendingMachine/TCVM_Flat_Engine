@@ -22,7 +22,10 @@ void fe::sceneGraph::postUpdate()
     {
         for (auto &ent : m_entities)
             {
-                ent->getCollider().m_position = ent->getPosition();
+                if (ent->hasCollider())
+                    {
+                        ent->getCollider().m_position = ent->getPosition();
+                    }
             }
     }
 

@@ -3,9 +3,9 @@
 #pragma once
 #define FLAT_ENGINE_EXPORT
 #include "../flatEngineExport.hpp"
-
 #include "../math/Vector2.hpp"
-#include "../misc/function.hpp"
+
+#include <functional>
 
 namespace fe
     {
@@ -20,6 +20,7 @@ namespace fe
                 colliderType m_type;
                 fe::Vector2d m_position;
                 bool m_collisonEnabled;
+                std::function<void(const collider&)> m_callback;
 
                 collider() : m_type(colliderType::NONE), m_collisonEnabled(true)
                     {}
@@ -32,24 +33,12 @@ namespace fe
                 virtual bool doesRayIntersect(const Vector2d &origin, const Vector2d &direction) const = 0;
             };
 
-        template<typename Obj>
         struct AABB : public collider
-            {
-                fe::function<void, Obj, const collider&> m_callback;
-            
-                AABB(const Vector2d &position) : collider(position) {}
+            {       
+                FLAT_ENGINE_API AABB(const Vector2d &size);
+                FLAT_ENGINE_API AABB(const Vector2d &size, std::function<void(const collider&)> callback);
 
-                // If the object has an instance, provide one
-                AABB(const Vector2d &size, Obj *instance = nullptr) : m_max(size) 
-                    {
-                        m_type = colliderType::AABB;
-                        if (instance)
-                            {
-                                m_callback = fe::function<void, Obj, const fe::collider&>(fe::fPtr<true, Obj, void, const fe::collider&>(instance, &Obj::collision));
-                            }
-                    }
-
-                void operator()(const collider &collided) const { m_callback(collided); }
+                FLAT_ENGINE_API void operator()(const collider &collided) const { if (m_callback) m_callback(collided); }
 
                 FLAT_ENGINE_API bool collide(const collider &other) const;
                 FLAT_ENGINE_API bool doesContain(const fe::Vector2d &point) const;
@@ -59,5 +48,3 @@ namespace fe
                 Vector2d m_max;
             };
     }
-
-#include "colliders.inl"
