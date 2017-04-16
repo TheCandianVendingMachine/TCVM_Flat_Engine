@@ -1,8 +1,7 @@
 // matrix.hpp
 // A 2d matrix to allow for easy transformations
 #pragma once
-#define FLAT_ENGINE_EXPORT
-#include "../flatEngineExport.hpp"
+#define FLAT_ENGINE_API
 #include "Vector2.hpp"
 #include <cstring>
 #include <cmath>
@@ -10,7 +9,7 @@
 // Converts the wanted degrees to radians
 constexpr float operator "" _Deg(long double degrees)
     {
-        return degrees * 3.14159f / 180.f;
+        return static_cast<long double>(degrees) * 3.14159f / 180.f;
     }
 
 // Converts the wanted degrees to radians
@@ -30,7 +29,6 @@ namespace fe
             {
                 typedef float matrix[9];
                 matrix values;
-                fe::Vector2d origin;
 
                 FLAT_ENGINE_API matrix3d();
                 FLAT_ENGINE_API matrix3d(float x11, float y12, float z13,

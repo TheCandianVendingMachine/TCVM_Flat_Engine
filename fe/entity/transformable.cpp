@@ -1,6 +1,6 @@
 #include "transformable.hpp"
 
-fe::transformable::transformable() : m_rotation(0.f), m_update(true)
+fe::transformable::transformable() : m_rotation(0.f), m_update(true), m_scale({ 1.f, 1.f })
     {}
 
 void fe::transformable::setPosition(const fe::Vector2d &position)
@@ -9,7 +9,7 @@ void fe::transformable::setPosition(const fe::Vector2d &position)
         m_update = true;
     }
 
-void fe::transformable::setRotation(const float &radians)
+void fe::transformable::setRotation(float radians)
     {
         m_rotation = radians;
         m_update = true;
@@ -17,18 +17,29 @@ void fe::transformable::setRotation(const float &radians)
 
 void fe::transformable::setOrigin(const fe::Vector2d &origin)
     {
-        m_matrix.origin = origin;
+        m_origin = origin;
         m_update |= true;
     }
 
-const fe::Vector2d &fe::transformable::getPosition()
+void fe::transformable::setScale(const fe::Vector2d &scale)
+    {
+        m_scale = scale;
+        m_update |= true;
+    }
+
+const fe::Vector2d &fe::transformable::getPosition() const
     {
         return m_position;
     }
 
-float fe::transformable::getRotation()
+float fe::transformable::getRotation() const
     {
         return m_rotation;
+    }
+
+const fe::Vector2d &fe::transformable::getScale() const
+    {
+        return m_scale;
     }
 
 void fe::transformable::move(const fe::Vector2d &offset)
@@ -37,10 +48,16 @@ void fe::transformable::move(const fe::Vector2d &offset)
         m_update |= (offset.magnitudeSqr() != 0.f);
     }
 
-void fe::transformable::rotate(const float &radians)
+void fe::transformable::rotate(float radians)
     {
         m_rotation += radians;
         m_update |= (radians != 0.f);
+    }
+
+void fe::transformable::scale(const fe::Vector2d &scale)
+    {
+        m_scale = fe::Vector2d(scale.x * m_scale.x, scale.y * m_scale.y);
+        m_update |= (scale.magnitudeSqr() != 0.f);
     }
 
 const fe::matrix3d &fe::transformable::getMatrix()
@@ -50,12 +67,20 @@ const fe::matrix3d &fe::transformable::getMatrix()
                 float cos = std::cos(m_rotation);
                 float sin = std::sin(m_rotation);
 
-                float tx = m_position.x;
-                float ty = m_position.y;
+                float scaleCosX = m_scale.x * cos;
+                float scaleSinX = m_scale.x * sin;
 
-                m_matrix = fe::matrix3d(cos, sin, 0.f,
-                                       -sin, cos, 0.f,
-                                        tx, ty,   1.f);
+                float scaleCosY = m_scale.y * cos;
+                float scaleSinY = m_scale.y * sin;
+
+                float tx = -m_origin.x * scaleCosX - m_origin.y * scaleSinY + m_position.x;
+                float ty =  m_origin.x * scaleSinX - m_origin.y * scaleCosY + m_position.y;
+
+                m_matrix = fe::matrix3d(scaleCosX, scaleSinY, 0.f,
+                                       -scaleSinX, scaleCosY, 0.f,
+                                        tx,        ty,        1.f);
+
+                m_update = false;
             }
 
         return m_matrix;
