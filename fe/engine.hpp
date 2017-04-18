@@ -63,8 +63,8 @@ namespace fe
 
                     FLAT_ENGINE_API const fe::Vector2d getMousePos() const;
 
-                    FLAT_ENGINE_API void queueState(fe::baseGameState *state);
-					FLAT_ENGINE_API void queuePop();
+                    FLAT_ENGINE_API void queueState(fe::baseGameState *state) const;
+					FLAT_ENGINE_API void queuePop() const;
 
                     FLAT_ENGINE_API const fe::baseGameState &getCurrentState() const;
 

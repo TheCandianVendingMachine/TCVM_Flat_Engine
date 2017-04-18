@@ -167,11 +167,11 @@ const fe::Vector2d fe::engine::getMousePos() const
         return m_mousePosition;
     }
 
-void fe::engine::queueState(fe::baseGameState *state)
+void fe::engine::queueState(fe::baseGameState *state) const
     {
         m_gameStateMachine->queuePush(state);
     }
-void fe::engine::queuePop()
+void fe::engine::queuePop() const
     {
         m_gameStateMachine->queuePop();
     }

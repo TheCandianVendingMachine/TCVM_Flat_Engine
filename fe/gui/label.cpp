@@ -30,6 +30,9 @@ fe::Vector2d fe::gui::label::getPosition() const
 void fe::gui::label::setCharacterSize(float point)
     {
         m_text.setCharacterSize(point);
+
+        sf::FloatRect textRect = m_text.getLocalBounds();
+        m_text.setOrigin(textRect.left + textRect.width / 2.f, textRect.top + textRect.height / 2.f);
     }
 
 float fe::gui::label::getCharacterSize() const
@@ -40,6 +43,9 @@ float fe::gui::label::getCharacterSize() const
 void fe::gui::label::setPixelSize(float pixel)
     {
         m_text.setCharacterSize(pixel * (72.f / 96.f));
+
+        sf::FloatRect textRect = m_text.getLocalBounds();
+        m_text.setOrigin(textRect.left + textRect.width / 2.f, textRect.top + textRect.height / 2.f);
     }
 
 float fe::gui::label::getPixelSize() const

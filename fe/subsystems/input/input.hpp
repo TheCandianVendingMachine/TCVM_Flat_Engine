@@ -26,11 +26,12 @@ namespace fe
 
                 bool m_realTime;
                 bool m_inverse;
+                bool m_frozen;
 
                 std::function<void()> m_callback;
 
                 input() {}
-                input(bool realTime, bool onPress, TInput input, std::function<void()> callback) : m_input(input), m_callback(callback), m_realTime(realTime), m_inverse(!onPress) { }
+                input(bool realTime, bool onPress, TInput input, std::function<void()> callback) : m_input(input), m_callback(callback), m_realTime(realTime), m_inverse(!onPress), m_frozen(false) { }
 
                 input &operator=(const input &rhs)
                     {
@@ -47,6 +48,8 @@ namespace fe
 
                 void handleEvent(const sf::Event &event)
                     {
+                        if (m_frozen) return;
+
                         bool correctKey = m_isKeyboard ? m_input == event.key.code : m_input == event.mouseButton.button;
                         bool eventPressed = event.type == m_pressed && correctKey;
 
@@ -60,6 +63,8 @@ namespace fe
 
                 void checkPressed()
                     {
+                        if (m_frozen) return;
+
                         // static_cast is required. The compiler doesn't like mixing/matching types, even if it cannot happen, so we
                         // cast it to the type it arleady is
                         bool isPressed = (std::is_same<TInput, sf::Keyboard::Key>::value ?
