@@ -16,7 +16,7 @@ void fe::renderer::shutDown()
 void fe::renderer::load()
     {
         m_renderWindow->create(sf::VideoMode(1280, 720), "Flat Engine", sf::Style::Close);
-        m_renderWindow->setFramerateLimit(2000);
+        m_renderWindow->setFramerateLimit(120);
     }
 
 void fe::renderer::draw(const sf::Drawable &draw)

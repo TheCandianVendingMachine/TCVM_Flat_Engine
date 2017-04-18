@@ -314,6 +314,7 @@ void fe::gui::panel::draw(sf::RenderTarget &target)
 
                 target.draw(m_window, state);
             }
+
         target.draw(m_titleBar);
         target.draw(m_title);
     }

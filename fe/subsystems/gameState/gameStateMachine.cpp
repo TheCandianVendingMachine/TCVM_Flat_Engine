@@ -44,7 +44,6 @@ void fe::gameStateMachine::pop()
         if (m_currentState) 
             {
                 m_currentState->deinit();
-                m_currentState->~baseGameState();
 
                 // This must be in this scope because if we free to the marker and there isnt a state, the marker will be pointing to an area made
                 // AFTER CONSTRUCTION. This will cause a ton of errors

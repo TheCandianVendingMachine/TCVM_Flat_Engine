@@ -10,13 +10,13 @@
 // Converts the wanted degrees to radians
 constexpr float operator "" _Deg(long double degrees)
     {
-        return static_cast<long double>(degrees) * 3.14159f / 180.f;
+        return static_cast<float>(static_cast<long double>(degrees) * 3.14159f / 180.f);
     }
 
 // Converts the wanted degrees to radians
 constexpr float operator "" _Deg(unsigned long long degrees)
     {
-        return static_cast<long double>(degrees) * 3.14159f / 180.f;
+        return static_cast<float>(static_cast<long double>(degrees) * 3.14159f / 180.f);
     }
 
 namespace fe 

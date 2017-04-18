@@ -101,21 +101,21 @@ void fe::engine::shutDown()
         // We manually call the destructors because we want them to go out of scope now
 
         m_gameStateMachine->shutDown();
-        m_gameStateMachine->~gameStateMachine();
+        //m_gameStateMachine->~gameStateMachine();
 
-        m_eventSender->~eventSender();
+        //m_eventSender->~eventSender();
 
         m_inputManager->shutDown();
-        m_inputManager->~inputManager();
+        //m_inputManager->~inputManager();
 
         m_renderer.shutDown();
-        m_renderer.~renderer();
+        //m_renderer.~renderer();
 
         m_logger->shutDown();
-        m_logger->~logger();
+        //m_logger->~logger();
 
         m_memoryManager.shutDown();
-        m_memoryManager.~memoryManager();
+        //m_memoryManager.~memoryManager();
     }
 
 const fe::engine &fe::engine::get()

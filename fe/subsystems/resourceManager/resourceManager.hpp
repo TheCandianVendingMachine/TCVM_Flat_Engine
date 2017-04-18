@@ -1,30 +1,72 @@
 // resourceManager.hpp
-// will load objects from file, copy them to memory, and then
+// loads and stores all resources so they don't go out of scope for the program
 #pragma once
-#define FLAT_ENGINE_EXPORT
-#include "../../flatEngineExport.hpp"
-#include "../memory/poolAllocater.hpp"
-#include "resourceObject.hpp"
-
 #include <unordered_map>
 #include <string>
+#include "../memory/memoryManager.hpp"
+#include "../../debug/logger.hpp"
 
-namespace fe
+namespace fe 
     {
+        template<typename T>
         class resourceManager
             {
                 private:
-                    std::unordered_map<std::string, resourceObject*> m_resources;
-                    fe::poolAllocater<resourceObject> m_resourceAllocater;
+                    std::unordered_map<std::string, T*> m_resources;
 
                 public:
-                    FLAT_ENGINE_API void startUp(size_t amountOfResources);
+                    T *load(const std::string &filepath, const std::string &id);
+                    T *get(const std::string &id);
+                    void remove(const std::string &id);
 
-                    FLAT_ENGINE_API void add(const std::string &id, const std::string &filepath, fe::resourceObjectType::resourceObjectType type);
-                    FLAT_ENGINE_API void remove(const std::string &id);
-                    FLAT_ENGINE_API resourceObject *get(const std::string &id);
-
-                    FLAT_ENGINE_API void clear();
-
+                    void shutDown();
             };
+
+        template<typename T>
+        T *resourceManager<T>::load(const std::string &filepath, const std::string &id)
+            {
+                T *resource = get(id);
+                if (resource)
+                    {
+                        return resource;
+                    }
+
+                auto memBuffer = FE_ALLOC_STACK("ResourceManager", sizeof(T));
+                resource = new(memBuffer) T();
+                if (resource)
+                    {
+                        resource->loadFromFile(filepath);
+
+                        m_resources[id] = resource;
+                        return resource;
+                    }
+                else
+                    {
+                        FE_LOG_WARNING(id, "from filepath", filepath, "cannot be loaded into memory");
+                    }
+
+                return nullptr;
+            }
+
+        template<typename T>
+        T *resourceManager<T>::get(const std::string &id)
+            {
+                return m_resources[id];
+            }
+
+        template<typename T>
+        void resourceManager<T>::remove(const std::string &id)
+            {
+                m_resources[id]->~T();
+                m_resources.erase(id);
+            }
+
+        template<typename T>
+        void resourceManager<T>::shutDown()
+            {
+                for (auto &obj : m_resources)
+                    {
+                        obj.second->~T();
+                    }
+            }
     }

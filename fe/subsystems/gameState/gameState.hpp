@@ -38,8 +38,8 @@ namespace fe
                     FLAT_ENGINE_API fe::sceneGraph::EntityHandle addEntity(Args &&...args);
                     FLAT_ENGINE_API void removeEntity(fe::sceneGraph::EntityHandle handle);
 
-                    void addPanel(gui::panel *panel);
-                    void removePanel(gui::panel *panel);
+                    FLAT_ENGINE_API void addPanel(gui::panel *panel);
+                    FLAT_ENGINE_API void removePanel(gui::panel *panel);
 
                 public:
                     FLAT_ENGINE_API virtual void init() {}
