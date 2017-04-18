@@ -24,6 +24,7 @@ void fe::engine::handleEvents()
                     }
 
                 m_inputManager->handleEvents(currentEvent);
+                m_gameStateMachine->handleEvents(currentEvent);
             }
     }
 

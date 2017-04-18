@@ -9,16 +9,27 @@
 #include "../memory/memoryManager.hpp"
 #include "../../debug/logger.hpp"
 
+#include <vector>
+
 namespace sf
     {
         class RenderTarget;
+        class Event;
     }
 
 namespace fe
     {
+        namespace gui
+            {
+                class panel;
+                class guiElement;
+            }
+
         class baseGameState
             {
                 private:
+                    std::vector<gui::panel*> m_guiPanels;
+
                     fe::sceneGraph m_sceneGraph;
                     fe::collisonHandler m_collisionHandler;
 
@@ -27,8 +38,13 @@ namespace fe
                     FLAT_ENGINE_API fe::sceneGraph::EntityHandle addEntity(Args &&...args);
                     FLAT_ENGINE_API void removeEntity(fe::sceneGraph::EntityHandle handle);
 
+                    void addPanel(gui::panel *panel);
+                    void removePanel(gui::panel *panel);
+
                 public:
                     FLAT_ENGINE_API virtual void init() {}
+
+                    FLAT_ENGINE_API void handleEvents(const sf::Event &event);
 
                     FLAT_ENGINE_API virtual void preUpdate() {}
                     FLAT_ENGINE_API void update(float deltaTime);

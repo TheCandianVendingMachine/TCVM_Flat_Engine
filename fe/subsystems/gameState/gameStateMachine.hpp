@@ -7,6 +7,7 @@
 namespace sf
     {
         class RenderWindow;
+        class Event;
     }
 
 namespace fe
@@ -41,6 +42,8 @@ namespace fe
                     FLAT_ENGINE_API void queuePush(baseGameState *newState);
                     // Queue a pop to happen next frame
                     FLAT_ENGINE_API void queuePop();
+
+                    FLAT_ENGINE_API void handleEvents(const sf::Event &event);
 
                     FLAT_ENGINE_API void preUpdate();
                     FLAT_ENGINE_API void update(float deltaTime);

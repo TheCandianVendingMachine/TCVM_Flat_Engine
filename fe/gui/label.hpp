@@ -1,6 +1,9 @@
 // label.hpp
 // A text-label that can be added to the world
 #pragma once
+#define FLAT_ENGINE_EXPORT
+#include "../flatEngineExport.hpp"
+
 #include "guiElement.hpp"
 #include <SFML/Graphics/Text.hpp>
 
@@ -19,28 +22,28 @@ namespace fe
                             sf::Text m_text;
                             fe::Vector2d m_textPosition;
 
-                            void drawElement(sf::RenderTarget &target, const fe::matrix3d &matrix);
+                            FLAT_ENGINE_API void drawElement(sf::RenderTarget &target, const fe::matrix3d &matrix);
 
                         public:
-                            label(sf::Font &font, const char *text);
+                            FLAT_ENGINE_API label(sf::Font &font, const char *text);
                             
-                            void setPosition(fe::Vector2d pos);
-                            fe::Vector2d getPosition() const;
+                            FLAT_ENGINE_API void setPosition(fe::Vector2d pos);
+                            FLAT_ENGINE_API fe::Vector2d getPosition() const;
 
-                            void setCharacterSize(float point);
-                            float getCharacterSize() const;
+                            FLAT_ENGINE_API void setCharacterSize(float point);
+                            FLAT_ENGINE_API float getCharacterSize() const;
 
-                            void setPixelSize(float pixel);
-                            float getPixelSize() const;
+                            FLAT_ENGINE_API void setPixelSize(float pixel);
+                            FLAT_ENGINE_API float getPixelSize() const;
 
-                            void setString(const char *str);
-                            std::string getString() const;
+                            FLAT_ENGINE_API void setString(const char *str);
+                            FLAT_ENGINE_API std::string getString() const;
 
-                            void setColour(sf::Color colour);
-                            sf::Color getColour();
+                            FLAT_ENGINE_API void setColour(sf::Color colour);
+                            FLAT_ENGINE_API sf::Color getColour();
 
-                            void handleEvent(const sf::Event &event) {}
-                            void update() {}
+                            FLAT_ENGINE_API void handleEvent(const sf::Event &event) {}
+                            FLAT_ENGINE_API void update() {}
                     };
             }
     }

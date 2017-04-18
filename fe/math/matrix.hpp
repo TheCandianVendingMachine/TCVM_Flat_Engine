@@ -1,7 +1,8 @@
 // matrix.hpp
 // A 2d matrix to allow for easy transformations
 #pragma once
-#define FLAT_ENGINE_API
+#define FLAT_ENGINE_EXPORT
+#include "../flatEngineExport.hpp"
 #include "Vector2.hpp"
 #include <cstring>
 #include <cmath>

@@ -1,8 +1,9 @@
 // transformable.hpp
 // a class that will allow objects to be able to be moved when rendered
 #pragma once
-#define FLAT_ENGINE_API
-#include "matrix.hpp"
+#define FLAT_ENGINE_EXPORT
+#include "../flatEngineExport.hpp"
+#include "../math/matrix.hpp"
 
 namespace fe
     {

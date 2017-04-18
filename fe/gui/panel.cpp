@@ -22,13 +22,24 @@ fe::gui::panel::panel(fe::Vector2d size, int modifiers, const char *title, sf::F
     m_distanceFromEnd(5.f),
     m_distanceFromTop(5.f) 
     {
+        m_window.setPrimitiveType(sf::PrimitiveType::Quads);
+        m_window.resize(4);
+
+        setModifiers(modifiers);
+        setSize(size);
+
+        if (m_hasTitle) 
+            {
+                setTitle(title, *font);
+            }
+    }
+
+void fe::gui::panel::setModifiers(int modifiers)
+    {
         m_canMinimize |=(modifiers & panelModifiers::CAN_MINIMIZE);
         m_canClose |=   (modifiers & panelModifiers::CAN_CLOSE);
         m_canDrag |=    (modifiers & panelModifiers::CAN_DRAG);
         m_hasTitle |=   (modifiers & panelModifiers::HAS_TITLE);
-
-        m_window.setPrimitiveType(sf::PrimitiveType::Quads);
-        m_window.resize(4);
 
         if (m_canMinimize || m_canClose || m_canDrag || m_hasTitle)
             {
@@ -56,25 +67,28 @@ fe::gui::panel::panel(fe::Vector2d size, int modifiers, const char *title, sf::F
                         m_titleBar[10].color = sf::Color::Red;
                         m_titleBar[11].color = sf::Color::Red;
                     }
-
-                if (m_hasTitle)
-                    {
-                        char croppedTitle[31];
-                        std::strncpy(croppedTitle, title, 30);
-                        croppedTitle[30] = '\0';
-
-                        m_title.setString(croppedTitle);
-                        m_title.setFillColor(sf::Color::Black);
-                        m_title.setFont(*font);
-
-                        m_title.setCharacterSize((m_windowOffset - 5.f) * (72.f / 96.f));
-                        m_title.setPosition(5, 5);
-
-                        m_titlePosition = m_title.getPosition();
-                    }
             }
+    }
 
-        setSize(size);
+void fe::gui::panel::setTitle(const char *title, sf::Font &font)
+    {
+        char croppedTitle[31];
+        std::strncpy(croppedTitle, title, 30);
+        croppedTitle[30] = '\0';
+
+        m_title.setString(croppedTitle);
+        m_title.setFillColor(sf::Color::Black);
+        m_title.setFont(font);
+
+        m_title.setCharacterSize((m_windowOffset - 5.f) * (72.f / 96.f));
+        m_title.setPosition(5, 5);
+
+        m_titlePosition = m_title.getPosition();
+    }
+
+std::string fe::gui::panel::getTitle() const
+    {
+    return std::string();
     }
 
 void fe::gui::panel::setPanelBarColour(sf::Color colour)

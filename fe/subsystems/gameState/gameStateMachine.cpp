@@ -64,6 +64,14 @@ void fe::gameStateMachine::queuePop()
         m_pop = true;
     }
 
+void fe::gameStateMachine::handleEvents(const sf::Event &event)
+    {
+        if (m_currentState)
+            {
+                m_currentState->handleEvents(event);
+            }
+    }
+
 void fe::gameStateMachine::preUpdate()
     {
         if (m_pop)

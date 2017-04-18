@@ -1,6 +1,9 @@
 // panel.hpp
 // a "window" for GUI elements. A render texture so we can render to it in one call
 #pragma once
+#define FLAT_ENGINE_EXPORT
+#include "../flatEngineExport.hpp"
+
 #include <SFML/Graphics/RenderTexture.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
 #include <SFML/Graphics/Color.hpp>
@@ -11,7 +14,7 @@
 #include <memory>
 #include <cstdint>
 
-#include "../transformable.hpp"
+#include "../entity/transformable.hpp"
 
 namespace sf
     {
@@ -74,34 +77,39 @@ namespace fe
                             bool m_isFolded;
 
                         public:
-                            panel(fe::Vector2d size, int modifiers = 0, const char *title = "\0", sf::Font *font = nullptr);
+                            FLAT_ENGINE_API panel(fe::Vector2d size = {50, 50}, int modifiers = 0, const char *title = "\0", sf::Font *font = nullptr);
 
-                            void setPanelBarColour(sf::Color colour);
-                            void setPanelClearColour(sf::Color colour);
+                            FLAT_ENGINE_API void setModifiers(int modifiers);
 
-                            sf::Color getPanelBarColour() const;
-                            sf::Color getPanelClearColour() const;
+                            FLAT_ENGINE_API void setTitle(const char *title, sf::Font &font);
+                            FLAT_ENGINE_API std::string getTitle() const;
+
+                            FLAT_ENGINE_API void setPanelBarColour(sf::Color colour);
+                            FLAT_ENGINE_API void setPanelClearColour(sf::Color colour);
+
+                            FLAT_ENGINE_API sf::Color getPanelBarColour() const;
+                            FLAT_ENGINE_API sf::Color getPanelClearColour() const;
 
                             // Returns false if the window requests to be closed
-                            bool isOpen() const;
+                            FLAT_ENGINE_API bool isOpen() const;
 
-                            unsigned int addElement(guiElement *element);
-                            guiElement *getElement(unsigned int handle);
+                            FLAT_ENGINE_API unsigned int addElement(guiElement *element);
+                            FLAT_ENGINE_API guiElement *getElement(unsigned int handle);
  
-                            void removeElement(unsigned int handle);
+                            FLAT_ENGINE_API void removeElement(unsigned int handle);
 
-                            bool getMousePressed() const;
-                            bool mouseHover(const fe::Vector2d &position, const fe::Vector2d &size) const;
+                            FLAT_ENGINE_API bool getMousePressed() const;
+                            FLAT_ENGINE_API bool mouseHover(const fe::Vector2d &position, const fe::Vector2d &size) const;
 
-                            void setSize(fe::Vector2d size);
-                            fe::Vector2d getSize() const;
+                            FLAT_ENGINE_API void setSize(fe::Vector2d size);
+                            FLAT_ENGINE_API fe::Vector2d getSize() const;
 
-                            void handleEvent(const sf::Event &event);
-                            void update();
-                            void draw(sf::RenderTarget &target);
+                            FLAT_ENGINE_API void handleEvent(const sf::Event &event);
+                            FLAT_ENGINE_API void update();
+                            FLAT_ENGINE_API void draw(sf::RenderTarget &target);
 
-                            void destroy();
-                            ~panel();
+                            FLAT_ENGINE_API void destroy();
+                            FLAT_ENGINE_API ~panel();
 
                     };
             }
