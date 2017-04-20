@@ -14,12 +14,19 @@ namespace fe
                     fe::clock m_timer;
                     fe::time m_length;
 
+                    bool m_started;
+
                 public:
+                    FLAT_ENGINE_API countdown();
+
                     // starts the timer for the length provided
                     FLAT_ENGINE_API void start(fe::time length);
                     
                     // returns true if the countdown has completed
                     FLAT_ENGINE_API bool isDone();
+
+                    // Returns true if the countdown has started
+                    FLAT_ENGINE_API bool hasStarted();
 
                     // returns how long the timer has to completion
                     FLAT_ENGINE_API fe::time timeUntilCompletion();
