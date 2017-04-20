@@ -10,8 +10,14 @@ namespace fe
         // a base class so we can store any type of input as a pointer
         struct inputBase
             {
+                inputBase(bool realTime, bool inverse) : m_realTime(realTime), m_inverse(inverse), m_frozen(false) {}
+
                 virtual void handleEvent(const sf::Event &eve) {}
                 virtual void checkPressed() {}
+
+                bool m_realTime;
+                bool m_inverse;
+                bool m_frozen;
             };
 
         template<typename TInput>
@@ -24,14 +30,10 @@ namespace fe
                 
                 TInput m_input;
 
-                bool m_realTime;
-                bool m_inverse;
-                bool m_frozen;
-
                 std::function<void()> m_callback;
 
-                input() {}
-                input(bool realTime, bool onPress, TInput input, std::function<void()> callback) : m_input(input), m_callback(callback), m_realTime(realTime), m_inverse(!onPress), m_frozen(false) { }
+                input() : inputBase(false, false) {}
+                input(bool realTime, bool onPress, TInput input, std::function<void()> callback) : inputBase(realTime, !onPress), m_input(input), m_callback(callback) { }
 
                 input &operator=(const input &rhs)
                     {

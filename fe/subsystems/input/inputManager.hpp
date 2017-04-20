@@ -5,14 +5,15 @@
 #include "../../flatEngineExport.hpp"
 #include "input.hpp"
 #include "../memory/memoryManager.hpp"
-#include <vector>
+#include <unordered_map>
+#include <string>
 
 namespace fe
     {
         class inputManager
             {
                 private:
-                    std::vector<fe::inputBase*> m_inputs;
+                    std::unordered_map<std::string, inputBase*> m_inputs;
                     static inputManager *m_instance;
 
                 public:
@@ -24,8 +25,10 @@ namespace fe
 
                     FLAT_ENGINE_API static inputManager &get();
 
-                    FLAT_ENGINE_API void add(input<sf::Keyboard::Key> input);
-                    FLAT_ENGINE_API void add(input<sf::Mouse::Button> input);
+                    FLAT_ENGINE_API void add(const char *id, input<sf::Keyboard::Key> input);
+                    FLAT_ENGINE_API void add(const char *id, input<sf::Mouse::Button> input);
+
+                    FLAT_ENGINE_API void setActive(const char *id, bool value);
 
                     FLAT_ENGINE_API virtual ~inputManager() {}
 
