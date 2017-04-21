@@ -20,6 +20,7 @@ namespace fe
                 private:
                     // since all memory that the state has will be irrelevant once we pop it, we get the current stack marker to free to
                     fe::stackAllocater::Marker m_stateMarker; // this marker is from m_previousState
+                    fe::stackAllocater m_stateAllocater;
                     bool m_pop;
 
                     baseGameState *m_currentState;
@@ -39,7 +40,8 @@ namespace fe
                     FLAT_ENGINE_API void pop();
 
                     // Queue a push to happen next frame
-                    FLAT_ENGINE_API void queuePush(baseGameState *newState);
+                    template<typename T>
+                    void queuePush();
                     // Queue a pop to happen next frame
                     FLAT_ENGINE_API void queuePop();
 
@@ -60,4 +62,10 @@ namespace fe
                     FLAT_ENGINE_API virtual ~gameStateMachine() {}
 
             };
+
+        template<typename T>
+        void gameStateMachine::queuePush()
+            {
+                m_nextState = new(m_stateAllocater.alloc(sizeof(T))) T();
+            }
     }

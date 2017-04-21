@@ -67,7 +67,8 @@ void fe::engine::calcFPS()
 fe::engine::engine(const float updateRate) :
     m_logger(nullptr),
     m_deltaTime(updateRate),
-    m_elapsedFrames(0)
+    m_elapsedFrames(0),
+    m_shutDown(false)
     {}
 
 void fe::engine::startUp(unsigned long long totalMemory, unsigned long long stackMemory)
@@ -98,24 +99,13 @@ void fe::engine::startUp(unsigned long long totalMemory, unsigned long long stac
 
 void fe::engine::shutDown()
     {
-        // We manually call the destructors because we want them to go out of scope now
+        m_shutDown = true;
 
         m_gameStateMachine->shutDown();
-        //m_gameStateMachine->~gameStateMachine();
-
-        //m_eventSender->~eventSender();
-
         m_inputManager->shutDown();
-        //m_inputManager->~inputManager();
-
         m_renderer.shutDown();
-        //m_renderer.~renderer();
-
         m_logger->shutDown();
-        //m_logger->~logger();
-
         m_memoryManager.shutDown();
-        //m_memoryManager.~memoryManager();
     }
 
 const fe::engine &fe::engine::get()
@@ -167,13 +157,9 @@ const fe::Vector2d fe::engine::getMousePos() const
         return m_mousePosition;
     }
 
-void fe::engine::queueState(fe::baseGameState *state) const
+fe::gameStateMachine &fe::engine::getStateMachine() const
     {
-        m_gameStateMachine->queuePush(state);
-    }
-void fe::engine::queuePop() const
-    {
-        m_gameStateMachine->queuePop();
+        return *m_gameStateMachine;
     }
 
 const fe::baseGameState &fe::engine::getCurrentState() const
@@ -184,4 +170,12 @@ const fe::baseGameState &fe::engine::getCurrentState() const
 fe::eventSender *fe::engine::getEventSender() const
     {
         return m_eventSender;
+    }
+
+fe::engine::~engine()
+    {
+        if (!m_shutDown)
+            {
+                m_memoryManager.printDebugInformation();
+            }
     }

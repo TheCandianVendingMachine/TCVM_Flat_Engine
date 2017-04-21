@@ -12,6 +12,9 @@ void fe::gameStateMachine::startUp()
     {
         if (!m_instance) 
             {
+                auto memBuf = FE_ALLOC_STACK("", 16_KiB);
+                m_stateAllocater.startUp(static_cast<char*>(memBuf), 16_KiB);
+
                 m_stateMarker = fe::memoryManager::get().getStackAllocater().getMarker();
                 m_instance = this;
 
@@ -31,7 +34,7 @@ fe::gameStateMachine &fe::gameStateMachine::get()
         return *m_instance;
     }
 
-void fe::gameStateMachine::push(fe::baseGameState *newState)
+void fe::gameStateMachine::push(baseGameState *newState)
     {
         m_currentState = newState;
         m_currentState->init();
@@ -41,21 +44,17 @@ void fe::gameStateMachine::pop()
     {
         // we clear all event handlers so we don't call on a nullptr by accident
         //fe::engine::get().getEventSender()->clear();
-        if (m_currentState) 
+        if (m_currentState)
             {
                 m_currentState->deinit();
 
                 // This must be in this scope because if we free to the marker and there isnt a state, the marker will be pointing to an area made
                 // AFTER CONSTRUCTION. This will cause a ton of errors
                 FE_FREE_STACK("StateMachine", m_stateMarker);
+                m_stateAllocater.freeToMarker(m_stateAllocater.getMarker());
             }
         m_stateMarker = fe::memoryManager::get().getStackAllocater().getMarker();
         m_currentState = nullptr;
-    }
-
-void fe::gameStateMachine::queuePush(fe::baseGameState *newState)
-    {
-        m_nextState = newState;
     }
 
 void fe::gameStateMachine::queuePop()

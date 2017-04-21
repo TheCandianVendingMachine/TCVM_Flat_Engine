@@ -38,6 +38,8 @@ namespace fe
                     fe::Vector2d m_screenSize;
                     fe::Vector2d m_mousePosition;
 
+                    bool m_shutDown;
+
                     static fe::engine *m_instance;
                                         
                 private:
@@ -63,12 +65,13 @@ namespace fe
 
                     FLAT_ENGINE_API const fe::Vector2d getMousePos() const;
 
-                    FLAT_ENGINE_API void queueState(fe::baseGameState *state) const;
-					FLAT_ENGINE_API void queuePop() const;
-
+                    FLAT_ENGINE_API fe::gameStateMachine &getStateMachine() const;
                     FLAT_ENGINE_API const fe::baseGameState &getCurrentState() const;
 
 
                     FLAT_ENGINE_API fe::eventSender *getEventSender() const;
+
+                    FLAT_ENGINE_API ~engine();
             };
+
     }
