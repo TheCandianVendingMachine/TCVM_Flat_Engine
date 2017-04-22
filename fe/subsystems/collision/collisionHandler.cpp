@@ -34,3 +34,11 @@ void fe::collisonHandler::handleCollisions()
                     }
             }
     }
+
+fe::collisonHandler::~collisonHandler()
+    {
+        for (auto &collider : m_colliders)
+            {
+                delete collider;
+            }
+    }

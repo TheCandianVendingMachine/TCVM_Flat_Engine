@@ -5,8 +5,6 @@
 #include "../../flatEngineExport.hpp"
 #include "stackAllocater.hpp"
 
-#include "../../debug/memoryLogger.hpp"
-
 // User defined literals for easy conversion between bytes to other memory units
 
 // Return the inputted bytes to Gigabytes (Really Gibibytes)
@@ -34,7 +32,6 @@ namespace fe
             {
                 private:
                     stackAllocater m_stackAllocater;
-                    memoryLogger *m_memoryLogger;
 
                     size_t m_bufferSize;
                     size_t m_currentOffset;
@@ -57,12 +54,6 @@ namespace fe
                     FLAT_ENGINE_API stackAllocater &getStackAllocater();
 
                     FLAT_ENGINE_API char *getBuffer() const;
-                    
-                    FLAT_ENGINE_API void logAllocation(const char *id, const size_t size, memoryLogger::allocationTypes type);
-                    FLAT_ENGINE_API void logDeallocation(const char *id, const size_t size, memoryLogger::allocationTypes type);
-                    FLAT_ENGINE_API memoryLogger &getMemoryLogger();
-
-                    FLAT_ENGINE_API void printDebugInformation();
 
                     FLAT_ENGINE_API ~memoryManager();
 
@@ -75,7 +66,6 @@ namespace fe
     ([]()\
         { /* Since we cant define an inline function, we declare a lamda that does everything we need and then call it to return the value. */ \
           /* This is so we can log the allocation before we do the allocaiton, so if we get OOM errors we will know the last allocation */ \
-            fe::memoryManager::get().logAllocation(id, size, fe::memoryLogger::ALLOC_DIRECT); \
             return fe::memoryManager::get().alloc(size); \
         })();
 
@@ -83,11 +73,9 @@ namespace fe
 #define FE_ALLOC_STACK(id, size)\
     ([]()\
         {\
-            fe::memoryManager::get().logAllocation(id, size, fe::memoryLogger::ALLOC_STACK);\
             return fe::memoryManager::get().getStackAllocater().alloc(size);\
         })();
 
 // Free memory from the bottom of the stack to the marker. Will not invalidate pointers, but will allow them to be overwritten
 #define FE_FREE_STACK(id, marker)\
-    fe::memoryManager::get().logDeallocation(id, 0, fe::memoryLogger::ALLOC_STACK);\
     fe::memoryManager::get().getStackAllocater().freeToMarker(marker);

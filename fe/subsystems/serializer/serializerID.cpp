@@ -5,7 +5,7 @@ void serializerID::dataBlock::outData(std::ostream &out)
         out << m_id << "{\n";
         for (auto &dat : m_mappedData)
             {
-            out << dat.first << ":" << dat.second << ";\n";
+                out << dat.first << ":" << dat.second << ";\n";
             }
         out << "}\n";
     }

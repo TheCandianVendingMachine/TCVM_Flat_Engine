@@ -14,7 +14,10 @@ void fe::inputManager::startUp()
 
 void fe::inputManager::shutDown()
     {
-        
+        for (auto &input : m_inputs)
+            {
+                delete input.second;
+            }
     }
 
 void fe::inputManager::handleEvents(const sf::Event &event)
@@ -40,20 +43,12 @@ fe::inputManager &fe::inputManager::get()
 
 void fe::inputManager::add(const char *id, input<sf::Keyboard::Key> input)
     {
-        void *mem = FE_ALLOC_STACK("InputManager", sizeof(fe::input<sf::Keyboard::Key>));
-        fe::input<sf::Keyboard::Key> *inputAlloc = new(mem) fe::input<sf::Keyboard::Key>;
-
-        *inputAlloc = input;
-        m_inputs[id] = inputAlloc;
+        m_inputs[id] = new fe::input<sf::Keyboard::Key>(input);
     }
 
 void fe::inputManager::add(const char *id, input<sf::Mouse::Button> input)
     {
-        void *mem = FE_ALLOC_STACK("InputManager", sizeof(fe::input<sf::Mouse::Button>));
-        fe::input<sf::Mouse::Button> *inputAlloc = new(mem) fe::input<sf::Mouse::Button>;
-
-        *inputAlloc = input;
-        m_inputs[id] = inputAlloc;
+        m_inputs[id] = m_inputs[id] = new fe::input<sf::Mouse::Button>(input);
     }
 
 void fe::inputManager::setActive(const char *id, bool value)

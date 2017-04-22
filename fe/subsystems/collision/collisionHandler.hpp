@@ -3,7 +3,7 @@
 #pragma once
 #define FLAT_ENGINE_EXPORT
 #include "../../flatEngineExport.hpp"
-#include "../memory/memoryManager.hpp"
+#include "../memory/feNew.hpp"
 #include <vector>
 
 namespace fe
@@ -23,13 +23,14 @@ namespace fe
 
                     FLAT_ENGINE_API void handleCollisions();
 
+                    FLAT_ENGINE_API ~collisonHandler();
+
             };
 
         template<typename T, typename ...Args>
         T *collisonHandler::add(Args ...args)
             {
-                auto buf = FE_ALLOC_STACK("CollisionHandler", sizeof(T));
-                auto ret = new(buf) T(args...);
+                auto ret = new T(args...);
                 m_colliders.push_back(ret);
                 return ret;
             }

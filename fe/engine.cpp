@@ -77,7 +77,7 @@ void fe::engine::startUp(unsigned long long totalMemory, unsigned long long stac
             {
                 m_memoryManager.startUp(totalMemory, stackMemory);
  
-                m_logger = new logger;
+                m_logger = new (m_memoryManager.alloc(sizeof(fe::logger))) logger;
                 m_logger->startUp("log.log");
 
                 m_renderer.startUp();
@@ -176,6 +176,6 @@ fe::engine::~engine()
     {
         if (!m_shutDown)
             {
-                m_memoryManager.printDebugInformation();
+                //m_memoryManager.printDebugInformation();
             }
     }

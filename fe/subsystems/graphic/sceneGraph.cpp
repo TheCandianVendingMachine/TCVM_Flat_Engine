@@ -6,7 +6,6 @@
 #include "../../debug/logger.hpp"
 
 #include <algorithm>
-#include <SFML/Graphics/RenderTarget.hpp>
 
 void fe::sceneGraph::update(float deltaTime)
     {
@@ -65,4 +64,12 @@ fe::baseEntity *fe::sceneGraph::getEntity(fe::sceneGraph::EntityHandle handle) c
 void fe::sceneGraph::draw(sf::RenderTarget &app)
     {
         m_batch.draw(app);
+    }
+
+fe::sceneGraph::~sceneGraph()
+    {
+        for (auto &ent : m_entities)
+            {
+                delete ent;
+            }
     }

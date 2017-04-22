@@ -36,5 +36,7 @@ namespace fe
 
                     FLAT_ENGINE_API void draw(sf::RenderTarget &app);
 
+                    FLAT_ENGINE_API ~sceneGraph();
+
             };
     }

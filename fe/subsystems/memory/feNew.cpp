@@ -1,9 +1,11 @@
 #include "feNew.hpp"
 #include "memoryManager.hpp"
 
+#include <cstdlib>
+
 void *feAlloc(size_t bytes)
     {
-        fe::memoryManager::get().getMemoryLogger().allocateOverloadedNew(bytes);
+        //fe::memoryManager::get().getMemoryLogger().allocateOverloadedNew(bytes);
         return fe::memoryManager::get().getStackAllocater().alloc(bytes);
     }
 

@@ -3,7 +3,7 @@
 #pragma once
 #include <unordered_map>
 #include <string>
-#include "../memory/memoryManager.hpp"
+#include "../memory/feNew.hpp"
 #include "../../debug/logger.hpp"
 
 namespace fe 
@@ -31,8 +31,7 @@ namespace fe
                         return resource;
                     }
 
-                auto memBuffer = FE_ALLOC_STACK("ResourceManager", sizeof(T));
-                resource = new(memBuffer) T();
+                resource = new T();
                 if (resource)
                     {
                         resource->loadFromFile(filepath);

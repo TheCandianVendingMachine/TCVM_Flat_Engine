@@ -33,3 +33,11 @@ fe::Vector2d fe::renderer::getWindowSize()
 	{
 		return fe::Vector2d(m_renderWindow->getSize().x, m_renderWindow->getSize().y);
 	}
+
+fe::renderer::~renderer()
+    {
+        if (m_renderWindow)
+            {
+                delete m_renderWindow;
+            }
+    }

@@ -67,3 +67,6 @@ fe::collisonHandler &fe::baseGameState::getCollisionHandler()
         return m_collisionHandler;
     }
 
+fe::baseGameState::~baseGameState()
+    {}
+

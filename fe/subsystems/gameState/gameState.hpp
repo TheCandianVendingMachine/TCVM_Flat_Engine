@@ -63,31 +63,21 @@ namespace fe
                     template<typename T = fe::baseEntity>
                     FLAT_ENGINE_API T *getEntity(fe::sceneGraph::EntityHandle handle) const;
 
-                    FLAT_ENGINE_API virtual ~baseGameState() {}
+                    FLAT_ENGINE_API virtual ~baseGameState();
             };
 
         template<typename T, typename ...Args>
         fe::sceneGraph::EntityHandle baseGameState::addEntity(Args &&...args)
             {
-                auto mem = FE_ALLOC_STACK("GameStateEntity", sizeof(T));
-                if (mem) 
-                    {
-                        T *ent = new(mem) T(args...);
-                        auto handle = m_sceneGraph.addEntity(ent);
-                        ent->onAdd(*this);
-                        return handle;
-                    }
-                else
-                    {
-                        FE_LOG_ERROR("Cannot add entity");
-                    }
-
-                return 0;
+                T *ent = new T(args...);
+                auto handle = m_sceneGraph.addEntity(ent);
+                ent->onAdd(*this);
+                return handle;
             }
 
         template<typename T>
         T *baseGameState::getEntity(fe::sceneGraph::EntityHandle handle) const
             {
-            return static_cast<T*>(m_sceneGraph.getEntity(handle));
+                return static_cast<T*>(m_sceneGraph.getEntity(handle));
             }
     }
