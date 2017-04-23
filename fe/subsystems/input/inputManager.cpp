@@ -14,35 +14,68 @@ void fe::inputManager::startUp()
 
 void fe::inputManager::shutDown()
     {
-        for (auto &input : m_inputs)
-            {
-                if (input.second)
-                    {
-                        delete input.second;
-                    }
-            }
-
-        m_inputs.clear();
+        m_keyboardInputs.clear();
+        m_mouseInputs.clear();
     }
 
 void fe::inputManager::handleEvents(const sf::Event &event)
     {
-        for (auto it = m_inputs.begin(); it != m_inputs.end(); ++it)
+        for (auto &input : m_keyboardInputs)
             {
-                if (it->second)
+                if (event.type == sf::Event::KeyPressed && event.key.code == input.first)
                     {
-                        it->second->handleEvent(event);
+                        for (auto &data : input.second)
+                            {
+                                if (!data.m_realTime)
+                                    {
+                                        data.m_callback();
+                                    }
+                            }
+                    }
+            }
+
+        for (auto &input : m_mouseInputs)
+            {
+                if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == input.first)
+                    {
+                        for (auto &data : input.second)
+                            {
+                                if (!data.m_realTime)
+                                    {
+                                        data.m_callback();
+                                    }
+                            }
                     }
             }
     }
 
 void fe::inputManager::handleKeyPress()
     {
-        for (auto it = m_inputs.begin(); it != m_inputs.end(); ++it)
+        for (auto &input : m_keyboardInputs)
             {
-                if (it->second)
+                if (sf::Keyboard::isKeyPressed(input.first))
                     {
-                        it->second->checkPressed();
+                        for (auto &data : input.second)
+                            {
+                                if (data.m_realTime)
+                                    {
+                                        data.m_callback();
+                                    }
+                            }
+                    }
+            }
+
+        for (auto &input : m_mouseInputs)
+            {
+                if (sf::Mouse::isButtonPressed(input.first))
+                    {
+                        for (auto &data : input.second)
+                            {
+                                if (data.m_realTime)
+                                    {
+                                        data.m_callback();
+                                    }
+                            }
                     }
             }
     }
@@ -52,22 +85,28 @@ fe::inputManager &fe::inputManager::get()
         return *m_instance;
     }
 
-void fe::inputManager::add(const char *id, input<sf::Keyboard::Key> input)
+void fe::inputManager::add(sf::Keyboard::Key key, input data)
     {
-        m_inputs[id] = new fe::input<sf::Keyboard::Key>(input);
+        m_keyboardInputs[key].push_back(data);
     }
 
-void fe::inputManager::add(const char *id, input<sf::Mouse::Button> input)
+void fe::inputManager::add(sf::Mouse::Button key, input data)
     {
-        m_inputs[id] = new fe::input<sf::Mouse::Button>(input);
+        m_mouseInputs[key].push_back(data);
     }
 
-void fe::inputManager::remove(const char *id)
+void fe::inputManager::setActive(sf::Keyboard::Key key, bool active)
     {
-        m_inputs.erase(id);
+        for (auto &input : m_keyboardInputs[key])
+            {
+                input.m_frozen = !active;
+            }
     }
 
-void fe::inputManager::setActive(const char *id, bool value)
+void fe::inputManager::setActive(sf::Mouse::Button key, bool active)
     {
-        m_inputs[id]->m_frozen = !value;
+        for (auto &input : m_mouseInputs[key])
+            {
+                input.m_frozen = !active;
+            }
     }
