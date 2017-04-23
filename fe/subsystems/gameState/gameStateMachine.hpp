@@ -26,6 +26,10 @@ namespace fe
                     baseGameState *m_currentState;
                     baseGameState *m_nextState;
 
+                    // Since the game needs to fully initialize, we don't update for one tick. Once the tick is done, this flag is true and
+                    // we update as usual
+                    bool m_update;
+
                     static gameStateMachine *m_instance;
 
                 public:

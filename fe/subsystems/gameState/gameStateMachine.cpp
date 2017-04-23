@@ -19,6 +19,8 @@ void fe::gameStateMachine::startUp()
                 m_pop = false;
                 m_currentState = nullptr;
                 m_nextState = nullptr;
+
+                m_update = true;
             }
     }
 
@@ -36,6 +38,7 @@ void fe::gameStateMachine::push(baseGameState *newState)
     {
         m_currentState = newState;
         m_currentState->init();
+        m_update = false;
     }
 
 void fe::gameStateMachine::pop()
@@ -90,9 +93,13 @@ void fe::gameStateMachine::preUpdate()
 
 void fe::gameStateMachine::update(float deltaTime)
     {
-        if (m_currentState)
+        if (m_currentState && m_update)
             {
                 m_currentState->update(deltaTime);
+            }
+        else if (!m_update)
+            {
+                m_update = true;
             }
     }
 
