@@ -1,5 +1,7 @@
 #include "gameStateMachine.hpp"
 #include "../memory/memoryManager.hpp"
+#include "../messaging/eventSender.hpp"
+#include "../../engine.hpp"
 #include "gameState.hpp"
 
 fe::gameStateMachine *fe::gameStateMachine::m_instance = nullptr;
@@ -39,7 +41,7 @@ void fe::gameStateMachine::push(baseGameState *newState)
 void fe::gameStateMachine::pop()
     {
         // we clear all event handlers so we don't call on a nullptr by accident
-        //fe::engine::get().getEventSender()->clear();
+        fe::engine::get().getEventSender()->clear();
         if (m_currentState)
             {
                 m_currentState->deinit();

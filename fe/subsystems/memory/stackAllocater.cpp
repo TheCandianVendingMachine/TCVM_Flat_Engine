@@ -13,7 +13,7 @@ void fe::stackAllocater::startUp(char *buffer, size_t bufferSize)
 
 void *fe::stackAllocater::alloc(size_t size)
     {
-        if (m_offset + size < m_bufferSize)
+        if (m_offset + size <= m_bufferSize)
             {
                 void *retMem = m_memoryBuffer + m_offset;
                 m_offset += size;
