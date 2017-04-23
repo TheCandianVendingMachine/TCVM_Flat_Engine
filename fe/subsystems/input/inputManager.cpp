@@ -16,15 +16,23 @@ void fe::inputManager::shutDown()
     {
         for (auto &input : m_inputs)
             {
-                delete input.second;
+                if (input.second)
+                    {
+                        delete input.second;
+                    }
             }
+
+        m_inputs.clear();
     }
 
 void fe::inputManager::handleEvents(const sf::Event &event)
     {
         for (auto it = m_inputs.begin(); it != m_inputs.end(); ++it)
             {
-                it->second->handleEvent(event);
+                if (it->second)
+                    {
+                        it->second->handleEvent(event);
+                    }
             }
     }
 
@@ -32,7 +40,10 @@ void fe::inputManager::handleKeyPress()
     {
         for (auto it = m_inputs.begin(); it != m_inputs.end(); ++it)
             {
-                it->second->checkPressed();
+                if (it->second)
+                    {
+                        it->second->checkPressed();
+                    }
             }
     }
 
@@ -48,7 +59,12 @@ void fe::inputManager::add(const char *id, input<sf::Keyboard::Key> input)
 
 void fe::inputManager::add(const char *id, input<sf::Mouse::Button> input)
     {
-        m_inputs[id] = m_inputs[id] = new fe::input<sf::Mouse::Button>(input);
+        m_inputs[id] = new fe::input<sf::Mouse::Button>(input);
+    }
+
+void fe::inputManager::remove(const char *id)
+    {
+        m_inputs.erase(id);
     }
 
 void fe::inputManager::setActive(const char *id, bool value)

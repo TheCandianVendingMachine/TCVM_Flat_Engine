@@ -33,8 +33,7 @@ fe::stackAllocater::Marker fe::stackAllocater::getMarker()
 void fe::stackAllocater::freeToMarker(Marker freeTo)
     {
         m_offset = freeTo;
-        std::memset(m_memoryBuffer + m_offset, 0,
-                   (m_memoryBuffer + m_bufferSize) - (m_memoryBuffer + m_offset));
+        std::memset(m_memoryBuffer + m_offset, 0, m_bufferSize - m_offset);
     }
 
 void fe::stackAllocater::clear()

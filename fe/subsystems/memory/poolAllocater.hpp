@@ -43,13 +43,9 @@ namespace fe
                 if (memManager)
                     {
                         m_freeIndicies = static_cast<bool*>(memManager->alloc(objectCount * sizeof(T)));
-                        memManager->logAllocation("PoolAllocater", objectCount * sizeof(T), fe::memoryLogger::ALLOC_DIRECT);
-
                         std::memset(m_freeIndicies, true, sizeof(m_freeIndicies));
 
                         auto size = sizeof(T) * objectCount;
-
-                        fe::memoryManager::get().logAllocation("ObjectPool", size, fe::memoryLogger::ALLOC_STACK);
                         m_buffer = static_cast<char*>(fe::memoryManager::get().getStackAllocater().alloc(size));
 
                         m_bufferSize = objectCount * sizeof(T);

@@ -38,6 +38,7 @@ fe::renderer::~renderer()
     {
         if (m_renderWindow)
             {
+                m_renderWindow = nullptr;
                 delete m_renderWindow;
             }
     }

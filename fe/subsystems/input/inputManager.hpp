@@ -4,7 +4,6 @@
 #define FLAT_ENGINE_EXPORT
 #include "../../flatEngineExport.hpp"
 #include "input.hpp"
-#include "../memory/memoryManager.hpp"
 #include <unordered_map>
 #include <string>
 
@@ -14,6 +13,7 @@ namespace fe
             {
                 private:
                     std::unordered_map<std::string, inputBase*> m_inputs;
+
                     static inputManager *m_instance;
 
                 public:
@@ -27,6 +27,8 @@ namespace fe
 
                     FLAT_ENGINE_API void add(const char *id, input<sf::Keyboard::Key> input);
                     FLAT_ENGINE_API void add(const char *id, input<sf::Mouse::Button> input);
+
+                    FLAT_ENGINE_API void remove(const char *id);
 
                     FLAT_ENGINE_API void setActive(const char *id, bool value);
 

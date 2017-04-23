@@ -6,7 +6,7 @@
 
 namespace sf
     {
-        class RenderWindow;
+        class RenderTarget;
         class Event;
     }
 
@@ -52,7 +52,7 @@ namespace fe
                     FLAT_ENGINE_API void postUpdate();
 
                     FLAT_ENGINE_API void preDraw();
-                    FLAT_ENGINE_API void draw(sf::RenderWindow &app);
+                    FLAT_ENGINE_API void draw(sf::RenderTarget &app);
                     FLAT_ENGINE_API void postDraw();
 
                     FLAT_ENGINE_API fe::sceneGraph &getSceneGraph();
@@ -66,6 +66,6 @@ namespace fe
         template<typename T>
         void gameStateMachine::queuePush()
             {
-                m_nextState = new(m_stateAllocater.alloc(sizeof(T))) T();
+                m_nextState = new T();
             }
     }
