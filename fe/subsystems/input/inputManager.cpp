@@ -26,7 +26,7 @@ void fe::inputManager::handleEvents(const sf::Event &event)
                     {
                         for (auto &data : input.second)
                             {
-                                if (!data.m_realTime)
+                                if (!data.m_realTime && !data.m_frozen)
                                     {
                                         data.m_callback();
                                     }
@@ -40,7 +40,7 @@ void fe::inputManager::handleEvents(const sf::Event &event)
                     {
                         for (auto &data : input.second)
                             {
-                                if (!data.m_realTime)
+                                if (!data.m_realTime && !data.m_frozen)
                                     {
                                         data.m_callback();
                                     }
@@ -57,7 +57,7 @@ void fe::inputManager::handleKeyPress()
                     {
                         for (auto &data : input.second)
                             {
-                                if (data.m_realTime)
+                                if (data.m_realTime && !data.m_frozen)
                                     {
                                         data.m_callback();
                                     }
@@ -71,7 +71,7 @@ void fe::inputManager::handleKeyPress()
                     {
                         for (auto &data : input.second)
                             {
-                                if (data.m_realTime)
+                                if (data.m_realTime && !data.m_frozen)
                                     {
                                         data.m_callback();
                                     }
