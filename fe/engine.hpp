@@ -68,6 +68,7 @@ namespace fe
                     FLAT_ENGINE_API fe::gameStateMachine &getStateMachine() const;
                     FLAT_ENGINE_API const fe::baseGameState &getCurrentState() const;
 
+                    FLAT_ENGINE_API fe::renderer &getRenderer();
 
                     FLAT_ENGINE_API fe::eventSender *getEventSender() const;
 

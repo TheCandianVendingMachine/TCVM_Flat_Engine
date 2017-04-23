@@ -167,6 +167,11 @@ const fe::baseGameState &fe::engine::getCurrentState() const
         return m_gameStateMachine->getCurrentState();
     }
 
+fe::renderer &fe::engine::getRenderer()
+    {
+        return m_renderer;
+    }
+
 fe::eventSender *fe::engine::getEventSender() const
     {
         return m_eventSender;

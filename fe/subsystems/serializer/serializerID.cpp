@@ -1,6 +1,6 @@
 #include "serializerID.hpp"
 
-void serializerID::dataBlock::outData(std::ostream &out)
+void fe::serializerID::dataBlock::outData(std::ostream &out)
     {
         out << m_id << "{\n";
         for (auto &dat : m_mappedData)
@@ -10,7 +10,7 @@ void serializerID::dataBlock::outData(std::ostream &out)
         out << "}\n";
     }
 
-void serializerID::dataBlock::readData(const std::string &block)
+void fe::serializerID::dataBlock::readData(const std::string &block)
     {
         enum readState
             {
@@ -88,7 +88,7 @@ void serializerID::dataBlock::readData(const std::string &block)
             }
     }
 
-void serializerID::readData(std::istream &in)
+void fe::serializerID::readData(std::istream &in)
     {
         m_data.clear();
 

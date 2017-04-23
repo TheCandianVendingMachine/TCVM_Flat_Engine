@@ -4,6 +4,7 @@
 #define FLAT_ENGINE_EXPORT
 #include "../../flatEngineExport.hpp"
 #include "../../math/Vector2.hpp"
+#include "../serializer/serializerID.hpp"
 
 namespace sf
     {
@@ -17,11 +18,23 @@ namespace fe
             {
                 private:
                     sf::RenderWindow *m_renderWindow;
+                    fe::serializerID *m_windowSettings;
+
+                    fe::Vector2<unsigned int> m_windowSize;
+                    bool m_fullscreen;
+                    bool m_borderless;
+
+                    unsigned int m_fps;
+
+                    SERIALIZE_ID("WindowSettings", "windowSizeX", m_windowSize.x, "windowSizeY", m_windowSize.y, "borderless", m_borderless, "fullscreen", m_fullscreen, "maxFPS", m_fps);
+
+                    friend class serializerID;
 
                 public:
                     FLAT_ENGINE_API void startUp();
                     FLAT_ENGINE_API void shutDown();
 
+                    FLAT_ENGINE_API void save();
                     FLAT_ENGINE_API void load();
 
                     FLAT_ENGINE_API void draw(const sf::Drawable &draw);
