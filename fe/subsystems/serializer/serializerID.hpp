@@ -79,30 +79,35 @@ namespace fe
         template<>
         inline int serializerID::convertValue(const std::string &in, int val)
             {
+                if (in.empty()) return int();
                 return std::stoi(in);
             }
 
         template<>
         inline unsigned int serializerID::convertValue(const std::string &in, unsigned int val)
             {
+                if (in.empty()) return unsigned int();
                 return std::stoul(in);
             }
 
         template<>
         inline float serializerID::convertValue(const std::string &in, float val)
             {
+                if (in.empty()) return float();
                 return std::stof(in);
             }
 
         template<>
         inline double serializerID::convertValue(const std::string &in, double val)
             {
+                if (in.empty()) return double();
                 return std::stod(in);
             }
 
         template<>
         inline bool serializerID::convertValue(const std::string &in, bool val)
             {
+                if (in.empty()) return bool();
                 std::string boolStr = in;
                 std::transform(boolStr.begin(), boolStr.end(), boolStr.begin(), std::tolower);
 

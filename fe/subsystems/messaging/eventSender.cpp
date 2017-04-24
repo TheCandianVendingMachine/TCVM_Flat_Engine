@@ -108,13 +108,13 @@ void fe::eventSender::send(gameEvent event, unsigned int to, int frame)
         m_eventQueueFrame.push(event);
     }
 
-
 void fe::eventSender::send(gameEvent event, int eventType)
     {
         event.eventType = eventType;
         event.sendType = fe::sendType::SEND_TO_EVENT;
 
         event.sendTimeType = fe::gameEvent::timeVar::NONE;
+
         sendEvent(event);
     }
 

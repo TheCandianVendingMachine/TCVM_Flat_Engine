@@ -4,6 +4,8 @@
 #include "subsystems/input/inputManager.hpp"
 #include "debug/logger.hpp"
 
+#include "feAssert.hpp"
+
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 
@@ -69,10 +71,14 @@ fe::engine::engine(const float updateRate) :
     m_deltaTime(updateRate),
     m_elapsedFrames(0),
     m_shutDown(false)
-    {}
+    {
+        FE_ASSERT((m_instance == nullptr), "Engine instance already created!");
+    }
 
 void fe::engine::startUp(unsigned long long totalMemory, unsigned long long stackMemory)
     { 
+        FE_ASSERT((m_instance == nullptr), "Engine instance already created!");
+
         if (!m_instance)
             {
                 m_memoryManager.startUp(totalMemory, stackMemory);

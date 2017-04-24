@@ -97,10 +97,6 @@ void fe::gameStateMachine::update(float deltaTime)
             {
                 m_currentState->update(deltaTime);
             }
-        else if (!m_update)
-            {
-                m_update = true;
-            }
     }
 
 void fe::gameStateMachine::postUpdate()
@@ -109,6 +105,11 @@ void fe::gameStateMachine::postUpdate()
             {
                 m_currentState->postUpdate();
                 m_currentState->postUpdateDefined();
+            }
+
+        if (!m_update)
+            {
+                m_update = true;
             }
     }
 
