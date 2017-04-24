@@ -34,6 +34,9 @@ namespace fe
                             FLAT_ENGINE_API void setParent(const panel *attached);
                             FLAT_ENGINE_API void setParent(guiElement *attached);
 
+                            FLAT_ENGINE_API const panel *getParentPanel() const;
+                            FLAT_ENGINE_API guiElement *getParentElement() const;
+
                             FLAT_ENGINE_API void setSize(const fe::Vector2d &size);
                             FLAT_ENGINE_API const fe::Vector2d &getSize() const;
 
