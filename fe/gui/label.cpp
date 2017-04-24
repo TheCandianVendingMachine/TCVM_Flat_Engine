@@ -13,8 +13,7 @@ fe::gui::label::label(sf::Font &font, const char *text)
         m_text.setFont(font);
         m_text.setString(text);
 
-        sf::FloatRect textRect = m_text.getLocalBounds();
-        m_text.setOrigin(textRect.left + textRect.width / 2.f, textRect.top + textRect.height / 2.f);
+        setCharacterSize(m_text.getCharacterSize());
     }
 
 void fe::gui::label::setPosition(fe::Vector2d pos)

@@ -28,7 +28,6 @@ void fe::gui::guiElement::setSize(const fe::Vector2d &size)
     {
         scale({ size.x / m_size.x, size.y / m_size.y });
         m_size = size;
-        setOrigin(m_size / 2.f);
     }
 
 const fe::Vector2d &fe::gui::guiElement::getSize() const
