@@ -39,7 +39,6 @@ namespace fe
                     fe::Vector2d m_mousePosition;
 
                     bool m_shutDown;
-
                     static fe::engine *m_instance;
                                         
                 private:
@@ -55,6 +54,8 @@ namespace fe
                                                  unsigned long long stackMemory = 256_MiB * (8.f / 10.f));
                     FLAT_ENGINE_API void shutDown();
 
+                    FLAT_ENGINE_API void close() const;
+
                     FLAT_ENGINE_API static const engine &get();
 
                     FLAT_ENGINE_API void run();
@@ -68,7 +69,7 @@ namespace fe
                     FLAT_ENGINE_API fe::gameStateMachine &getStateMachine() const;
                     FLAT_ENGINE_API const fe::baseGameState &getCurrentState() const;
 
-                    FLAT_ENGINE_API fe::renderer &getRenderer();
+                    FLAT_ENGINE_API const fe::renderer &getRenderer() const;
 
                     FLAT_ENGINE_API fe::eventSender *getEventSender() const;
 

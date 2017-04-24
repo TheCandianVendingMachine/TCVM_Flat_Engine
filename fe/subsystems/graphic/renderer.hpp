@@ -39,7 +39,7 @@ namespace fe
 
                     FLAT_ENGINE_API void draw(const sf::Drawable &draw);
 
-                    FLAT_ENGINE_API sf::RenderWindow &getRenderWindow();
+                    FLAT_ENGINE_API sf::RenderWindow &getRenderWindow() const;
 					FLAT_ENGINE_API fe::Vector2d getWindowSize();
 
                     FLAT_ENGINE_API virtual ~renderer();

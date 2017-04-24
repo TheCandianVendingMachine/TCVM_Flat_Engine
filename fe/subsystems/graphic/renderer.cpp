@@ -77,7 +77,7 @@ void fe::renderer::draw(const sf::Drawable &draw)
         m_renderWindow->draw(draw);
     }
 
-sf::RenderWindow &fe::renderer::getRenderWindow()
+sf::RenderWindow &fe::renderer::getRenderWindow() const
     {
         return *m_renderWindow;
     }

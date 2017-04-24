@@ -114,6 +114,11 @@ void fe::engine::shutDown()
         m_memoryManager.shutDown();
     }
 
+void fe::engine::close() const
+    {
+        getRenderer().getRenderWindow().close();
+    }
+
 const fe::engine &fe::engine::get()
     {
         return *m_instance;
@@ -173,7 +178,7 @@ const fe::baseGameState &fe::engine::getCurrentState() const
         return m_gameStateMachine->getCurrentState();
     }
 
-fe::renderer &fe::engine::getRenderer()
+const fe::renderer &fe::engine::getRenderer() const
     {
         return m_renderer;
     }
