@@ -122,7 +122,6 @@ namespace fe
         void serializerID::serialize(dataBlock &block, const std::string &id, T &&data)
             {
                 block.m_mappedData[id] = std::to_string(data);
-                int i = 0;
             }
 
         template<typename T, typename ...Args>
