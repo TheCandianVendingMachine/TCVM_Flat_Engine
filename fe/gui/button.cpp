@@ -18,7 +18,7 @@ fe::gui::button::button(const fe::Vector2d &size, const std::function<void()> &c
         m_shape.setPrimitiveType(sf::PrimitiveType::Quads);
         m_shape.resize(4);
 
-        m_size = size;
+        //m_size = size;
         setSize(size);
         m_shape[0].color = sf::Color::Red;
         m_shape[1].color = sf::Color::Red;

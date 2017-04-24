@@ -38,7 +38,7 @@ namespace fe
                             FLAT_ENGINE_API guiElement *getParentElement() const;
 
                             FLAT_ENGINE_API void setSize(const fe::Vector2d &size);
-                            FLAT_ENGINE_API const fe::Vector2d &getSize() const;
+                            FLAT_ENGINE_API const fe::Vector2d &getSize();
 
                             virtual void handleEvent(const sf::Event &event) = 0;
                             virtual void update() = 0;
