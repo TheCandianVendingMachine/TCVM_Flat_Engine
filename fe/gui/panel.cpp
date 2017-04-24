@@ -134,6 +134,11 @@ fe::gui::guiElement *fe::gui::panel::getElement(unsigned int handle)
         return m_guiElements[m_guiHandles[handle]];
     }
 
+void fe::gui::panel::setElementPosition(unsigned int handle, fe::Vector2d position)
+    {
+        getElement(handle)->setPosition({ getSize().x * position.x, getSize().y * position.y });
+    }
+
 void fe::gui::panel::removeElement(unsigned int handle)
     {
         if (m_guiHandles.begin() + handle < m_guiHandles.end())

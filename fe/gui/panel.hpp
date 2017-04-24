@@ -96,6 +96,9 @@ namespace fe
                             FLAT_ENGINE_API unsigned int addElement(guiElement *element);
                             FLAT_ENGINE_API guiElement *getElement(unsigned int handle);
  
+                            // Sets the element position via a ratio of the distance from the size of the panel
+                            FLAT_ENGINE_API void setElementPosition(unsigned int handle, fe::Vector2d position);
+
                             FLAT_ENGINE_API void removeElement(unsigned int handle);
 
                             FLAT_ENGINE_API bool getMousePressed() const;
