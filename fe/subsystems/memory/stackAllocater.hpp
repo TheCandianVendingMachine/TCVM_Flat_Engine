@@ -7,7 +7,7 @@
 
 namespace fe
     {
-        class FLAT_ENGINE_API stackAllocater
+        class stackAllocater
             {
                 public:
                     typedef uintptr_t Marker;
@@ -22,18 +22,18 @@ namespace fe
                     char *m_memoryBuffer;
 
                 public:
-                    void startUp(char *buffer, size_t bufferSize);
+                    FLAT_ENGINE_API void startUp(char *buffer, size_t bufferSize);
 
                     // allocates memory
-                    void *alloc(size_t size);
+                    FLAT_ENGINE_API void *alloc(size_t size);
 
                     // returns a marker (uint32) to allow the user to free to
-                    Marker getMarker();
+                    FLAT_ENGINE_API Marker getMarker();
                     // frees the memory up to the marker from the bottom of the stack
-                    void freeToMarker(Marker freeTo);
+                    FLAT_ENGINE_API void freeToMarker(Marker freeTo);
 
                     // clears the allocated memory to the top of the stack
-                    void clear();
+                    FLAT_ENGINE_API void clear();
 
             };
     }

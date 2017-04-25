@@ -25,6 +25,7 @@ namespace fe
 
                     baseGameState *m_currentState;
                     baseGameState *m_nextState;
+                    baseGameState *m_previousState;
 
                     // Since the game needs to fully initialize, we don't update for one tick. Once the tick is done, this flag is true and
                     // we update as usual
