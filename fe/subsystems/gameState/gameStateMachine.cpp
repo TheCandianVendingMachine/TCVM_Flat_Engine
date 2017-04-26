@@ -36,26 +36,31 @@ fe::gameStateMachine &fe::gameStateMachine::get()
 
 void fe::gameStateMachine::push(baseGameState *newState)
     {
-        m_currentState = newState;
-        m_currentState->init();
+        auto listBuf = FE_ALLOC_STACK("StateListAlloc", sizeof(stateList));
+        m_endState->m_head = new(listBuf) stateList();
+
+        m_endState = m_endState->m_head;
+
+        m_endState->m_currentState = newState;
+        m_endState->m_currentState->init();
         m_update = false;
     }
 
 void fe::gameStateMachine::pop()
     {
-        // we clear all event handlers so we don't call on a nullptr by accident
-        fe::engine::get().getEventSender()->clear();
-        if (m_currentState)
+        if (m_endState)
             {
-                m_currentState->deinit();
-                delete m_currentState;
+                m_endState->m_currentState->deinit();
+                delete m_endState->m_currentState;
 
-                // This must be in this scope because if we free to the marker and there isnt a state, the marker will be pointing to an area made
-                // AFTER CONSTRUCTION. This will cause a ton of errors
-                FE_FREE_STACK("StateMachine", m_stateMarker);
+                m_endState = m_endState->m_tail;
+
+                delete m_endState->m_head;
+                m_endState->m_head = nullptr;
+
+                FE_FREE_STACK("GameStateMachine", m_endState->m_offset);
             }
         m_stateMarker = fe::memoryManager::get().getStackAllocater().getMarker();
-        m_currentState = nullptr;
     }
 
 void fe::gameStateMachine::queuePop()

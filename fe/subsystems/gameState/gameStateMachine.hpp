@@ -18,14 +18,22 @@ namespace fe
         class gameStateMachine
             {
                 private:
+                    struct stateList
+                        {
+                            stateList *m_head;
+                            stateList *m_tail;
+
+                            baseGameState *m_currentState;
+                            unsigned int m_offset;
+                        };
+
                     // since all memory that the state has will be irrelevant once we pop it, we get the current stack marker to free to
                     fe::stackAllocater::Marker m_stateMarker; // this marker is from m_previousState
                     fe::stackAllocater m_stateAllocater;
                     bool m_pop;
 
-                    baseGameState *m_currentState;
-                    baseGameState *m_nextState;
-                    baseGameState *m_previousState;
+                    stateList *m_baseState;
+                    stateList *m_endState; // last state in the linked list
 
                     // Since the game needs to fully initialize, we don't update for one tick. Once the tick is done, this flag is true and
                     // we update as usual
