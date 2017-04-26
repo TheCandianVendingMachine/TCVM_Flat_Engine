@@ -32,8 +32,9 @@ namespace fe
                     fe::stackAllocater m_stateAllocater;
                     bool m_pop;
 
-                    stateList *m_baseState;
                     stateList *m_endState; // last state in the linked list
+                    baseGameState *m_nextState;
+
 
                     // Since the game needs to fully initialize, we don't update for one tick. Once the tick is done, this flag is true and
                     // we update as usual
@@ -51,6 +52,9 @@ namespace fe
                     FLAT_ENGINE_API void push(baseGameState *newState);
                     // pop the current state
                     FLAT_ENGINE_API void pop();
+
+                    // clear all states off the list
+                    FLAT_ENGINE_API void clear();
 
                     // Queue a push to happen next frame
                     template<typename T>

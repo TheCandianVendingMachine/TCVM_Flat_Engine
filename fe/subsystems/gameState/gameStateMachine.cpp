@@ -14,19 +14,21 @@ void fe::gameStateMachine::startUp()
                 m_stateAllocater.startUp(static_cast<char*>(memBuf), 16_KiB);
 
                 m_stateMarker = fe::memoryManager::get().getStackAllocater().getMarker();
+
                 m_instance = this;
 
                 m_pop = false;
-                m_currentState = nullptr;
                 m_nextState = nullptr;
 
                 m_update = true;
+
+                m_endState = nullptr;
             }
     }
 
 void fe::gameStateMachine::shutDown()
     {
-        pop();
+        clear();
     }
 
 fe::gameStateMachine &fe::gameStateMachine::get()
@@ -36,10 +38,25 @@ fe::gameStateMachine &fe::gameStateMachine::get()
 
 void fe::gameStateMachine::push(baseGameState *newState)
     {
-        auto listBuf = FE_ALLOC_STACK("StateListAlloc", sizeof(stateList));
-        m_endState->m_head = new(listBuf) stateList();
+        if (m_endState) 
+            {
+                m_endState->m_offset = fe::memoryManager::get().getStackAllocater().getMarker();
+                auto listBuf = FE_ALLOC_STACK("StateListAlloc", sizeof(stateList));
+                m_endState->m_head = new(listBuf) stateList();
 
-        m_endState = m_endState->m_head;
+                auto tail = m_endState;
+
+                m_endState = m_endState->m_head;
+                m_endState->m_tail = tail;
+            }
+        else
+            {
+                auto listBuf = FE_ALLOC_STACK("StateListAlloc", sizeof(stateList));
+                m_endState = new(listBuf) stateList;
+
+                m_endState->m_head = nullptr;
+                m_endState->m_tail = nullptr;
+            }
 
         m_endState->m_currentState = newState;
         m_endState->m_currentState->init();
@@ -53,14 +70,48 @@ void fe::gameStateMachine::pop()
                 m_endState->m_currentState->deinit();
                 delete m_endState->m_currentState;
 
-                m_endState = m_endState->m_tail;
+                if (m_endState->m_tail)
+                    {
+                        m_endState = m_endState->m_tail;
+                    }
+                else
+                    {
+                        delete m_endState;
+                        m_endState = nullptr;
+                    }
 
-                delete m_endState->m_head;
-                m_endState->m_head = nullptr;
+                if (m_endState)
+                    {
+                        if (m_endState->m_head) 
+                            {
+                                delete m_endState->m_head;
+                            }
+                        m_endState->m_head = nullptr;
 
-                FE_FREE_STACK("GameStateMachine", m_endState->m_offset);
+                        FE_FREE_STACK("GameStateMachine", m_endState->m_offset);
+                    }
+                else
+                    {
+                        FE_FREE_STACK("GameStateMachine", m_stateMarker);
+                    }
             }
         m_stateMarker = fe::memoryManager::get().getStackAllocater().getMarker();
+    }
+
+void fe::gameStateMachine::clear()
+    {
+        while (m_endState)
+            {
+                auto next = m_endState->m_head;
+                if (m_endState->m_currentState)
+                    {
+                        m_endState->m_currentState->deinit();
+                        delete m_endState->m_currentState;
+                    }
+                delete m_endState;
+                m_endState = nullptr;
+                m_endState = next;
+            }
     }
 
 void fe::gameStateMachine::queuePop()
@@ -70,9 +121,9 @@ void fe::gameStateMachine::queuePop()
 
 void fe::gameStateMachine::handleEvents(const sf::Event &event)
     {
-        if (m_currentState)
+        if (m_endState && m_endState->m_currentState)
             {
-                m_currentState->handleEvents(event);
+                m_endState->m_currentState->handleEvents(event);
             }
     }
 
@@ -90,26 +141,26 @@ void fe::gameStateMachine::preUpdate()
                 m_nextState = nullptr;
             }
 
-        if (m_currentState)
+        if (m_endState && m_endState->m_currentState)
             {
-                m_currentState->preUpdate();
+                m_endState->m_currentState->preUpdate();
             }
     }
 
 void fe::gameStateMachine::update(float deltaTime)
     {
-        if (m_currentState && m_update)
+        if (m_endState && m_endState->m_currentState && m_update)
             {
-                m_currentState->update(deltaTime);
+                m_endState->m_currentState->update(deltaTime);
             }
     }
 
 void fe::gameStateMachine::postUpdate()
     {
-        if (m_currentState)
+        if (m_endState && m_endState->m_currentState)
             {
-                m_currentState->postUpdate();
-                m_currentState->postUpdateDefined();
+                m_endState->m_currentState->postUpdate();
+                m_endState->m_currentState->postUpdateDefined();
             }
 
         if (!m_update)
@@ -120,34 +171,34 @@ void fe::gameStateMachine::postUpdate()
 
 void fe::gameStateMachine::preDraw()
     {
-        if (m_currentState)
+        if (m_endState && m_endState->m_currentState)
             {
-                m_currentState->preDraw();
+                m_endState->m_currentState->preDraw();
             }
     }
 
 void fe::gameStateMachine::draw(sf::RenderTarget &app)
     {
-        if (m_currentState)
+        if (m_endState && m_endState->m_currentState)
             {
-                m_currentState->draw(app);
+                m_endState->m_currentState->draw(app);
             }
     }
 
 void fe::gameStateMachine::postDraw()
     {
-        if (m_currentState)
+        if (m_endState && m_endState->m_currentState)
             {
-                m_currentState->postDraw();
+                m_endState->m_currentState->postDraw();
             }
     }
 
 fe::sceneGraph &fe::gameStateMachine::getSceneGraph()
     {
-        return m_currentState->getSceneGraph();
+        return m_endState->m_currentState->getSceneGraph();
     }
 
 const fe::baseGameState &fe::gameStateMachine::getCurrentState()
     {
-        return *m_currentState;
+        return *m_endState->m_currentState;
     }
