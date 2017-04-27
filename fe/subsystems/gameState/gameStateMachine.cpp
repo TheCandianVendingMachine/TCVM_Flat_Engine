@@ -36,7 +36,7 @@ fe::gameStateMachine &fe::gameStateMachine::get()
         return *m_instance;
     }
 
-void fe::gameStateMachine::push(baseGameState *newState)
+void fe::gameStateMachine::push(baseGameState *newState, stateOptions options)
     {
         if (m_endState) 
             {
@@ -60,6 +60,8 @@ void fe::gameStateMachine::push(baseGameState *newState)
 
         m_endState->m_currentState = newState;
         m_endState->m_currentState->init();
+        m_endState->m_options = options;
+
         m_update = false;
     }
 
@@ -102,21 +104,18 @@ void fe::gameStateMachine::clear()
     {
         while (m_endState)
             {
-                auto next = m_endState->m_head;
-                if (m_endState->m_currentState)
-                    {
-                        m_endState->m_currentState->deinit();
-                        delete m_endState->m_currentState;
-                    }
-                delete m_endState;
-                m_endState = nullptr;
-                m_endState = next;
+                pop();
             }
     }
 
 void fe::gameStateMachine::queuePop()
     {
         m_pop = true;
+    }
+
+void fe::gameStateMachine::queueClear()
+    {
+        m_clear = true;
     }
 
 void fe::gameStateMachine::handleEvents(const sf::Event &event)
@@ -129,6 +128,13 @@ void fe::gameStateMachine::handleEvents(const sf::Event &event)
 
 void fe::gameStateMachine::preUpdate()
     {
+        if (m_clear)
+            {
+                clear();
+                m_pop = false;
+                m_clear = false;
+            }
+
         if (m_pop)
             {
                 pop();
@@ -137,13 +143,20 @@ void fe::gameStateMachine::preUpdate()
 
         if (m_nextState)
             {
-                push(m_nextState);
+                push(m_nextState, m_nestStateOptions);
                 m_nextState = nullptr;
             }
 
         if (m_endState && m_endState->m_currentState)
             {
                 m_endState->m_currentState->preUpdate();
+
+                stateList *tail = m_endState->m_tail;
+                while (tail && tail->m_currentState && tail->m_options & stateOptions::UPDATE_UNDERNEATH)
+                    {
+                        tail->m_currentState->preUpdate();
+                        tail = tail->m_tail;
+                    }
             }
     }
 
@@ -152,6 +165,13 @@ void fe::gameStateMachine::update(float deltaTime)
         if (m_endState && m_endState->m_currentState && m_update)
             {
                 m_endState->m_currentState->update(deltaTime);
+
+                stateList *tail = m_endState->m_tail;
+                while (tail && tail->m_currentState && tail->m_options & stateOptions::UPDATE_UNDERNEATH)
+                    {
+                        tail->m_currentState->update(deltaTime);
+                        tail = tail->m_tail;
+                    }
             }
     }
 
@@ -161,6 +181,14 @@ void fe::gameStateMachine::postUpdate()
             {
                 m_endState->m_currentState->postUpdate();
                 m_endState->m_currentState->postUpdateDefined();
+
+                stateList *tail = m_endState->m_tail;
+                while (tail && tail->m_currentState && tail->m_options & stateOptions::UPDATE_UNDERNEATH)
+                    {
+                        tail->m_currentState->postUpdate();
+                        tail->m_currentState->postUpdateDefined();
+                        tail = tail->m_tail;
+                    }
             }
 
         if (!m_update)
@@ -174,6 +202,16 @@ void fe::gameStateMachine::preDraw()
         if (m_endState && m_endState->m_currentState)
             {
                 m_endState->m_currentState->preDraw();
+
+                stateList *listTop = m_endState;
+                stateList *tail = m_endState->m_tail;
+                while (listTop->m_options & stateOptions::RENDER_OVERTOP && tail && tail->m_currentState)
+                    {
+                        tail->m_currentState->preDraw();
+
+                        listTop = tail;
+                        tail = tail->m_tail;
+                    }
             }
     }
 
@@ -182,6 +220,16 @@ void fe::gameStateMachine::draw(sf::RenderTarget &app)
         if (m_endState && m_endState->m_currentState)
             {
                 m_endState->m_currentState->draw(app);
+
+                stateList *listTop = m_endState;
+                stateList *tail = m_endState->m_tail;
+                while (listTop->m_options & stateOptions::RENDER_OVERTOP && tail && tail->m_currentState)
+                    {
+                        tail->m_currentState->draw(app);
+
+                        listTop = tail;
+                        tail = tail->m_tail;
+                    }
             }
     }
 
@@ -190,6 +238,16 @@ void fe::gameStateMachine::postDraw()
         if (m_endState && m_endState->m_currentState)
             {
                 m_endState->m_currentState->postDraw();
+
+                stateList *listTop = m_endState;
+                stateList *tail = m_endState->m_tail;
+                while (listTop->m_options & stateOptions::RENDER_OVERTOP && tail && tail->m_currentState)
+                    {
+                        tail->m_currentState->postDraw();
+
+                        listTop = tail;
+                        tail = tail->m_tail;
+                    }
             }
     }
 

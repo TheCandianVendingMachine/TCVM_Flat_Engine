@@ -17,11 +17,21 @@ namespace fe
         
         class gameStateMachine
             {
+                public:
+                    enum stateOptions
+                        {
+                            NONE                = 0,
+                            RENDER_OVERTOP      = 1 << 0,
+                            UPDATE_UNDERNEATH   = 1 << 1
+                        };
+
                 private:
                     struct stateList
                         {
                             stateList *m_head;
                             stateList *m_tail;
+
+                            stateOptions m_options;
 
                             baseGameState *m_currentState;
                             unsigned int m_offset;
@@ -31,8 +41,11 @@ namespace fe
                     fe::stackAllocater::Marker m_stateMarker; // this marker is from m_previousState
                     fe::stackAllocater m_stateAllocater;
                     bool m_pop;
+                    bool m_clear;
 
                     stateList *m_endState; // last state in the linked list
+
+                    stateOptions m_nestStateOptions;
                     baseGameState *m_nextState;
 
 
@@ -49,7 +62,7 @@ namespace fe
                     FLAT_ENGINE_API gameStateMachine &get();
 
                     // push the state as the current state
-                    FLAT_ENGINE_API void push(baseGameState *newState);
+                    FLAT_ENGINE_API void push(baseGameState *newState, stateOptions options = stateOptions::NONE);
                     // pop the current state
                     FLAT_ENGINE_API void pop();
 
@@ -58,9 +71,11 @@ namespace fe
 
                     // Queue a push to happen next frame
                     template<typename T>
-                    void queuePush();
+                    void queuePush(stateOptions options = stateOptions::NONE);
                     // Queue a pop to happen next frame
                     FLAT_ENGINE_API void queuePop();
+                    // Queue a clear to happen next frame
+                    FLAT_ENGINE_API void queueClear();
 
                     FLAT_ENGINE_API void handleEvents(const sf::Event &event);
 
@@ -81,8 +96,9 @@ namespace fe
             };
 
         template<typename T>
-        void gameStateMachine::queuePush()
+        void gameStateMachine::queuePush(stateOptions options)
             {
                 m_nextState = new T();
+                m_nestStateOptions = options;
             }
     }
