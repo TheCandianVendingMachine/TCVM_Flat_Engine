@@ -143,7 +143,7 @@ void fe::gameStateMachine::preUpdate()
 
         if (m_nextState)
             {
-                push(m_nextState, m_nestStateOptions);
+                push(m_nextState, m_nextStateOptions);
                 m_nextState = nullptr;
             }
 

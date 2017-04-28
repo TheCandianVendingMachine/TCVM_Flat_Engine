@@ -45,7 +45,7 @@ namespace fe
 
                     stateList *m_endState; // last state in the linked list
 
-                    stateOptions m_nestStateOptions;
+                    stateOptions m_nextStateOptions;
                     baseGameState *m_nextState;
 
 
@@ -99,6 +99,6 @@ namespace fe
         void gameStateMachine::queuePush(stateOptions options)
             {
                 m_nextState = new T();
-                m_nestStateOptions = options;
+                m_nextStateOptions = options;
             }
     }
