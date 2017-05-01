@@ -10,8 +10,8 @@ void fe::gameStateMachine::startUp()
     {
         if (!m_instance) 
             {
-                auto memBuf = FE_ALLOC_STACK("StateBuffer", 16_KiB);
-                m_stateAllocater.startUp(static_cast<char*>(memBuf), 16_KiB);
+                //auto memBuf = FE_ALLOC_STACK("StateBuffer", 16_MiB);
+                //m_stateAllocater.startUp(static_cast<char*>(memBuf), 16_MiB);
 
                 m_stateMarker = fe::memoryManager::get().getStackAllocater().getMarker();
 

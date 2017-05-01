@@ -15,8 +15,12 @@ namespace fe
         class inputManager
             {
                 private:
-                    std::unordered_map<sf::Keyboard::Key, std::vector<input>> m_keyboardInputs;
-                    std::unordered_map<sf::Mouse::Button, std::vector<input>> m_mouseInputs;
+                    std::unordered_map<sf::Keyboard::Key, std::vector<input*>> m_keyboardInputs;
+                    std::unordered_map<sf::Mouse::Button, std::vector<input*>> m_mouseInputs;
+
+                    std::vector<unsigned int> m_handles;
+                    std::vector<input*> m_inputs;
+
                     static inputManager *m_instance;
 
                 public:
@@ -28,11 +32,14 @@ namespace fe
 
                     FLAT_ENGINE_API static inputManager &get();
 
-                    FLAT_ENGINE_API void add(sf::Keyboard::Key key, input data);
-                    FLAT_ENGINE_API void add(sf::Mouse::Button key, input data);
+                    FLAT_ENGINE_API unsigned int add(sf::Keyboard::Key key, input data);
+                    FLAT_ENGINE_API unsigned int add(sf::Mouse::Button key, input data);
+
+                    FLAT_ENGINE_API void remove(unsigned int handle);
 
                     FLAT_ENGINE_API void setActive(sf::Keyboard::Key key, bool active);
                     FLAT_ENGINE_API void setActive(sf::Mouse::Button key, bool active);
+                    FLAT_ENGINE_API void setActive(unsigned int handle, bool active);
 
                     FLAT_ENGINE_API virtual ~inputManager() {}
 
