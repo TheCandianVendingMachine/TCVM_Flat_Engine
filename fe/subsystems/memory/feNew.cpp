@@ -6,8 +6,8 @@
 void *feAlloc(size_t bytes)
     {
         //fe::memoryManager::get().getMemoryLogger().allocateOverloadedNew(bytes);
-        return fe::memoryManager::get().alloc(bytes);
-        //return fe::memoryManager::get().getStackAllocater().alloc(bytes);
+        //return fe::memoryManager::get().alloc(bytes);
+        return fe::memoryManager::get().getStackAllocater().alloc(bytes);
     }
 
 void feDelete(void *memory)

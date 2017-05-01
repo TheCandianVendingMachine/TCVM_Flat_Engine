@@ -79,3 +79,18 @@ namespace fe
 // Free memory from the bottom of the stack to the marker. Will not invalidate pointers, but will allow them to be overwritten
 #define FE_FREE_STACK(id, marker)\
     fe::memoryManager::get().getStackAllocater().freeToMarker(marker);
+
+// Allocates memory directly from the heap. Should not be used outside of special use cases. Use this when you define a size outside of the call
+#define FE_ALLOC_DIRECT_CAPTURED(id, size) \
+    ([&size]()\
+        { /* Since we cant define an inline function, we declare a lamda that does everything we need and then call it to return the value. */ \
+          /* This is so we can log the allocation before we do the allocaiton, so if we get OOM errors we will know the last allocation */ \
+            return fe::memoryManager::get().alloc(size); \
+        })();
+
+// Allocate memory from the stack. Use memory that needs to be allocated fast, and deallocated fast. Use this when you define a size outside of the call
+#define FE_ALLOC_STACK_CAPTURED(id, size)\
+    ([&size]()\
+        {\
+            return fe::memoryManager::get().getStackAllocater().alloc(size);\
+        })();

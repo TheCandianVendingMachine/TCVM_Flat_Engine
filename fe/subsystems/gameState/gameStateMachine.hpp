@@ -37,6 +37,10 @@ namespace fe
                             unsigned int m_offset;
                         };
 
+                    struct stateHolderBase { virtual void *construct() { return nullptr; } };
+                    template<typename T>
+                    struct stateHolder : stateHolderBase { void *construct() { return new T(); } };
+
                     // since all memory that the state has will be irrelevant once we pop it, we get the current stack marker to free to
                     fe::stackAllocater::Marker m_stateMarker; // this marker is from m_previousState
                     fe::stackAllocater m_stateAllocater;
@@ -46,7 +50,7 @@ namespace fe
                     stateList *m_endState; // last state in the linked list
 
                     stateOptions m_nextStateOptions;
-                    baseGameState *m_nextState;
+                    stateHolderBase *m_nextState;
 
 
                     // Since the game needs to fully initialize, we don't update for one tick. Once the tick is done, this flag is true and
@@ -98,7 +102,7 @@ namespace fe
         template<typename T>
         void gameStateMachine::queuePush(stateOptions options)
             {
-                m_nextState = new T();
+                m_nextState = new(m_stateAllocater.alloc(sizeof(stateHolder<T>))) stateHolder<T>;
                 m_nextStateOptions = options;
             }
     }
