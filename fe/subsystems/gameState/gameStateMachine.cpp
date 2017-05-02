@@ -6,6 +6,15 @@
 
 fe::gameStateMachine *fe::gameStateMachine::m_instance = nullptr;
 
+void fe::gameStateMachine::drawState(stateList *node, sf::RenderTarget &app)
+    {
+        if (node && node->m_options & RENDER_OVERTOP)
+            {
+                drawState(node->m_tail, app);
+            }
+        node->m_currentState->draw(app);
+    }
+
 void fe::gameStateMachine::startUp()
     {
         if (!m_instance) 
@@ -226,17 +235,7 @@ void fe::gameStateMachine::draw(sf::RenderTarget &app)
     {
         if (m_endState && m_endState->m_currentState)
             {
-                m_endState->m_currentState->draw(app);
-
-                stateList *listTop = m_endState;
-                stateList *tail = m_endState->m_tail;
-                while (listTop->m_options & stateOptions::RENDER_OVERTOP && tail && tail->m_currentState)
-                    {
-                        tail->m_currentState->draw(app);
-
-                        listTop = tail;
-                        tail = tail->m_tail;
-                    }
+                drawState(m_endState, app);
             }
     }
 

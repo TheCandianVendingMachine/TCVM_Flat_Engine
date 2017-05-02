@@ -59,6 +59,8 @@ namespace fe
 
                     static gameStateMachine *m_instance;
 
+                    FLAT_ENGINE_API void drawState(stateList *node, sf::RenderTarget &app);
+
                 public:
                     FLAT_ENGINE_API void startUp();
                     FLAT_ENGINE_API void shutDown();
