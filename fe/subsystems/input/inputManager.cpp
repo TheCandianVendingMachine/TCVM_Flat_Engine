@@ -94,7 +94,7 @@ unsigned int fe::inputManager::add(sf::Keyboard::Key key, input data)
         m_keyboardInputs[key].push_back(&m_inputs.back());
         m_handles.push_back(m_inputs.size() - 1);
 
-        return m_handles.back();
+        return m_handles.size() - 1;
     }
 
 unsigned int fe::inputManager::add(sf::Mouse::Button key, input data)
@@ -103,7 +103,7 @@ unsigned int fe::inputManager::add(sf::Mouse::Button key, input data)
         m_mouseInputs[key].push_back(&m_inputs.back());
         m_handles.push_back(m_inputs.size() - 1);
 
-        return m_handles.back();
+        return m_handles.size() - 1;
     }
 
 void fe::inputManager::remove(unsigned int handle)
@@ -118,12 +118,12 @@ void fe::inputManager::remove(unsigned int handle)
 
                 for (auto &inp : m_keyboardInputs)
                     {
-                        inp.second.erase(std::remove_if(inp.second.begin(), inp.second.end(), [](input **inp){ return inp == nullptr; }), inp.second.end());
+                        inp.second.erase(std::remove_if(inp.second.begin(), inp.second.end(), [](input **inp){ return *inp == nullptr; }), inp.second.end());
                     }
 
                 for (auto &inp : m_mouseInputs)
                     {
-                        inp.second.erase(std::remove_if(inp.second.begin(), inp.second.end(), [](input **inp){ return inp == nullptr; }), inp.second.end());
+                        inp.second.erase(std::remove_if(inp.second.begin(), inp.second.end(), [](input **inp){ return *inp == nullptr; }), inp.second.end());
                     }
             }
         else
