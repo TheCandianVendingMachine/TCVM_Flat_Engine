@@ -52,6 +52,11 @@ void fe::gameStateMachine::push(baseGameState *newState, stateOptions options)
     {
         if (m_endState) 
             {
+                if (m_endState->m_currentState)
+                    {
+                        m_endState->m_currentState->onDeactive();
+                    }
+
                 m_endState->m_offset = fe::memoryManager::get().getStackAllocater().getMarker();
                 auto listBuf = FE_ALLOC_STACK("StateListAlloc", sizeof(stateList));
                 m_endState->m_head = new(listBuf) stateList();
@@ -72,6 +77,7 @@ void fe::gameStateMachine::push(baseGameState *newState, stateOptions options)
 
         m_endState->m_currentState = newState;
         m_endState->m_currentState->init();
+        m_endState->m_currentState->onActive();
         m_endState->m_options = options;
 
         m_update = false;
@@ -86,6 +92,7 @@ void fe::gameStateMachine::pop()
     {
         if (m_endState)
             {
+                m_endState->m_currentState->onDeactive();
                 m_endState->m_currentState->deinit();
                 delete m_endState->m_currentState;
 
@@ -108,6 +115,11 @@ void fe::gameStateMachine::pop()
                         m_endState->m_head = nullptr;
 
                         FE_FREE_STACK("GameStateMachine", m_endState->m_offset);
+
+                        if (m_endState->m_currentState)
+                            {
+                                m_endState->m_currentState->onActive();
+                            }
                     }
                 else
                     {

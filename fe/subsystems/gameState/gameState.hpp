@@ -45,6 +45,9 @@ namespace fe
                     FLAT_ENGINE_API baseGameState() {}
 
                     FLAT_ENGINE_API virtual void init() {}
+                    FLAT_ENGINE_API virtual void onActive() {}
+                    FLAT_ENGINE_API virtual void onDeactive() {}
+
 
                     FLAT_ENGINE_API void handleEvents(const sf::Event &event);
 

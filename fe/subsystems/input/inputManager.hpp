@@ -15,8 +15,8 @@ namespace fe
         class inputManager
             {
                 private:
-                    std::unordered_map<sf::Keyboard::Key, std::vector<input*>> m_keyboardInputs;
-                    std::unordered_map<sf::Mouse::Button, std::vector<input*>> m_mouseInputs;
+                    std::unordered_map<sf::Keyboard::Key, std::vector<input**>> m_keyboardInputs;
+                    std::unordered_map<sf::Mouse::Button, std::vector<input**>> m_mouseInputs;
 
                     std::vector<unsigned int> m_handles;
                     std::vector<input*> m_inputs;
