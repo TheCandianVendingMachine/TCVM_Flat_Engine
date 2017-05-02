@@ -141,6 +141,7 @@ void fe::engine::run()
 
                 m_accumulator += frameTime;
 
+                m_inputManager->preUpdate();
                 handleEvents();
                 update();
                 draw();

@@ -21,6 +21,19 @@ void fe::inputManager::shutDown()
         m_mouseInputs.clear();
     }
 
+void fe::inputManager::preUpdate()
+    {
+        for (auto &input : m_keyboardInputs)
+            {
+                input.second.erase(std::remove_if(input.second.begin(), input.second.end(), [this](Handle handle) { return !handleActive(handle); }), input.second.end());
+            }
+
+        for (auto &input : m_mouseInputs)
+            {
+                input.second.erase(std::remove_if(input.second.begin(), input.second.end(), [this](Handle handle) { return !handleActive(handle); }), input.second.end());
+            }
+    }
+
 void fe::inputManager::handleEvents(const sf::Event &event)
     {
         for (auto &input : m_keyboardInputs)
@@ -29,9 +42,13 @@ void fe::inputManager::handleEvents(const sf::Event &event)
                     {
                         for (auto &data : input.second)
                             {
-                                if (!(*data)->m_realTime && !(*data)->m_frozen)
+                                auto input = getObject(data);
+                                if (input)
                                     {
-                                        (*data)->m_callback();
+                                        if (!input->m_realTime && !input->m_frozen)
+                                            {
+                                                input->m_callback();
+                                            }
                                     }
                             }
                     }
@@ -43,9 +60,13 @@ void fe::inputManager::handleEvents(const sf::Event &event)
                     {
                         for (auto &data : input.second)
                             {
-                                if (!(*data)->m_realTime && !(*data)->m_frozen)
+                                auto input = getObject(data);
+                                if (input)
                                     {
-                                        (*data)->m_callback();
+                                        if (!input->m_realTime && !input->m_frozen)
+                                            {
+                                                input->m_callback();
+                                            }
                                     }
                             }
                     }
@@ -60,9 +81,13 @@ void fe::inputManager::handleKeyPress()
                     {
                         for (auto &data : input.second)
                             {
-                                if ((*data)->m_realTime && !(*data)->m_frozen)
+                                auto input = getObject(data);
+                                if (input)
                                     {
-                                        (*data)->m_callback();
+                                        if (input->m_realTime && !input->m_frozen)
+                                            {
+                                                input->m_callback();
+                                            }
                                     }
                             }
                     }
@@ -74,9 +99,13 @@ void fe::inputManager::handleKeyPress()
                     {
                         for (auto &data : input.second)
                             {
-                                if ((*data)->m_realTime && !(*data)->m_frozen)
+                                auto input = getObject(data);
+                                if (input)
                                     {
-                                        (*data)->m_callback();
+                                        if (input->m_realTime && !input->m_frozen)
+                                            {
+                                                input->m_callback();
+                                            }
                                     }
                             }
                     }
@@ -90,53 +119,25 @@ fe::inputManager &fe::inputManager::get()
 
 unsigned int fe::inputManager::add(sf::Keyboard::Key key, input data)
     {
-        m_inputs.push_back(new input(data));
-        m_keyboardInputs[key].push_back(&m_inputs.back());
-        m_handles.push_back(m_inputs.size() - 1);
+        auto handle = addObject(new input(data));
+        m_keyboardInputs[key].push_back(handle);
 
-        return m_handles.size() - 1;
+        return handle;
     }
 
 unsigned int fe::inputManager::add(sf::Mouse::Button key, input data)
     {
-        m_inputs.push_back(new input(data));
-        m_mouseInputs[key].push_back(&m_inputs.back());
-        m_handles.push_back(m_inputs.size() - 1);
+        auto handle = addObject(new input(data));
+        m_mouseInputs[key].push_back(handle);
 
-        return m_handles.size() - 1;
-    }
-
-void fe::inputManager::remove(unsigned int handle)
-    {
-        if (m_handles.begin() + handle < m_handles.end())
-            {
-                (*(m_inputs.begin() + m_handles[handle])) = nullptr;
-                m_inputs.erase(m_inputs.begin() + m_handles[handle]);
-                // since we are erasing an entity, all handles above it will become invalid. To prevent this, we will subtract all handles
-                // above and including the current one by one.
-                for (auto it = m_handles.begin() + handle; it != m_handles.end(); ++it) { (*it) -= 1; }
-
-                for (auto &inp : m_keyboardInputs)
-                    {
-                        inp.second.erase(std::remove_if(inp.second.begin(), inp.second.end(), [](input **inp){ return *inp == nullptr; }), inp.second.end());
-                    }
-
-                for (auto &inp : m_mouseInputs)
-                    {
-                        inp.second.erase(std::remove_if(inp.second.begin(), inp.second.end(), [](input **inp){ return *inp == nullptr; }), inp.second.end());
-                    }
-            }
-        else
-            {
-                FE_LOG_WARNING("Cannot remove input with handle \"", handle, "\"");
-            }
+        return handle;
     }
 
 void fe::inputManager::setActive(sf::Keyboard::Key key, bool active)
     {
         for (auto &input : m_keyboardInputs[key])
             {
-                (*input)->m_frozen = !active;
+                getObject(input)->m_frozen = !active;
             }
     }
 
@@ -144,18 +145,11 @@ void fe::inputManager::setActive(sf::Mouse::Button key, bool active)
     {
         for (auto &input : m_mouseInputs[key])
             {
-                (*input)->m_frozen = !active;
+                getObject(input)->m_frozen = !active;
             }
     }
 
 void fe::inputManager::setActive(unsigned int handle, bool active)
     {
-        if (m_handles.begin() + handle < m_handles.end())
-            {
-                m_inputs[m_handles[handle]]->m_frozen = !active;
-            }
-        else
-            {
-                FE_LOG_WARNING("Cannot disable input with handle \"", handle, "\"");
-            }
+        getObject(handle)->m_frozen = !active;
     }

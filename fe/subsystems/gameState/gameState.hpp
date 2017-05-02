@@ -35,8 +35,8 @@ namespace fe
 
                 protected:
                     template<typename T, typename ...Args>
-                    FLAT_ENGINE_API fe::sceneGraph::EntityHandle addEntity(Args &&...args);
-                    FLAT_ENGINE_API void removeEntity(fe::sceneGraph::EntityHandle handle);
+                    FLAT_ENGINE_API fe::Handle addEntity(Args &&...args);
+                    FLAT_ENGINE_API void removeEntity(Handle handle);
 
                     FLAT_ENGINE_API void addPanel(gui::panel *panel);
                     FLAT_ENGINE_API void removePanel(gui::panel *panel);
@@ -66,23 +66,23 @@ namespace fe
                     FLAT_ENGINE_API fe::collisonHandler &getCollisionHandler();
 
                     template<typename T = fe::baseEntity>
-                    FLAT_ENGINE_API T *getEntity(fe::sceneGraph::EntityHandle handle) const;
+                    FLAT_ENGINE_API T *getEntity(fe::Handle handle) const;
 
                     FLAT_ENGINE_API virtual ~baseGameState();
             };
 
         template<typename T, typename ...Args>
-        fe::sceneGraph::EntityHandle baseGameState::addEntity(Args &&...args)
+        fe::Handle baseGameState::addEntity(Args &&...args)
             {
                 T *ent = new T(args...);
-                auto handle = m_sceneGraph.addEntity(ent);
+                auto handle = m_sceneGraph.addObject(ent);
                 ent->onAdd(*this);
                 return handle;
             }
 
         template<typename T>
-        T *baseGameState::getEntity(fe::sceneGraph::EntityHandle handle) const
+        T *baseGameState::getEntity(fe::Handle handle) const
             {
-                return static_cast<T*>(m_sceneGraph.getEntity(handle));
+                return static_cast<T*>(m_sceneGraph.getObject(handle));
             }
     }

@@ -5,13 +5,13 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <algorithm>
 
-void fe::baseGameState::removeEntity(fe::sceneGraph::EntityHandle handle)
+void fe::baseGameState::removeEntity(Handle handle)
     {
         auto ent = getEntity(handle);
         if (ent) 
             {
                 ent->onRemove(*this);
-                m_sceneGraph.removeEntity(handle);
+                m_sceneGraph.removeObject(handle);
             }
     }
 
