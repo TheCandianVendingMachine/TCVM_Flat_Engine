@@ -42,7 +42,7 @@ namespace fe
                     struct stateHolder : stateHolderBase { void *construct() { return new T(); } };
 
                     // since all memory that the state has will be irrelevant once we pop it, we get the current stack marker to free to
-                    fe::stackAllocater::Marker m_stateMarker; // this marker is from m_previousState
+                    //fe::stackAllocater::Marker m_stateMarker; // this marker is from m_previousState
                     fe::stackAllocater m_stateAllocater;
                     bool m_pop;
                     bool m_clear;

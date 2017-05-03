@@ -25,7 +25,7 @@ void fe::inputManager::preUpdate()
     {
         for (auto &input : m_keyboardInputs)
             {
-                input.second.erase(std::remove_if(input.second.begin(), input.second.end(), [this](Handle handle) { return !handleActive(handle); }), input.second.end());
+                input.second.erase(std::remove_if(input.second.begin(), input.second.end(), [this](Handle handle) { return !handleActive(handle); } ), input.second.end());
             }
 
         for (auto &input : m_mouseInputs)
@@ -36,11 +36,11 @@ void fe::inputManager::preUpdate()
 
 void fe::inputManager::handleEvents(const sf::Event &event)
     {
-        for (auto &input : m_keyboardInputs)
+        for (auto &inputData : m_keyboardInputs)
             {
-                if (event.type == sf::Event::KeyPressed && event.key.code == input.first)
+                if (event.type == sf::Event::KeyPressed && event.key.code == inputData.first)
                     {
-                        for (auto &data : input.second)
+                        for (auto &data : inputData.second)
                             {
                                 auto input = getObject(data);
                                 if (input)
@@ -54,11 +54,11 @@ void fe::inputManager::handleEvents(const sf::Event &event)
                     }
             }
 
-        for (auto &input : m_mouseInputs)
+        for (auto &inputData : m_mouseInputs)
             {
-                if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == input.first)
+                if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == inputData.first)
                     {
-                        for (auto &data : input.second)
+                        for (auto &data : inputData.second)
                             {
                                 auto input = getObject(data);
                                 if (input)
@@ -75,11 +75,11 @@ void fe::inputManager::handleEvents(const sf::Event &event)
 
 void fe::inputManager::handleKeyPress()
     {
-        for (auto &input : m_keyboardInputs)
+        for (auto &inputData : m_keyboardInputs)
             {
-                if (sf::Keyboard::isKeyPressed(input.first))
+                if (sf::Keyboard::isKeyPressed(inputData.first))
                     {
-                        for (auto &data : input.second)
+                        for (auto &data : inputData.second)
                             {
                                 auto input = getObject(data);
                                 if (input)
@@ -93,11 +93,11 @@ void fe::inputManager::handleKeyPress()
                     }
             }
 
-        for (auto &input : m_mouseInputs)
+        for (auto &inputData : m_mouseInputs)
             {
-                if (sf::Mouse::isButtonPressed(input.first))
+                if (sf::Mouse::isButtonPressed(inputData.first))
                     {
-                        for (auto &data : input.second)
+                        for (auto &data : inputData.second)
                             {
                                 auto input = getObject(data);
                                 if (input)
@@ -117,7 +117,7 @@ fe::inputManager &fe::inputManager::get()
         return *m_instance;
     }
 
-unsigned int fe::inputManager::add(sf::Keyboard::Key key, input data)
+fe::Handle fe::inputManager::add(sf::Keyboard::Key key, input data)
     {
         auto handle = addObject(new input(data));
         m_keyboardInputs[key].push_back(handle);
@@ -125,7 +125,7 @@ unsigned int fe::inputManager::add(sf::Keyboard::Key key, input data)
         return handle;
     }
 
-unsigned int fe::inputManager::add(sf::Mouse::Button key, input data)
+fe::Handle fe::inputManager::add(sf::Mouse::Button key, input data)
     {
         auto handle = addObject(new input(data));
         m_mouseInputs[key].push_back(handle);
@@ -137,7 +137,7 @@ void fe::inputManager::setActive(sf::Keyboard::Key key, bool active)
     {
         for (auto &input : m_keyboardInputs[key])
             {
-                getObject(input)->m_frozen = !active;
+                setActive(input, active);
             }
     }
 
@@ -145,11 +145,11 @@ void fe::inputManager::setActive(sf::Mouse::Button key, bool active)
     {
         for (auto &input : m_mouseInputs[key])
             {
-                getObject(input)->m_frozen = !active;
+                setActive(input, active);
             }
     }
 
-void fe::inputManager::setActive(unsigned int handle, bool active)
+void fe::inputManager::setActive(fe::Handle handle, bool active)
     {
         getObject(handle)->m_frozen = !active;
     }

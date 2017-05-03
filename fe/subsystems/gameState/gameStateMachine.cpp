@@ -25,8 +25,6 @@ void fe::gameStateMachine::startUp()
                 auto memBuf = FE_ALLOC_DIRECT_CAPTURED("StateBuffer", size);
                 m_stateAllocater.startUp(static_cast<char*>(memBuf), size);
 
-                m_stateMarker = fe::memoryManager::get().getStackAllocater().getMarker();
-
                 m_instance = this;
 
                 m_pop = false;
@@ -57,6 +55,7 @@ void fe::gameStateMachine::push(baseGameState *newState, stateOptions options)
                         m_endState->m_currentState->onDeactive();
                     }
 
+                // we set the offset here so we can free the memory past the previous state, and behind the current
                 m_endState->m_offset = fe::memoryManager::get().getStackAllocater().getMarker();
                 auto listBuf = FE_ALLOC_STACK("StateListAlloc", sizeof(stateList));
                 m_endState->m_head = new(listBuf) stateList();
@@ -81,11 +80,6 @@ void fe::gameStateMachine::push(baseGameState *newState, stateOptions options)
         m_endState->m_options = options;
 
         m_update = false;
-
-        // we set the marker to the top of the stack after we push because we want to capture
-        // all of the STL's allocations in construction as well so when things are destructed
-        // they are still in memory. We have a small "leak" but that is worth it
-        m_stateMarker = fe::memoryManager::get().getStackAllocater().getMarker();
     }
 
 void fe::gameStateMachine::pop()
@@ -120,10 +114,6 @@ void fe::gameStateMachine::pop()
                             {
                                 m_endState->m_currentState->onActive();
                             }
-                    }
-                else
-                    {
-                        FE_FREE_STACK("GameStateMachine", m_stateMarker);
                     }
             }
     }

@@ -54,7 +54,7 @@ namespace fe
         template<typename T>
         void handleManager<T>::removeObject(Handle handle)
             {
-                if (m_handles.begin() + handle < m_handles.end() && m_handles[handle].active)
+                if (m_handles.begin() + handle < m_handles.end())
                     {
                         m_objects.erase(m_objects.begin() + m_handles[handle].handle); 
                         m_handles[handle].active = false;
@@ -85,7 +85,7 @@ namespace fe
             {
                 if (handle >= m_handles.size())
                     {
-                        FE_LOG_WARNING("Cannot get active object with handle \"", handle, "\"");
+                        FE_LOG_WARNING("Cannot get handle \"", handle, "\"");
                         return false;
                     }
 
@@ -98,12 +98,11 @@ namespace fe
                 if (handle >= m_handles.size())
                     {
                         FE_LOG_WARNING("Cannot retrieve object with handle \"", handle, "\"");
-                        return nullptr;
+                        return T();
                     }
                 else if (!m_handles[handle].active)
                     {
                         FE_LOG_DEBUG("Object with handle \"", handle, "\" inactive");
-                        return nullptr;
                     }
 
                 return m_objects[m_handles[handle].handle];
