@@ -54,9 +54,7 @@ void fe::gameStateMachine::push(baseGameState *newState, stateOptions options)
                     {
                         m_endState->m_currentState->onDeactive();
                     }
-                // we set the offset here so we can free the memory past the previous state, and behind the current
-                m_endState->m_offset = fe::memoryManager::get().getStackAllocater().getMarker();
-
+                
                 auto listBuf = FE_ALLOC_STACK("StateListAlloc", sizeof(stateList));
                 m_endState->m_head = new(listBuf) stateList();
 
@@ -78,6 +76,9 @@ void fe::gameStateMachine::push(baseGameState *newState, stateOptions options)
         m_endState->m_currentState->init();
         m_endState->m_currentState->onActive();
         m_endState->m_options = options;
+
+        // we set the offset here so we can free the memory past the previous state, and behind the current
+        m_endState->m_offset = fe::memoryManager::get().getStackAllocater().getMarker();
 
         m_update = false;
     }
