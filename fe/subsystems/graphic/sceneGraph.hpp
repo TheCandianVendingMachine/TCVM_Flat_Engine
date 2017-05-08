@@ -26,6 +26,8 @@ namespace fe
                     FLAT_ENGINE_API void onAdd(fe::baseEntity *entity);
 
                 public:
+                    FLAT_ENGINE_API void postInit();
+
                     FLAT_ENGINE_API void update(float deltaTime);
                     FLAT_ENGINE_API void postUpdate();
 

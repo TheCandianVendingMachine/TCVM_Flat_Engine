@@ -46,6 +46,7 @@ const sf::Texture &fe::texturePacker::getTexture()
         if (m_needsUpdate)
             {
                 createTexture();
+                m_needsUpdate = false;
             }
         
         return m_packedTexture;

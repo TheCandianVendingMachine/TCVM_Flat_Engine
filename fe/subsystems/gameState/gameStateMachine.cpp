@@ -75,6 +75,7 @@ void fe::gameStateMachine::push(baseGameState *newState, stateOptions options)
         m_endState->m_currentState = newState;
         m_endState->m_currentState->init();
         m_endState->m_currentState->onActive();
+        m_endState->m_currentState->postInit();
         m_endState->m_options = options;
 
         // we set the offset here so we can free the memory past the previous state, and behind the current

@@ -26,6 +26,14 @@ void fe::sceneGraph::onAdd(fe::baseEntity *entity)
             }
     }
 
+void fe::sceneGraph::postInit()
+    {
+        for (auto &entity : getObjects())
+            {
+                onAdd(entity);
+            }
+    }
+
 void fe::sceneGraph::update(float deltaTime)
     {
         m_batch.clear();
