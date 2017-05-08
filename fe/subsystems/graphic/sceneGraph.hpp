@@ -5,6 +5,7 @@
 #include "../../flatEngineExport.hpp"
 #include "../../objectManagement/handleManager.hpp"
 #include "spriteBatch.hpp"
+#include "texturePacker.hpp"
 #include <vector>
 
 namespace sf
@@ -20,6 +21,9 @@ namespace fe
             {
                 private:
                     spriteBatch m_batch;
+                    texturePacker m_textureBatch;
+
+                    void onAdd(fe::baseEntity *entity);
 
                 public:
                     FLAT_ENGINE_API void update(float deltaTime);

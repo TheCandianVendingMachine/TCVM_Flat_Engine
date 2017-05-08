@@ -2,13 +2,23 @@
 #include "transformable.hpp"
 #include "../subsystems/graphic/spriteBatch.hpp"
 
-fe::drawable::drawable() : m_verticies(sf::PrimitiveType::Quads, 4)
+fe::drawable::drawable() : m_verticies(sf::PrimitiveType::Quads, 4), m_texture(nullptr)
     {
     }
 
 void fe::drawable::draw(fe::spriteBatch &batch, fe::transformable &transform)
     {
         batch.add(m_verticies, transform);
+    }
+
+void fe::drawable::setTexture(sf::Texture *texture)
+    {
+        m_texture = texture;
+    }
+
+sf::Texture *fe::drawable::getTexture() const
+    {
+        return m_texture;
     }
 
 void fe::drawable::setColour(const sf::Color &colour)

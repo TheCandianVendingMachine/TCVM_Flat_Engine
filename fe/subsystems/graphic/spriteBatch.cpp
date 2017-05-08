@@ -32,8 +32,8 @@ void fe::spriteBatch::clear()
         m_index = 0;
     }
 
-void fe::spriteBatch::draw(sf::RenderTarget &app)
+void fe::spriteBatch::draw(sf::RenderTarget &app, sf::RenderStates states)
     {
-        app.draw(m_batch);
+        app.draw(m_batch, states);
         clear();
     }

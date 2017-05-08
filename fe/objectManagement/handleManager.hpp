@@ -27,6 +27,7 @@ namespace fe
 
                 protected:
                     std::vector<T> &getObjects();
+                    virtual void onAdd(T object) {}
 
                 public:
                     Handle addObject(T object);

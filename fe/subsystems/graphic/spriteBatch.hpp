@@ -28,7 +28,7 @@ namespace fe
 
                     FLAT_ENGINE_API void add(const sf::VertexArray &entity, fe::transformable &transform);
                     FLAT_ENGINE_API void clear();
-                    FLAT_ENGINE_API void draw(sf::RenderTarget &app);
+                    FLAT_ENGINE_API void draw(sf::RenderTarget &app, sf::RenderStates states);
 
             };
     }

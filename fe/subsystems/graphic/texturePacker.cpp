@@ -2,7 +2,7 @@
 #include <SFML/Graphics/Image.hpp>
 #include <algorithm>
 
-void texturePacker::createImage(packNode *node, sf::Image &packed)
+void fe::texturePacker::createImage(packNode *node, sf::Image &packed)
     {
         if (node->m_child[0])
             {
@@ -13,18 +13,21 @@ void texturePacker::createImage(packNode *node, sf::Image &packed)
             {
                 packed.copy(node->m_texture->copyToImage(), node->m_position.x, node->m_position.y);
             }
-        else
-            {
-                int i = 0;
-            }
     }
 
-texturePacker::texturePacker(fe::Vector2<unsigned int> textureSize) : m_needsUpdate(false), m_baseNode(0, 0, textureSize.x, textureSize.y)
+fe::texturePacker::texturePacker(fe::Vector2<unsigned int> textureSize) : m_needsUpdate(false), m_baseNode(0, 0, textureSize.x, textureSize.y)
     {
         m_packedTexture.create(textureSize.x, textureSize.y);
     }
 
-fe::Vector2<unsigned int> texturePacker::addTexture(sf::Texture *texture)
+void fe::texturePacker::createTexture()
+    {
+        sf::Image packed = m_packedTexture.copyToImage();
+        createImage(&m_baseNode, packed);
+        m_packedTexture.loadFromImage(packed);
+    }
+
+fe::Vector2<unsigned int> fe::texturePacker::addTexture(sf::Texture *texture)
     {
         packNode *ret = m_baseNode.insert(texture);
         if (ret) 
@@ -38,25 +41,22 @@ fe::Vector2<unsigned int> texturePacker::addTexture(sf::Texture *texture)
             }
     }
 
-const sf::Texture &texturePacker::getTexture()
+const sf::Texture &fe::texturePacker::getTexture()
     {
         if (m_needsUpdate)
             {
-                sf::Image packed = m_packedTexture.copyToImage();
-                createImage(&m_baseNode, packed);
-                m_packedTexture.loadFromImage(packed);
+                createTexture();
             }
         
-
         return m_packedTexture;
     }
 
-texturePacker::~texturePacker()
+fe::texturePacker::~texturePacker()
     {
         m_baseNode.clear();
     }
 
-texturePacker::packNode::packNode(unsigned int x, unsigned int y, unsigned int width, unsigned int height)
+fe::texturePacker::packNode::packNode(unsigned int x, unsigned int y, unsigned int width, unsigned int height)
     {
         m_child[0] = nullptr;
         m_child[1] = nullptr;
@@ -66,7 +66,7 @@ texturePacker::packNode::packNode(unsigned int x, unsigned int y, unsigned int w
         m_size = fe::Vector2<unsigned int>(width, height);
     }
 
-texturePacker::packNode *texturePacker::packNode::insert(sf::Texture *texture)
+fe::texturePacker::packNode *fe::texturePacker::packNode::insert(sf::Texture *texture)
     {
         if (m_child[0]) // if we are a branch we will have atleast 1 child
             {
@@ -127,7 +127,7 @@ texturePacker::packNode *texturePacker::packNode::insert(sf::Texture *texture)
             }
     }
 
-void texturePacker::packNode::clear()
+void fe::texturePacker::packNode::clear()
     {
         if (m_child[0])
             {
