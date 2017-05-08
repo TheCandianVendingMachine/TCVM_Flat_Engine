@@ -23,7 +23,7 @@ namespace fe
                     spriteBatch m_batch;
                     texturePacker m_textureBatch;
 
-                    void onAdd(fe::baseEntity *entity);
+                    FLAT_ENGINE_API void onAdd(fe::baseEntity *entity);
 
                 public:
                     FLAT_ENGINE_API void update(float deltaTime);
