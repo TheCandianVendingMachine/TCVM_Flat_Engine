@@ -3,6 +3,7 @@
 #pragma once
 #define FLAT_ENGINE_EXPORT
 #include "../flatEngineExport.hpp"
+#include "../subsystems/graphic/animation/animationActor.hpp"
 #include <SFML/Graphics/VertexArray.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Color.hpp>
@@ -17,7 +18,7 @@ namespace fe
         class transformable;
         class spriteBatch;
 
-        class drawable
+        class drawable : public fe::animationActor
             {
                 protected:
                     sf::VertexArray m_verticies;

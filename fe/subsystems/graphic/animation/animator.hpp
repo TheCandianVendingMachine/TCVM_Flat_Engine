@@ -6,10 +6,10 @@
 
 #include <unordered_map>
 #include <vector>
-#include <SFML/System/Vector2.hpp>
 
 #include "../../../objectManagement/handleManager.hpp"
 #include "../../../time/clock.hpp"
+#include "../../../math/Vector2.hpp"
 
 namespace sf
     {
@@ -27,7 +27,7 @@ namespace fe
                     fe::clock m_elapsedTime;
 
                 public:
-                    FLAT_ENGINE_API fe::Handle addAnimation(sf::Vector2u frameSize, sf::Vector2u animationSize, sf::Vector2u texturePosition = sf::Vector2u(0, 0), bool vertical = true);
+                    FLAT_ENGINE_API fe::Handle addAnimation(fe::Vector2<unsigned int> frameSize, fe::Vector2<unsigned int> animationSize, fe::Vector2<unsigned int> texturePosition = fe::Vector2<unsigned int>(0, 0), bool vertical = true);
                     FLAT_ENGINE_API void removeAnimation(fe::Handle handle);
                 
                     FLAT_ENGINE_API void subscribe(animationActor *actor, fe::Handle animation);

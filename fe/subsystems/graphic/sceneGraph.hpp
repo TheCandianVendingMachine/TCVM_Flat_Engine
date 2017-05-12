@@ -6,6 +6,7 @@
 #include "../../objectManagement/handleManager.hpp"
 #include "spriteBatch.hpp"
 #include "texturePacker.hpp"
+#include "animation/animator.hpp"
 #include <vector>
 
 namespace sf
@@ -23,6 +24,8 @@ namespace fe
                     spriteBatch m_batch;
                     texturePacker m_textureBatch;
 
+                    animator m_animator;
+
                     FLAT_ENGINE_API void onAdd(fe::baseEntity *entity);
 
                 public:
@@ -32,6 +35,12 @@ namespace fe
                     FLAT_ENGINE_API void postUpdate();
 
                     FLAT_ENGINE_API void draw(sf::RenderTarget &app);
+
+                    fe::Vector2<unsigned int> addTexture(sf::Texture *texture);
+                    fe::Handle addAnimation(sf::Texture *texture, fe::Vector2<unsigned int> frameSize);
+
+                    void subscribe(fe::animationActor *actor, fe::Handle animation);
+                    void unsubscribe(fe::animationActor *actor, fe::Handle animation);
 
                     FLAT_ENGINE_API ~sceneGraph();
 

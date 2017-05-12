@@ -3,7 +3,7 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <iostream>
 
-fe::animationTexture::animationTexture(const sf::Vector2u frameSize, const sf::Vector2u frameOffset, const sf::Vector2u animationSize, bool verticalStrip) :
+fe::animationTexture::animationTexture(const fe::Vector2<unsigned int> frameSize, const fe::Vector2<unsigned int> frameOffset, const fe::Vector2<unsigned int> animationSize, bool verticalStrip) :
     m_frameSize(frameSize),
     m_framePosition(frameOffset),
     m_vertical(verticalStrip),
@@ -12,7 +12,7 @@ fe::animationTexture::animationTexture(const sf::Vector2u frameSize, const sf::V
         m_maxFrames = m_vertical ? (m_animationSize.y - frameOffset.y) / m_frameSize.y : (m_animationSize.x - frameOffset.x) / m_frameSize.x;
     }
 
-std::pair<sf::Vector2u, sf::Vector2u> fe::animationTexture::getTexture(animationActor *actor)
+std::pair<fe::Vector2<unsigned int>, fe::Vector2<unsigned int>> fe::animationTexture::getTexture(animationActor *actor)
     {
         unsigned int maxFrame = m_maxFrames;
         if (maxFrame > actor->getEndFrame() && actor->getEndFrame() != 0)
@@ -25,7 +25,7 @@ std::pair<sf::Vector2u, sf::Vector2u> fe::animationTexture::getTexture(animation
                 actor->setCurrentFrame(actor->getStartFrame());
             }
 
-        sf::Vector2u frameOffset = m_framePosition;
+        fe::Vector2<unsigned int> frameOffset = m_framePosition;
         if (m_vertical)
             {
                 frameOffset.y += actor->getCurrentFrame() * m_frameSize.y;

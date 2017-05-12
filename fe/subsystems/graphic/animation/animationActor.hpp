@@ -3,8 +3,7 @@
 #pragma once
 #define FLAT_ENGINE_EXPORT
 #include "../../../flatEngineExport.hpp"
-
-#include <SFML/System/Vector2.hpp>
+#include "../../../math/Vector2.hpp"
 #include "../../../time/clock.hpp"
 
 namespace sf
@@ -60,7 +59,7 @@ namespace fe
                     FLAT_ENGINE_API void iterateFrame(int amount);
 
                     // Updates the verticies according to the texture
-                    FLAT_ENGINE_API void updateVerticies(sf::Vector2u offset, sf::Vector2u size);
+                    FLAT_ENGINE_API void updateVerticies(fe::Vector2<unsigned int> offset, fe::Vector2<unsigned int> size);
 
             };
     }

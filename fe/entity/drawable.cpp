@@ -2,7 +2,7 @@
 #include "transformable.hpp"
 #include "../subsystems/graphic/spriteBatch.hpp"
 
-fe::drawable::drawable() : m_verticies(sf::PrimitiveType::Quads, 4), m_texture(nullptr)
+fe::drawable::drawable() : m_verticies(sf::PrimitiveType::Quads, 4), m_texture(nullptr), animationActor(&m_verticies)
     {
     }
 

@@ -9,6 +9,7 @@
 
 void fe::sceneGraph::onAdd(fe::baseEntity *entity)
     {
+        
         if (entity->m_texture)
             {
                 auto texture = entity->m_texture;
@@ -60,7 +61,29 @@ void fe::sceneGraph::draw(sf::RenderTarget &app)
         sf::RenderStates renderStates;
         renderStates.texture = &m_textureBatch.getTexture();
 
+        m_animator.updateTextures();
         m_batch.draw(app, renderStates);
+    }
+
+fe::Vector2<unsigned int> fe::sceneGraph::addTexture(sf::Texture *texture)
+    {
+        return m_textureBatch.addTexture(texture);
+    }
+
+fe::Handle fe::sceneGraph::addAnimation(sf::Texture *texture, fe::Vector2<unsigned int> frameSize)
+    {
+        fe::Vector2<unsigned int> offset = m_textureBatch.addTexture(texture);
+        return m_animator.addAnimation(frameSize, texture->getSize(), offset);
+    }
+
+void fe::sceneGraph::subscribe(fe::animationActor *actor, fe::Handle animation)
+    {
+        m_animator.subscribe(actor, animation);
+    }
+
+void fe::sceneGraph::unsubscribe(fe::animationActor *actor, fe::Handle animation)
+    {
+        m_animator.unsubscribe(actor, animation);
     }
 
 fe::sceneGraph::~sceneGraph()

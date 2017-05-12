@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <SFML/Graphics/VertexArray.hpp>
 
-fe::Handle fe::animator::addAnimation(sf::Vector2u frameSize, sf::Vector2u animationSize, sf::Vector2u texturePosition, bool vertical)
+fe::Handle fe::animator::addAnimation(fe::Vector2<unsigned int> frameSize, fe::Vector2<unsigned int> animationSize, fe::Vector2<unsigned int> texturePosition, bool vertical)
     {
         return addObject(animationTexture(frameSize, texturePosition, animationSize, vertical));
     }

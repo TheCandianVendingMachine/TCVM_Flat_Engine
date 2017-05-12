@@ -96,7 +96,7 @@ void fe::animationActor::iterateFrame(int amount)
             }
     }
 
-void fe::animationActor::updateVerticies(sf::Vector2u offset, sf::Vector2u size)
+void fe::animationActor::updateVerticies(fe::Vector2<unsigned int> offset, fe::Vector2<unsigned int> size)
     {
         (*m_verticies)[0].position = sf::Vector2f(0, 0);
         (*m_verticies)[1].position = sf::Vector2f(size.x, 0);

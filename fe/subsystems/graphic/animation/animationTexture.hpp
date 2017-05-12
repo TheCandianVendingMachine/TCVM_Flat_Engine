@@ -3,8 +3,7 @@
 #pragma once
 #define FLAT_ENGINE_EXPORT
 #include "../../../flatEngineExport.hpp"
-
-#include <SFML/System/Vector2.hpp>
+#include "../../../math/Vector2.hpp"
 #include <SFML/Graphics/Image.hpp>
 
 namespace sf
@@ -18,9 +17,9 @@ namespace fe
         class animationTexture
             {
                 private:
-                    sf::Vector2u m_frameSize;
-                    sf::Vector2u m_framePosition;
-                    sf::Vector2u m_animationSize;
+                    fe::Vector2<unsigned int> m_frameSize;
+                    fe::Vector2<unsigned int> m_framePosition;
+                    fe::Vector2<unsigned int> m_animationSize;
 
                     unsigned int m_maxFrames;
 
@@ -29,8 +28,8 @@ namespace fe
 
                 public:
                     FLAT_ENGINE_API animationTexture() {}
-                    FLAT_ENGINE_API animationTexture(const sf::Vector2u frameSize, const sf::Vector2u frameOffset, const sf::Vector2u animationSize, bool verticalStrip);
-                    FLAT_ENGINE_API std::pair<sf::Vector2u, sf::Vector2u> getTexture(animationActor *actor);
+                    FLAT_ENGINE_API animationTexture(const fe::Vector2<unsigned int> frameSize, const fe::Vector2<unsigned int> frameOffset, const fe::Vector2<unsigned int> animationSize, bool verticalStrip);
+                    FLAT_ENGINE_API std::pair<fe::Vector2<unsigned int>, fe::Vector2<unsigned int>> getTexture(animationActor *actor);
 
             };
     }
