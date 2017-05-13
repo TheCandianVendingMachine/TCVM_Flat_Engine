@@ -1,7 +1,8 @@
 #include "animationTexture.hpp"
 #include "animationActor.hpp"
+#include "../../../debug/logger.hpp"
+
 #include <SFML/Graphics/Texture.hpp>
-#include <iostream>
 
 fe::animationTexture::animationTexture(const fe::Vector2<unsigned int> frameSize, const fe::Vector2<unsigned int> frameOffset, const fe::Vector2<unsigned int> animationSize, bool verticalStrip) :
     m_frameSize(frameSize),
@@ -9,7 +10,14 @@ fe::animationTexture::animationTexture(const fe::Vector2<unsigned int> frameSize
     m_vertical(verticalStrip),
     m_animationSize(animationSize)
     {
-        m_maxFrames = m_vertical ? (m_animationSize.y - frameOffset.y) / m_frameSize.y : (m_animationSize.x - frameOffset.x) / m_frameSize.x;
+        if (m_frameSize.x != 0 && m_frameSize.y != 0)
+            {
+                m_maxFrames = m_vertical ? (m_animationSize.y - frameOffset.y) / m_frameSize.y : (m_animationSize.x - frameOffset.x) / m_frameSize.x;
+            }
+        else
+            {
+                FE_LOG_ERROR("Cannot load texture into animation");
+            }
     }
 
 std::pair<fe::Vector2<unsigned int>, fe::Vector2<unsigned int>> fe::animationTexture::getTexture(animationActor *actor)

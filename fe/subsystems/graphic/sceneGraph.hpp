@@ -26,8 +26,6 @@ namespace fe
 
                     animator m_animator;
 
-                    FLAT_ENGINE_API void onAdd(fe::baseEntity *entity);
-
                 public:
                     FLAT_ENGINE_API void postInit();
 
@@ -36,11 +34,11 @@ namespace fe
 
                     FLAT_ENGINE_API void draw(sf::RenderTarget &app);
 
-                    fe::Vector2<unsigned int> addTexture(sf::Texture *texture);
-                    fe::Handle addAnimation(sf::Texture *texture, fe::Vector2<unsigned int> frameSize);
+                    FLAT_ENGINE_API fe::Handle addTexture(sf::Texture *texture);
+                    FLAT_ENGINE_API fe::Handle addAnimation(sf::Texture *texture, fe::Vector2<unsigned int> frameSize);
 
-                    void subscribe(fe::animationActor *actor, fe::Handle animation);
-                    void unsubscribe(fe::animationActor *actor, fe::Handle animation);
+                    FLAT_ENGINE_API void subscribe(fe::animationActor *actor, fe::Handle animation);
+                    FLAT_ENGINE_API void unsubscribe(fe::animationActor *actor, fe::Handle animation);
 
                     FLAT_ENGINE_API ~sceneGraph();
 

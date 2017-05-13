@@ -23,12 +23,13 @@ namespace fe
                     
 
                             FLAT_ENGINE_API packNode(unsigned int x, unsigned int y, unsigned int width, unsigned int height);
-                            FLAT_ENGINE_API packNode *insert(sf::Texture *texture);
+                            FLAT_ENGINE_API packNode *insert(sf::Texture &texture);
                             FLAT_ENGINE_API void clear();
 
                         } m_baseNode;
 
                     sf::Texture m_packedTexture;
+                    sf::Texture m_baseTexture; // a small white pixel used for non-texture objects
                     bool m_needsUpdate;
 
                     FLAT_ENGINE_API void createImage(packNode *node, sf::Image &packed);
@@ -37,7 +38,7 @@ namespace fe
                     FLAT_ENGINE_API texturePacker(fe::Vector2<unsigned int> textureSize = fe::Vector2<unsigned int>(2048, 2048));
                     FLAT_ENGINE_API void createTexture();
 
-                    FLAT_ENGINE_API fe::Vector2<unsigned int> addTexture(sf::Texture *texture);
+                    FLAT_ENGINE_API fe::Vector2<unsigned int> addTexture(sf::Texture &texture);
                     FLAT_ENGINE_API const sf::Texture &getTexture();
 
                     FLAT_ENGINE_API ~texturePacker();

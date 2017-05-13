@@ -11,6 +11,8 @@
 #include "../../../time/clock.hpp"
 #include "../../../math/Vector2.hpp"
 
+#include "animationTexture.hpp"
+
 namespace sf
     {
         class Texture;
@@ -18,7 +20,6 @@ namespace sf
 
 namespace fe
     {
-        class animationTexture;
         class animationActor;
         class animator : fe::handleManager<animationTexture>
             {
