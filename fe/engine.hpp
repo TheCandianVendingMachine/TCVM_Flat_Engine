@@ -16,6 +16,9 @@ namespace fe
         class eventSender;
         class baseGameState;
 
+        template<typename T>
+        class resourceManager;
+
         class engine
             {
                 private:

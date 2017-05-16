@@ -23,7 +23,7 @@ fe::texturePacker::texturePacker(fe::Vector2<unsigned int> textureSize) : m_need
         tempTexture.create(1, 1, sf::Color::White);
         m_baseTexture.loadFromImage(tempTexture);
 
-        addTexture(m_baseTexture);
+        addTexture(m_baseTexture, "base");
     }
 
 void fe::texturePacker::createTexture()
@@ -33,12 +33,13 @@ void fe::texturePacker::createTexture()
         m_packedTexture.loadFromImage(packed);
     }
 
-fe::Vector2<unsigned int> fe::texturePacker::addTexture(sf::Texture &texture)
+fe::Vector2<unsigned int> fe::texturePacker::addTexture(sf::Texture &texture, const std::string &id)
     {
         packNode *ret = m_baseNode.insert(texture);
         if (ret) 
             {
                 m_needsUpdate = true;
+                ret->m_id = id;
                 return ret->m_position;
             }
         else
@@ -56,6 +57,27 @@ const sf::Texture &fe::texturePacker::getTexture()
             }
         
         return m_packedTexture;
+    }
+
+const sf::Texture *fe::texturePacker::getTexture(const std::string &id)
+    {
+        auto node = m_baseNode.get(id);
+        if (node)
+            {
+                return node->m_texture;
+            }
+        return nullptr;
+    }
+
+fe::Vector2<unsigned int> fe::texturePacker::getTexturePosition(const std::string & id)
+    {
+        auto node = m_baseNode.get(id);
+        if (node)
+            {
+                return node->m_position;
+            }
+
+        return fe::Vector2<unsigned int>();
     }
 
 fe::texturePacker::~texturePacker()
@@ -132,6 +154,22 @@ fe::texturePacker::packNode *fe::texturePacker::packNode::insert(sf::Texture &te
 
                 return m_child[0]->insert(texture);
             }
+    }
+
+fe::texturePacker::packNode *fe::texturePacker::packNode::get(const std::string &id)
+    {
+        if (m_id == id)
+            {
+                return this;
+            }
+        else if (m_child[0] || m_child[1])
+            {
+                auto ret = m_child[0]->get(id);
+                if (ret) return ret;
+                return m_child[1]->get(id);
+            }
+
+        return nullptr;
     }
 
 void fe::texturePacker::packNode::clear()
