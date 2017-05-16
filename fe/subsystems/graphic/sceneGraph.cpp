@@ -5,12 +5,10 @@
 
 #include "../../debug/logger.hpp"
 
-#include <algorithm>
+#include "../../engine.hpp"
+#include "../resourceManager/resourceManager.hpp"
 
-void fe::sceneGraph::postInit()
-    {
-        m_textureBatch.createTexture();
-    }
+#include <algorithm>
 
 void fe::sceneGraph::update(float deltaTime)
     {
@@ -36,20 +34,33 @@ void fe::sceneGraph::postUpdate()
 void fe::sceneGraph::draw(sf::RenderTarget &app)
     {
         sf::RenderStates renderStates;
-        renderStates.texture = &m_textureBatch.getTexture();
+        //renderStates.texture = &fe::engine::get().getResourceManager<sf::Texture>()->get();
 
         m_animator.updateTextures();
         m_batch.draw(app, renderStates);
     }
 
-fe::Handle fe::sceneGraph::addTexture(sf::Texture *texture)
+fe::Handle fe::sceneGraph::addTexture(const char *filepath, const char *id)
     {
-        return addAnimation(texture, texture->getSize());
+        //auto texture = fe::engine::get().getResourceManager<sf::Texture>()->load(filepath, id);
+        //return addTexture(texture, fe::engine::get().getResourceManager<sf::Texture>()->getTextureOffset(id));
+        return 0;
     }
 
-fe::Handle fe::sceneGraph::addAnimation(sf::Texture *texture, fe::Vector2<unsigned int> frameSize)
+fe::Handle fe::sceneGraph::addAnimation(const char *filepath, const char *id, fe::Vector2<unsigned int> frameSize)
     {
-        fe::Vector2<unsigned int> offset = m_textureBatch.addTexture(*texture);
+        //auto texture = fe::engine::get().getResourceManager<sf::Texture>()->load(filepath, id);
+        //return addAnimation(texture, fe::engine::get().getResourceManager<sf::Texture>()->getTextureOffset(id), frameSize);
+        return 0;
+    }
+
+fe::Handle fe::sceneGraph::addTexture(const sf::Texture *texture, fe::Vector2<unsigned int> offset)
+    {
+        return addAnimation(texture, offset, texture->getSize());
+    }
+
+fe::Handle fe::sceneGraph::addAnimation(const sf::Texture *texture, fe::Vector2<unsigned int> offset, fe::Vector2<unsigned int> frameSize)
+    {
         return m_animator.addAnimation(frameSize, texture->getSize(), offset);
     }
 

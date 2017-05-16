@@ -2,12 +2,16 @@
 #include "subsystems/gameState/gameStateMachine.hpp"
 #include "subsystems/messaging/eventSender.hpp"
 #include "subsystems/input/inputManager.hpp"
+#include "subsystems/resourceManager/resourceManager.hpp"
 #include "debug/logger.hpp"
 
 #include "feAssert.hpp"
 
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
+
+#include <SFML/Graphics/Texture.hpp>
+#include <SFML/Graphics/Font.hpp>
 
 fe::engine *fe::engine::m_instance = nullptr;
 
@@ -97,6 +101,9 @@ void fe::engine::startUp(unsigned long long totalMemory, unsigned long long stac
                 m_gameStateMachine = new gameStateMachine;
                 m_gameStateMachine->startUp();
 
+                m_fontManager = new resourceManager<sf::Font>;
+                m_textureManager = new resourceManager<sf::Texture>;
+
                 m_screenSize = m_renderer.getWindowSize();
 
                 m_instance = this;
@@ -106,6 +113,9 @@ void fe::engine::startUp(unsigned long long totalMemory, unsigned long long stac
 void fe::engine::shutDown()
     {
         m_shutDown = true;
+
+        m_fontManager->shutDown();
+        m_textureManager->shutDown();
 
         m_gameStateMachine->shutDown();
         m_inputManager->shutDown();

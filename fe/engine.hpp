@@ -8,6 +8,12 @@
 #include "subsystems/graphic/renderer.hpp"
 #include "time/clock.hpp"
 
+namespace sf
+    {
+        class Texture;
+        class Font;
+    }
+
 namespace fe
     {
         class logger;
@@ -29,6 +35,9 @@ namespace fe
                     fe::inputManager *m_inputManager;
                     fe::gameStateMachine *m_gameStateMachine;
                     fe::eventSender *m_eventSender;
+
+                    fe::resourceManager<sf::Texture> *m_textureManager;
+                    fe::resourceManager<sf::Font> *m_fontManager;
 
                 private:
                     fe::clock m_fpsClock;
@@ -76,7 +85,32 @@ namespace fe
 
                     FLAT_ENGINE_API fe::eventSender *getEventSender() const;
 
+                    template<typename T>
+                    fe::resourceManager<T>              *getResourceManager() const;
+                    template<>
+                    fe::resourceManager<sf::Texture>    *getResourceManager() const;
+                    template<>
+                    fe::resourceManager<sf::Font>       *getResourceManager() const;
+
                     FLAT_ENGINE_API ~engine();
             };
+
+        template<typename T>
+        inline fe::resourceManager<T> *engine::getResourceManager() const
+            {
+                return nullptr;
+            }
+
+        template<>
+        inline fe::resourceManager<sf::Texture> *engine::getResourceManager() const
+            {
+                return m_textureManager;
+            }
+
+        template<>
+        inline fe::resourceManager<sf::Font> *engine::getResourceManager() const
+            {
+                return m_fontManager;
+            }
 
     }

@@ -73,31 +73,34 @@ namespace fe
 
         template<>
         class resourceManager<sf::Texture>
-        {
-            private:
-                std::vector<sf::Texture*> m_textures;
-                fe::texturePacker m_packed;
+            {
+                private:
+                    std::vector<sf::Texture*> m_textures;
+                    fe::texturePacker m_packed;
 
-            public:
-                resourceManager();
+                public:
+                    resourceManager();
 
-                const sf::Texture *load(const std::string &filepath, const std::string &id);
-                const sf::Texture *get(const std::string &id);
-                fe::Vector2<unsigned int> getTexturePosition(const std::string &id);
-                void remove(const std::string &id);
+                    const sf::Texture *load(const std::string &filepath, const std::string &id);
+                    const sf::Texture *getTexture(const std::string &id);
+                    fe::Vector2<unsigned int> getTextureOffset(const std::string &id);
 
-                void shutDown();
+                    const sf::Texture &get();
+                    fe::Vector2<unsigned int> getTexturePosition(const std::string &id);
+                    void remove(const std::string &id);
 
-        };
+                    void shutDown();
 
-        resourceManager<sf::Texture>::resourceManager()
+            };
+
+        inline resourceManager<sf::Texture>::resourceManager()
             {
                 m_packed.createTexture();
             }
 
-        const sf::Texture *resourceManager<sf::Texture>::load(const std::string &filepath, const std::string &id)
+        inline const sf::Texture *resourceManager<sf::Texture>::load(const std::string &filepath, const std::string &id)
             {
-                const sf::Texture *resource = get(id);
+                const sf::Texture *resource = getTexture(id);
                 if (resource)
                     {
                         return resource;
@@ -110,7 +113,7 @@ namespace fe
 
                         m_textures.push_back(added);
                         m_packed.addTexture(*added, id);
-                        return resource;
+                        return added;
                     }
                 else
                     {
@@ -120,13 +123,31 @@ namespace fe
                 return nullptr;
             }
 
-        const sf::Texture *resourceManager<sf::Texture>::get(const std::string &id)
+        inline const sf::Texture *resourceManager<sf::Texture>::getTexture(const std::string &id)
             {
                 return m_packed.getTexture(id);
             }
 
-        fe::Vector2<unsigned int> resourceManager<sf::Texture>::getTexturePosition(const std::string &id)
+        inline fe::Vector2<unsigned int> resourceManager<sf::Texture>::getTextureOffset(const std::string &id)
             {
                 return m_packed.getTexturePosition(id);
             }
+
+        inline const sf::Texture &resourceManager<sf::Texture>::get()
+            {
+                return m_packed.getTexture();
+            }
+
+        inline fe::Vector2<unsigned int> resourceManager<sf::Texture>::getTexturePosition(const std::string &id)
+            {
+                return m_packed.getTexturePosition(id);
+            }
+
+        inline void remove(const std::string &id)
+            {
+        
+            }
+
+        inline void resourceManager<sf::Texture>::shutDown()
+            {}
     }
