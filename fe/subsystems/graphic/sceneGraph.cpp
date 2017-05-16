@@ -34,7 +34,7 @@ void fe::sceneGraph::postUpdate()
 void fe::sceneGraph::draw(sf::RenderTarget &app)
     {
         sf::RenderStates renderStates;
-        //renderStates.texture = &fe::engine::get().getResourceManager<sf::Texture>()->get();
+        renderStates.texture = &fe::engine::get().getResourceManager<sf::Texture>()->get();
 
         m_animator.updateTextures();
         m_batch.draw(app, renderStates);
@@ -42,16 +42,14 @@ void fe::sceneGraph::draw(sf::RenderTarget &app)
 
 fe::Handle fe::sceneGraph::addTexture(const char *filepath, const char *id)
     {
-        //auto texture = fe::engine::get().getResourceManager<sf::Texture>()->load(filepath, id);
-        //return addTexture(texture, fe::engine::get().getResourceManager<sf::Texture>()->getTextureOffset(id));
-        return 0;
+        auto texture = fe::engine::get().getResourceManager<sf::Texture>()->load(filepath, id);
+        return addTexture(texture, fe::engine::get().getResourceManager<sf::Texture>()->getTextureOffset(id));
     }
 
 fe::Handle fe::sceneGraph::addAnimation(const char *filepath, const char *id, fe::Vector2<unsigned int> frameSize)
     {
-        //auto texture = fe::engine::get().getResourceManager<sf::Texture>()->load(filepath, id);
-        //return addAnimation(texture, fe::engine::get().getResourceManager<sf::Texture>()->getTextureOffset(id), frameSize);
-        return 0;
+        auto texture = fe::engine::get().getResourceManager<sf::Texture>()->load(filepath, id);
+        return addAnimation(texture, fe::engine::get().getResourceManager<sf::Texture>()->getTextureOffset(id), frameSize);
     }
 
 fe::Handle fe::sceneGraph::addTexture(const sf::Texture *texture, fe::Vector2<unsigned int> offset)
@@ -72,6 +70,11 @@ void fe::sceneGraph::subscribe(fe::animationActor *actor, fe::Handle animation)
 void fe::sceneGraph::unsubscribe(fe::animationActor *actor, fe::Handle animation)
     {
         m_animator.unsubscribe(actor, animation);
+    }
+
+void fe::sceneGraph::unsubscribe(fe::animationActor * actor)
+    {
+        m_animator.unsubscribe(actor);
     }
 
 fe::sceneGraph::~sceneGraph()

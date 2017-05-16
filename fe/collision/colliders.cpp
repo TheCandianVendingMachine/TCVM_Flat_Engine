@@ -1,12 +1,12 @@
 #include "colliders.hpp"
 #include <algorithm>
 
-fe::AABB::AABB(const Vector2d &size) : m_max(size)
+fe::AABB::AABB(const Vector2d size) : m_max(size)
     {
         m_type = colliderType::AABB;
     }
 
-fe::AABB::AABB(const Vector2d &size, std::function<void(const collider&)> callback) : m_max(size)
+fe::AABB::AABB(const Vector2d size, std::function<void(const collider&)> callback) : m_max(size)
     {
         m_type = colliderType::AABB;
         m_callback = callback;

@@ -29,6 +29,14 @@ void fe::animator::unsubscribe(animationActor *actor, fe::Handle animation)
         actorVector.erase(std::remove(actorVector.begin(), actorVector.end(), actor), actorVector.end());
     }
 
+void fe::animator::unsubscribe(animationActor *actor)
+    {
+        for (auto &handle : m_actors)
+            {
+                unsubscribe(actor, handle.first);
+            }
+    }
+
 void fe::animator::updateTextures()
     {
         for (auto &animation : m_actors)

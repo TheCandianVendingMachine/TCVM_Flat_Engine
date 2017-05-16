@@ -33,6 +33,7 @@ namespace fe
                 
                     FLAT_ENGINE_API void subscribe(animationActor *actor, fe::Handle animation);
                     FLAT_ENGINE_API void unsubscribe(animationActor *actor, fe::Handle anitmation);
+                    FLAT_ENGINE_API void unsubscribe(animationActor *actor);
 
                     FLAT_ENGINE_API void updateTextures();
             };

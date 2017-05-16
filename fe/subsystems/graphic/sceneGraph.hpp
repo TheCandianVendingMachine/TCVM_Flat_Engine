@@ -38,6 +38,7 @@ namespace fe
 
                     FLAT_ENGINE_API void subscribe(fe::animationActor *actor, fe::Handle animation);
                     FLAT_ENGINE_API void unsubscribe(fe::animationActor *actor, fe::Handle animation);
+                    FLAT_ENGINE_API void unsubscribe(fe::animationActor *actor);
 
                     FLAT_ENGINE_API ~sceneGraph();
 

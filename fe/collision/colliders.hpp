@@ -35,8 +35,8 @@ namespace fe
 
         struct AABB : public collider
             {       
-                FLAT_ENGINE_API AABB(const Vector2d &size);
-                FLAT_ENGINE_API AABB(const Vector2d &size, std::function<void(const collider&)> callback);
+                FLAT_ENGINE_API AABB(const Vector2d size);
+                FLAT_ENGINE_API AABB(const Vector2d size, std::function<void(const collider&)> callback);
 
                 FLAT_ENGINE_API void operator()(const collider &collided) const { if (m_callback) m_callback(collided); }
 

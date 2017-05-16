@@ -4,6 +4,10 @@
 
 fe::drawable::drawable() : m_verticies(sf::PrimitiveType::Quads, 4), animationActor(&m_verticies)
     {
+        m_verticies[0].texCoords = fe::Vector2d(0, 0).convertToSfVec2();
+        m_verticies[1].texCoords = fe::Vector2d(1, 0).convertToSfVec2();
+        m_verticies[2].texCoords = fe::Vector2d(1, 1).convertToSfVec2();
+        m_verticies[3].texCoords = fe::Vector2d(0, 1).convertToSfVec2();
     }
 
 void fe::drawable::draw(fe::spriteBatch &batch, fe::transformable &transform)
