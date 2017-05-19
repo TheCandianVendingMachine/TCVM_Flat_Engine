@@ -30,6 +30,8 @@ namespace fe
                     FLAT_ENGINE_API void setOrigin(const fe::Vector2d &origin);
                     // Set the scale of the object. Overrides all previous scaling
                     FLAT_ENGINE_API void setScale(const fe::Vector2d &scale);
+                    // Set the scale of the object. Overrides all previous scaling
+                    FLAT_ENGINE_API void setScale(float scale);
                     
 
                     // Get the position in the world
@@ -43,6 +45,8 @@ namespace fe
                     FLAT_ENGINE_API void move(const fe::Vector2d &offset);
                     // Scale the matrix by the factor
                     FLAT_ENGINE_API void scale(const fe::Vector2d &scale);
+                    // Scale the matrix by the factor
+                    FLAT_ENGINE_API void scale(float scale);
                     // Rotate the matrix by an amount of radians
                     FLAT_ENGINE_API void rotate(float radians);
 

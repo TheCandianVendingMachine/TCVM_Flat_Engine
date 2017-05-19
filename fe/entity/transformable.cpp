@@ -27,6 +27,11 @@ void fe::transformable::setScale(const fe::Vector2d &scale)
         m_update |= true;
     }
 
+void fe::transformable::setScale(float scale)
+    {
+        setScale({ scale, scale });
+    }
+
 const fe::Vector2d &fe::transformable::getPosition() const
     {
         return m_position;
@@ -58,6 +63,11 @@ void fe::transformable::scale(const fe::Vector2d &scale)
     {
         m_scale = fe::Vector2d(scale.x * m_scale.x, scale.y * m_scale.y);
         m_update |= (scale.magnitudeSqr() != 0.f);
+    }
+
+void fe::transformable::scale(float scale)
+    {
+        return this->scale(fe::Vector2d(scale, scale));
     }
 
 const fe::matrix3d &fe::transformable::getMatrix()
