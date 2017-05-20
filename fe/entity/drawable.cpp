@@ -28,16 +28,3 @@ sf::Color fe::drawable::getColour() const
     {
         return m_colour;
     }
-
-void fe::drawable::setSize(fe::Vector2d size)
-    {
-        m_verticies[0].position = fe::Vector2d(0, 0).convertToSfVec2();
-        m_verticies[1].position = fe::Vector2d(size.x, 0).convertToSfVec2();
-        m_verticies[2].position = fe::Vector2d(size.x, size.y).convertToSfVec2();
-        m_verticies[3].position = fe::Vector2d(0, size.y).convertToSfVec2();
-    }
-
-fe::Vector2d fe::drawable::getSize() const
-    {
-        return m_verticies[2].position; // since this is corner is the farthest away, this is the largest point
-    }

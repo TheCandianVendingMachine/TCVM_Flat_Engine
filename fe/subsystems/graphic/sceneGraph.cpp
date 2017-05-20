@@ -10,6 +10,11 @@
 
 #include <algorithm>
 
+void fe::sceneGraph::onAdd(fe::baseEntity *object, fe::Handle objectHandle)
+    {
+        object->setHandle(objectHandle);
+    }
+
 void fe::sceneGraph::update(float deltaTime)
     {
         m_batch.clear();
@@ -17,6 +22,24 @@ void fe::sceneGraph::update(float deltaTime)
             {
                 ent->update(deltaTime);
                 ent->draw(m_batch, *ent);
+            }
+    }
+
+void fe::sceneGraph::cullObjects(fe::baseGameState &state)
+    {
+        auto &objects = getObjects();
+        for (auto it = objects.begin(); it != objects.end();)
+            {
+                if ((*it)->isDestroyed())
+                    {
+                        (*it)->onDestroy(state);
+                        m_animator.unsubscribe(getObject((*it)->getHandle()));
+                        it = removeHandle((*it)->getHandle());
+                    }
+                else
+                    {
+                        it++;
+                    }
             }
     }
 

@@ -2,7 +2,7 @@
 // stores handles to objects being pushed. Inherit off of to enable handles
 #pragma once
 #include "../debug/logger.hpp"
-
+#include <iterator>
 #include <vector>
 #include <algorithm>
 
@@ -27,7 +27,9 @@ namespace fe
 
                 protected:
                     std::vector<T> &getObjects();
-                    virtual void onAdd(T object) {}
+                    typename std::vector<T>::iterator removeHandle(Handle handle);
+
+                    virtual void onAdd(T object, fe::Handle objectHandle) {}
 
                 public:
                     Handle addObject(T object);
@@ -45,10 +47,31 @@ namespace fe
             }
 
         template<typename T>
+        typename std::vector<T>::iterator handleManager<T>::removeHandle(Handle handle)
+            {
+                auto it = m_objects.erase(m_objects.begin() + m_handles[handle].handle); 
+                m_handles[handle].active = false;
+
+                // since we are erasing an entity, all handles above it will become invalid. To prevent this, we will subtract all handles
+                // above and including the current one by one.
+                for (auto it = m_handles.begin() + handle; it != m_handles.end(); ++it) 
+                    {
+                        it->handle -= 1;
+                        if (it->handle < 0)
+                            {
+                                it->active = false;
+                            }
+                    }
+
+                return it;
+            }
+
+        template<typename T>
         Handle handleManager<T>::addObject(T object)
             {
                 m_objects.push_back(object);
                 m_handles.push_back(handleObject(m_objects.size() - 1));
+                onAdd(m_objects.back(), m_handles.size() - 1);
                 return m_handles.size() - 1;
             }
 
@@ -57,19 +80,7 @@ namespace fe
             {
                 if (m_handles.begin() + handle < m_handles.end())
                     {
-                        m_objects.erase(m_objects.begin() + m_handles[handle].handle); 
-                        m_handles[handle].active = false;
-
-                        // since we are erasing an entity, all handles above it will become invalid. To prevent this, we will subtract all handles
-                        // above and including the current one by one.
-                        for (auto it = m_handles.begin() + handle; it != m_handles.end(); ++it) 
-                            {
-                                it->handle -= 1;
-                                if (it->handle < 0)
-                                    {
-                                        it->active = false;
-                                    }
-                            }
+                        removeHandle(handle);
                     }
                 else if (m_handles.begin() + handle >= m_handles.end())
                     {

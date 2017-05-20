@@ -40,6 +40,8 @@ namespace fe
                     FLAT_ENGINE_API const fe::Vector2d &getScale() const;
                     // Get the position in radians
                     FLAT_ENGINE_API float getRotation() const;
+                    // Get the size of an object if transformed via this matrix
+                    FLAT_ENGINE_API fe::Vector2d getSize(fe::Vector2d originalSize) const;
 
                     // Move the matrix by the offset
                     FLAT_ENGINE_API void move(const fe::Vector2d &offset);

@@ -42,6 +42,7 @@ void fe::baseGameState::postUpdateDefined()
     {
         m_sceneGraph.postUpdate();
         m_collisionHandler.handleCollisions();
+        m_sceneGraph.cullObjects(*this);
         for (auto &panel : m_guiPanels)
             {
                 panel->update();

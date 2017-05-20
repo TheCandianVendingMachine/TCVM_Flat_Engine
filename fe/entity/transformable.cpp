@@ -42,6 +42,11 @@ float fe::transformable::getRotation() const
         return m_rotation;
     }
 
+fe::Vector2d fe::transformable::getSize(fe::Vector2d originalSize) const
+    {
+        return fe::Vector2d(m_scale.x * originalSize.x, m_scale.y * originalSize.y);
+    }
+
 const fe::Vector2d &fe::transformable::getScale() const
     {
         return m_scale;

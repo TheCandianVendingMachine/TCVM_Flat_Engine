@@ -22,6 +22,10 @@ namespace fe
                     unsigned int m_lastVertexCount;
 
                     unsigned int m_index; // index of the current sprite
+                    unsigned int m_lastEntityCount; // How many entities were processed last frame
+                    unsigned int m_currentEntityCount; // How many entities were processed this frame
+
+                    bool m_needsPurge; // If this is true, all entities will be re-added to the vertex array
 
                 public:
                     FLAT_ENGINE_API spriteBatch();

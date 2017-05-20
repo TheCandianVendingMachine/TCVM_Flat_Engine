@@ -4,9 +4,10 @@
 fe::AABB::AABB(const Vector2d size) : m_max(size)
     {
         m_type = colliderType::AABB;
+        m_callback = [](fe::collisionData) {};
     }
 
-fe::AABB::AABB(const Vector2d size, std::function<void(const collider&)> callback) : m_max(size)
+fe::AABB::AABB(const Vector2d size, std::function<void(fe::collisionData)> callback) : m_max(size)
     {
         m_type = colliderType::AABB;
         m_callback = callback;
@@ -75,4 +76,40 @@ bool fe::AABB::doesRayIntersect(const Vector2d &origin, const Vector2d &directio
             }
 
         return true;
+    }
+
+fe::collisionData fe::AABB::getCollisionData(const collider &other)
+    {
+        fe::collisionData data;
+
+        switch (other.m_type)
+            {
+                case colliderType::AABB:
+                    {
+                        auto &box = static_cast<const AABB&>(other);
+                        fe::Vector2d posFirst = m_position;
+                        fe::Vector2d boundFirst = m_max;
+
+                        fe::Vector2d posSecond = box.m_position;
+                        fe::Vector2d boundSecond = box.m_max;
+
+                        fe::Vector2d centerFirst(posFirst.x + (boundFirst.x / 2),
+                                                 posFirst.y + (boundFirst.y / 2));
+
+                        fe::Vector2d centerSecond(posSecond.x + (boundSecond.x / 2),
+                                                 posSecond.y + (boundSecond.y / 2));
+
+                        fe::Vector2d distance(centerFirst - centerSecond);
+                        fe::Vector2d minDistance((boundFirst.x / 2) + (boundSecond.x / 2),
+                                                 (boundFirst.y / 2) + (boundSecond.y / 2));
+
+                        data.m_collisionDepth = fe::Vector2d(distance.x > 0 ? minDistance.x - distance.x : -minDistance.x - distance.x,
+                                                             distance.y > 0 ? minDistance.y - distance.y : -minDistance.y - distance.y);
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+        return data;
     }

@@ -8,9 +8,10 @@ fe::spriteBatch::spriteBatch() : m_batch(sf::PrimitiveType::Quads), m_maxVertexC
 
 void fe::spriteBatch::add(const sf::VertexArray &entity, fe::transformable &transform)
     {
+        m_currentEntityCount++;
         for (unsigned int i = 0; i < entity.getVertexCount(); i++)
             {
-                if (m_index >= m_lastVertexCount) 
+                if (m_needsPurge || m_index >= m_lastVertexCount) 
                     {
                         m_batch.append(sf::Vertex(transform.getMatrix().transformPoint(entity[i].position).convertToSfVec2(), entity[i].color, entity[i].texCoords));
                     }
@@ -30,10 +31,20 @@ void fe::spriteBatch::clear()
         m_lastVertexCount = m_lastVertexCount > m_maxVertexCount ? m_lastVertexCount : m_maxVertexCount;
         m_maxVertexCount = 0;
         m_index = 0;
+        m_needsPurge = false;
+
+        if (m_currentEntityCount < m_lastEntityCount)
+            {
+                m_needsPurge = true;
+                m_lastEntityCount = 0;
+                m_batch.clear();
+            }
+
+        m_lastEntityCount = m_currentEntityCount;
+        m_currentEntityCount = 0;
     }
 
 void fe::spriteBatch::draw(sf::RenderTarget &app, sf::RenderStates states)
     {
         app.draw(m_batch, states);
-        clear();
     }

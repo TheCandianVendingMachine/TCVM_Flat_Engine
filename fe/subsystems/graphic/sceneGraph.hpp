@@ -17,6 +17,7 @@ namespace sf
 namespace fe
     {
         class baseEntity;
+        class baseGameState;
 
         class sceneGraph : public handleManager<fe::baseEntity*>
             {
@@ -24,9 +25,12 @@ namespace fe
                     spriteBatch m_batch;
                     animator m_animator;
 
+                    FLAT_ENGINE_API void onAdd(fe::baseEntity* object, fe::Handle objectHandle);
+
                 public:
                     FLAT_ENGINE_API void update(float deltaTime);
                     FLAT_ENGINE_API void postUpdate();
+                    FLAT_ENGINE_API void cullObjects(fe::baseGameState &state);
 
                     FLAT_ENGINE_API void draw(sf::RenderTarget &app);
 

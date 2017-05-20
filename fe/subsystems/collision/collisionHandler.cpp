@@ -27,8 +27,8 @@ void fe::collisonHandler::handleCollisions()
                             {
                                 if ((*it2)->m_collisonEnabled && (*it2)->collide(**it1))
                                     {
-                                        (*it1)->operator()(**it2);
-                                        (*it2)->operator()(**it1);
+                                        (*it1)->operator()((*it2)->getCollisionData(**it1));
+                                        (*it2)->operator()((*it1)->getCollisionData(**it2));
                                     }
                             }
                     }

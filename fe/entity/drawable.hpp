@@ -33,9 +33,5 @@ namespace fe
                     FLAT_ENGINE_API void setColour(const sf::Color &colour);
                     FLAT_ENGINE_API sf::Color getColour() const;
 
-                    FLAT_ENGINE_API void setSize(fe::Vector2d size);
-                    FLAT_ENGINE_API fe::Vector2d getSize() const;
-
-
             };
     }
