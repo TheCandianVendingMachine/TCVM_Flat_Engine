@@ -33,7 +33,7 @@ void fe::spriteBatch::clear()
         m_index = 0;
         m_needsPurge = false;
 
-        if (m_currentEntityCount < m_lastEntityCount)
+        if (m_lastEntityCount < m_currentEntityCount)
             {
                 m_needsPurge = true;
                 m_lastEntityCount = 0;
