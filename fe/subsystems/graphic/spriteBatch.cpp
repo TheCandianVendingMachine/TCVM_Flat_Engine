@@ -1,5 +1,6 @@
 #include "spriteBatch.hpp"
 #include "../../entity/transformable.hpp"
+#include "../../debug/logger.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 
 fe::spriteBatch::spriteBatch() : m_batch(sf::PrimitiveType::Quads), m_maxVertexCount(0), m_lastVertexCount(0)
@@ -33,10 +34,11 @@ void fe::spriteBatch::clear()
         m_index = 0;
         m_needsPurge = false;
 
-        if (m_lastEntityCount < m_currentEntityCount)
+        if (m_currentEntityCount < m_lastEntityCount)
             {
                 m_needsPurge = true;
                 m_lastEntityCount = 0;
+                m_lastVertexCount = 0;
                 m_batch.clear();
             }
 
