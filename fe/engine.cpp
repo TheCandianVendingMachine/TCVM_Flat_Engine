@@ -106,6 +106,8 @@ void fe::engine::startUp(unsigned long long totalMemory, unsigned long long stac
 
                 m_screenSize = m_renderer.getWindowSize();
 
+                m_random.startUp();
+
                 m_instance = this;
             }
     }

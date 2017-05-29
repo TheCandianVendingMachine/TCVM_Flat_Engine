@@ -6,6 +6,7 @@
 #include "subsystems/memory/memoryManager.hpp"
 #include "subsystems/memory/feNew.hpp"
 #include "subsystems/graphic/renderer.hpp"
+#include "math/random.hpp"
 #include "time/clock.hpp"
 
 namespace sf
@@ -30,6 +31,7 @@ namespace fe
                 private:
                     fe::memoryManager m_memoryManager;
                     fe::renderer m_renderer;
+                    fe::random m_random;
 
                     fe::logger *m_logger;
                     fe::inputManager *m_inputManager;
