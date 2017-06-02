@@ -33,13 +33,13 @@ void fe::texturePacker::createTexture()
         m_packedTexture.loadFromImage(packed);
     }
 
-fe::Vector2<unsigned int> fe::texturePacker::addTexture(sf::Texture &texture, const std::string &id)
+fe::Vector2<unsigned int> fe::texturePacker::addTexture(sf::Texture &texture, const char *id)
     {
         packNode *ret = m_baseNode.insert(texture);
         if (ret) 
             {
                 m_needsUpdate = true;
-                ret->m_id = id;
+                ret->m_id = FE_STR(id);
                 return ret->m_position;
             }
         else
@@ -59,7 +59,7 @@ const sf::Texture &fe::texturePacker::getTexture()
         return m_packedTexture;
     }
 
-const sf::Texture *fe::texturePacker::getTexture(const std::string &id)
+const sf::Texture *fe::texturePacker::getTexture(const char *id)
     {
         auto node = m_baseNode.get(id);
         if (node)
@@ -69,7 +69,7 @@ const sf::Texture *fe::texturePacker::getTexture(const std::string &id)
         return nullptr;
     }
 
-fe::Vector2<unsigned int> fe::texturePacker::getTexturePosition(const std::string & id)
+fe::Vector2<unsigned int> fe::texturePacker::getTexturePosition(const char *id)
     {
         auto node = m_baseNode.get(id);
         if (node)
@@ -156,9 +156,9 @@ fe::texturePacker::packNode *fe::texturePacker::packNode::insert(sf::Texture &te
             }
     }
 
-fe::texturePacker::packNode *fe::texturePacker::packNode::get(const std::string &id)
+fe::texturePacker::packNode *fe::texturePacker::packNode::get(const char *id)
     {
-        if (m_id == id)
+        if (m_id == FE_STR(id))
             {
                 return this;
             }

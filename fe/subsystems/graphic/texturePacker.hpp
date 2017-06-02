@@ -6,8 +6,8 @@
 #include "../../flatEngineExport.hpp"
 
 #include <SFML/Graphics/Texture.hpp>
-#include <string>
 #include "../../math/Vector2.hpp"
+#include "../../objectManagement/guid.hpp"
 
 namespace fe
     {
@@ -22,12 +22,12 @@ namespace fe
                             fe::Vector2<unsigned int> m_position;
                             fe::Vector2<unsigned int> m_size;
 
-                            std::string m_id;
+                            fe::guid m_id;
                     
 
                             FLAT_ENGINE_API packNode(unsigned int x, unsigned int y, unsigned int width, unsigned int height);
                             FLAT_ENGINE_API packNode *insert(sf::Texture &texture);
-                            FLAT_ENGINE_API packNode *get(const std::string &id);
+                            FLAT_ENGINE_API packNode *get(const char *id);
                             FLAT_ENGINE_API void clear();
 
                         } m_baseNode;
@@ -42,10 +42,10 @@ namespace fe
                     FLAT_ENGINE_API texturePacker(fe::Vector2<unsigned int> textureSize = fe::Vector2<unsigned int>(2048, 2048));
                     FLAT_ENGINE_API void createTexture();
 
-                    FLAT_ENGINE_API fe::Vector2<unsigned int> addTexture(sf::Texture &texture, const std::string &id);
+                    FLAT_ENGINE_API fe::Vector2<unsigned int> addTexture(sf::Texture &texture, const char *id);
                     FLAT_ENGINE_API const sf::Texture &getTexture();
-                    FLAT_ENGINE_API const sf::Texture *getTexture(const std::string &id);
-                    FLAT_ENGINE_API fe::Vector2<unsigned int> getTexturePosition(const std::string &id);
+                    FLAT_ENGINE_API const sf::Texture *getTexture(const char *id);
+                    FLAT_ENGINE_API fe::Vector2<unsigned int> getTexturePosition(const char *id);
 
                     FLAT_ENGINE_API ~texturePacker();
 

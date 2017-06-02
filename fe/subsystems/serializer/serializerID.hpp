@@ -9,6 +9,8 @@
 #include <algorithm>
 #include <cctype>
 
+#include "../../objectManagement/guid.hpp"
+
 namespace fe
     {
         class serializerID
@@ -16,15 +18,15 @@ namespace fe
                 protected:
                     struct dataBlock 
                         {
-                            std::string m_id;
-                            std::unordered_map<std::string, std::string> m_mappedData;
+                            fe::guid m_id;
+                            std::unordered_map<fe::guid, std::string> m_mappedData;
                             bool m_read; // if this block has already been read, we dont want
                                          // to get data from it again
 
-                            dataBlock() : m_id(""), m_read(false) {}
+                            dataBlock() : m_id(0), m_read(false) {}
 
                             void outData(std::ostream &out);
-                            void readData(const std::string &block);
+                            void readData(const char *block);
                         };
 
                     std::vector<dataBlock> m_data;
@@ -47,23 +49,23 @@ namespace fe
                         {}
 
                     template<typename T>
-                    void serialize(dataBlock &block, const std::string &id, T &&data);
+                    void serialize(dataBlock &block, const char *id, T &&data);
 
                     template<typename T, typename ...Args>
-                    void serialize(dataBlock &block, const std::string &id, T &&data, Args &&...args);
+                    void serialize(dataBlock &block, const char *id, T &&data, Args &&...args);
 
                     template<typename ...Args>
-                    void serializeBlock(const std::string &blockID, Args &&...args);
+                    void serializeBlock(const char *blockID, Args &&...args);
 
                     void deserialize() {}
                     template<typename T>
-                    void deserialize(dataBlock &dataBlock, const std::string &id, T &newValue);
+                    void deserialize(dataBlock &dataBlock, const char *id, T &newValue);
 
                     template<typename T, typename ...Args>
-                    void deserialize(dataBlock &dataBlock, const std::string &id, T &newValue, Args &&...args);
+                    void deserialize(dataBlock &dataBlock, const char *id, T &newValue, Args &&...args);
 
                     template<typename T, typename ...Args>
-                    void deserializeBlock(const std::string &blockID, const std::string &id, T &newValue, Args &&...args);
+                    void deserializeBlock(const char *blockID, const char *id, T &newValue, Args &&...args);
 
                     void outData(std::ostream &out)
                         {
@@ -124,48 +126,48 @@ namespace fe
             }
 
         template<typename T>
-        void serializerID::serialize(dataBlock &block, const std::string &id, T &&data)
+        void serializerID::serialize(dataBlock &block, const char *id, T &&data)
             {
-                block.m_mappedData[id] = std::to_string(data);
+                block.m_mappedData[FE_STR(id)] = std::to_string(data);
             }
 
         template<typename T, typename ...Args>
-        void serializerID::serialize(dataBlock &block, const std::string &id, T &&data, Args &&...args)
+        void serializerID::serialize(dataBlock &block, const char *id, T &&data, Args &&...args)
             {
                 serialize(block, id, data);
                 serialize(block, std::forward<Args>(args)...);
             }
 
         template<typename ...Args>
-        void serializerID::serializeBlock(const std::string &blockID, Args &&...args)
+        void serializerID::serializeBlock(const char *blockID, Args &&...args)
             {
                 dataBlock block;
-                block.m_id = blockID;
+                block.m_id = FE_STR(blockID);
                 serialize(block, args...);
                 m_data.push_back(block);
             }
 
         template<typename T>
-        void serializerID::deserialize(dataBlock &dataBlock, const std::string &id, T &newValue)
+        void serializerID::deserialize(dataBlock &dataBlock, const char *id, T &newValue)
             {
-                newValue = convertValue(dataBlock.m_mappedData[id], newValue);
+                newValue = convertValue(dataBlock.m_mappedData[FE_STR(id)], newValue);
                 int i = 0;
             }
 
         template<typename T, typename ...Args>
-        void serializerID::deserialize(dataBlock &dataBlock, const std::string &id, T &newValue, Args &&...args)
+        void serializerID::deserialize(dataBlock &dataBlock, const char *id, T &newValue, Args &&...args)
             {
                 deserialize(dataBlock, id, newValue);
                 deserialize(dataBlock, std::forward<Args>(args)...);
             }
 
         template<typename T, typename ...Args>
-        void serializerID::deserializeBlock(const std::string &blockID, const std::string &id, T &newValue, Args &&...args)
+        void serializerID::deserializeBlock(const char *blockID, const char *id, T &newValue, Args &&...args)
             {
                 dataBlock *selectedBlock = nullptr;
                 for (auto &datBlock : m_data)
                     {
-                        if (datBlock.m_id == blockID && !datBlock.m_read)
+                        if (datBlock.m_id == FE_STR(blockID) && !datBlock.m_read)
                             {
                                 selectedBlock = &datBlock;
                             }

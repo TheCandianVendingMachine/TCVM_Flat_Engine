@@ -3,7 +3,7 @@
 #pragma once
 #include <unordered_map>
 #include <vector>
-#include <string>
+#include "../../objectManagement/guid.hpp"
 #include "../memory/feNew.hpp"
 #include "../../debug/logger.hpp"
 #include "../graphic/texturePacker.hpp"
@@ -14,18 +14,18 @@ namespace fe
         class resourceManager
             {
                 private:
-                    std::unordered_map<std::string, T*> m_resources;
+                    std::unordered_map<fe::guid, T*> m_resources;
 
                 public:
-                    const T *load(const std::string &filepath, const std::string &id);
-                    const T *get(const std::string &id);
-                    void remove(const std::string &id);
+                    const T *load(const char* filepath, const char* id);
+                    const T *get(const char* id);
+                    void remove(const char* id);
 
                     void shutDown();
             };
 
         template<typename T>
-        const T *resourceManager<T>::load(const std::string &filepath, const std::string &id)
+        const T *resourceManager<T>::load(const char* filepath, const char* id)
             {
                 T *resource = get(id);
                 if (resource)
@@ -38,7 +38,7 @@ namespace fe
                     {
                         resource->loadFromFile(filepath);
 
-                        m_resources[id] = resource;
+                        m_resources[FE_STR(id)] = resource;
                         return resource;
                     }
                 else
@@ -50,16 +50,16 @@ namespace fe
             }
 
         template<typename T>
-        const T *resourceManager<T>::get(const std::string &id)
+        const T *resourceManager<T>::get(const char* id)
             {
-                return m_resources[id];
+                return m_resources[FE_STR(id)];
             }
 
         template<typename T>
-        void resourceManager<T>::remove(const std::string &id)
+        void resourceManager<T>::remove(const char* id)
             {
-                m_resources[id]->~T();
-                m_resources.erase(id);
+                m_resources[FE_STR(id)]->~T();
+                m_resources.erase(FE_STR(id));
             }
 
         template<typename T>
@@ -81,13 +81,13 @@ namespace fe
                 public:
                     resourceManager();
 
-                    const sf::Texture *load(const std::string &filepath, const std::string &id);
-                    const sf::Texture *getTexture(const std::string &id);
-                    fe::Vector2<unsigned int> getTextureOffset(const std::string &id);
+                    const sf::Texture *load(const char* filepath, const char* id);
+                    const sf::Texture *getTexture(const char* id);
+                    fe::Vector2<unsigned int> getTextureOffset(const char* id);
 
                     const sf::Texture &get();
-                    fe::Vector2<unsigned int> getTexturePosition(const std::string &id);
-                    void remove(const std::string &id);
+                    fe::Vector2<unsigned int> getTexturePosition(const char* id);
+                    void remove(const char* id);
 
                     void shutDown();
 
@@ -98,7 +98,7 @@ namespace fe
                 m_packed.createTexture();
             }
 
-        inline const sf::Texture *resourceManager<sf::Texture>::load(const std::string &filepath, const std::string &id)
+        inline const sf::Texture *resourceManager<sf::Texture>::load(const char* filepath, const char* id)
             {
                 const sf::Texture *resource = getTexture(id);
                 if (resource)
@@ -123,12 +123,12 @@ namespace fe
                 return nullptr;
             }
 
-        inline const sf::Texture *resourceManager<sf::Texture>::getTexture(const std::string &id)
+        inline const sf::Texture *resourceManager<sf::Texture>::getTexture(const char* id)
             {
                 return m_packed.getTexture(id);
             }
 
-        inline fe::Vector2<unsigned int> resourceManager<sf::Texture>::getTextureOffset(const std::string &id)
+        inline fe::Vector2<unsigned int> resourceManager<sf::Texture>::getTextureOffset(const char* id)
             {
                 return m_packed.getTexturePosition(id);
             }
@@ -138,7 +138,7 @@ namespace fe
                 return m_packed.getTexture();
             }
 
-        inline fe::Vector2<unsigned int> resourceManager<sf::Texture>::getTexturePosition(const std::string &id)
+        inline fe::Vector2<unsigned int> resourceManager<sf::Texture>::getTexturePosition(const char* id)
             {
                 return m_packed.getTexturePosition(id);
             }

@@ -1,4 +1,6 @@
 #include "serializerID.hpp"
+#include "../../debug/logger.hpp"
+#include <string.h>
 
 void fe::serializerID::dataBlock::outData(std::ostream &out)
     {
@@ -10,7 +12,7 @@ void fe::serializerID::dataBlock::outData(std::ostream &out)
         out << "}\n";
     }
 
-void fe::serializerID::dataBlock::readData(const std::string &block)
+void fe::serializerID::dataBlock::readData(const char *block)
     {
         enum readState
             {
@@ -20,7 +22,7 @@ void fe::serializerID::dataBlock::readData(const std::string &block)
             };
         readState curState = readState::ID;
 
-        std::string line;
+        char line[1024] = "\0";
         unsigned int index = 0;
         bool readBlock = true;
 
@@ -31,14 +33,16 @@ void fe::serializerID::dataBlock::readData(const std::string &block)
                     {
                         if (block[index] != ';' && block[index] != '{' && block[index] != '}')
                             {
-                                line += block[index];
+                                char curChar[2] = "\0";
+                                curChar[0] = block[index];
+                                std::strcat(line, curChar);
                             }
                         else
                             {
                                 foundEOL = true;
                             }
 
-                        if (index++ >= block.size())
+                        if (index++ > std::strlen(block))
                             {
                                 return;
                             }
@@ -48,17 +52,17 @@ void fe::serializerID::dataBlock::readData(const std::string &block)
                     {
                         case ID:
                             {                
-                                m_id = line;
+                                m_id = FE_STR(line);
                                 curState = readState::DATA;
-                                line.clear();
+                                line[0] = '\0';
                             }
                             break;
                         case DATA:
                             {
-                                std::string datID;
+                                char datID[1024] = "\0";
                                 std::string datStr;
                                 bool findingID = true;
-                                for (int i = 0; i < line.size(); i++)
+                                for (int i = 0; i < std::strlen(line); i++)
                                     {
                                         if (line[i] == '}')
                                             {
@@ -71,15 +75,17 @@ void fe::serializerID::dataBlock::readData(const std::string &block)
                                             }
                                         else if (findingID)
                                             {
-                                                datID += line[i];
+                                                char curChar[2] = "\0";
+                                                curChar[0] = line[i];
+                                                std::strcat(datID, curChar);
                                             }
                                         else
                                             {
                                                 datStr += line[i];
                                             }
                                     }
-                                line.clear();
-                                m_mappedData[datID] = datStr;
+                                line[0] = '\0';
+                                m_mappedData[FE_STR(datID)] = datStr;
                             }
                             break;
                         default:
@@ -92,16 +98,16 @@ void fe::serializerID::readData(std::istream &in)
     {
         m_data.clear();
 
-        std::string datBlock;
+        char datBlock[1024] = "\0";
         std::string line;
         while (std::getline(in, line))
             {
-                datBlock += line;
+                std::strcat(datBlock, line.c_str());
                 if (line == "}")
                     {
                         dataBlock newData;
                         newData.readData(datBlock);
-                        datBlock.clear();
+                        datBlock[0] = '\0';
 
                         m_data.push_back(newData);
                     }
