@@ -29,6 +29,8 @@ namespace fe
                     std::vector<T> &getObjects();
                     typename std::vector<T>::iterator removeHandle(Handle handle);
 
+                    fe::Handle getHandle(T object);
+
                     virtual void onAdd(T object, fe::Handle objectHandle) {}
 
                 public:
@@ -64,6 +66,22 @@ namespace fe
                     }
 
                 return it;
+            }
+
+        // Really inefficient, but this shouldnt be used at runtime anyway
+        template<typename T>
+        fe::Handle handleManager<T>::getHandle(T object)
+            {
+                for (auto handle : m_handles)
+                    {
+                        if (&getObject(handle.handle) == &object)
+                            {
+                                return handle.handle;
+                            }
+                    }
+
+                FE_LOG_WARNING("Cannot retrive handle with object");
+                return -1;
             }
 
         template<typename T>

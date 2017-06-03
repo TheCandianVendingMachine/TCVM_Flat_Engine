@@ -3,6 +3,7 @@
 #pragma once
 #define FLAT_ENGINE_EXPORT
 #include "../flatEngineExport.hpp"
+#include "../debug/logger.hpp"
 
 namespace fe
     {
@@ -14,7 +15,7 @@ namespace fe
         // implicitely calls the hash with the magic number "5381"
         constexpr fe::guid hashImpl(const char *input)
             {
-                return fe::hash(input, 5381);
+                return hash(input, 5381);
             }
     }
 

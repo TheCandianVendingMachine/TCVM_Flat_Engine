@@ -6,6 +6,7 @@
 #include "../../objectManagement/handleManager.hpp"
 #include "spriteBatch.hpp"
 #include "animation/animator.hpp"
+#include "tileMap.hpp"
 #include <vector>
 
 namespace sf
@@ -24,6 +25,7 @@ namespace fe
                 private:
                     spriteBatch m_batch;
                     animator m_animator;
+                    tileMap m_tileMap;
 
                     FLAT_ENGINE_API void onAdd(fe::baseEntity* object, fe::Handle objectHandle);
 
@@ -33,6 +35,8 @@ namespace fe
                     FLAT_ENGINE_API void cullObjects(fe::baseGameState &state);
 
                     FLAT_ENGINE_API void draw(sf::RenderTarget &app);
+
+                    FLAT_ENGINE_API fe::tileMap &getTileMap();
 
                     FLAT_ENGINE_API fe::Handle addTexture(const char *filepath, const char *name);
                     FLAT_ENGINE_API fe::Handle addAnimation(const char *filepath, const char *name, fe::Vector2<unsigned int> frameSize);

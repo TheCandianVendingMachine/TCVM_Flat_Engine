@@ -61,6 +61,11 @@ const sf::Texture &fe::texturePacker::getTexture()
 
 const sf::Texture *fe::texturePacker::getTexture(const char *id)
     {
+        return getTexture(FE_STR(id));
+    }
+
+const sf::Texture *fe::texturePacker::getTexture(fe::guid id)
+    {
         auto node = m_baseNode.get(id);
         if (node)
             {
@@ -70,6 +75,11 @@ const sf::Texture *fe::texturePacker::getTexture(const char *id)
     }
 
 fe::Vector2<unsigned int> fe::texturePacker::getTexturePosition(const char *id)
+    {
+        return getTexturePosition(FE_STR(id));
+    }
+
+fe::Vector2<unsigned int> fe::texturePacker::getTexturePosition(fe::guid id)
     {
         auto node = m_baseNode.get(id);
         if (node)
@@ -156,17 +166,17 @@ fe::texturePacker::packNode *fe::texturePacker::packNode::insert(sf::Texture &te
             }
     }
 
-fe::texturePacker::packNode *fe::texturePacker::packNode::get(const char *id)
+fe::texturePacker::packNode *fe::texturePacker::packNode::get(fe::guid guid)
     {
-        if (m_id == FE_STR(id))
+        if (m_id == guid)
             {
                 return this;
             }
         else if (m_child[0] || m_child[1])
             {
-                auto ret = m_child[0]->get(id);
+                auto ret = m_child[0]->get(guid);
                 if (ret) return ret;
-                return m_child[1]->get(id);
+                return m_child[1]->get(guid);
             }
 
         return nullptr;

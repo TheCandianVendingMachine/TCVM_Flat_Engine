@@ -59,8 +59,15 @@ void fe::sceneGraph::draw(sf::RenderTarget &app)
         sf::RenderStates renderStates;
         renderStates.texture = &fe::engine::get().getResourceManager<sf::Texture>()->get();
 
+        m_tileMap.draw(app, renderStates);
+
         m_animator.updateTextures();
         m_batch.draw(app, renderStates);
+    }
+
+fe::tileMap &fe::sceneGraph::getTileMap()
+    {
+        return m_tileMap;
     }
 
 fe::Handle fe::sceneGraph::addTexture(const char *filepath, const char *id)

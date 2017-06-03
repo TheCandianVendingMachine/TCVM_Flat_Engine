@@ -52,7 +52,7 @@ void fe::serializerID::dataBlock::readData(const char *block)
                     {
                         case ID:
                             {                
-                                m_id = FE_STR(line);
+                                m_id = line;
                                 curState = readState::DATA;
                                 line[0] = '\0';
                             }
@@ -85,7 +85,7 @@ void fe::serializerID::dataBlock::readData(const char *block)
                                             }
                                     }
                                 line[0] = '\0';
-                                m_mappedData[FE_STR(datID)] = datStr;
+                                m_mappedData[datID] = datStr;
                             }
                             break;
                         default:

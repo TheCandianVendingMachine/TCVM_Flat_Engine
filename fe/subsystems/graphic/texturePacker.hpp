@@ -27,7 +27,7 @@ namespace fe
 
                             FLAT_ENGINE_API packNode(unsigned int x, unsigned int y, unsigned int width, unsigned int height);
                             FLAT_ENGINE_API packNode *insert(sf::Texture &texture);
-                            FLAT_ENGINE_API packNode *get(const char *id);
+                            FLAT_ENGINE_API packNode *get(fe::guid guid);
                             FLAT_ENGINE_API void clear();
 
                         } m_baseNode;
@@ -45,7 +45,10 @@ namespace fe
                     FLAT_ENGINE_API fe::Vector2<unsigned int> addTexture(sf::Texture &texture, const char *id);
                     FLAT_ENGINE_API const sf::Texture &getTexture();
                     FLAT_ENGINE_API const sf::Texture *getTexture(const char *id);
+                    FLAT_ENGINE_API const sf::Texture *getTexture(fe::guid id);
+
                     FLAT_ENGINE_API fe::Vector2<unsigned int> getTexturePosition(const char *id);
+                    FLAT_ENGINE_API fe::Vector2<unsigned int> getTexturePosition(fe::guid id);
 
                     FLAT_ENGINE_API ~texturePacker();
 

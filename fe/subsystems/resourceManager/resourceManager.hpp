@@ -19,7 +19,10 @@ namespace fe
                 public:
                     const T *load(const char* filepath, const char* id);
                     const T *get(const char* id);
+                    const T *get(fe::guid id);
+
                     void remove(const char* id);
+                    void remove(fe::guid id);
 
                     void shutDown();
             };
@@ -56,10 +59,23 @@ namespace fe
             }
 
         template<typename T>
+        const T *resourceManager<T>::get(fe::guid id)
+            {
+                return m_resources[id];
+            }
+
+        template<typename T>
         void resourceManager<T>::remove(const char* id)
             {
                 m_resources[FE_STR(id)]->~T();
                 m_resources.erase(FE_STR(id));
+            }
+
+        template<typename T>
+        void resourceManager<T>::remove(fe::guid id)
+            {
+                m_resources[id]->~T();
+                m_resources.erase(id);
             }
 
         template<typename T>
@@ -82,12 +98,20 @@ namespace fe
                     resourceManager();
 
                     const sf::Texture *load(const char* filepath, const char* id);
+
                     const sf::Texture *getTexture(const char* id);
-                    fe::Vector2<unsigned int> getTextureOffset(const char* id);
+                    const sf::Texture *getTexture(fe::guid id);
+
+                    [[deprecated("Deprecated. Use \"getTexturePosition(const char*)\" instead")]] fe::Vector2<unsigned int> getTextureOffset(const char* id);
+                    [[deprecated("Deprecated. Use \"getTexturePosition(fe::guid)\" instead")]] fe::Vector2<unsigned int> getTextureOffset(fe::guid id);
+
+                    fe::Vector2<unsigned int> getTexturePosition(const char* id);
+                    fe::Vector2<unsigned int> getTexturePosition(fe::guid id);
+
+                    void remove(const char* id);
+                    void remove(fe::guid id);
 
                     const sf::Texture &get();
-                    fe::Vector2<unsigned int> getTexturePosition(const char* id);
-                    void remove(const char* id);
 
                     void shutDown();
 
@@ -128,7 +152,17 @@ namespace fe
                 return m_packed.getTexture(id);
             }
 
+        inline const sf::Texture *resourceManager<sf::Texture>::getTexture(fe::guid id)
+            {
+                return m_packed.getTexture(id);
+            }
+
         inline fe::Vector2<unsigned int> resourceManager<sf::Texture>::getTextureOffset(const char* id)
+            {
+                return m_packed.getTexturePosition(id);
+            }
+
+        inline fe::Vector2<unsigned int> resourceManager<sf::Texture>::getTextureOffset(fe::guid id)
             {
                 return m_packed.getTexturePosition(id);
             }
@@ -143,9 +177,9 @@ namespace fe
                 return m_packed.getTexturePosition(id);
             }
 
-        inline void remove(const std::string &id)
+        inline fe::Vector2<unsigned int> resourceManager<sf::Texture>::getTexturePosition(fe::guid id)
             {
-        
+                return m_packed.getTexturePosition(id);
             }
 
         inline void resourceManager<sf::Texture>::shutDown()
