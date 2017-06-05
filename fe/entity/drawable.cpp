@@ -2,8 +2,12 @@
 #include "transformable.hpp"
 #include "../subsystems/graphic/spriteBatch.hpp"
 
-fe::drawable::drawable() : m_verticies(sf::PrimitiveType::Quads, 4), animationActor(&m_verticies)
+fe::drawable::drawable() : animationActor(&m_verticies)
     {
+        m_verticies.resize(4);
+        m_verticies.setPrimitiveType(sf::PrimitiveType::Quads);
+
+        // On the packed texture, there is a 1x1 white pixel. This represents the position
         m_verticies[0].texCoords = fe::Vector2d(0, 0).convertToSfVec2();
         m_verticies[1].texCoords = fe::Vector2d(1, 0).convertToSfVec2();
         m_verticies[2].texCoords = fe::Vector2d(1, 1).convertToSfVec2();

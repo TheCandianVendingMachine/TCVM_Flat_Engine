@@ -16,12 +16,12 @@ void fe::tileMap::rebuildTilemap()
                 auto pos = fe::Vector2d(tile.xPosition, tile.yPosition);
                 auto offset = fe::engine::get().getResourceManager<sf::Texture>()->getTexturePosition(tile.textureId);
 
-                m_verticies[index    ].position = fe::Vector2d(pos.x,           pos.y).convertToSfVec2();
-                m_verticies[index + 1].position = fe::Vector2d(pos.x + size.x,  pos.y).convertToSfVec2();
-                m_verticies[index + 2].position = fe::Vector2d(pos.x + size.x,  pos.y + size.y).convertToSfVec2();
-                m_verticies[index + 3].position = fe::Vector2d(pos.x,           pos.y + size.y).convertToSfVec2();
+                m_verticies[index + 0].position = fe::Vector2d(pos.x,               pos.y).convertToSfVec2();
+                m_verticies[index + 1].position = fe::Vector2d(pos.x + size.x,      pos.y).convertToSfVec2();
+                m_verticies[index + 2].position = fe::Vector2d(pos.x + size.x,      pos.y + size.y).convertToSfVec2();
+                m_verticies[index + 3].position = fe::Vector2d(pos.x,               pos.y + size.y).convertToSfVec2();
 
-                m_verticies[index    ].texCoords = fe::Vector2d(offset.x,           offset.y).convertToSfVec2();
+                m_verticies[index + 0].texCoords = fe::Vector2d(offset.x,           offset.y).convertToSfVec2();
                 m_verticies[index + 1].texCoords = fe::Vector2d(offset.x + size.x,  offset.y).convertToSfVec2();
                 m_verticies[index + 2].texCoords = fe::Vector2d(offset.x + size.x,  offset.y + size.y).convertToSfVec2();
                 m_verticies[index + 3].texCoords = fe::Vector2d(offset.x,           offset.y + size.y).convertToSfVec2();

@@ -45,7 +45,7 @@ namespace fe
                         {
                             std::tuple<Args...> args;
 
-                            stateHolder(Args &...args) : args(std::forward<Args>(args)...) {}
+                            stateHolder(Args &&...args) : args(std::forward<Args>(args)...) {}
                             void *construct() { return constructT(args, std::index_sequence_for<Args...>()); }
 
                             private:
@@ -89,7 +89,7 @@ namespace fe
 
                     // Queue a push to happen next frame
                     template<typename T, typename ...Args>
-                    void queuePush(stateOptions options = stateOptions::NONE, Args &...args);
+                    void queuePush(stateOptions options = stateOptions::NONE, Args &&...args);
                     // Queue a pop to happen next frame
                     FLAT_ENGINE_API void queuePop();
                     // Queue a clear to happen next frame
@@ -114,9 +114,9 @@ namespace fe
             };
 
         template<typename T, typename ...Args>
-        void gameStateMachine::queuePush(stateOptions options, Args &...args)
+        void gameStateMachine::queuePush(stateOptions options, Args &&...args)
             {
-                m_nextState = new(m_stateAllocater.alloc(sizeof(stateHolder<T, Args...>(args...)))) stateHolder<T, Args...>(args...);
+                m_nextState = new(m_stateAllocater.alloc(sizeof(stateHolder<T, Args...>(std::forward<Args>(args)...)))) stateHolder<T, Args...>(std::forward<Args>(args)...);
                 m_nextStateOptions = options;
             }
     }
