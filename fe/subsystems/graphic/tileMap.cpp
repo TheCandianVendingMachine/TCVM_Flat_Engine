@@ -102,3 +102,8 @@ void fe::tileMap::deserialize(fe::serializerID &serial)
                 add({temp.xPosition, temp.yPosition}, temp.id);
             }
     }
+
+const std::vector<fe::imp::tile> &fe::tileMap::getFabrications()
+    {
+        return m_fabrications;
+    }

@@ -56,5 +56,8 @@ namespace fe
                     // Deserializes all tiles. Does not deserialize fabrications
                     FLAT_ENGINE_API void deserialize(fe::serializerID &serial);
 
+                    // Returns a vector of all fabricated tiles
+                    FLAT_ENGINE_API const std::vector<fe::imp::tile> &getFabrications();
+
             };
     }

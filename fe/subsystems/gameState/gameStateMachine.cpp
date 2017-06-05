@@ -20,8 +20,8 @@ void fe::gameStateMachine::startUp()
         if (!m_instance) 
             {
                 const unsigned int maxStates = 32;
-                auto size = sizeof(stateHolderBase) * maxStates;
 
+                auto size = 32_MiB;
                 auto memBuf = FE_ALLOC_DIRECT_CAPTURED("StateBuffer", size);
                 m_stateAllocater.startUp(static_cast<char*>(memBuf), size);
 
@@ -48,6 +48,7 @@ fe::gameStateMachine &fe::gameStateMachine::get()
 
 void fe::gameStateMachine::push(baseGameState *newState, stateOptions options)
     {
+        m_nextState = nullptr;
         if (m_endState) 
             {
                 if (m_endState->m_currentState)
@@ -164,7 +165,6 @@ void fe::gameStateMachine::preUpdate()
         if (m_nextState)
             {
                 push(static_cast<fe::baseGameState*>(m_nextState->construct()), m_nextStateOptions);
-                m_nextState = nullptr;
             }
 
         if (m_endState && m_endState->m_currentState)

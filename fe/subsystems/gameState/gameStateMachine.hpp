@@ -3,6 +3,8 @@
 #define FLAT_ENGINE_EXPORT
 #include "../../flatEngineExport.hpp"
 #include "../memory/stackAllocater.hpp"
+#include <tuple>
+#include <utility>
 
 namespace sf
     {
@@ -38,8 +40,18 @@ namespace fe
                         };
 
                     struct stateHolderBase { virtual void *construct() { return nullptr; } };
-                    template<typename T>
-                    struct stateHolder : stateHolderBase { void *construct() { return new T(); } };
+                    template<typename T, typename ...Args>
+                    struct stateHolder : stateHolderBase 
+                        {
+                            std::tuple<Args...> args;
+
+                            stateHolder(Args &...args) : args(std::forward<Args>(args)...) {}
+                            void *construct() { return constructT(args, std::index_sequence_for<Args...>()); }
+
+                            private:
+                                template<std::size_t... S>
+                                void *constructT(std::tuple<Args...> &tuple, std::index_sequence<S...>) { return new T(std::get<S>(tuple)...); }
+                        };
 
                     // since all memory that the state has will be irrelevant once we pop it, we get the current stack marker to free to
                     //fe::stackAllocater::Marker m_stateMarker; // this marker is from m_previousState
@@ -76,8 +88,8 @@ namespace fe
                     FLAT_ENGINE_API void clear();
 
                     // Queue a push to happen next frame
-                    template<typename T>
-                    void queuePush(stateOptions options = stateOptions::NONE);
+                    template<typename T, typename ...Args>
+                    void queuePush(stateOptions options = stateOptions::NONE, Args &...args);
                     // Queue a pop to happen next frame
                     FLAT_ENGINE_API void queuePop();
                     // Queue a clear to happen next frame
@@ -101,10 +113,10 @@ namespace fe
 
             };
 
-        template<typename T>
-        void gameStateMachine::queuePush(stateOptions options)
+        template<typename T, typename ...Args>
+        void gameStateMachine::queuePush(stateOptions options, Args &...args)
             {
-                m_nextState = new(m_stateAllocater.alloc(sizeof(stateHolder<T>))) stateHolder<T>;
+                m_nextState = new(m_stateAllocater.alloc(sizeof(stateHolder<T, Args...>(args...)))) stateHolder<T, Args...>(args...);
                 m_nextStateOptions = options;
             }
     }
