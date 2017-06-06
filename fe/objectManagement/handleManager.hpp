@@ -10,13 +10,18 @@ namespace fe
     {
         using Handle = int;
 
+        /*
+            The handles work by storing the object in a normal vector, and another vector full off indicies to the objects in the original vector
+            When we create an object, we return the index to the handleObject which in turn has their handle pointing to the index of the wanted object
+            This works because we can always assume the indicies of the handleObjects wont change, while we can remove and add objects dynamically
+        */
         template<typename T>
         class handleManager
             {
                 private:
                     struct handleObject
                         {
-                            Handle handle;
+                            Handle handle; // Index to the object
                             bool active;
 
                             handleObject(Handle handle) : handle(handle), active(true) {}
@@ -72,11 +77,14 @@ namespace fe
         template<typename T>
         fe::Handle handleManager<T>::getHandle(T object)
             {
-                for (auto handle : m_handles)
+                for (unsigned int i = 0; i < m_handles.size(); i++)
                     {
-                        if (&getObject(handle.handle) == &object)
+                        // we check if the handle is >= 0 here because we are looping through every handle - we can't guarentee there will be
+                        // safe handles.
+                        // we access the objects directly as for hte handles in m_handles are indicies to the object vector
+                        if (m_handles[i].handle >= 0 && m_objects[m_handles[i].handle] == object)
                             {
-                                return handle.handle;
+                                return i; // return the index to the handle
                             }
                     }
 
@@ -133,6 +141,11 @@ namespace fe
                 else if (!m_handles[handle].active)
                     {
                         FE_LOG_DEBUG("Object with handle \"", handle, "\" inactive");
+                        if (m_handles[handle].handle < 0)
+                            {
+                                FE_LOG_ERROR("Error: Handle", handle, "Attempting to get hidden-handle of < 0");
+                                return T();
+                            }
                     }
 
                 return m_objects[m_handles[handle].handle];

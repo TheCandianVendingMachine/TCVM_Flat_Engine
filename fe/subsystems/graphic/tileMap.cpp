@@ -12,9 +12,9 @@ void fe::tileMap::rebuildTilemap()
         int index = 0;
         for (auto &tile : getObjects())
             {
-                auto size = fe::engine::get().getResourceManager<sf::Texture>()->getTexture(tile.textureId)->getSize();
-                auto pos = fe::Vector2d(tile.xPosition, tile.yPosition);
-                auto offset = fe::engine::get().getResourceManager<sf::Texture>()->getTexturePosition(tile.textureId);
+                auto size = fe::engine::get().getResourceManager<sf::Texture>()->getTexture(tile->textureId)->getSize();
+                auto pos = fe::Vector2d(tile->xPosition, tile->yPosition);
+                auto offset = fe::engine::get().getResourceManager<sf::Texture>()->getTexturePosition(tile->textureId);
 
                 m_verticies[index + 0].position = fe::Vector2d(pos.x,               pos.y).convertToSfVec2();
                 m_verticies[index + 1].position = fe::Vector2d(pos.x + size.x,      pos.y).convertToSfVec2();
@@ -50,7 +50,7 @@ fe::Handle fe::tileMap::add(fe::Vector2d position, fe::guid tileId)
                         tile.xPosition = position.x;
                         tile.yPosition = position.y;
 
-                        fe::Handle retHandle = addObject(tile);
+                        fe::Handle retHandle = addObject(new fe::imp::tile(tile));
                         rebuildTilemap();
                         return retHandle;
                         break;
@@ -60,25 +60,26 @@ fe::Handle fe::tileMap::add(fe::Vector2d position, fe::guid tileId)
         return -1;
     }
 
-void fe::tileMap::remove(fe::Vector2d position, fe::Vector2d size)
-    {
-        for (auto &tile : getObjects())
-            {
-                fe::Vector2d tPosition(tile.xPosition, tile.yPosition);
-                fe::Vector2<unsigned int> tSize = fe::engine::get().getResourceManager<sf::Texture>()->getTexture(tile.textureId)->getSize();
-                if (tPosition.x >= position.x && tPosition.x + tSize.x < position.x + size.x &&
-                    tPosition.y >= position.y && tPosition.y + tSize.y < position.y + size.y)
-                    {
-                        remove(getHandle(tile));
-                        return;
-                    }
-            }
-    }
-
 void fe::tileMap::remove(fe::Handle handle)
     {
         removeObject(handle);
         rebuildTilemap();
+    }
+
+fe::Handle fe::tileMap::get(fe::Vector2d position)
+    {
+        for (auto &tile : getObjects())
+            {
+                fe::Vector2d tPosition(tile->xPosition, tile->yPosition);
+                fe::Vector2<unsigned int> tSize = fe::engine::get().getResourceManager<sf::Texture>()->getTexture(tile->textureId)->getSize();
+                if (position.x > tPosition.x && position.x < tPosition.x + tSize.x &&
+                    position.y > tPosition.y && position.y < tPosition.y + tSize.y)
+                    {
+                        return getHandle(tile);
+                    }
+            }
+
+        return -1;
     }
 
 void fe::tileMap::draw(sf::RenderTarget &target, sf::RenderStates states)
@@ -90,7 +91,7 @@ void fe::tileMap::serialize(fe::serializerID &serial)
     {
         for (auto &tile : getObjects())
             {
-                tile.serialize(serial);
+                tile->serialize(serial);
             }
     }
 

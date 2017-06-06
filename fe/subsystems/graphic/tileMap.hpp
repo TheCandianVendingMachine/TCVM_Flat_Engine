@@ -32,7 +32,7 @@ namespace fe
                     };
             }
 
-        class tileMap : private fe::handleManager<fe::imp::tile>
+        class tileMap : private fe::handleManager<fe::imp::tile*>
             {
                 private:
                     std::vector<fe::imp::tile> m_fabrications; // tiles already defined
@@ -45,9 +45,8 @@ namespace fe
                     FLAT_ENGINE_API void create(fe::guid name, fe::guid textureID);
 
                     FLAT_ENGINE_API fe::Handle add(fe::Vector2d position, fe::guid tileId);
-
-                    FLAT_ENGINE_API void remove(fe::Vector2d position, fe::Vector2d size);
                     FLAT_ENGINE_API void remove(fe::Handle handle);
+                    FLAT_ENGINE_API fe::Handle get(fe::Vector2d position);
 
                     FLAT_ENGINE_API void draw(sf::RenderTarget &target, sf::RenderStates states);
 
