@@ -112,7 +112,7 @@ void fe::sceneGraph::save(const char *filepath)
     {
         m_tileMap.serialize(m_serializer);
 
-        std::ofstream out(filepath, std::ios::app);
+        std::ofstream out(filepath, std::ios::trunc);
         m_serializer.outData(out);
         out.close();
 
