@@ -4,6 +4,7 @@
 #include "../time/time.hpp"
 #include "../time/clock.hpp"
 #include "../subsystems/memory/memoryManager.hpp"
+#include "../objectManagement/guid.hpp"
 #include <iostream>
 #include <cstring>
 
@@ -14,25 +15,29 @@ namespace fe
 		        fe::time m_startTime;
 		        fe::time m_endTime;
 		
-		        char *m_name;
+		        fe::guid m_name;
+                char m_nameStr[512];
 		
 		        profiler(const char *name) 
 		            {
-                        void *alloc = FE_ALLOC_STACK("Profiler", sizeof(name));
-                        m_name = static_cast<char*>(alloc);
-			            strcpy(m_name, name);
+                    #ifdef FE_PROFILE_ENGINE
+                        strcpy(m_nameStr, name);
+                        m_name = FE_STR(name);
 			            m_startTime = fe::clock::getTimeSinceEpoch();
+                    #endif
 		            }
 		
 		        ~profiler()
 		            {
+                    #ifdef FE_PROFILE_ENGINE
 			            m_endTime = fe::clock::getTimeSinceEpoch();
 			            fe::time runtime = m_endTime - m_startTime;
 
-                        std::cout << "\n" << m_name <<
+                        std::cout << "\n" << m_nameStr <<
                             "\nMicroseconds: " << runtime.asMicroseconds() <<
                             "\nMilliseconds: " << runtime.asMilliseconds() <<
                             "\nSeconds: " << runtime.asSeconds() << "\n\n";
+                    #endif
 		            }
 	        };
     }

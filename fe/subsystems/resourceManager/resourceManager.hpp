@@ -30,13 +30,13 @@ namespace fe
         template<typename T>
         const T *resourceManager<T>::load(const char* filepath, const char* id)
             {
-                T *resource = get(id);
-                if (resource)
+                const T *cResource = get(id);
+                if (cResource)
                     {
-                        return resource;
+                        return cResource;
                     }
 
-                resource = new T();
+                T *resource = new T();
                 if (resource)
                     {
                         resource->loadFromFile(filepath);

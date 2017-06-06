@@ -4,6 +4,7 @@
 #include "subsystems/input/inputManager.hpp"
 #include "subsystems/resourceManager/resourceManager.hpp"
 #include "debug/logger.hpp"
+#include "debug/profiler.hpp"
 
 #include "feAssert.hpp"
 
@@ -50,12 +51,25 @@ void fe::engine::update()
 
 void fe::engine::draw()
     {
+        FE_PROFILE("engine_pre_draw")
         m_gameStateMachine->preDraw();
-        m_renderer.getRenderWindow().clear(sf::Color::Black);
-        m_gameStateMachine->draw(m_renderer.getRenderWindow());
-        m_renderer.getRenderWindow().display();
+        FE_END_PROFILE
 
+        FE_PROFILE("engine_window_clear")
+        m_renderer.getRenderWindow().clear(sf::Color::Black);
+        FE_END_PROFILE
+
+        FE_PROFILE("engine_window_buf1_draw");
+        m_gameStateMachine->draw(m_renderer.getRenderWindow());
+        FE_END_PROFILE;
+
+        FE_PROFILE("engine_window_buf2_draw")
+        m_renderer.getRenderWindow().display();
+        FE_END_PROFILE;
+
+        FE_PROFILE("engine_post_draw")
         m_gameStateMachine->postDraw();
+        FE_END_PROFILE;
     }
 
 void fe::engine::calcFPS()
@@ -153,10 +167,21 @@ void fe::engine::run()
 
                 m_accumulator += frameTime;
 
+                FE_PROFILE("engine_input")
                 m_inputManager->preUpdate();
+                FE_END_PROFILE;
+
+                FE_PROFILE("engine_event");
                 handleEvents();
+                FE_END_PROFILE;
+
+                FE_PROFILE("engine_update")
                 update();
+                FE_END_PROFILE;
+
+                FE_PROFILE("engine_draw")
                 draw();
+                FE_END_PROFILE;
 
                 calcFPS();
             }

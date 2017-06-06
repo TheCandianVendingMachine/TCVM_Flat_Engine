@@ -25,7 +25,7 @@ namespace fe
                             FLAT_ENGINE_API void drawElement(sf::RenderTarget &target, const fe::matrix3d &matrix);
 
                         public:
-                            FLAT_ENGINE_API label(sf::Font &font, const char *text);
+                            FLAT_ENGINE_API label(const sf::Font &font, const char *text);
                             
                             FLAT_ENGINE_API void setPosition(fe::Vector2d pos);
                             FLAT_ENGINE_API fe::Vector2d getPosition() const;

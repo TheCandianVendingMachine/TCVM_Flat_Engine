@@ -2,6 +2,8 @@
 #include "../../gui/panel.hpp"
 #include "../../gui/guiElement.hpp"
 
+#include "../../debug/profiler.hpp"
+
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <algorithm>
 
@@ -51,11 +53,16 @@ void fe::baseGameState::postUpdateDefined()
 
 void fe::baseGameState::draw(sf::RenderTarget &app)
     {
+        FE_PROFILE("state_scene_graph")
         m_sceneGraph.draw(app);
+        FE_END_PROFILE
+
+        FE_PROFILE("state_gui")
         for (auto &panel : m_guiPanels)
             {
                 panel->draw(app);
             }
+        FE_END_PROFILE
     }
 
 fe::sceneGraph &fe::baseGameState::getSceneGraph()

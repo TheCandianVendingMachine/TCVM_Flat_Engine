@@ -5,8 +5,12 @@
 
 namespace fe
     {
+        struct collider;
+
         struct collisionData
             {
+                // the collider which hit
+                collider *m_collider;
                 // How deep the collision is
                 fe::Vector2d m_collisionDepth;
                 int m_collisionGroup;

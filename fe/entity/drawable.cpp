@@ -19,6 +19,14 @@ void fe::drawable::draw(fe::spriteBatch &batch, fe::transformable &transform)
         batch.add(m_verticies, transform);
     }
 
+void fe::drawable::setVertSize(fe::Vector2d size)
+    {
+        m_verticies[0].position = fe::Vector2d(0,       0).convertToSfVec2();
+        m_verticies[1].position = fe::Vector2d(size.x,  0).convertToSfVec2();
+        m_verticies[2].position = fe::Vector2d(size.x,  size.y).convertToSfVec2();
+        m_verticies[3].position = fe::Vector2d(0,       size.y).convertToSfVec2();
+    }
+
 void fe::drawable::setColour(const sf::Color &colour)
     {
         m_colour = colour;

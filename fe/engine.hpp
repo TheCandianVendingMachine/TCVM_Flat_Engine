@@ -9,6 +9,8 @@
 #include "math/random.hpp"
 #include "time/clock.hpp"
 
+#define FE_PROFILE_ENGINE
+
 namespace sf
     {
         class Texture;

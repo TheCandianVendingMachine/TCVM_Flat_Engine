@@ -21,7 +21,7 @@ void fe::gameStateMachine::startUp()
             {
                 const unsigned int maxStates = 32;
 
-                auto size = 32_MiB;
+                auto size = 8_MiB;
                 auto memBuf = FE_ALLOC_DIRECT_CAPTURED("StateBuffer", size);
                 m_stateAllocater.startUp(static_cast<char*>(memBuf), size);
 

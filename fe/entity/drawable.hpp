@@ -30,6 +30,8 @@ namespace fe
                     FLAT_ENGINE_API drawable();
                     FLAT_ENGINE_API void draw(fe::spriteBatch &batch, fe::transformable &transform);
 
+                    FLAT_ENGINE_API void setVertSize(fe::Vector2d size);
+
                     FLAT_ENGINE_API void setColour(const sf::Color &colour);
                     FLAT_ENGINE_API sf::Color getColour() const;
 

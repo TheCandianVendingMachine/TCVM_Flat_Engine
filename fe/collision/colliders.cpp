@@ -81,6 +81,7 @@ bool fe::AABB::doesRayIntersect(const Vector2d &origin, const Vector2d &directio
 fe::collisionData fe::AABB::getCollisionData(const collider &other)
     {
         fe::collisionData data;
+        data.m_collider = this;
 
         switch (other.m_type)
             {

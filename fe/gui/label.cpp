@@ -8,7 +8,7 @@ void fe::gui::label::drawElement(sf::RenderTarget &target, const fe::matrix3d &m
         target.draw(m_text);
     }
 
-fe::gui::label::label(sf::Font &font, const char *text)
+fe::gui::label::label(const sf::Font &font, const char *text)
     {
         m_text.setFont(font);
         m_text.setString(text);
