@@ -9,6 +9,7 @@
 #include "../resourceManager/resourceManager.hpp"
 
 #include <algorithm>
+#include <fstream>
 
 void fe::sceneGraph::onAdd(fe::baseEntity *object, fe::Handle objectHandle)
     {
@@ -102,9 +103,31 @@ void fe::sceneGraph::unsubscribe(fe::animationActor *actor, fe::Handle animation
         m_animator.unsubscribe(actor, animation);
     }
 
-void fe::sceneGraph::unsubscribe(fe::animationActor * actor)
+void fe::sceneGraph::unsubscribe(fe::animationActor *actor)
     {
         m_animator.unsubscribe(actor);
+    }
+
+void fe::sceneGraph::save(const char *filepath)
+    {
+        m_tileMap.serialize(m_serializer);
+
+        std::ofstream out(filepath, std::ios::app);
+        m_serializer.outData(out);
+        out.close();
+
+        m_serializer.clearData();
+    }
+
+void fe::sceneGraph::load(const char *filepath)
+    {
+        m_serializer.clearData();
+
+        std::ifstream in(filepath);
+        m_serializer.readData(in);
+        in.close();
+
+        m_tileMap.deserialize(m_serializer);
     }
 
 fe::sceneGraph::~sceneGraph()

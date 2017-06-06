@@ -94,6 +94,11 @@ void fe::serializerID::dataBlock::readData(const char *block)
             }
     }
 
+void fe::serializerID::clearData()
+    {
+        m_data.clear();
+    }
+
 void fe::serializerID::readData(std::istream &in)
     {
         m_data.clear();

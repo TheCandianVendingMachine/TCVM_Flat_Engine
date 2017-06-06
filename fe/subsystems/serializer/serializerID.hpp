@@ -69,6 +69,8 @@ namespace fe
                     template<typename T, typename ...Args>
                     bool deserializeBlock(const char *blockID, const char *id, T &newValue, Args &&...args);
 
+                    FLAT_ENGINE_API void clearData();
+
                     FLAT_ENGINE_API void outData(std::ostream &out)
                         {
                             for (auto &data : m_data)

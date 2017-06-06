@@ -108,3 +108,20 @@ const std::vector<fe::imp::tile> &fe::tileMap::getFabrications()
     {
         return m_fabrications;
     }
+
+void fe::tileMap::clearMap()
+    {
+        m_verticies.clear();
+        getObjects().clear();
+    }
+
+void fe::tileMap::clearFabs()
+    {
+        m_fabrications.clear();
+    }
+
+void fe::tileMap::clear()
+    {
+        clearMap();
+        clearFabs();
+    }

@@ -58,5 +58,12 @@ namespace fe
                     // Returns a vector of all fabricated tiles
                     FLAT_ENGINE_API const std::vector<fe::imp::tile> &getFabrications();
 
+                    // Clears tilemap of all verticies
+                    FLAT_ENGINE_API void clearMap();
+                    // Clears all pre-fabricated tiles
+                    FLAT_ENGINE_API void clearFabs();
+                    // Clears all data
+                    FLAT_ENGINE_API void clear();
+
             };
     }

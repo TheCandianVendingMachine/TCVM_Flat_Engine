@@ -4,6 +4,7 @@
 #define FLAT_ENGINE_EXPORT
 #include "../../flatEngineExport.hpp"
 #include "../../objectManagement/handleManager.hpp"
+#include "../serializer/serializerID.hpp"
 #include "spriteBatch.hpp"
 #include "animation/animator.hpp"
 #include "tileMap.hpp"
@@ -23,6 +24,8 @@ namespace fe
         class sceneGraph : public handleManager<fe::baseEntity*>
             {
                 private:
+                    fe::serializerID m_serializer;
+
                     spriteBatch m_batch;
                     animator m_animator;
                     tileMap m_tileMap;
@@ -47,6 +50,11 @@ namespace fe
                     FLAT_ENGINE_API void subscribe(fe::animationActor *actor, fe::Handle animation);
                     FLAT_ENGINE_API void unsubscribe(fe::animationActor *actor, fe::Handle animation);
                     FLAT_ENGINE_API void unsubscribe(fe::animationActor *actor);
+
+                    // save all scene data to file
+                    FLAT_ENGINE_API void save(const char *filepath);
+                    // load all scene data from file
+                    FLAT_ENGINE_API void load(const char *filepath);
 
                     FLAT_ENGINE_API ~sceneGraph();
 
