@@ -4,7 +4,6 @@
 #include <unordered_map>
 #include <vector>
 #include "../../objectManagement/guid.hpp"
-#include "../memory/feNew.hpp"
 #include "../../debug/logger.hpp"
 #include "../graphic/texturePacker.hpp"
 

@@ -196,5 +196,5 @@ namespace fe
     }
 
 #define SERIALIZE_ID(...) \
-void serialize(fe::serializerID &serial) { serial.serializeBlock(__VA_ARGS__); }\
+void serialize(fe::serializerID &serial) const { serial.serializeBlock(__VA_ARGS__); }\
 bool deserialize(fe::serializerID &serial) { return serial.deserializeBlock(__VA_ARGS__); }

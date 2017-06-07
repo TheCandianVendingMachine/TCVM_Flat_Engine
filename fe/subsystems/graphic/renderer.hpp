@@ -34,7 +34,7 @@ namespace fe
                     FLAT_ENGINE_API void startUp();
                     FLAT_ENGINE_API void shutDown();
 
-                    FLAT_ENGINE_API void save();
+                    FLAT_ENGINE_API void save() const;
                     FLAT_ENGINE_API void load();
 
                     FLAT_ENGINE_API void draw(const sf::Drawable &draw);

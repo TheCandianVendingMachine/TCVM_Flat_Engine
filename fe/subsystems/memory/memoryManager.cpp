@@ -21,7 +21,7 @@ void fe::memoryManager::startUp(size_t bufferSize, size_t stackSize)
 
 void fe::memoryManager::shutDown()
     {
-        if (m_allocatedBuffer)
+        if (m_instance && m_allocatedBuffer)
             {
                 // shut down all types of memory allocation and free the pointers allocated inside them
                 m_stackAllocater.clear();
@@ -30,6 +30,7 @@ void fe::memoryManager::shutDown()
                 m_allocatedBuffer = nullptr;
 
                 m_shutDown = true;
+                m_instance = nullptr;
             }
     }
 
@@ -41,6 +42,11 @@ fe::memoryManager &fe::memoryManager::get()
             }
 
         return *m_instance;
+    }
+
+bool fe::memoryManager::exists()
+    {
+        return m_instance != nullptr;
     }
 
 void *fe::memoryManager::alloc(size_t size)

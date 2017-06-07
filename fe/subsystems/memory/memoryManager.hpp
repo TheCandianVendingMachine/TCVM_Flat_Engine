@@ -46,6 +46,9 @@ namespace fe
                     FLAT_ENGINE_API void shutDown();
                     FLAT_ENGINE_API static memoryManager &get();
 
+                    // Returns true if an instance exists
+                    FLAT_ENGINE_API static bool exists();
+
                     // allocate memory from the "heap" of specific size
                     // IF YOU CALL THIS YOU MUST LOG IT MANUALLY.
                     FLAT_ENGINE_API void *alloc(size_t size);

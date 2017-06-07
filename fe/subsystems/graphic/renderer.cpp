@@ -1,5 +1,4 @@
 #include "renderer.hpp"
-#include "../memory/feNew.hpp"
 
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
@@ -34,7 +33,7 @@ void fe::renderer::shutDown()
             }
     }
 
-void fe::renderer::save()
+void fe::renderer::save() const
     {
         serialize(*m_windowSettings);
 
@@ -88,6 +87,4 @@ fe::Vector2d fe::renderer::getWindowSize()
 	}
 
 fe::renderer::~renderer()
-    {
-        shutDown();
-    }
+    {}

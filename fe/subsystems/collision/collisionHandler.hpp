@@ -3,7 +3,6 @@
 #pragma once
 #define FLAT_ENGINE_EXPORT
 #include "../../flatEngineExport.hpp"
-#include "../memory/feNew.hpp"
 #include <vector>
 
 namespace fe

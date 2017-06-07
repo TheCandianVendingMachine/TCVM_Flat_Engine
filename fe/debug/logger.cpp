@@ -10,8 +10,7 @@ void fe::logger::startUp(const char *directory)
             {
                 m_instance = this;
                 m_output.open(directory);
-                assert(m_output.is_open() && "Error: Logger cannot be opened");
-
+                assert(!m_output.fail() && "Error: Logger cannot be opened");
                 sf::err().rdbuf(m_output.rdbuf());
             }
     }

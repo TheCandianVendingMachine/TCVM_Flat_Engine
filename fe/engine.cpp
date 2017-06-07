@@ -100,7 +100,7 @@ void fe::engine::startUp(unsigned long long totalMemory, unsigned long long stac
         if (!m_instance)
             {
                 m_memoryManager.startUp(totalMemory, stackMemory);
- 
+
                 m_logger = new(m_memoryManager.alloc(sizeof(fe::logger))) logger;
                 m_logger->startUp("log.log");
 
