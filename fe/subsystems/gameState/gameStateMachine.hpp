@@ -45,7 +45,7 @@ namespace fe
                         {
                             std::tuple<Args...> args;
 
-                            stateHolder(Args &&...args) : args(std::forward<Args>(args)...) {}
+                            stateHolder(Args &&...arg) : args(std::forward<Args>(arg)...) { }
                             void *construct() { return constructT(args, std::index_sequence_for<Args...>()); }
 
                             private:
@@ -53,8 +53,6 @@ namespace fe
                                 void *constructT(std::tuple<Args...> &tuple, std::index_sequence<S...>) { return new T(std::get<S>(tuple)...); }
                         };
 
-                    // since all memory that the state has will be irrelevant once we pop it, we get the current stack marker to free to
-                    //fe::stackAllocater::Marker m_stateMarker; // this marker is from m_previousState
                     fe::stackAllocater m_stateAllocater;
                     bool m_pop;
                     bool m_clear;
@@ -116,7 +114,7 @@ namespace fe
         template<typename T, typename ...Args>
         void gameStateMachine::queuePush(stateOptions options, Args &&...args)
             {
-                m_nextState = new(m_stateAllocater.alloc(sizeof(stateHolder<T, Args...>(std::forward<Args>(args)...)))) stateHolder<T, Args...>(std::forward<Args>(args)...);
+                m_nextState = new(m_stateAllocater.alloc(sizeof(stateHolder<T, Args...>))) stateHolder<T, Args...>(std::forward<Args>(args)...);
                 m_nextStateOptions = options;
             }
     }
