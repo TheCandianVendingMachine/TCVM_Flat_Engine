@@ -3,8 +3,8 @@
 #pragma once
 #define FLAT_ENGINE_EXPORT
 #include "../flatEngineExport.hpp"
-
 #include "../entity/transformable.hpp"
+#include <SFML/Graphics/VertexArray.hpp>
 
 namespace sf
     {
@@ -22,6 +22,9 @@ namespace fe
                 class guiElement : public fe::transformable
                     {
                         protected:
+                            sf::VertexArray m_shape;
+                            sf::Color m_colour;
+
                             const panel *m_parentPanel; // the panel this gui element is attached to.
                             guiElement *m_parentElement;
                             fe::Vector2d m_size;
@@ -39,6 +42,9 @@ namespace fe
 
                             FLAT_ENGINE_API void setSize(const fe::Vector2d &size);
                             FLAT_ENGINE_API const fe::Vector2d &getSize();
+
+                            FLAT_ENGINE_API void setColour(sf::Color colour);
+                            FLAT_ENGINE_API sf::Color getColour() const;
 
                             virtual void handleEvent(const sf::Event &event) = 0;
                             virtual void update() = 0;

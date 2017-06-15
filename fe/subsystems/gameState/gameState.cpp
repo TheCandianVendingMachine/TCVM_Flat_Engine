@@ -33,6 +33,8 @@ void fe::baseGameState::handleEvents(const sf::Event &event)
             {
                 panel->handleEvent(event);
             }
+
+        handleWindowEvent(event);
     }
 
 void fe::baseGameState::update(float deltaTime)

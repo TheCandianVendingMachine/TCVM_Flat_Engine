@@ -17,15 +17,14 @@ namespace fe
                     {
                         private:
                             std::function<void()> m_callback;
-                            sf::VertexArray m_shape;
 
                             FLAT_ENGINE_API void drawElement(sf::RenderTarget &target, const fe::matrix3d &matrix);
 
                         public:
                             FLAT_ENGINE_API button(const fe::Vector2d &size, const std::function<void()> &callback);
 
-                            FLAT_ENGINE_API void handleEvent(const sf::Event &event);
-                            FLAT_ENGINE_API void update();
+                            FLAT_ENGINE_API virtual void handleEvent(const sf::Event &event);
+                            FLAT_ENGINE_API virtual void update();
 
                     };
             }

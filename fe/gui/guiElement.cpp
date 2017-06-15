@@ -1,4 +1,5 @@
 #include "guiElement.hpp"
+#include <SFML/Graphics/RenderTarget.hpp>
 
 fe::gui::guiElement::guiElement() : m_parentPanel(nullptr), m_parentElement(nullptr)
     {
@@ -34,6 +35,20 @@ const fe::Vector2d &fe::gui::guiElement::getSize()
         return m_size;
     }
 
+void fe::gui::guiElement::setColour(sf::Color colour)
+    {
+        m_colour = colour;
+        for (unsigned int i = 0; i < m_shape.getVertexCount(); i++)
+            {
+                m_shape[i].color = colour;
+            }
+    }
+
+sf::Color fe::gui::guiElement::getColour() const
+    {
+        return m_colour;
+    }
+
 void fe::gui::guiElement::draw(sf::RenderTarget &target)
     {
         if (m_parentElement)
@@ -44,4 +59,6 @@ void fe::gui::guiElement::draw(sf::RenderTarget &target)
             {
                 drawElement(target, fe::matrix3d());
             }
+
+        target.draw(m_shape);
     }

@@ -18,11 +18,11 @@ namespace fe
             {
                 class label : public guiElement
                     {
-                        private:
+                        protected:
                             sf::Text m_text;
                             fe::Vector2d m_textPosition;
 
-                            FLAT_ENGINE_API void drawElement(sf::RenderTarget &target, const fe::matrix3d &matrix);
+                            FLAT_ENGINE_API virtual void drawElement(sf::RenderTarget &target, const fe::matrix3d &matrix);
 
                         public:
                             FLAT_ENGINE_API label(const sf::Font &font, const char *text);
@@ -42,8 +42,8 @@ namespace fe
                             FLAT_ENGINE_API void setColour(sf::Color colour);
                             FLAT_ENGINE_API sf::Color getColour();
 
-                            FLAT_ENGINE_API void handleEvent(const sf::Event &event) {}
-                            FLAT_ENGINE_API void update() {}
+                            FLAT_ENGINE_API virtual void handleEvent(const sf::Event &event) {}
+                            FLAT_ENGINE_API virtual void update() {}
                     };
             }
     }
