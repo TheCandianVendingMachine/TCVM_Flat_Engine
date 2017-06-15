@@ -16,8 +16,16 @@ void fe::gui::textBox::drawElement(sf::RenderTarget &target, const fe::matrix3d 
         m_drawText.draw(target);
     }
 
-fe::gui::textBox::textBox(fe::Vector2d size, const sf::Font &font, const char *text) : m_drawText(font, text), m_paddingX(10.f), m_paddingY(3.f)
+fe::gui::textBox::textBox(fe::Vector2d size, const sf::Font &font, options opt, unsigned int maxChars, const char *text) : m_drawText(font, text), m_paddingX(10.f), m_paddingY(3.f)
     {
+        m_allowAlpha = false;
+        m_allowNumerics = false;
+        m_input = false;
+
+        m_maxChars = maxChars;
+
+        setOptions(opt);
+
         m_drawText.setParent(this);
         m_drawText.setPosition({ m_paddingX, m_paddingY });
         m_drawText.setPixelSize(size.y - (m_paddingY * 2));
@@ -26,6 +34,12 @@ fe::gui::textBox::textBox(fe::Vector2d size, const sf::Font &font, const char *t
         m_shape.resize(4);
 
         m_size = size;
+    }
+
+void fe::gui::textBox::setOptions(options opt)
+    {
+        m_allowAlpha =      (opt & options::ALPHA);
+        m_allowNumerics =   (opt & options::NUM);
     }
 
 void fe::gui::textBox::handleEvent(const sf::Event &event)
@@ -50,9 +64,14 @@ void fe::gui::textBox::handleEvent(const sf::Event &event)
                                 m_inputText.erase(m_inputText.size() - 1, 1);
                             }
                     }
-                else if (event.text.unicode < 128)
+                else if (event.text.unicode < 128 && m_inputText.size() < m_maxChars)
                     {
-                        m_inputText += (char)event.text.unicode;
+                        if ((m_allowAlpha && m_allowNumerics) ||
+                            (m_allowNumerics && event.text.unicode >= '0' && event.text.unicode <= '9') ||
+                            (m_allowAlpha && event.text.unicode < '0' && event.text.unicode > '9'))
+                            {
+                                m_inputText += (char)event.text.unicode;
+                            }
                     }
                 m_drawText.setString(m_inputText.c_str());
 
@@ -68,4 +87,19 @@ void fe::gui::textBox::handleEvent(const sf::Event &event)
 void fe::gui::textBox::update()
     {
     
+    }
+
+void fe::gui::textBox::setString(const char *str)
+    {
+        m_drawText.setString(str);
+    }
+
+std::string fe::gui::textBox::getString() const
+    {
+        return m_drawText.getString();
+    }
+
+bool fe::gui::textBox::active()
+    {
+        return m_input;
     }
