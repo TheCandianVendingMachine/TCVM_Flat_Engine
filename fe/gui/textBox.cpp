@@ -11,12 +11,13 @@ void fe::gui::textBox::drawElement(sf::RenderTarget &target, const fe::matrix3d 
         m_shape[1].position = localMatrix.transformPoint({ m_size.x, 0.f }).convertToSfVec2();
         m_shape[2].position = localMatrix.transformPoint({ m_size.x, m_size.y }).convertToSfVec2();
         m_shape[3].position = localMatrix.transformPoint({ 0.f, m_size.y }).convertToSfVec2();
+        m_shape[4].position = localMatrix.transformPoint({ 0.f, 0.f }).convertToSfVec2();
 
         target.draw(m_shape);
         m_drawText.draw(target);
     }
 
-fe::gui::textBox::textBox(fe::Vector2d size, const sf::Font &font, options opt, unsigned int maxChars, const char *text) : m_drawText(font, text), m_paddingX(10.f), m_paddingY(3.f)
+fe::gui::textBox::textBox(fe::Vector2d size, const sf::Font &font, options opt, float padX, float padY, unsigned int maxChars, const char *text) : m_drawText(font, ""), m_paddingX(padX), m_paddingY(padY)
     {
         m_allowAlpha = false;
         m_allowNumerics = false;
@@ -29,9 +30,11 @@ fe::gui::textBox::textBox(fe::Vector2d size, const sf::Font &font, options opt, 
         m_drawText.setParent(this);
         m_drawText.setPosition({ m_paddingX, m_paddingY });
         m_drawText.setPixelSize(size.y - (m_paddingY * 2));
+        m_inputText = text;
+        setString(text);
 
         m_shape.setPrimitiveType(sf::PrimitiveType::LinesStrip);
-        m_shape.resize(4);
+        m_shape.resize(5);
 
         m_size = size;
     }
@@ -53,6 +56,7 @@ void fe::gui::textBox::handleEvent(const sf::Event &event)
                 else
                     {
                         m_input = m_parentPanel->mouseHover(getPosition(), m_size);
+                        m_drawText.setString(m_inputText.c_str());
                     }
             }
         else if (m_input && event.type == sf::Event::TextEntered)

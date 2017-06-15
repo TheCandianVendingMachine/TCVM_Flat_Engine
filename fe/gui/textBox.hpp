@@ -37,7 +37,7 @@ namespace fe
 
                         public:
                             // intentionally underflowing maxChars to allow for a max amount of characters
-                            FLAT_ENGINE_API textBox(fe::Vector2d size, const sf::Font &font, options opt = options(options::ALPHA | options::NUM), unsigned int maxChars = -1, const char *text = "");
+                            FLAT_ENGINE_API textBox(fe::Vector2d size, const sf::Font &font, options opt = options(options::ALPHA | options::NUM), float padX = 10.f, float padY = 5.f, unsigned int maxChars = -1, const char *text = "");
 
                             FLAT_ENGINE_API void setOptions(options opt);
 

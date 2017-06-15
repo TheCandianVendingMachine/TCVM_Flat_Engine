@@ -32,8 +32,13 @@ void fe::gui::button::handleEvent(const sf::Event &event)
 
 void fe::gui::button::update()
     {
-        if (m_parentPanel->mouseHover(getPosition(), m_size) && m_parentPanel->getMousePressed())
+        if (m_parentPanel->mouseHover(getPosition(), m_size) && m_parentPanel->getMousePressed() && !m_pressed)
             {
+                m_pressed = true;
                 m_callback();
+            }
+        else if (!m_parentPanel->getMousePressed() && m_pressed)
+            {
+                m_pressed = false;
             }
     }

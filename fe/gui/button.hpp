@@ -17,6 +17,7 @@ namespace fe
                     {
                         private:
                             std::function<void()> m_callback;
+                            bool m_pressed;
 
                             FLAT_ENGINE_API void drawElement(sf::RenderTarget &target, const fe::matrix3d &matrix);
 
