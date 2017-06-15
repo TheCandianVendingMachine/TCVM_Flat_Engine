@@ -66,9 +66,9 @@ void fe::gui::textBox::handleEvent(const sf::Event &event)
                     }
                 else if (event.text.unicode < 128 && m_inputText.size() < m_maxChars)
                     {
-                        if ((m_allowAlpha && m_allowNumerics) ||
-                            (m_allowNumerics && event.text.unicode >= '0' && event.text.unicode <= '9') ||
-                            (m_allowAlpha && event.text.unicode < '0' && event.text.unicode > '9'))
+                         if ((m_allowAlpha && m_allowNumerics) ||
+                             (m_allowNumerics && event.text.unicode >= '0' && event.text.unicode <= '9') ||
+                             (m_allowAlpha && !(event.text.unicode >= '0' && event.text.unicode <= '9')))
                             {
                                 m_inputText += (char)event.text.unicode;
                             }
