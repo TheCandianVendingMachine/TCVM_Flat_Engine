@@ -9,7 +9,7 @@
 void fe::gui::textBox::checkAddChar(sf::Uint32 ascii, const sf::Glyph &glyph)
     {
         if ((m_allowAlpha && m_allowNumerics) ||
-            (m_allowNumerics && ascii >= '0' && ascii <= '9') ||
+            (m_allowNumerics && (ascii >= '0' && ascii <= '9') || (ascii == '-' || ascii == '.')) ||
             (m_allowAlpha && !(ascii >= '0' && ascii <= '9')))
             {
                 m_inputText += (char)ascii;
