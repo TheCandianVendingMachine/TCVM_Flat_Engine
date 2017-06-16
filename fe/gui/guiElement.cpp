@@ -1,6 +1,15 @@
 #include "guiElement.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 
+fe::matrix3d fe::gui::guiElement::getParentTransform()
+    {
+        if (m_parentElement)
+            {
+                return getMatrix() * m_parentElement->getParentTransform();
+            }
+        return getMatrix();
+    }
+
 fe::gui::guiElement::guiElement() : m_parentPanel(nullptr), m_parentElement(nullptr)
     {
     }
@@ -51,14 +60,5 @@ sf::Color fe::gui::guiElement::getColour() const
 
 void fe::gui::guiElement::draw(sf::RenderTarget &target)
     {
-        if (m_parentElement)
-            {
-                drawElement(target, m_parentElement->getMatrix());
-            }
-        else
-            {
-                drawElement(target, fe::matrix3d());
-            }
-
-        target.draw(m_shape);
+        drawElement(target, getParentTransform());
     }

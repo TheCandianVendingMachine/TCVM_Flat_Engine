@@ -3,12 +3,10 @@
 
 void fe::gui::square::drawElement(sf::RenderTarget &target, const fe::matrix3d &matrix)
     {
-        fe::matrix3d localMatrix = getMatrix() * matrix;
-
-        m_shape[0].position = localMatrix.transformPoint({ 0.f, 0.f }).convertToSfVec2();
-        m_shape[1].position = localMatrix.transformPoint({ m_size.x, 0.f }).convertToSfVec2();
-        m_shape[2].position = localMatrix.transformPoint({ m_size.x, m_size.y }).convertToSfVec2();
-        m_shape[3].position = localMatrix.transformPoint({ 0.f, m_size.y }).convertToSfVec2();
+        m_shape[0].position = matrix.transformPoint({ 0.f, 0.f }).convertToSfVec2();
+        m_shape[1].position = matrix.transformPoint({ m_size.x, 0.f }).convertToSfVec2();
+        m_shape[2].position = matrix.transformPoint({ m_size.x, m_size.y }).convertToSfVec2();
+        m_shape[3].position = matrix.transformPoint({ 0.f, m_size.y }).convertToSfVec2();
 
         target.draw(m_shape, m_texture);
     }

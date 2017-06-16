@@ -18,8 +18,8 @@ namespace fe
                         public:
                             enum options
                                 {
-                                    ALPHABET = 1 << 0,
-                                    NUMERICS = 1 << 1,
+                                    DISABLE_ALPHABET = 1 << 0,
+                                    DISABLE_NUMERICS = 1 << 1,
                                     DISABLE_INPUT = 1 << 2,
                                     WORD_WRAP = 1 << 3
                                 };
@@ -42,12 +42,14 @@ namespace fe
                             float m_paddingY;
                             bool m_input;
 
-                            FLAT_ENGINE_API void addChar(sf::Uint32 ascii, const sf::Glyph &glyph);
+                            FLAT_ENGINE_API void checkAddChar(sf::Uint32 ascii, const sf::Glyph &glyph);
+                            FLAT_ENGINE_API void addChar(sf::Uint32 ascii);
+
                             FLAT_ENGINE_API void drawElement(sf::RenderTarget &target, const fe::matrix3d &matrix);
 
                         public:
                             // intentionally underflowing maxChars to allow for a max amount of characters
-                            FLAT_ENGINE_API textBox(fe::Vector2d size, const sf::Font &font, options opt = options(options::ALPHABET | options::NUMERICS), float textStrSize = -1.f, float padX = 10.f, float padY = 5.f, unsigned int maxChars = -1, const char *text = "");
+                            FLAT_ENGINE_API textBox(fe::Vector2d size, const sf::Font &font, options opt, float textStrSize = -1.f, unsigned int maxChars = -1, float padX = 10.f, float padY = 5.f, const char *text = "");
 
                             FLAT_ENGINE_API void setOptions(options opt);
 

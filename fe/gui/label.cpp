@@ -3,8 +3,7 @@
 
 void fe::gui::label::drawElement(sf::RenderTarget &target, const fe::matrix3d &matrix)
     {
-        auto localMatrix = getMatrix() * matrix;
-        m_text.setPosition(localMatrix.transformPoint(getPosition()).convertToSfVec2());
+        m_text.setPosition(matrix.transformPoint(getPosition()).convertToSfVec2());
         target.draw(m_text);
     }
 

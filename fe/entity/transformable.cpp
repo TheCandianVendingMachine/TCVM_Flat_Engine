@@ -54,7 +54,7 @@ const fe::Vector2d &fe::transformable::getScale() const
 
 void fe::transformable::move(const fe::Vector2d &offset)
     {
-        m_position += offset;
+        setPosition(getPosition() + offset);
         m_update |= (offset.magnitudeSqr() != 0.f);
     }
 
