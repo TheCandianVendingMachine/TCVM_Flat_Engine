@@ -30,10 +30,11 @@ namespace fe
                             fe::Vector2d m_size;
 
                             virtual void drawElement(sf::RenderTarget &target, const fe::matrix3d &matrix) = 0;
-                            fe::matrix3d getParentTransform();
 
                         public:
                             FLAT_ENGINE_API guiElement();
+
+                            FLAT_ENGINE_API fe::matrix3d getParentTransform();
 
                             FLAT_ENGINE_API void setParent(const panel *attached);
                             FLAT_ENGINE_API void setParent(guiElement *attached);

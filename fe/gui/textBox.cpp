@@ -60,11 +60,11 @@ void fe::gui::textBox::addChar(sf::Uint32 ascii)
                                 m_lastCharPos = { m_paddingX, m_lastCharPos.y + lineSpace };
                             }
 
-                        if (m_lastCharPos.x + glyph.advance <= m_size.x - m_paddingX)
+                        if (m_lastCharPos.x + glyph.advance <= m_size.x - m_paddingX && m_lastCharPos.y + lineSpace <= m_size.y - m_paddingY)
                             {
                                 checkAddChar(ascii, glyph);
                             }
-                        else if (m_lastCharPos.y + lineSpace < m_size.y - m_paddingY)
+                        else if (m_lastCharPos.y + lineSpace <= m_size.y - m_paddingY)
                             {
                                 checkAddChar('\n', glyph);
                                 checkAddChar(ascii, glyph);
@@ -140,7 +140,7 @@ void fe::gui::textBox::handleEvent(const sf::Event &event)
                     }
                 else
                     {
-                        m_input = m_parentPanel->mouseHover(getParentTransform().transformPoint(getPosition()), m_size);
+                        m_input = m_parentPanel->mouseHover(m_parentElement->getParentTransform().transformPoint(getPosition()), m_size);
                     }
             }
         else if (m_input && event.type == sf::Event::TextEntered)
