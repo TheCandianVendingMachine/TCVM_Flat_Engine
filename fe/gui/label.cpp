@@ -76,3 +76,8 @@ sf::Color fe::gui::label::getColour()
     {
         return m_text.getFillColor();
     }
+
+const sf::Text &fe::gui::label::getText()
+    {
+        return m_text;
+    }

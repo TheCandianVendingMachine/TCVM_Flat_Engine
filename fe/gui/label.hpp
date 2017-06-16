@@ -42,6 +42,8 @@ namespace fe
                             FLAT_ENGINE_API void setColour(sf::Color colour);
                             FLAT_ENGINE_API sf::Color getColour();
 
+                            FLAT_ENGINE_API const sf::Text &getText();
+
                             FLAT_ENGINE_API virtual void handleEvent(const sf::Event &event) {}
                             FLAT_ENGINE_API virtual void update() {}
                     };
