@@ -4,10 +4,11 @@
 #define FLAT_ENGINE_EXPORT
 #include "../flatEngineExport.hpp"
 #include "../debug/logger.hpp"
+#include "../typeDefines.hpp"
 
 namespace fe
     {
-        using guid = unsigned long;
+        
         constexpr fe::guid hash(const char *input, unsigned int hash)
             {
                 return input[0] == '\0' ? hash : fe::hash(&input[1], hash * 33 ^ (fe::guid)(input[0]));

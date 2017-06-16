@@ -7,6 +7,7 @@
 #include "subsystems/graphic/renderer.hpp"
 #include "math/random.hpp"
 #include "time/clock.hpp"
+#include "typeDefines.hpp"
 
 //#define FE_PROFILE_ENGINE
 
@@ -83,6 +84,8 @@ namespace fe
 
                     FLAT_ENGINE_API fe::gameStateMachine &getStateMachine() const;
                     FLAT_ENGINE_API const fe::baseGameState &getCurrentState() const;
+
+                    FLAT_ENGINE_API fe::inputManager &getInputManager() const;
 
                     FLAT_ENGINE_API const fe::renderer &getRenderer() const;
 

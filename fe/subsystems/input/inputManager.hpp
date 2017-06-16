@@ -30,7 +30,7 @@ namespace fe
                     FLAT_ENGINE_API void handleEvents(const sf::Event &event);
                     FLAT_ENGINE_API void handleKeyPress();
 
-                    FLAT_ENGINE_API static inputManager &get();
+                    FLAT_ENGINE_API[[deprecated]] static inputManager &get();
 
                     FLAT_ENGINE_API fe::Handle add(sf::Keyboard::Key key, input data);
                     FLAT_ENGINE_API fe::Handle add(sf::Mouse::Button key, input data);

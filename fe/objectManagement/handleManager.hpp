@@ -2,14 +2,13 @@
 // stores handles to objects being pushed. Inherit off of to enable handles
 #pragma once
 #include "../debug/logger.hpp"
+#include "../typeDefines.hpp"
 #include <iterator>
 #include <vector>
 #include <algorithm>
 
 namespace fe
     {
-        using Handle = int;
-
         /*
             The handles work by storing the object in a normal vector, and another vector full off indicies to the objects in the original vector
             When we create an object, we return the index to the handleObject which in turn has their handle pointing to the index of the wanted object

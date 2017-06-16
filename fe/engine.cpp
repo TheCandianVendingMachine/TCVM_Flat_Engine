@@ -217,6 +217,11 @@ const fe::baseGameState &fe::engine::getCurrentState() const
         return m_gameStateMachine->getCurrentState();
     }
 
+fe::inputManager &fe::engine::getInputManager() const
+    {
+        return *m_inputManager;
+    }
+
 const fe::renderer &fe::engine::getRenderer() const
     {
         return m_renderer;
