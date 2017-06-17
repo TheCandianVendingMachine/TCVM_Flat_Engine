@@ -21,7 +21,7 @@ fe::gui::square::square(fe::Vector2d size, sf::Color colour)
         m_shape = sf::VertexArray(sf::PrimitiveType::Quads, 4);
 
         setSize(size);
-        setColour(colour);
+        setActiveColour(colour);
 
         m_shape[0].position = { 0, 0 };
         m_shape[1].position = { size.x, 0 };

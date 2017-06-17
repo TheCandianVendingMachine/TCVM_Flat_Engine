@@ -118,6 +118,9 @@ fe::gui::textBox::textBox(fe::Vector2d size, const sf::Font &font, options opt, 
         m_shape.resize(5);
 
         m_size = size;
+
+        setActiveColour(sf::Color(255, 255, 255, 255));
+        setInactiveColour(sf::Color(255, 255, 255, 220));
     }
 
 void fe::gui::textBox::setOptions(options opt)
@@ -140,7 +143,14 @@ void fe::gui::textBox::handleEvent(const sf::Event &event)
                     }
                 else
                     {
-                        m_input = m_parentPanel->mouseHover(m_parentElement->getParentTransform().transformPoint(getPosition()), m_size);
+                        if (m_parentElement)
+                            {
+                                m_input = m_parentPanel->mouseHover(m_parentElement->getParentTransform().transformPoint(getPosition()), m_size);
+                            }
+                        else
+                            {
+                                m_input = m_parentPanel->mouseHover(getPosition(), m_size);
+                            }
                     }
             }
         else if (m_input && event.type == sf::Event::TextEntered)
@@ -151,7 +161,14 @@ void fe::gui::textBox::handleEvent(const sf::Event &event)
 
 void fe::gui::textBox::update()
     {
-    
+        if ((m_parentElement && m_parentPanel->mouseHover(m_parentElement->getParentTransform().transformPoint(getPosition()), m_size)) || m_parentPanel->mouseHover(getPosition(), m_size) || m_input)
+            {
+                setActive(true);
+            }
+        else
+            {
+                setActive(false);
+            }
     }
 
 void fe::gui::textBox::setString(const char *str)

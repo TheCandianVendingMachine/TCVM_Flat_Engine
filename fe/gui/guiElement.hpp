@@ -23,11 +23,15 @@ namespace fe
                     {
                         protected:
                             sf::VertexArray m_shape;
-                            sf::Color m_colour;
+                            sf::Color m_activeColour;
+                            sf::Color m_inactiveColour;
 
                             const panel *m_parentPanel; // the panel this gui element is attached to.
                             guiElement *m_parentElement;
                             fe::Vector2d m_size;
+
+                            bool m_active;
+                            bool m_colourUpdate;
 
                             virtual void drawElement(sf::RenderTarget &target, const fe::matrix3d &matrix) = 0;
 
@@ -45,8 +49,14 @@ namespace fe
                             FLAT_ENGINE_API void setSize(const fe::Vector2d &size);
                             FLAT_ENGINE_API const fe::Vector2d &getSize();
 
-                            FLAT_ENGINE_API void setColour(sf::Color colour);
-                            FLAT_ENGINE_API sf::Color getColour() const;
+                            FLAT_ENGINE_API void setActive(bool value);
+                            FLAT_ENGINE_API bool getActive() const;
+
+                            FLAT_ENGINE_API void setActiveColour(sf::Color colour);
+                            FLAT_ENGINE_API void setInactiveColour(sf::Color colour);
+
+                            FLAT_ENGINE_API sf::Color getActiveColour() const;
+                            FLAT_ENGINE_API sf::Color getInactiveColour() const;
 
                             virtual void handleEvent(const sf::Event &event) {}
                             virtual void update() {}

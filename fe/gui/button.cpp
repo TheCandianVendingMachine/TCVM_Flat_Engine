@@ -18,10 +18,8 @@ fe::gui::button::button(const fe::Vector2d &size, const std::function<void()> &c
 
         //m_size = size;
         setSize(size);
-        m_shape[0].color = sf::Color::Red;
-        m_shape[1].color = sf::Color::Red;
-        m_shape[2].color = sf::Color::Red;
-        m_shape[3].color = sf::Color::Red;
+        setActiveColour(sf::Color(255, 0, 0, 255));
+        setInactiveColour(sf::Color(255, 0, 0, 220));
     }
 
 void fe::gui::button::handleEvent(const sf::Event &event)
@@ -38,5 +36,14 @@ void fe::gui::button::update()
         else if (!m_parentPanel->getMousePressed() && m_pressed)
             {
                 m_pressed = false;
+            }
+
+        if (m_parentPanel->mouseHover(getPosition(), m_size))
+            {
+                setActive(true);
+            }
+        else
+            {
+                setActive(false);
             }
     }
