@@ -3,7 +3,7 @@
 #pragma once
 #define FLAT_ENGINE_EXPORT
 #include "../../flatEngineExport.hpp"
-#include "../graphic/sceneGraph.hpp"
+#include "../graphic/renderObject/sceneGraph.hpp"
 #include "../../entity/baseEntity.hpp"
 #include "../collision/collisionHandler.hpp"
 #include "../memory/memoryManager.hpp"
@@ -34,10 +34,6 @@ namespace fe
                     fe::collisonHandler m_collisionHandler;
 
                 protected:
-                    template<typename T, typename ...Args>
-                    FLAT_ENGINE_API fe::Handle addEntity(Args &&...args);
-                    FLAT_ENGINE_API void removeEntity(Handle handle);
-
                     FLAT_ENGINE_API void addPanel(gui::panel *panel);
                     FLAT_ENGINE_API void removePanel(gui::panel *panel);
 
@@ -67,24 +63,7 @@ namespace fe
                     FLAT_ENGINE_API fe::sceneGraph &getSceneGraph();
                     FLAT_ENGINE_API fe::collisonHandler &getCollisionHandler();
 
-                    template<typename T = fe::baseEntity>
-                    FLAT_ENGINE_API T *getEntity(fe::Handle handle) const;
-
                     FLAT_ENGINE_API virtual ~baseGameState();
             };
 
-        template<typename T, typename ...Args>
-        fe::Handle baseGameState::addEntity(Args &&...args)
-            {
-                T *ent = new T(args...);
-                auto handle = m_sceneGraph.addObject(ent);
-                ent->onAdd(*this);
-                return handle;
-            }
-
-        template<typename T>
-        T *baseGameState::getEntity(fe::Handle handle) const
-            {
-                return static_cast<T*>(m_sceneGraph.getObject(handle));
-            }
     }

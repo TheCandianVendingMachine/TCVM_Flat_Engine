@@ -2,7 +2,8 @@
 // a small sprite batch to lower amount of draw calls that happen
 #pragma once
 #define FLAT_ENGINE_EXPORT
-#include "../../flatEngineExport.hpp"
+#include "../../../flatEngineExport.hpp"
+#include "renderObject.hpp"
 #include <SFML/Graphics/VertexArray.hpp>
 
 namespace sf
@@ -30,7 +31,7 @@ namespace fe
                 public:
                     FLAT_ENGINE_API spriteBatch();
 
-                    FLAT_ENGINE_API void add(const sf::VertexArray &entity, fe::transformable &transform);
+                    FLAT_ENGINE_API void add(const fe::renderObject *entity, fe::transformable &transform);
                     FLAT_ENGINE_API void clear();
                     FLAT_ENGINE_API void draw(sf::RenderTarget &app, sf::RenderStates states);
 

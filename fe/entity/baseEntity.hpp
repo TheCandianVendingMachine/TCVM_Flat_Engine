@@ -3,16 +3,17 @@
 #pragma once
 #define FLAT_ENGINE_EXPORT
 #include "../flatEngineExport.hpp"
-
-namespace sf
-    {
-        class RenderWindow;
-    }
+#include "../subsystems/graphic/renderObject/renderObject.hpp"
 
 namespace fe
     {
         class baseEntity
             {
-                
+                private:
+                    fe::renderObject *m_renderObject;
+
+                protected:
+                public:
+
             };
     }

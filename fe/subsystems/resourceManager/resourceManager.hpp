@@ -110,6 +110,7 @@ namespace fe
                     void remove(const char* id);
                     void remove(fe::guid id);
 
+                    // Get the packed texture
                     const sf::Texture &get();
 
                     void shutDown();

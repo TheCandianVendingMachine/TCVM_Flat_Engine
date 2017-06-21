@@ -29,6 +29,9 @@ namespace fe
                     // Frees the object at the address it is allocated to
                     void free(T *address);
 
+                    // Returns the object constructed at the address
+                    T *at(unsigned int index);
+
                     // clears the allocated memory to allow for a new 
                     void clear();
 
@@ -75,8 +78,7 @@ namespace fe
                 if (index <= m_objectCount)
                     {
                         m_freeIndicies[index] = false;
-                        T *retMem = new(m_buffer + (index * sizeof(T))) T(args...);
-                        return retMem;
+                        return new(m_buffer + (index * sizeof(T))) T(args...);
                     }
 
                 FE_LOG_WARNING("No memory allocated in pool. Attempted allocation of", sizeof(sizeof(T)), "bytes");
@@ -92,8 +94,15 @@ namespace fe
             }
 
         template<typename T>
+        T *poolAllocater<T>::at(unsigned int index)
+            {
+                return reinterpret_cast<T*>(m_buffer + (index * sizeof(T)));
+            }
+
+        template<typename T>
         void poolAllocater<T>::clear()
             {
                 std::memset(m_freeIndicies, true, m_objectCount);
+                std::memset(m_buffer, 0, m_objectCount);
             }
     }
