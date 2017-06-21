@@ -1,7 +1,8 @@
 #include "physicsEngine.hpp"
 #include "../../typeDefines.hpp"
+#include "../../math/Vector2.hpp"
 
-fe::physicsEngine::physicsEngine() : m_gravityForce(1.f)
+fe::physicsEngine::physicsEngine() : m_gravityForce(0.f, 0.f)
     {
     }
 
@@ -37,7 +38,7 @@ void fe::physicsEngine::simulateForces(float deltaTime)
                 fe::rigidBody *body = m_rigidBodies.at(i);
 
                 fe::Vector2d accelForce = body->getForce() / body->getMass();
-                fe::Vector2d frictionForce = body->getFrictionCoefficient() * m_gravityForce;
+                fe::Vector2d frictionForce = m_gravityForce * body->getFrictionCoefficient();
                 
                 fe::Vector2d acceleration = (accelForce + frictionForce) * body->getMass();
                 body->update(acceleration, deltaTime);

@@ -14,7 +14,7 @@
 #include <memory>
 #include <cstdint>
 
-#include "../entity/transformable.hpp"
+#include "../subsystems/physics/transformable.hpp"
 
 namespace sf
     {

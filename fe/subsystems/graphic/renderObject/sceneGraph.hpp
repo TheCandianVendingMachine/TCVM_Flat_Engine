@@ -22,11 +22,11 @@ namespace fe
                     fe::spriteBatch m_batch;
 
                 public:
-                    void startUp();
-                    void shutDown();
-                    void clear();
+                    FLAT_ENGINE_API void startUp();
+                    FLAT_ENGINE_API void shutDown();
+                    FLAT_ENGINE_API void clear();
 
-                    void draw(sf::RenderTarget &window);
+                    FLAT_ENGINE_API void draw(sf::RenderTarget &window);
 
             };
     }

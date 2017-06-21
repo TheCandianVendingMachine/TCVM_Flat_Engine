@@ -25,35 +25,35 @@ namespace fe
                     float m_frictionCoeff; // unit float for friction. 1 = Stops immediately -- 0 = Never Slows Down
 
                 public:
-                    rigidBody(float mass);
-                    rigidBody(float mass, float maxSpeed);
-                    rigidBody(float mass, float maxSpeed, float frictionCoeff);
+                    FLAT_ENGINE_API rigidBody(float mass);
+                    FLAT_ENGINE_API rigidBody(float mass, float maxSpeed);
+                    FLAT_ENGINE_API rigidBody(float mass, float maxSpeed, float frictionCoeff);
 
-                    void setMass(float newMass);
-                    void setMaxSpeed(float maxSpeed);
-                    void setFrictionCoefficient(float fricCoeff);
+                    FLAT_ENGINE_API void setMass(float newMass);
+                    FLAT_ENGINE_API void setMaxSpeed(float maxSpeed);
+                    FLAT_ENGINE_API void setFrictionCoefficient(float fricCoeff);
 
                     // applies a force upon the rigid body. 
-                    void applyForce(fe::Vector2d force);
+                    FLAT_ENGINE_API void applyForce(fe::Vector2d force);
 
-                    void setVelocity(fe::Vector2d newVel);
-                    void setForce(fe::Vector2d newForce);
-                    void setDirection(fe::Vector2d newDirection);
+                    FLAT_ENGINE_API void setVelocity(fe::Vector2d newVel);
+                    FLAT_ENGINE_API void setForce(fe::Vector2d newForce);
+                    FLAT_ENGINE_API void setDirection(fe::Vector2d newDirection);
 
-                    fe::Vector2d getVelocity() const;
-                    fe::Vector2d getForce() const;
-                    fe::Vector2d getDirection() const;
+                    FLAT_ENGINE_API fe::Vector2d getVelocity() const;
+                    FLAT_ENGINE_API fe::Vector2d getForce() const;
+                    FLAT_ENGINE_API fe::Vector2d getDirection() const;
 
-                    float getSpeed() const;
-                    float getTotalForce() const;
-                    float getHeading() const;
+                    FLAT_ENGINE_API float getSpeed() const;
+                    FLAT_ENGINE_API float getTotalForce() const;
+                    FLAT_ENGINE_API float getHeading() const;
 
-                    float getMass() const;
-                    float getMaxVelocity() const;
-                    float getFrictionCoefficient() const;
+                    FLAT_ENGINE_API float getMass() const;
+                    FLAT_ENGINE_API float getMaxVelocity() const;
+                    FLAT_ENGINE_API float getFrictionCoefficient() const;
 
                     // Updates position of object based on force
-                    void update(fe::Vector2d accel, float deltaTime);
+                    FLAT_ENGINE_API void update(fe::Vector2d accel, float deltaTime);
 
             };
     }

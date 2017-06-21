@@ -104,7 +104,5 @@ float fe::rigidBody::getFrictionCoefficient() const
 void fe::rigidBody::update(fe::Vector2d accel, float deltaTime)
     {
         m_velocity += accel;
-
-        m_velocity.clamp(m_maxSpeed);
-        move(m_velocity * deltaTime);
+        move(m_velocity.clamp(m_maxSpeed) * deltaTime);
     }

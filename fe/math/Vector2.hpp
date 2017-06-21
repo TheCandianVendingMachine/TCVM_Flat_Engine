@@ -68,10 +68,11 @@ namespace fe
                         return Vector2<dataType>();
                     }
 
-                void clamp(float max)
+                Vector2<dataType> clamp(float max)
                     {
-                        // max^2 / x^2 + y^2 = 2 * Modifier
-                        operator/=(((max * max) / (x * x + y * y)) / 2.f);
+                        // max^2 / (x^2 + y^2) = 2 * Modifier
+                        float modifier = (((max * max) / (x * x + y * y)) / 2.f);
+                        return fe::Vector2d(x / modifier, y / modifier);
                     }
 
                 Vector2<dataType> normal() const { return Vector2(-y, x); }

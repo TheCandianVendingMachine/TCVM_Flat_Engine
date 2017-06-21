@@ -1,5 +1,5 @@
 #include "spriteBatch.hpp"
-#include "../../../entity/transformable.hpp"
+#include "../../physics/transformable.hpp"
 #include "../../../debug/logger.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 

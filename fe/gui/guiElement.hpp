@@ -3,7 +3,7 @@
 #pragma once
 #define FLAT_ENGINE_EXPORT
 #include "../flatEngineExport.hpp"
-#include "../entity/transformable.hpp"
+#include "../subsystems/physics/transformable.hpp"
 #include <SFML/Graphics/VertexArray.hpp>
 
 namespace sf

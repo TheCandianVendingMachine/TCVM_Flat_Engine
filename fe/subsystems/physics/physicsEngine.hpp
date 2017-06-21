@@ -16,16 +16,16 @@ namespace fe
                     fe::Vector2d m_gravityForce;
 
                 public:
-                    physicsEngine();
+                    FLAT_ENGINE_API physicsEngine();
 
-                    void startUp();
-                    void shutDown();
-                    void clear();
+                    FLAT_ENGINE_API void startUp();
+                    FLAT_ENGINE_API void shutDown();
+                    FLAT_ENGINE_API void clear();
 
-                    void setGravity(fe::Vector2d gravity);
-                    fe::Vector2d getGravity() const;
+                    FLAT_ENGINE_API void setGravity(fe::Vector2d gravity);
+                    FLAT_ENGINE_API fe::Vector2d getGravity() const;
 
-                    void simulateForces(float deltaTime);
+                    FLAT_ENGINE_API void simulateForces(float deltaTime);
 
             };
     }
