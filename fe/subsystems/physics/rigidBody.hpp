@@ -52,5 +52,8 @@ namespace fe
                     float getMaxVelocity() const;
                     float getFrictionCoefficient() const;
 
+                    // Updates position of object based on force
+                    void update(fe::Vector2d accel, float deltaTime);
+
             };
     }

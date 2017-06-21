@@ -99,3 +99,12 @@ float fe::rigidBody::getFrictionCoefficient() const
     {
         return m_frictionCoeff;
     }
+
+// Updates position of object based on force
+void fe::rigidBody::update(fe::Vector2d accel, float deltaTime)
+    {
+        m_velocity += accel;
+
+        m_velocity.clamp(m_maxSpeed);
+        move(m_velocity * deltaTime);
+    }

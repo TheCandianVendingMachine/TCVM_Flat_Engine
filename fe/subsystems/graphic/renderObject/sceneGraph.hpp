@@ -24,6 +24,7 @@ namespace fe
                 public:
                     void startUp();
                     void shutDown();
+                    void clear();
 
                     void draw(sf::RenderTarget &window);
 

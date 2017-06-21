@@ -12,6 +12,11 @@ void fe::sceneGraph::shutDown()
         m_renderObjects.clear();
     }
 
+void fe::sceneGraph::clear()
+    {
+        m_renderObjects.clear();
+    }
+
 void fe::sceneGraph::draw(sf::RenderTarget &window)
     {
         m_batch.clear();

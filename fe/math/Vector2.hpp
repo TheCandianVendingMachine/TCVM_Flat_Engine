@@ -37,6 +37,7 @@ namespace fe
                 Vector2<dataType> operator-(const Vector2<dataType> &rhs) const { return Vector2<dataType>(x - rhs.x, y - rhs.y); }
                 Vector2<dataType> operator*(const dataType &rhs) const          { return Vector2<dataType>(rhs * x, rhs * y); }
                 Vector2<dataType> operator/(const dataType &rhs) const          { return Vector2<dataType>(x / rhs, y / rhs); }
+                Vector2<dataType> operator-() const                             { return Vector2<dataType>(-rhs.x, -rhs.y); }
                 
                 // A way to get the x/y coordinate based on the index provided. Useful in incrementing loops
                 dataType operator[](const size_t &index) const  { if (index == 0) return x; if (index == 1) return y; return 0.f; }
@@ -65,6 +66,12 @@ namespace fe
                                 return Vector2<dataType>(x / mag, y / mag);
                             }
                         return Vector2<dataType>();
+                    }
+
+                void clamp(float max)
+                    {
+                        // max^2 / x^2 + y^2 = 2 * Modifier
+                        operator/=(((max * max) / (x * x + y * y)) / 2.f);
                     }
 
                 Vector2<dataType> normal() const { return Vector2(-y, x); }
