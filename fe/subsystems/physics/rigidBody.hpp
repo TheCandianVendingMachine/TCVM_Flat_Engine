@@ -1,6 +1,9 @@
 // rigidBody.hpp
 // Simple rigid body. Can move
 #pragma once
+#define FLAT_ENGINE_EXPORT
+#include "../../flatEngineExport.hpp"
+
 #include "transformable.hpp"
 #include "../../math/Vector2.hpp"
 
