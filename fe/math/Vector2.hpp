@@ -72,7 +72,7 @@ namespace fe
                     {
                         // max^2 / (x^2 + y^2) = 2 * Modifier
                         float modifier = (((max * max) / (x * x + y * y)) / 2.f);
-                        return fe::Vector2d(x / modifier, y / modifier);
+                        return modifier < 1.f ? fe::Vector2d(x / modifier, y / modifier) : *this;
                     }
 
                 Vector2<dataType> normal() const { return Vector2(-y, x); }
