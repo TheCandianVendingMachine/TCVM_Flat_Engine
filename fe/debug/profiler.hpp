@@ -33,10 +33,20 @@ namespace fe
 			            m_endTime = fe::clock::getTimeSinceEpoch();
 			            fe::time runtime = m_endTime - m_startTime;
 
-                        std::cout << "\n" << m_nameStr <<
-                            "\nMicroseconds: " << runtime.asMicroseconds() <<
-                            "\nMilliseconds: " << runtime.asMilliseconds() <<
-                            "\nSeconds: " << runtime.asSeconds() << "\n\n";
+                        #ifdef FE_PROFILE_PRINT_ZEROS
+                            std::cout << "\n" << m_nameStr <<
+                                "\nMicroseconds: " << runtime.asMicroseconds() <<
+                                "\nMilliseconds: " << runtime.asMilliseconds() <<
+                                "\nSeconds: " << runtime.asSeconds() << "\n\n";
+                        #else
+                            if (runtime.asMicroseconds() != 0)
+                                {
+                                    std::cout << "\n" << m_nameStr <<
+                                        "\nMicroseconds: " << runtime.asMicroseconds() <<
+                                        "\nMilliseconds: " << runtime.asMilliseconds() <<
+                                        "\nSeconds: " << runtime.asSeconds() << "\n\n";
+                                }
+                        #endif
                     #endif
 		            }
 	        };

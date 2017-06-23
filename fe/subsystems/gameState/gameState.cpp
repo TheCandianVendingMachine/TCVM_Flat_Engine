@@ -42,16 +42,12 @@ void fe::baseGameState::update()
         for (auto &ent : getObjects())
             {
                 ent->update();
+                ent->postUpdate();
             }
     }
 
 void fe::baseGameState::postUpdateDefined()
     {
-        for (auto &ent : getObjects())
-            {
-                ent->postUpdate();
-            }
-
         for (auto &panel : m_guiPanels)
             {
                 panel->update();

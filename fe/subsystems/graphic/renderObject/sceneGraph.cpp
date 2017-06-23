@@ -2,6 +2,7 @@
 #include "../../../engine.hpp"
 #include "../../resourceManager/resourceManager.hpp"
 #include "../../physics/transformable.hpp"
+#include "../../../debug/profiler.hpp"
 
 void fe::sceneGraph::startUp()
     {
@@ -20,6 +21,7 @@ void fe::sceneGraph::clear()
 
 void fe::sceneGraph::draw(sf::RenderTarget &window)
     {
+        FE_PROFILE("scene_graph_batch_draw");
         m_batch.clear();
         for (unsigned int i = 0; i < m_renderObjects.getObjectAllocCount(); i++)
             {
@@ -29,11 +31,14 @@ void fe::sceneGraph::draw(sf::RenderTarget &window)
                         m_batch.add(render, fe::transformable());
                     }
             }
+        FE_END_PROFILE;
 
         sf::RenderStates states;
         states.texture = &fe::engine::get().getResourceManager<sf::Texture>()->get();
 
+        FE_PROFILE("scene_graph_window_draw");
         m_batch.draw(window, states);
+        FE_END_PROFILE;
     }
 
 fe::renderObject *fe::sceneGraph::createRenderObject()
