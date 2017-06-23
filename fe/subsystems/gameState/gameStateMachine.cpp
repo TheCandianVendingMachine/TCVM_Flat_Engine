@@ -74,6 +74,7 @@ void fe::gameStateMachine::push(baseGameState *newState, stateOptions options)
             }
 
         m_endState->m_currentState = newState;
+        m_endState->m_currentState->startUp();
         m_endState->m_currentState->init();
         m_endState->m_currentState->onActive();
         m_endState->m_options = options;
@@ -90,6 +91,7 @@ void fe::gameStateMachine::pop()
             {
                 m_endState->m_currentState->onDeactive();
                 m_endState->m_currentState->deinit();
+                m_endState->m_currentState->shutDown();
                 delete m_endState->m_currentState;
 
                 auto offset = m_endState->m_offset;
@@ -180,16 +182,16 @@ void fe::gameStateMachine::preUpdate()
             }
     }
 
-void fe::gameStateMachine::update(float deltaTime)
+void fe::gameStateMachine::update()
     {
         if (m_endState && m_endState->m_currentState && m_update)
             {
-                m_endState->m_currentState->update(deltaTime);
+                m_endState->m_currentState->update();
 
                 stateList *tail = m_endState->m_tail;
                 while (tail && tail->m_currentState && tail->m_options & stateOptions::UPDATE_UNDERNEATH)
                     {
-                        tail->m_currentState->update(deltaTime);
+                        tail->m_currentState->update();
                         tail = tail->m_tail;
                     }
             }

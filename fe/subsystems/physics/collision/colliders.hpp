@@ -2,8 +2,8 @@
 // all colliders in the game
 #pragma once
 #define FLAT_ENGINE_EXPORT
-#include "../flatEngineExport.hpp"
-#include "../math/Vector2.hpp"
+#include "../../../flatEngineExport.hpp"
+#include "../../../math/Vector2.hpp"
 #include "collisionData.hpp"
 
 #include <functional>

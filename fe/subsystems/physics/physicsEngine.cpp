@@ -31,16 +31,38 @@ fe::Vector2d fe::physicsEngine::getGravity() const
         return m_gravityForce;
     }
 
-void fe::physicsEngine::simulateForces(float deltaTime)
+void fe::physicsEngine::preUpdate()
     {
-        for (unsigned int i = 0; i < FE_MAX_GAME_OBJECTS; i++)
+        
+    }
+
+void fe::physicsEngine::simulateForces(float deltaTime, unsigned int iterations)
+    {
+        for (unsigned int i = 0; i < m_rigidBodies.getObjectAllocCount(); i++)
             {
                 fe::rigidBody *body = m_rigidBodies.at(i);
+                if (body)
+                    {
+                        float frictionForceX = m_gravityForce.x * body->getFrictionCoefficient();
+                        float frictionForceY = m_gravityForce.y * body->getFrictionCoefficient();
 
-                fe::Vector2d accelForce = body->getForce() / body->getMass();
-                fe::Vector2d frictionForce = m_gravityForce * body->getFrictionCoefficient();
-                
-                fe::Vector2d acceleration = (accelForce + frictionForce) * body->getMass();
-                body->update(acceleration, deltaTime);
+                        float accelX = (body->getForce().x + frictionForceX) / body->getMass();
+                        float accelY = (body->getForce().y + frictionForceY) / body->getMass();
+
+                        for (int j = 0; j < iterations; j++)
+                            {
+                                body->update(accelX, accelY, deltaTime);
+                            }
+                    }
             }
+    }
+
+fe::rigidBody *fe::physicsEngine::createRigidBody()
+    {
+        return m_rigidBodies.alloc();
+    }
+
+void fe::physicsEngine::deleteRigidBody(fe::rigidBody *body)
+    {
+        m_rigidBodies.free(body);
     }

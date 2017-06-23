@@ -96,7 +96,7 @@ namespace fe
                     FLAT_ENGINE_API void handleEvents(const sf::Event &event);
 
                     FLAT_ENGINE_API void preUpdate();
-                    FLAT_ENGINE_API void update(float deltaTime);
+                    FLAT_ENGINE_API void update();
                     FLAT_ENGINE_API void postUpdate();
 
                     FLAT_ENGINE_API void preDraw();

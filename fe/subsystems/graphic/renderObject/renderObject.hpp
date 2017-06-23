@@ -9,6 +9,6 @@ namespace fe
                 int m_vertColour[4];  // r, g, b, a
                 float m_verticies[4]; // x, y, w, h
                 float m_texCoords[2];// x, y
-                bool m_draw;
+                bool m_draw = true;
             };
     }

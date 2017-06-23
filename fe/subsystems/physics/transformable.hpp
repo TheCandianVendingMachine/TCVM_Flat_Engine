@@ -12,9 +12,15 @@ namespace fe
                 private:
                     fe::matrix3d m_matrix;
 
-                    fe::Vector2d m_position;
-                    fe::Vector2d m_scale;
-                    fe::Vector2d m_origin;
+                    float m_positionX;
+                    float m_positionY;
+
+                    float m_scaleX;
+                    float m_scaleY;
+
+                    float m_originX;
+                    float m_originY;
+
                     float m_rotation;
 
                     bool m_update;
@@ -23,30 +29,30 @@ namespace fe
                     FLAT_ENGINE_API transformable();
 
                     // Set the position in the world
-                    FLAT_ENGINE_API void setPosition(const fe::Vector2d &position);
+                    FLAT_ENGINE_API void setPosition(float x, float y);
                     // Set the rotation in radians
                     FLAT_ENGINE_API void setRotation(float radians);
                     // Set the origin which the object will transform around
-                    FLAT_ENGINE_API void setOrigin(const fe::Vector2d &origin);
+                    FLAT_ENGINE_API void setOrigin(float x, float y);
                     // Set the scale of the object. Overrides all previous scaling
-                    FLAT_ENGINE_API void setScale(const fe::Vector2d &scale);
+                    FLAT_ENGINE_API void setScale(float x, float y);
                     // Set the scale of the object. Overrides all previous scaling
                     FLAT_ENGINE_API void setScale(float scale);
                     
 
                     // Get the position in the world
-                    FLAT_ENGINE_API const fe::Vector2d &getPosition() const;
+                    FLAT_ENGINE_API fe::Vector2d getPosition() const;
                     // Get the current scale factor
-                    FLAT_ENGINE_API const fe::Vector2d &getScale() const;
+                    FLAT_ENGINE_API fe::Vector2d getScale() const;
                     // Get the position in radians
                     FLAT_ENGINE_API float getRotation() const;
                     // Get the size of an object if transformed via this matrix
-                    FLAT_ENGINE_API fe::Vector2d getSize(fe::Vector2d originalSize) const;
+                    FLAT_ENGINE_API fe::Vector2d getSize(float x, float y) const;
 
                     // Move the matrix by the offset
-                    FLAT_ENGINE_API void move(const fe::Vector2d &offset);
+                    FLAT_ENGINE_API void move(float x, float y);
                     // Scale the matrix by the factor
-                    FLAT_ENGINE_API void scale(const fe::Vector2d &scale);
+                    FLAT_ENGINE_API void scale(float x, float y);
                     // Scale the matrix by the factor
                     FLAT_ENGINE_API void scale(float scale);
                     // Rotate the matrix by an amount of radians

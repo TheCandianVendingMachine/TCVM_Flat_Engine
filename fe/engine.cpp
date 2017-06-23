@@ -3,6 +3,7 @@
 #include "subsystems/messaging/eventSender.hpp"
 #include "subsystems/input/inputManager.hpp"
 #include "subsystems/resourceManager/resourceManager.hpp"
+#include "subsystems/physics/physicsEngine.hpp"
 #include "debug/logger.hpp"
 #include "debug/profiler.hpp"
 
@@ -37,16 +38,35 @@ void fe::engine::handleEvents()
 
 void fe::engine::update()
     {
+        FE_PROFILE("engine_state_preupdate");
         m_gameStateMachine->preUpdate();
+        FE_END_PROFILE;
+        FE_PROFILE("engine_state_update");
+        m_gameStateMachine->update();
+        FE_END_PROFILE;
+        FE_PROFILE("engine_physics_preupdate");
+        m_physicsEngine->preUpdate();
+        FE_END_PROFILE;
+
+        int iterations = 0;
+        FE_PROFILE("engine_fixed_timestep");
         while (m_accumulator >= m_deltaTime)
             {
                 m_inputManager->handleKeyPress();
-                m_gameStateMachine->update(m_deltaTime);
                 m_accumulator -= m_deltaTime;
+                iterations++;
             }
+        FE_END_PROFILE;
+
+        FE_PROFILE("engine_physics_timestep_sim");
+        m_physicsEngine->simulateForces(m_deltaTime, iterations);
+        FE_END_PROFILE;
 
         m_eventSender->sendEvents();
+
+        FE_PROFILE("engine_state_postupdate");
         m_gameStateMachine->postUpdate();
+        FE_END_PROFILE;
     }
 
 void fe::engine::draw()
@@ -115,6 +135,9 @@ void fe::engine::startUp(unsigned long long totalMemory, unsigned long long stac
                 m_gameStateMachine = new gameStateMachine;
                 m_gameStateMachine->startUp();
 
+                m_physicsEngine = new physicsEngine;
+                m_physicsEngine->startUp();
+
                 m_fontManager = new resourceManager<sf::Font>;
                 m_textureManager = new resourceManager<sf::Texture>;
 
@@ -133,6 +156,7 @@ void fe::engine::shutDown()
         m_fontManager->shutDown();
         m_textureManager->shutDown();
 
+        m_physicsEngine->shutDown();
         m_gameStateMachine->shutDown();
         m_inputManager->shutDown();
         m_renderer.shutDown();
@@ -167,6 +191,7 @@ void fe::engine::run()
 
                 m_accumulator += frameTime;
 
+                FE_PROFILE("engine_frame");
                 FE_PROFILE("engine_input")
                 m_inputManager->preUpdate();
                 FE_END_PROFILE;
@@ -181,6 +206,7 @@ void fe::engine::run()
 
                 FE_PROFILE("engine_draw")
                 draw();
+                FE_END_PROFILE;
                 FE_END_PROFILE;
 
                 calcFPS();
@@ -230,6 +256,11 @@ const fe::renderer &fe::engine::getRenderer() const
 fe::eventSender *fe::engine::getEventSender() const
     {
         return m_eventSender;
+    }
+
+fe::physicsEngine &fe::engine::getPhysicsEngine() const
+    {
+        return *m_physicsEngine;
     }
 
 fe::engine::~engine()

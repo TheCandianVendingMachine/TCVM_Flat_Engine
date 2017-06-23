@@ -17,6 +17,16 @@ void fe::baseGameState::removePanel(gui::panel *panel)
         m_guiPanels.erase(std::remove(m_guiPanels.begin(), m_guiPanels.end(), panel), m_guiPanels.end());
     }
 
+void fe::baseGameState::onAdd(baseEntity *object, fe::Handle objectHandle)
+    {
+        object->onAdd(*this);
+    }
+
+void fe::baseGameState::startUp()
+    {
+        m_sceneGraph.startUp();
+    }
+
 void fe::baseGameState::handleEvents(const sf::Event &event)
     {
         for (auto &panel : m_guiPanels)
@@ -27,14 +37,21 @@ void fe::baseGameState::handleEvents(const sf::Event &event)
         handleWindowEvent(event);
     }
 
-void fe::baseGameState::update(float deltaTime)
+void fe::baseGameState::update()
     {
-        
+        for (auto &ent : getObjects())
+            {
+                ent->update();
+            }
     }
 
 void fe::baseGameState::postUpdateDefined()
     {
-        
+        for (auto &ent : getObjects())
+            {
+                ent->postUpdate();
+            }
+
         for (auto &panel : m_guiPanels)
             {
                 panel->update();
@@ -53,6 +70,11 @@ void fe::baseGameState::draw(sf::RenderTarget &app)
                 panel->draw(app);
             }
         FE_END_PROFILE
+    }
+
+void fe::baseGameState::shutDown()
+    {
+        m_sceneGraph.shutDown();
     }
 
 fe::sceneGraph &fe::baseGameState::getSceneGraph()

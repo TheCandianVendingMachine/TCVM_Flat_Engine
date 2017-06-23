@@ -5,7 +5,8 @@
 #include "../../flatEngineExport.hpp"
 #include "../graphic/renderObject/sceneGraph.hpp"
 #include "../../entity/baseEntity.hpp"
-#include "../collision/collisionHandler.hpp"
+#include "../physics/collision/collisionHandler.hpp"
+#include "../../objectManagement/handleManager.hpp"
 #include "../memory/memoryManager.hpp"
 #include "../../debug/logger.hpp"
 
@@ -25,7 +26,7 @@ namespace fe
                 class guiElement;
             }
 
-        class baseGameState
+        class baseGameState : public fe::handleManager<baseEntity*>
             {
                 private:
                     std::vector<gui::panel*> m_guiPanels;
@@ -37,9 +38,12 @@ namespace fe
                     FLAT_ENGINE_API void addPanel(gui::panel *panel);
                     FLAT_ENGINE_API void removePanel(gui::panel *panel);
 
+                    FLAT_ENGINE_API void onAdd(baseEntity *object, fe::Handle objectHandle);
+
                 public:
                     FLAT_ENGINE_API baseGameState() {}
 
+                    FLAT_ENGINE_API void startUp();
                     FLAT_ENGINE_API virtual void init() {}
 
                     FLAT_ENGINE_API virtual void onActive() {}
@@ -50,7 +54,7 @@ namespace fe
                     FLAT_ENGINE_API virtual void handleWindowEvent(const sf::Event &event) {}
 
                     FLAT_ENGINE_API virtual void preUpdate() {}
-                    FLAT_ENGINE_API void update(float deltaTime);
+                    FLAT_ENGINE_API void update();
                     FLAT_ENGINE_API void postUpdateDefined();
                     FLAT_ENGINE_API virtual void postUpdate() {}
 
@@ -59,6 +63,7 @@ namespace fe
                     FLAT_ENGINE_API virtual void postDraw() {}
 
                     FLAT_ENGINE_API virtual void deinit() {}
+                    FLAT_ENGINE_API void shutDown();
 
                     FLAT_ENGINE_API fe::sceneGraph &getSceneGraph();
                     FLAT_ENGINE_API fe::collisonHandler &getCollisionHandler();

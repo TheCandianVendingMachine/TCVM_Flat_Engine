@@ -1,7 +1,7 @@
 // collisionData.hpp
 // basic data that gets set when a collision happens
 #pragma once
-#include "../math/Vector2.hpp"
+#include "../../../math/Vector2.hpp"
 
 namespace fe
     {

@@ -27,6 +27,8 @@ namespace fe
                     FLAT_ENGINE_API void clear();
 
                     FLAT_ENGINE_API void draw(sf::RenderTarget &window);
+                    FLAT_ENGINE_API renderObject *createRenderObject();
+                    FLAT_ENGINE_API void deleteRenderObject(renderObject *obj);
 
             };
     }

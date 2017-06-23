@@ -1,6 +1,6 @@
 #include "collisionHandler.hpp"
-#include "../../collision/colliders.hpp"
-#include "../memory/memoryManager.hpp"
+#include "colliders.hpp"
+#include "../../memory/memoryManager.hpp"
 #include <algorithm>
 
 fe::collisonHandler::collisonHandler()

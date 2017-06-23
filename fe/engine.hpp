@@ -9,7 +9,7 @@
 #include "time/clock.hpp"
 #include "typeDefines.hpp"
 
-//#define FE_PROFILE_ENGINE
+#define FE_PROFILE_ENGINE
 
 namespace sf
     {
@@ -24,6 +24,7 @@ namespace fe
         class gameStateMachine;
         class eventSender;
         class baseGameState;
+        class physicsEngine;
 
         template<typename T>
         class resourceManager;
@@ -35,10 +36,11 @@ namespace fe
                     fe::renderer m_renderer;
                     fe::random m_random;
 
+                    fe::eventSender *m_eventSender;
+                    fe::gameStateMachine *m_gameStateMachine;
                     fe::logger *m_logger;
                     fe::inputManager *m_inputManager;
-                    fe::gameStateMachine *m_gameStateMachine;
-                    fe::eventSender *m_eventSender;
+                    fe::physicsEngine *m_physicsEngine;
 
                     fe::resourceManager<sf::Texture> *m_textureManager;
                     fe::resourceManager<sf::Font> *m_fontManager;
@@ -84,12 +86,10 @@ namespace fe
 
                     FLAT_ENGINE_API fe::gameStateMachine &getStateMachine() const;
                     FLAT_ENGINE_API const fe::baseGameState &getCurrentState() const;
-
                     FLAT_ENGINE_API fe::inputManager &getInputManager() const;
-
                     FLAT_ENGINE_API const fe::renderer &getRenderer() const;
-
                     FLAT_ENGINE_API fe::eventSender *getEventSender() const;
+                    FLAT_ENGINE_API fe::physicsEngine &getPhysicsEngine() const;
 
                     template<typename T>
                     fe::resourceManager<T>              *getResourceManager() const;

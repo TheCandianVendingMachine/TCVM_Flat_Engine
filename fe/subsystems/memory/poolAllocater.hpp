@@ -14,6 +14,7 @@ namespace fe
                     size_t m_bufferSize;
 
                     unsigned int m_objectCount;
+                    unsigned int m_lastObjectIndex;
 
                     bool m_canAllocate;
                     bool *m_freeIndicies; // if there is a block that can be allocated, the corresponding index in this array will be "true"
@@ -21,6 +22,7 @@ namespace fe
 
                 public:
                     void startUp(const unsigned int objectCount);
+                    unsigned int getObjectAllocCount() const;
 
                     // allocates a block of memory for the wanted object
                     template<typename ...Args>
@@ -28,6 +30,8 @@ namespace fe
 
                     // Frees the object at the address it is allocated to
                     void free(T *address);
+                    // Frees the object at the address it is allocated to
+                    void free(const T *address);
 
                     // Returns the object constructed at the address
                     T *at(unsigned int index);
@@ -53,10 +57,17 @@ namespace fe
 
                         m_bufferSize = objectCount * sizeof(T);
                         m_objectCount = objectCount;
+                        m_lastObjectIndex = 0;
 
                         m_canAllocate = true;
                         clear();
                     }
+            }
+
+        template<typename T>
+        unsigned int poolAllocater<T>::getObjectAllocCount() const
+            {
+                return m_lastObjectIndex;
             }
 
         template<typename T>
@@ -78,6 +89,7 @@ namespace fe
                 if (index <= m_objectCount)
                     {
                         m_freeIndicies[index] = false;
+                        m_lastObjectIndex = index >= m_lastObjectIndex ? index + 1 : m_lastObjectIndex;
                         return new(m_buffer + (index * sizeof(T))) T(args...);
                     }
 
@@ -88,6 +100,13 @@ namespace fe
 
         template<typename T>
         void poolAllocater<T>::free(T *address)
+            {
+                size_t offset = address - static_cast<void*>(&m_buffer[0]);
+                m_freeIndicies[offset] = true;
+            }
+
+        template<typename T>
+        void poolAllocater<T>::free(const T *address)
             {
                 size_t offset = address - static_cast<void*>(&m_buffer[0]);
                 m_freeIndicies[offset] = true;

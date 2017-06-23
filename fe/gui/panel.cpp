@@ -137,8 +137,8 @@ fe::gui::guiElement *fe::gui::panel::getElement(unsigned int handle)
 void fe::gui::panel::setElementPosition(unsigned int handle, fe::Vector2d position)
     {
         auto element = getElement(handle);
-        element->setPosition({ (getSize().x * position.x) - (element->getSize().x / 2.f),
-                               (getSize().y * position.y) - (element->getSize().y / 2.f) });
+        element->setPosition((getSize().x * position.x) - (element->getSize().x / 2.f),
+                             (getSize().y * position.y) - (element->getSize().y / 2.f));
     }
 
 void fe::gui::panel::removeElement(unsigned int handle)
@@ -246,7 +246,7 @@ void fe::gui::panel::update()
                         m_dragging = true;
                         m_clickOffset = m_mousePosition - getPosition();
                     }
-                setPosition(m_mousePosition - m_clickOffset);
+                setPosition(m_mousePosition.x - m_clickOffset.x, m_mousePosition.y - m_clickOffset.y);
             }
 
         if (!m_mousePressed && m_dragging)

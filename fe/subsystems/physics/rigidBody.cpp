@@ -1,5 +1,7 @@
 #include "rigidBody.hpp"
 
+fe::rigidBody::rigidBody() : m_mass(1.f), m_maxSpeed(0.f), m_frictionCoeff(1.f) {}
+
 fe::rigidBody::rigidBody(float mass) : m_mass(mass), m_maxSpeed(0.f), m_frictionCoeff(1.f)
     {
     }
@@ -12,6 +14,15 @@ fe::rigidBody::rigidBody(float mass, float maxSpeed, float frictionCoeff) : m_ma
     {
     }
 
+void fe::rigidBody::enable(bool value)
+    {
+        m_enabled = value;
+    }
+
+bool fe::rigidBody::getEnabled() const
+    {
+        return m_enabled;
+    }
 
 void fe::rigidBody::setMass(float newMass)
     {
@@ -32,56 +43,62 @@ void fe::rigidBody::setFrictionCoefficient(float fricCoeff)
 // applies a force upon the rigid body. 
 void fe::rigidBody::applyForce(fe::Vector2d force)
     {
-        m_force += force;
+        if (!m_enabled) return;
+        m_forceX += force.x;
+        m_forceY += force.y;
     }
 
 
 void fe::rigidBody::setVelocity(fe::Vector2d newVel)
     {
-        m_velocity = newVel;
+        m_velocityX = newVel.x;
+        m_velocityY = newVel.y;
     }
 
 void fe::rigidBody::setForce(fe::Vector2d newForce)
     {
-        m_force = newForce;
+        m_forceX = newForce.x;
+        m_forceY = newForce.y;
     }
 
 void fe::rigidBody::setDirection(fe::Vector2d newDirection)
     {
-        m_velocity.x *= newDirection.normalize().x;
-        m_velocity.y *= newDirection.normalize().y;
+        if (!m_enabled) return;
+
+        m_velocityX *= newDirection.normalize().x;
+        m_velocityY *= newDirection.normalize().y;
     }
 
 
 fe::Vector2d fe::rigidBody::getVelocity() const
     {
-        return m_velocity;
+        return { m_velocityX, m_velocityX };
     }
 
 fe::Vector2d fe::rigidBody::getForce() const
     {
-        return m_force;
+        return { m_forceX, m_forceY };
     }
 
 fe::Vector2d fe::rigidBody::getDirection() const
     {
-        return m_velocity.normalize();
+        return fe::Vector2d(m_velocityX, m_velocityY).normalize();
     }
 
 
 float fe::rigidBody::getSpeed() const
     {
-        return m_velocity.magnitude();
+        return fe::Vector2d(m_velocityX, m_velocityY).magnitude();
     }
 
 float fe::rigidBody::getTotalForce() const
     {
-        return m_force.magnitude();
+        return fe::Vector2d(m_forceX, m_forceY).magnitude();
     }
 
 float fe::rigidBody::getHeading() const
     {
-        return m_velocity.normalize().magnitude();
+        return fe::Vector2d(m_velocityX, m_velocityY).normalize().magnitude();
     }
 
 
@@ -101,8 +118,19 @@ float fe::rigidBody::getFrictionCoefficient() const
     }
 
 // Updates position of object based on force
-void fe::rigidBody::update(fe::Vector2d accel, float deltaTime)
+void fe::rigidBody::update(float acellX, float acellY, float deltaTime)
     {
-        m_velocity += accel;
-        move(m_velocity.clamp(m_maxSpeed) * deltaTime);
+        if (!m_enabled) return;
+
+        m_velocityX += acellX;
+        m_velocityY += acellY;
+
+        if (m_maxSpeed * m_maxSpeed > m_velocityX * m_velocityX + m_velocityY * m_velocityY) 
+            {
+                float modifier = std::sqrt((m_maxSpeed * m_maxSpeed) / (m_velocityX * m_velocityX + m_velocityY * m_velocityY));
+                m_velocityX *= modifier;
+                m_velocityY *= modifier;
+            }
+
+        move(m_velocityX * deltaTime, m_velocityY * deltaTime);
     }
