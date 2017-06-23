@@ -3,6 +3,7 @@
 #pragma once
 #define FLAT_ENGINE_EXPORT
 #include "../../flatEngineExport.hpp"
+#include "../../math/Vector2.hpp"
 #include "transformable.hpp"
 
 namespace fe
@@ -41,15 +42,15 @@ namespace fe
                     FLAT_ENGINE_API void setFrictionCoefficient(float fricCoeff);
 
                     // applies a force upon the rigid body. 
-                    FLAT_ENGINE_API void applyForce(fe::Vector2d force);
+                    FLAT_ENGINE_API void applyForce(float x, float y);
 
-                    FLAT_ENGINE_API void setVelocity(fe::Vector2d newVel);
-                    FLAT_ENGINE_API void setForce(fe::Vector2d newForce);
-                    FLAT_ENGINE_API void setDirection(fe::Vector2d newDirection);
+                    FLAT_ENGINE_API void setVelocity(float x, float y);
+                    FLAT_ENGINE_API void setForce(float x, float y);
+                    FLAT_ENGINE_API void setDirection(float x, float y);
 
-                    FLAT_ENGINE_API fe::Vector2d getVelocity() const;
-                    FLAT_ENGINE_API fe::Vector2d getForce() const;
-                    FLAT_ENGINE_API fe::Vector2d getDirection() const;
+                    FLAT_ENGINE_API fe::lightVector2d getVelocity() const;
+                    FLAT_ENGINE_API fe::lightVector2d getForce() const;
+                    FLAT_ENGINE_API fe::lightVector2d getDirection() const;
 
                     FLAT_ENGINE_API float getSpeed() const;
                     FLAT_ENGINE_API float getTotalForce() const;

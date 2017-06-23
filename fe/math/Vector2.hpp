@@ -8,6 +8,8 @@ namespace fe
     {
         template <typename dataType>
         struct Vector2;
+        template <typename T>
+        struct lightVector2;
 
         template<typename dataType>
         Vector2<dataType> operator*(const dataType &lhs, Vector2<dataType> &rhs);
@@ -28,6 +30,7 @@ namespace fe
                 Vector2() : x(0), y(0) {}
                 Vector2(dataType X, dataType Y) : x(X), y(Y) {}
                 Vector2(const Vector2<dataType> &copy) : x(copy.x), y(copy.y) {}
+                Vector2(const lightVector2<dataType> &copy) : x(copy.x), y(copy.y) {}
 				Vector2(const sf::Vector2<dataType> &copy) : x(copy.x), y(copy.y) {}
 
                 Vector2 &operator=(const Vector2<dataType> &copy) { if (&copy != this) { x = copy.x; y = copy.y; } return *this; }
@@ -127,6 +130,19 @@ namespace fe
                 rhs /= lhs;
             }
 
+        template<typename T>
+        struct lightVector2
+            {
+                T x;
+                T y;
 
+                lightVector2() : x(T), y(T) {}
+                lightVector2(T x, T y) : x(x), y(y) {}
+                lightVector2(const fe::Vector2<T> &copy) : x(copy.x), y(copy.y) {}
+
+                sf::Vector2f convertToSfVec2() { return sf::Vector2<T>(x, y); }
+            };
+
+        typedef lightVector2<float> lightVector2d;
         typedef Vector2<float> Vector2d;
     }

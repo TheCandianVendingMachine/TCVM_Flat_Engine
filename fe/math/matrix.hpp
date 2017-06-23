@@ -50,15 +50,15 @@ namespace fe
 
                 FLAT_ENGINE_API matrix3d transpose();
 
-                FLAT_ENGINE_API void translate(const fe::Vector2d &translation);
+                FLAT_ENGINE_API void translate(fe::lightVector2d &&translation);
                 FLAT_ENGINE_API void rotate(float radians);
 
-                FLAT_ENGINE_API fe::Vector2d translatePoint(const fe::Vector2d &point) const;
-                FLAT_ENGINE_API fe::Vector2d rotatePoint(const fe::Vector2d &point) const;
-                FLAT_ENGINE_API fe::Vector2d rotatePoint(const fe::Vector2d &point, float radians) const;
+                FLAT_ENGINE_API fe::lightVector2d translatePoint(fe::lightVector2d &&point) const;
+                FLAT_ENGINE_API fe::lightVector2d rotatePoint(fe::lightVector2d &&point) const;
+                FLAT_ENGINE_API fe::lightVector2d rotatePoint(fe::lightVector2d &&point, float radians) const;
 
                 // combines the rotation, scale, and translation of the matrix and applies it to the point
-                FLAT_ENGINE_API fe::Vector2d transformPoint(const fe::Vector2d &point) const;
+                FLAT_ENGINE_API fe::lightVector2d transformPoint(fe::lightVector2d &&point) const;
 
             };
     }

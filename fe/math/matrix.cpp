@@ -1,4 +1,5 @@
 #include "matrix.hpp"
+#include <utility>
 
 fe::matrix3d::matrix3d()
     {
@@ -165,7 +166,7 @@ fe::matrix3d fe::matrix3d::transpose()
                         values[2], values[5], values[8]);
     }
 
-void fe::matrix3d::translate(const fe::Vector2d &translation)
+void fe::matrix3d::translate(fe::lightVector2d &&translation)
     {
         values[6] += translation.x;
         values[7] += translation.y;
@@ -178,29 +179,29 @@ void fe::matrix3d::rotate(float radians)
                                 0,            0,             1);
     }
 
-fe::Vector2d fe::matrix3d::translatePoint(const fe::Vector2d &point) const
+fe::lightVector2d fe::matrix3d::translatePoint(fe::lightVector2d &&point) const
     {
-        return fe::Vector2d(values[6] + point.x, values[7] + point.y);
+        return fe::lightVector2d(values[6] + point.x, values[7] + point.y);
     }
 
-fe::Vector2d fe::matrix3d::rotatePoint(const fe::Vector2d &point) const
+fe::lightVector2d fe::matrix3d::rotatePoint(fe::lightVector2d &&point) const
     {
-        return fe::Vector2d(point.x * values[0] + point.y * values[1],
-                            point.x * values[3] + point.y * values[4]);
+        return fe::lightVector2d(point.x * values[0] + point.y * values[1],
+                                 point.x * values[3] + point.y * values[4]);
     }
 
-fe::Vector2d fe::matrix3d::rotatePoint(const fe::Vector2d &point, float radians) const
+fe::lightVector2d fe::matrix3d::rotatePoint(fe::lightVector2d &&point, float radians) const
     {
         return (*this * fe::matrix3d(cos(radians), -sin(radians), 0,
                                      sin(radians), cos(radians),  0,
-                                     0,            0,             1)).rotatePoint(point);
+                                     0,            0,             1)).rotatePoint(std::forward<fe::lightVector2d>(point));
     }
 
-fe::Vector2d fe::matrix3d::transformPoint(const fe::Vector2d &point) const
+fe::lightVector2d fe::matrix3d::transformPoint(fe::lightVector2d &&point) const
     {
-        fe::Vector2d transformed = point;
-        transformed = rotatePoint(transformed);
-        transformed = translatePoint(transformed);
+        fe::lightVector2d transformed = point;
+        transformed = rotatePoint(std::forward<fe::lightVector2d>(transformed));
+        transformed = translatePoint(std::forward<fe::lightVector2d>(transformed));
         
         return transformed;
     }

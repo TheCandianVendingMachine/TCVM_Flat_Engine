@@ -41,48 +41,48 @@ void fe::rigidBody::setFrictionCoefficient(float fricCoeff)
 
 
 // applies a force upon the rigid body. 
-void fe::rigidBody::applyForce(fe::Vector2d force)
+void fe::rigidBody::applyForce(float x, float y)
     {
         if (!m_enabled) return;
-        m_forceX += force.x;
-        m_forceY += force.y;
+        m_forceX += x;
+        m_forceY += y;
     }
 
 
-void fe::rigidBody::setVelocity(fe::Vector2d newVel)
+void fe::rigidBody::setVelocity(float x, float y)
     {
-        m_velocityX = newVel.x;
-        m_velocityY = newVel.y;
+        m_velocityX = x;
+        m_velocityY = y;
     }
 
-void fe::rigidBody::setForce(fe::Vector2d newForce)
+void fe::rigidBody::setForce(float x, float y)
     {
-        m_forceX = newForce.x;
-        m_forceY = newForce.y;
+        m_forceX = x;
+        m_forceY = y;
     }
 
-void fe::rigidBody::setDirection(fe::Vector2d newDirection)
+void fe::rigidBody::setDirection(float x, float y)
     {
         if (!m_enabled) return;
 
-        m_velocityX *= newDirection.normalize().x;
-        m_velocityY *= newDirection.normalize().y;
+        m_velocityX *= fe::Vector2d(x, y).normalize().x;
+        m_velocityY *= fe::Vector2d(x, y).normalize().y;
     }
 
 
-fe::Vector2d fe::rigidBody::getVelocity() const
+fe::lightVector2d fe::rigidBody::getVelocity() const
     {
         return { m_velocityX, m_velocityX };
     }
 
-fe::Vector2d fe::rigidBody::getForce() const
+fe::lightVector2d fe::rigidBody::getForce() const
     {
         return { m_forceX, m_forceY };
     }
 
-fe::Vector2d fe::rigidBody::getDirection() const
+fe::lightVector2d fe::rigidBody::getDirection() const
     {
-        return fe::Vector2d(m_velocityX, m_velocityY).normalize();
+        return lightVector2d(fe::Vector2d(m_velocityX, m_velocityY).normalize());
     }
 
 

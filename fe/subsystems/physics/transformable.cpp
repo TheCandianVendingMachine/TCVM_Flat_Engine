@@ -3,8 +3,8 @@
 fe::transformable::transformable() : 
     m_positionX(0.f),
     m_positionY(0.f),
-    m_scaleX(0.f),
-    m_scaleY(0.f),
+    m_scaleX(1.f),
+    m_scaleY(1.f),
     m_originX(0.f),
     m_originY(0.f),
     m_rotation(0.f), 
@@ -43,7 +43,7 @@ void fe::transformable::setScale(float scale)
         setScale(scale, scale);
     }
 
-fe::Vector2d fe::transformable::getPosition() const
+fe::lightVector2d fe::transformable::getPosition() const
     {
         return { m_positionX, m_positionY };
     }
@@ -53,12 +53,12 @@ float fe::transformable::getRotation() const
         return m_rotation;
     }
 
-fe::Vector2d fe::transformable::getSize(float x, float y) const
+fe::lightVector2d fe::transformable::getSize(float x, float y) const
     {
-        return fe::Vector2d(m_scaleX * x, m_scaleY * y);
+        return fe::lightVector2d(m_scaleX * x, m_scaleY * y);
     }
 
-fe::Vector2d fe::transformable::getScale() const
+fe::lightVector2d fe::transformable::getScale() const
     {
         return { m_scaleX, m_scaleY };
     }

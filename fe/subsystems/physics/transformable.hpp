@@ -4,6 +4,7 @@
 #define FLAT_ENGINE_EXPORT
 #include "../../flatEngineExport.hpp"
 #include "../../math/matrix.hpp"
+#include "../../math/Vector2.hpp"
 
 namespace fe
     {
@@ -41,13 +42,13 @@ namespace fe
                     
 
                     // Get the position in the world
-                    FLAT_ENGINE_API fe::Vector2d getPosition() const;
+                    FLAT_ENGINE_API fe::lightVector2d getPosition() const;
                     // Get the current scale factor
-                    FLAT_ENGINE_API fe::Vector2d getScale() const;
+                    FLAT_ENGINE_API fe::lightVector2d getScale() const;
                     // Get the position in radians
                     FLAT_ENGINE_API float getRotation() const;
                     // Get the size of an object if transformed via this matrix
-                    FLAT_ENGINE_API fe::Vector2d getSize(float x, float y) const;
+                    FLAT_ENGINE_API fe::lightVector2d getSize(float x, float y) const;
 
                     // Move the matrix by the offset
                     FLAT_ENGINE_API void move(float x, float y);
