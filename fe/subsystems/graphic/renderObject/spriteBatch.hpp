@@ -3,6 +3,7 @@
 #pragma once
 #define FLAT_ENGINE_EXPORT
 #include "../../../flatEngineExport.hpp"
+#include "../../../typeDefines.hpp"
 #include "renderObject.hpp"
 #include <SFML/Graphics/VertexArray.hpp>
 
@@ -14,11 +15,10 @@ namespace sf
 namespace fe
     {
         class transformable;
-        
         class spriteBatch
             {
                 private:
-                    sf::VertexArray m_batch;
+                    sf::Vertex m_batch[FE_MAX_GAME_OBJECTS * 4];
                     unsigned int m_maxVertexCount; // optimization to resize the batch after every clear so we can avoid dynamic allocations
                     unsigned int m_lastVertexCount;
 

@@ -21,6 +21,7 @@ void fe::sceneGraph::clear()
 
 void fe::sceneGraph::draw(sf::RenderTarget &window)
     {
+        fe::transformable a;
         FE_PROFILE("scene_graph_batch_draw");
         m_batch.clear();
         for (unsigned int i = 0; i < m_renderObjects.getObjectAllocCount(); i++)
@@ -28,7 +29,7 @@ void fe::sceneGraph::draw(sf::RenderTarget &window)
                 renderObject *render = m_renderObjects.at(i);
                 if (render && render->m_draw)
                     {
-                        m_batch.add(render, fe::transformable());
+                        m_batch.add(render, a);
                     }
             }
         FE_END_PROFILE;
