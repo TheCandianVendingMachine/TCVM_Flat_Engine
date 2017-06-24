@@ -49,20 +49,32 @@ void fe::physicsEngine::preUpdate(float deltaTime, unsigned int iterations)
         jobC.m_initialIndex = objectQuart * 2; jobC.m_endIndex = objectQuart * 3; jobC.m_iterations = iterations; jobC.m_deltaTime = deltaTime;
         jobD.m_initialIndex = objectQuart * 3; jobD.m_endIndex = objectQuart * 4; jobD.m_iterations = iterations; jobD.m_deltaTime = deltaTime;
 
-        FE_PROFILE("physics_add_job");
+        FE_PROFILE("physics_add_jobA");
         fe::engine::get().getThreadPool().addJob(jobA);
+        FE_END_PROFILE;
+        FE_PROFILE("physics_add_jobB");
         fe::engine::get().getThreadPool().addJob(jobB);
+        FE_END_PROFILE;
+        FE_PROFILE("physics_add_jobC");
         fe::engine::get().getThreadPool().addJob(jobC);
+        FE_END_PROFILE;
+        FE_PROFILE("physics_add_jobD");
         fe::engine::get().getThreadPool().addJob(jobD);
         FE_END_PROFILE;
     }
 
 void fe::physicsEngine::simulateForces()
     {
-        FE_PROFILE("physics_wait_job");
+        FE_PROFILE("physics_wait_jobA");
         fe::engine::get().getThreadPool().waitFor(jobA);
+        FE_END_PROFILE;
+        FE_PROFILE("physics_wait_jobB");
         fe::engine::get().getThreadPool().waitFor(jobB);
+        FE_END_PROFILE;
+        FE_PROFILE("physics_wait_jobC");
         fe::engine::get().getThreadPool().waitFor(jobC);
+        FE_END_PROFILE;
+        FE_PROFILE("physics_wait_jobD");
         fe::engine::get().getThreadPool().waitFor(jobD);
         FE_END_PROFILE;
     }

@@ -49,13 +49,11 @@ void fe::engine::update()
         m_physicsEngine->preUpdate(m_deltaTime, m_accumulator / m_deltaTime);
         FE_END_PROFILE;
 
-        int iterations = 0;
         FE_PROFILE("engine_fixed_timestep");
         while (m_accumulator >= m_deltaTime)
             {
                 m_inputManager->handleKeyPress();
                 m_accumulator -= m_deltaTime;
-                iterations++;
             }
         FE_END_PROFILE;
 

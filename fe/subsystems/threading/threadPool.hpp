@@ -45,7 +45,7 @@ namespace fe
                 for (unsigned int i = 0; i < 4; i++)
                     {
                         m_pool[i].m_running = true;
-                        m_pool[i].m_sleepTime = std::chrono::milliseconds(500);
+                        m_pool[i].m_sleepTime = std::chrono::milliseconds(1);
                         m_pool[i].m_thread = std::thread(&threadPool::threadObj::update, &m_pool[i]);
                         m_pool[i].m_jobCount = 0;
                     }
@@ -89,7 +89,7 @@ namespace fe
         void threadPool<threadCount>::threadObj::runJob(threadJob *newJob)
             {
                 m_jobs.push(newJob);
-                m_sleepTime = std::chrono::milliseconds(0);
+                m_sleepTime = std::chrono::milliseconds(1);
                 m_jobCount++;
             }
 
@@ -116,7 +116,7 @@ namespace fe
 
                         if (m_jobCount <= 0)
                             {
-                                m_sleepTime = std::chrono::milliseconds(500);
+                                m_sleepTime = std::chrono::milliseconds(1);
                             }
                     }
             }
