@@ -6,6 +6,7 @@
 #include "../../../typeDefines.hpp"
 #include "renderObject.hpp"
 #include <SFML/Graphics/VertexArray.hpp>
+#include <mutex>
 
 namespace sf
     {
@@ -19,19 +20,12 @@ namespace fe
             {
                 private:
                     sf::Vertex m_batch[FE_MAX_GAME_OBJECTS * 4];
-                    unsigned int m_maxVertexCount; // optimization to resize the batch after every clear so we can avoid dynamic allocations
-                    unsigned int m_lastVertexCount;
-
-                    unsigned int m_index; // index of the current sprite
-                    unsigned int m_lastEntityCount; // How many entities were processed last frame
-                    unsigned int m_currentEntityCount; // How many entities were processed this frame
-
-                    bool m_needsPurge; // If this is true, all entities will be re-added to the vertex array
+                    unsigned int m_objectCount;
 
                 public:
                     FLAT_ENGINE_API spriteBatch();
 
-                    FLAT_ENGINE_API void add(const fe::renderObject *entity, fe::transformable &transform);
+                    FLAT_ENGINE_API void add(const fe::renderObject *entity, fe::transformable &transform, unsigned int &index, unsigned int indexOffset = 0);
                     FLAT_ENGINE_API void clear();
                     FLAT_ENGINE_API void draw(sf::RenderTarget &app, sf::RenderStates states);
 

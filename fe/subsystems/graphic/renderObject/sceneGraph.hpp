@@ -7,6 +7,7 @@
 #include "../../memory/poolAllocater.hpp"
 #include "spriteBatch.hpp"
 #include "renderObject.hpp"
+#include "../../threading/threadJob.hpp"
 
 namespace fe
     {
@@ -21,7 +22,28 @@ namespace fe
                     fe::poolAllocater<renderObject> m_renderObjects;
                     fe::spriteBatch m_batch;
 
+                    struct renderJob : public fe::threadJob
+                        {
+                            fe::poolAllocater<renderObject> &m_renderObjects;
+                            fe::spriteBatch &m_batch;
+
+                            unsigned int m_initialIndex;
+                            unsigned int m_endIndex;
+
+                            FLAT_ENGINE_API renderJob(fe::poolAllocater<renderObject> &renderObjects, fe::spriteBatch &batch);
+                            FLAT_ENGINE_API bool execute();
+                        };
+
+                    renderJob m_jobA;
+                    renderJob m_jobB;
+                    renderJob m_jobC;
+                    renderJob m_jobD;
+
+                    FLAT_ENGINE_API void drawParallel(unsigned int initialIndex, unsigned int endIndex);
+
                 public:
+                    FLAT_ENGINE_API sceneGraph();
+
                     FLAT_ENGINE_API void startUp();
                     FLAT_ENGINE_API void shutDown();
                     FLAT_ENGINE_API void clear();
