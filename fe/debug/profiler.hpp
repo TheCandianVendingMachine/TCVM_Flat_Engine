@@ -29,11 +29,11 @@ namespace fe
 		
 		        ~profiler()
 		            {
-                    #ifdef FE_PROFILE_ENGINE
+                    #if FE_PROFILE_ENGINE
 			            m_endTime = fe::clock::getTimeSinceEpoch();
 			            fe::time runtime = m_endTime - m_startTime;
 
-                        #ifdef FE_PROFILE_PRINT_ZEROS
+                        #if FE_PROFILE_PRINT_ZEROS
                             std::cout << "\n" << m_nameStr <<
                                 "\nMicroseconds: " << runtime.asMicroseconds() <<
                                 "\nMilliseconds: " << runtime.asMilliseconds() <<

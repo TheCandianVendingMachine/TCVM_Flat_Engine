@@ -4,6 +4,7 @@
 #include "subsystems/input/inputManager.hpp"
 #include "subsystems/resourceManager/resourceManager.hpp"
 #include "subsystems/physics/physicsEngine.hpp"
+#include "subsystems/threading/threadPool.hpp"
 #include "debug/logger.hpp"
 #include "debug/profiler.hpp"
 
@@ -45,7 +46,7 @@ void fe::engine::update()
         m_gameStateMachine->update();
         FE_END_PROFILE;
         FE_PROFILE("engine_physics_preupdate");
-        m_physicsEngine->preUpdate();
+        m_physicsEngine->preUpdate(m_deltaTime, m_accumulator / m_deltaTime);
         FE_END_PROFILE;
 
         int iterations = 0;
@@ -59,7 +60,7 @@ void fe::engine::update()
         FE_END_PROFILE;
 
         FE_PROFILE("engine_physics_timestep_sim");
-        m_physicsEngine->simulateForces(m_deltaTime, iterations);
+        m_physicsEngine->simulateForces();
         FE_END_PROFILE;
 
         m_eventSender->sendEvents();
@@ -127,6 +128,9 @@ void fe::engine::startUp(unsigned long long totalMemory, unsigned long long stac
                 m_renderer.startUp();
                 m_renderer.load();
 
+                m_threadPool = new fe::threadPool<4>();
+                m_threadPool->startUp();
+
                 m_inputManager = new inputManager;
                 m_inputManager->startUp();
 
@@ -159,6 +163,7 @@ void fe::engine::shutDown()
         m_physicsEngine->shutDown();
         m_gameStateMachine->shutDown();
         m_inputManager->shutDown();
+        m_threadPool->shutDown();
         m_renderer.shutDown();
         m_logger->shutDown();
         m_logger->~logger();
@@ -261,6 +266,11 @@ fe::eventSender *fe::engine::getEventSender() const
 fe::physicsEngine &fe::engine::getPhysicsEngine() const
     {
         return *m_physicsEngine;
+    }
+
+fe::threadPool<4> &fe::engine::getThreadPool() const
+    {
+        return *m_threadPool;
     }
 
 fe::engine::~engine()
