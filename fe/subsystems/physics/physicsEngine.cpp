@@ -43,50 +43,44 @@ fe::Vector2d fe::physicsEngine::getGravity() const
 
 void fe::physicsEngine::preUpdate(float deltaTime, unsigned int iterations)
     {
-        unsigned int objectQuart = m_rigidBodies.getObjectAllocCount() / 4;
-        jobA.m_initialIndex = objectQuart * 0; jobA.m_endIndex = objectQuart * 1; jobA.m_iterations = iterations; jobA.m_deltaTime = deltaTime;
-        jobB.m_initialIndex = objectQuart * 1; jobB.m_endIndex = objectQuart * 2; jobB.m_iterations = iterations; jobB.m_deltaTime = deltaTime;
-        jobC.m_initialIndex = objectQuart * 2; jobC.m_endIndex = objectQuart * 3; jobC.m_iterations = iterations; jobC.m_deltaTime = deltaTime;
-        jobD.m_initialIndex = objectQuart * 3; jobD.m_endIndex = objectQuart * 4; jobD.m_iterations = iterations; jobD.m_deltaTime = deltaTime;
+        jobA.m_iterations = iterations; jobA.m_deltaTime = deltaTime;
+        jobB.m_iterations = iterations; jobB.m_deltaTime = deltaTime;
+        jobC.m_iterations = iterations; jobC.m_deltaTime = deltaTime;
+        jobD.m_iterations = iterations; jobD.m_deltaTime = deltaTime;
 
-        FE_PROFILE("physics_add_jobA");
         fe::engine::get().getThreadPool().addJob(jobA);
-        FE_END_PROFILE;
-        FE_PROFILE("physics_add_jobB");
         fe::engine::get().getThreadPool().addJob(jobB);
-        FE_END_PROFILE;
-        FE_PROFILE("physics_add_jobC");
         fe::engine::get().getThreadPool().addJob(jobC);
-        FE_END_PROFILE;
-        FE_PROFILE("physics_add_jobD");
         fe::engine::get().getThreadPool().addJob(jobD);
-        FE_END_PROFILE;
     }
 
 void fe::physicsEngine::simulateForces()
     {
-        FE_PROFILE("physics_wait_jobA");
         fe::engine::get().getThreadPool().waitFor(jobA);
-        FE_END_PROFILE;
-        FE_PROFILE("physics_wait_jobB");
         fe::engine::get().getThreadPool().waitFor(jobB);
-        FE_END_PROFILE;
-        FE_PROFILE("physics_wait_jobC");
         fe::engine::get().getThreadPool().waitFor(jobC);
-        FE_END_PROFILE;
-        FE_PROFILE("physics_wait_jobD");
         fe::engine::get().getThreadPool().waitFor(jobD);
-        FE_END_PROFILE;
     }
 
 fe::rigidBody *fe::physicsEngine::createRigidBody()
     {
-        return m_rigidBodies.alloc();
+        fe::rigidBody *allocated = m_rigidBodies.alloc();;
+        unsigned int objectQuart = m_rigidBodies.getObjectAllocCount() / 4;
+        jobA.m_initialIndex = objectQuart * 0; jobA.m_endIndex = objectQuart * 1;
+        jobB.m_initialIndex = objectQuart * 1; jobB.m_endIndex = objectQuart * 2;
+        jobC.m_initialIndex = objectQuart * 2; jobC.m_endIndex = objectQuart * 3;
+        jobD.m_initialIndex = objectQuart * 3; jobD.m_endIndex = objectQuart * 4;
+        return allocated;
     }
 
 void fe::physicsEngine::deleteRigidBody(fe::rigidBody *body)
     {
         m_rigidBodies.free(body);
+        unsigned int objectQuart = m_rigidBodies.getObjectAllocCount() / 4;
+        jobA.m_initialIndex = objectQuart * 0; jobA.m_endIndex = objectQuart * 1;
+        jobB.m_initialIndex = objectQuart * 1; jobB.m_endIndex = objectQuart * 2;
+        jobC.m_initialIndex = objectQuart * 2; jobC.m_endIndex = objectQuart * 3;
+        jobD.m_initialIndex = objectQuart * 3; jobD.m_endIndex = objectQuart * 4;
     }
 
 fe::physicsEngine::physicsJob::physicsJob(fe::poolAllocater<rigidBody> &rigidBodies, float gravityX, float gravityY) :
@@ -103,11 +97,8 @@ bool fe::physicsEngine::physicsJob::execute()
                 fe::rigidBody *body = m_rigidBodies.at(i);
                 if (body)
                     {
-                        float frictionForceX = m_gravityX * body->getFrictionCoefficient();
-                        float frictionForceY = m_gravityY * body->getFrictionCoefficient();
-
-                        float accelX = (body->getForce().x + frictionForceX) / body->getMass();
-                        float accelY = (body->getForce().y + frictionForceY) / body->getMass();
+                        float accelX = (body->getForce().x + m_gravityX * body->getFrictionCoefficient()) / body->getMass();
+                        float accelY = (body->getForce().y + m_gravityY * body->getFrictionCoefficient()) / body->getMass();
 
                         for (int j = 0; j < m_iterations; j++)
                             {

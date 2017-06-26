@@ -89,7 +89,7 @@ namespace fe
         void threadPool<threadCount>::threadObj::runJob(threadJob *newJob)
             {
                 m_jobs.push(newJob);
-                m_sleepTime = std::chrono::milliseconds(1);
+                m_sleepTime = std::chrono::milliseconds(0);
                 m_jobCount++;
             }
 

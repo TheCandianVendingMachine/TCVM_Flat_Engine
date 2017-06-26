@@ -3,12 +3,7 @@
 #include "../../resourceManager/resourceManager.hpp"
 #include "../../physics/transformable.hpp"
 #include "../../../debug/profiler.hpp"
-#include <thread>
-
-void fe::sceneGraph::drawParallel(unsigned int initialIndex, unsigned int endIndex)
-    {
-        
-    }
+#include "../../threading/threadPool.hpp"
 
 fe::sceneGraph::sceneGraph() : 
     m_jobA(m_renderObjects, m_batch),
@@ -33,28 +28,30 @@ void fe::sceneGraph::clear()
         m_renderObjects.clear();
     }
 
-void fe::sceneGraph::draw(sf::RenderTarget &window)
+void fe::sceneGraph::preDraw()
     {
-        fe::transformable a;
         FE_PROFILE("scene_graph_batch_draw");
         m_batch.clear();
 
-        unsigned int objectCountQuart = m_renderObjects.getObjectAllocCount() / 4;
-
-        std::thread draw1(&fe::sceneGraph::drawParallel, this, 0 * objectCountQuart, objectCountQuart * 1);
-        std::thread draw2(&fe::sceneGraph::drawParallel, this, 1 * objectCountQuart, objectCountQuart * 2);
-        std::thread draw3(&fe::sceneGraph::drawParallel, this, 2 * objectCountQuart, objectCountQuart * 3);
-        std::thread draw4(&fe::sceneGraph::drawParallel, this, 3 * objectCountQuart, objectCountQuart * 4);
-        
-        draw1.join();
-        draw2.join();
-        draw3.join();
-        draw4.join();
+        fe::engine::get().getThreadPool().addJob(m_jobA);
+        fe::engine::get().getThreadPool().addJob(m_jobB);
+        fe::engine::get().getThreadPool().addJob(m_jobC);
+        fe::engine::get().getThreadPool().addJob(m_jobD);
 
         FE_END_PROFILE;
+    }
 
+void fe::sceneGraph::draw(sf::RenderTarget &window)
+    {
         sf::RenderStates states;
         states.texture = &fe::engine::get().getResourceManager<sf::Texture>()->get();
+
+        FE_PROFILE("scene_graph_wait_draw");
+        fe::engine::get().getThreadPool().waitFor(m_jobA);
+        fe::engine::get().getThreadPool().waitFor(m_jobB);
+        fe::engine::get().getThreadPool().waitFor(m_jobC);
+        fe::engine::get().getThreadPool().waitFor(m_jobD);
+        FE_END_PROFILE;
 
         FE_PROFILE("scene_graph_window_draw");
         m_batch.draw(window, states);
@@ -63,12 +60,23 @@ void fe::sceneGraph::draw(sf::RenderTarget &window)
 
 fe::renderObject *fe::sceneGraph::createRenderObject()
     {
-        return m_renderObjects.alloc();
+        fe::renderObject *allocated = m_renderObjects.alloc();
+        unsigned int objectCountQuart = m_renderObjects.getObjectAllocCount() / 4;
+        m_jobA.m_initialIndex = 0 * objectCountQuart; m_jobA.m_endIndex = objectCountQuart * 1;
+        m_jobB.m_initialIndex = 1 * objectCountQuart; m_jobB.m_endIndex = objectCountQuart * 2;
+        m_jobC.m_initialIndex = 2 * objectCountQuart; m_jobC.m_endIndex = objectCountQuart * 3;
+        m_jobD.m_initialIndex = 3 * objectCountQuart; m_jobD.m_endIndex = objectCountQuart * 4;
+        return allocated;
     }
 
 void fe::sceneGraph::deleteRenderObject(renderObject *obj)
     {
-        return m_renderObjects.free(obj);
+        m_renderObjects.free(obj);
+        unsigned int objectCountQuart = m_renderObjects.getObjectAllocCount() / 4;
+        m_jobA.m_initialIndex = 0 * objectCountQuart; m_jobA.m_endIndex = objectCountQuart * 1;
+        m_jobB.m_initialIndex = 1 * objectCountQuart; m_jobB.m_endIndex = objectCountQuart * 2;
+        m_jobC.m_initialIndex = 2 * objectCountQuart; m_jobC.m_endIndex = objectCountQuart * 3;
+        m_jobD.m_initialIndex = 3 * objectCountQuart; m_jobD.m_endIndex = objectCountQuart * 4;
     }
 
 fe::sceneGraph::renderJob::renderJob(fe::poolAllocater<renderObject> &renderObjects, fe::spriteBatch &batch) : m_renderObjects(renderObjects), m_batch(batch)
@@ -77,7 +85,7 @@ fe::sceneGraph::renderJob::renderJob(fe::poolAllocater<renderObject> &renderObje
 bool fe::sceneGraph::renderJob::execute()
     {
         fe::transformable a;
-        unsigned int index = 0;
+        unsigned int index = m_initialIndex;
         for (unsigned int i = m_initialIndex; i < m_endIndex; i++)
             {
                 renderObject *render = m_renderObjects.at(i);

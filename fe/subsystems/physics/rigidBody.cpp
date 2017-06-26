@@ -116,21 +116,3 @@ float fe::rigidBody::getFrictionCoefficient() const
     {
         return m_frictionCoeff;
     }
-
-// Updates position of object based on force
-void fe::rigidBody::update(float acellX, float acellY, float deltaTime)
-    {
-        if (!m_enabled) return;
-
-        m_velocityX += acellX;
-        m_velocityY += acellY;
-
-        if (m_maxSpeed * m_maxSpeed > m_velocityX * m_velocityX + m_velocityY * m_velocityY) 
-            {
-                float modifier = std::sqrt((m_maxSpeed * m_maxSpeed) / (m_velocityX * m_velocityX + m_velocityY * m_velocityY));
-                m_velocityX *= modifier;
-                m_velocityY *= modifier;
-            }
-
-        move(m_velocityX * deltaTime, m_velocityY * deltaTime);
-    }

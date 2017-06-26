@@ -182,12 +182,14 @@ void fe::engine::run()
     {
         fe::clock updateClock;
         float currentTime = updateClock.getTime().asSeconds();
+        float newTime = 0.f;
+        float frameTime = 0.f;
 
         int framesPassed = 0;
         while (m_renderer.getRenderWindow().isOpen())
             {
-                float newTime = updateClock.getTime().asSeconds();
-                float frameTime = newTime - currentTime;
+                newTime = updateClock.getTime().asSeconds();
+                frameTime = newTime - currentTime;
 
                 if (frameTime > 0.25f) frameTime = 0.25f;
                 currentTime = newTime;

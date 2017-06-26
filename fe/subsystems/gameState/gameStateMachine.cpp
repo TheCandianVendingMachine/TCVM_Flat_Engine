@@ -224,6 +224,7 @@ void fe::gameStateMachine::preDraw()
         if (m_endState && m_endState->m_currentState)
             {
                 m_endState->m_currentState->preDraw();
+                m_endState->m_currentState->getSceneGraph().preDraw();
 
                 stateList *listTop = m_endState;
                 stateList *tail = m_endState->m_tail;

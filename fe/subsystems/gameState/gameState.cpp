@@ -39,11 +39,13 @@ void fe::baseGameState::handleEvents(const sf::Event &event)
 
 void fe::baseGameState::update()
     {
+        FE_PROFILE("game_state_entity_update");
         for (auto &ent : getObjects())
             {
                 ent->update();
                 ent->postUpdate();
             }
+        FE_END_PROFILE;
     }
 
 void fe::baseGameState::postUpdateDefined()

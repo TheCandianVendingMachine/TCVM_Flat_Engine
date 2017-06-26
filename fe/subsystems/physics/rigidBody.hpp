@@ -8,9 +8,11 @@
 
 namespace fe
     {
-        class rigidBody : public fe::transformable
+        class rigidBody
             {
                 private:
+                    fe::transformable m_transform;
+
                     // Current velocity of the object during this frame
                     float m_velocityX;
                     float m_velocityY;
@@ -61,7 +63,22 @@ namespace fe
                     FLAT_ENGINE_API float getFrictionCoefficient() const;
 
                     // Updates position of object based on force
-                    FLAT_ENGINE_API void update(float acellX, float acellY, float deltaTime);
+                    inline void update(float acellX, float acellY, float deltaTime)
+                        {
+                            if (!m_enabled) return;
+
+                            m_velocityX += acellX;
+                            m_velocityY += acellY;
+
+                            if (m_maxSpeed * m_maxSpeed > m_velocityX * m_velocityX + m_velocityY * m_velocityY) 
+                                {
+                                    float modifier = std::sqrt((m_maxSpeed * m_maxSpeed) / (m_velocityX * m_velocityX + m_velocityY * m_velocityY));
+                                    m_velocityX *= modifier;
+                                    m_velocityY *= modifier;
+                                }
+
+                            m_transform.move(m_velocityX * deltaTime, m_velocityY * deltaTime);
+                        }
 
             };
     }

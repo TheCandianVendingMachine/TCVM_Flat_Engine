@@ -9,7 +9,7 @@
 #include "renderObject.hpp"
 #include "../../threading/threadJob.hpp"
 
-namespace fe
+namespace sf
     {
         class RenderTarget;
     }
@@ -39,8 +39,6 @@ namespace fe
                     renderJob m_jobC;
                     renderJob m_jobD;
 
-                    FLAT_ENGINE_API void drawParallel(unsigned int initialIndex, unsigned int endIndex);
-
                 public:
                     FLAT_ENGINE_API sceneGraph();
 
@@ -48,6 +46,7 @@ namespace fe
                     FLAT_ENGINE_API void shutDown();
                     FLAT_ENGINE_API void clear();
 
+                    FLAT_ENGINE_API void preDraw();
                     FLAT_ENGINE_API void draw(sf::RenderTarget &window);
                     FLAT_ENGINE_API renderObject *createRenderObject();
                     FLAT_ENGINE_API void deleteRenderObject(renderObject *obj);
