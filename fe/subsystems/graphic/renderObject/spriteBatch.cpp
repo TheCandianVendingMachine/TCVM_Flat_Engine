@@ -52,5 +52,5 @@ void fe::spriteBatch::clear()
 
 void fe::spriteBatch::draw(sf::RenderTarget &app, sf::RenderStates states)
     {
-        app.draw(m_batch, (m_objectCount - 1) * 4, sf::PrimitiveType::Quads, states);
+        app.draw(m_batch, m_objectCount * 4, sf::PrimitiveType::Quads, states);
     }

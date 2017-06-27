@@ -21,7 +21,7 @@ namespace sf
 namespace fe
     {
         class animationActor;
-        class animator : fe::handleManager<animationTexture>
+        class animator : fe::handleManager<animationTexture, 0>
             {
                 private:
                     std::unordered_map<fe::Handle, std::vector<animationActor*>> m_actors;

@@ -26,7 +26,7 @@ namespace fe
                 class guiElement;
             }
 
-        class baseGameState : public fe::handleManager<baseEntity*>
+        class baseGameState : public fe::handleManager<baseEntity*, FE_MAX_GAME_OBJECTS>
             {
                 private:
                     std::vector<gui::panel*> m_guiPanels;

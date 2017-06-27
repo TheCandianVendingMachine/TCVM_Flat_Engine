@@ -32,10 +32,10 @@ namespace fe
                             FLAT_ENGINE_API bool execute();
                         };
 
-                    physicsJob jobA;
-                    physicsJob jobB;
-                    physicsJob jobC;
-                    physicsJob jobD;
+                    physicsJob m_jobA;
+                    physicsJob m_jobB;
+                    physicsJob m_jobC;
+                    physicsJob m_jobD;
 
                 public:
                     FLAT_ENGINE_API physicsEngine();

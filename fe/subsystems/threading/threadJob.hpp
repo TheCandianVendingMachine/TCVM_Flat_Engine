@@ -10,5 +10,6 @@ namespace fe
                 // If this returns false, the thread will run again
                 virtual bool execute() = 0;
                 bool m_done;
+                bool m_active;
             };
     }

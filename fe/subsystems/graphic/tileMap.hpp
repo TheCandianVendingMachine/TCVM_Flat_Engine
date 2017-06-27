@@ -31,7 +31,7 @@ namespace fe
                     };
             }
 
-        class tileMap : private fe::handleManager<fe::imp::tile*>
+        class tileMap : private fe::handleManager<fe::imp::tile*, 0>
             {
                 private:
                     std::vector<fe::imp::tile> m_fabrications; // tiles already defined

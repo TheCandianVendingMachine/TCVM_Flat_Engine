@@ -8,10 +8,10 @@
 fe::physicsEngine::physicsEngine() :
     m_gravityForceX(0.f),
     m_gravityForceY(0.f),
-    jobA(m_rigidBodies, m_gravityForceX, m_gravityForceY),
-    jobB(m_rigidBodies, m_gravityForceX, m_gravityForceY),
-    jobC(m_rigidBodies, m_gravityForceX, m_gravityForceY),
-    jobD(m_rigidBodies, m_gravityForceX, m_gravityForceY)
+    m_jobA(m_rigidBodies, m_gravityForceX, m_gravityForceY),
+    m_jobB(m_rigidBodies, m_gravityForceX, m_gravityForceY),
+    m_jobC(m_rigidBodies, m_gravityForceX, m_gravityForceY),
+    m_jobD(m_rigidBodies, m_gravityForceX, m_gravityForceY)
     {
     }
 
@@ -43,44 +43,126 @@ fe::Vector2d fe::physicsEngine::getGravity() const
 
 void fe::physicsEngine::preUpdate(float deltaTime, unsigned int iterations)
     {
-        jobA.m_iterations = iterations; jobA.m_deltaTime = deltaTime;
-        jobB.m_iterations = iterations; jobB.m_deltaTime = deltaTime;
-        jobC.m_iterations = iterations; jobC.m_deltaTime = deltaTime;
-        jobD.m_iterations = iterations; jobD.m_deltaTime = deltaTime;
+        m_jobA.m_iterations = iterations; m_jobA.m_deltaTime = deltaTime;
+        m_jobB.m_iterations = iterations; m_jobB.m_deltaTime = deltaTime;
+        m_jobC.m_iterations = iterations; m_jobC.m_deltaTime = deltaTime;
+        m_jobD.m_iterations = iterations; m_jobD.m_deltaTime = deltaTime;
 
-        fe::engine::get().getThreadPool().addJob(jobA);
-        fe::engine::get().getThreadPool().addJob(jobB);
-        fe::engine::get().getThreadPool().addJob(jobC);
-        fe::engine::get().getThreadPool().addJob(jobD);
+        fe::engine::get().getThreadPool().addJob(m_jobA);
+        fe::engine::get().getThreadPool().addJob(m_jobB);
+        fe::engine::get().getThreadPool().addJob(m_jobC);
+        fe::engine::get().getThreadPool().addJob(m_jobD);
     }
 
 void fe::physicsEngine::simulateForces()
     {
-        fe::engine::get().getThreadPool().waitFor(jobA);
-        fe::engine::get().getThreadPool().waitFor(jobB);
-        fe::engine::get().getThreadPool().waitFor(jobC);
-        fe::engine::get().getThreadPool().waitFor(jobD);
+        fe::engine::get().getThreadPool().waitFor(m_jobA);
+        fe::engine::get().getThreadPool().waitFor(m_jobB);
+        fe::engine::get().getThreadPool().waitFor(m_jobC);
+        fe::engine::get().getThreadPool().waitFor(m_jobD);
     }
 
 fe::rigidBody *fe::physicsEngine::createRigidBody()
     {
-        fe::rigidBody *allocated = m_rigidBodies.alloc();;
-        unsigned int objectQuart = m_rigidBodies.getObjectAllocCount() / 4;
-        jobA.m_initialIndex = objectQuart * 0; jobA.m_endIndex = objectQuart * 1;
-        jobB.m_initialIndex = objectQuart * 1; jobB.m_endIndex = objectQuart * 2;
-        jobC.m_initialIndex = objectQuart * 2; jobC.m_endIndex = objectQuart * 3;
-        jobD.m_initialIndex = objectQuart * 3; jobD.m_endIndex = objectQuart * 4;
+        fe::rigidBody *allocated = m_rigidBodies.alloc();
+        unsigned int allocCount = m_rigidBodies.getObjectAllocCount();
+        if (allocCount < 4)
+            {
+                if (allocCount < 4)
+                    {
+                        m_jobA.m_active = true;
+                        m_jobB.m_active = true;
+                        m_jobC.m_active = true;
+                        m_jobD.m_active = false;
+                    }
+                if (allocCount < 3)
+                    {
+                        m_jobA.m_active = true;
+                        m_jobB.m_active = true;
+                        m_jobC.m_active = false;
+
+                    }
+                if (allocCount < 2)
+                    {
+                        m_jobA.m_active = true;
+                        m_jobB.m_active = false;
+                    }
+                if (allocCount < 1)
+                    {
+                        m_jobA.m_active = false;
+                    }
+
+                unsigned int objectCountQuart = allocCount;
+                m_jobA.m_initialIndex = 0 * objectCountQuart; m_jobA.m_endIndex = objectCountQuart * 1;
+                m_jobB.m_initialIndex = 1 * objectCountQuart; m_jobB.m_endIndex = objectCountQuart * 2;
+                m_jobC.m_initialIndex = 2 * objectCountQuart; m_jobC.m_endIndex = objectCountQuart * 3;
+                m_jobD.m_initialIndex = 3 * objectCountQuart; m_jobD.m_endIndex = objectCountQuart * 4;
+            }
+        else
+            {
+                m_jobA.m_active = true;
+                m_jobB.m_active = true;
+                m_jobC.m_active = true;
+                m_jobD.m_active = true;
+
+                unsigned int objectCountQuart = allocCount / 4;
+                m_jobA.m_initialIndex = 0 * objectCountQuart; m_jobA.m_endIndex = objectCountQuart * 1;
+                m_jobB.m_initialIndex = 1 * objectCountQuart; m_jobB.m_endIndex = objectCountQuart * 2;
+                m_jobC.m_initialIndex = 2 * objectCountQuart; m_jobC.m_endIndex = objectCountQuart * 3;
+                m_jobD.m_initialIndex = 3 * objectCountQuart; m_jobD.m_endIndex = objectCountQuart * 4;
+            }
         return allocated;
     }
 
 void fe::physicsEngine::deleteRigidBody(fe::rigidBody *body)
     {
         m_rigidBodies.free(body);
-        unsigned int objectQuart = m_rigidBodies.getObjectAllocCount() / 4;
-        jobA.m_initialIndex = objectQuart * 0; jobA.m_endIndex = objectQuart * 1;
-        jobB.m_initialIndex = objectQuart * 1; jobB.m_endIndex = objectQuart * 2;
-        jobC.m_initialIndex = objectQuart * 2; jobC.m_endIndex = objectQuart * 3;
-        jobD.m_initialIndex = objectQuart * 3; jobD.m_endIndex = objectQuart * 4;
+        unsigned int allocCount = m_rigidBodies.getObjectAllocCount();
+        if (allocCount < 4)
+            {
+                if (allocCount < 4)
+                    {
+                        m_jobA.m_active = true;
+                        m_jobB.m_active = true;
+                        m_jobC.m_active = true;
+                        m_jobD.m_active = false;
+                    }
+                if (allocCount < 3)
+                    {
+                        m_jobA.m_active = true;
+                        m_jobB.m_active = true;
+                        m_jobC.m_active = false;
+
+                    }
+                if (allocCount < 2)
+                    {
+                        m_jobA.m_active = true;
+                        m_jobB.m_active = false;
+                    }
+                if (allocCount < 1)
+                    {
+                        m_jobA.m_active = false;
+                    }
+
+                unsigned int objectCountQuart = allocCount;
+                m_jobA.m_initialIndex = 0 * objectCountQuart; m_jobA.m_endIndex = objectCountQuart * 1;
+                m_jobB.m_initialIndex = 1 * objectCountQuart; m_jobB.m_endIndex = objectCountQuart * 2;
+                m_jobC.m_initialIndex = 2 * objectCountQuart; m_jobC.m_endIndex = objectCountQuart * 3;
+                m_jobD.m_initialIndex = 3 * objectCountQuart; m_jobD.m_endIndex = objectCountQuart * 4;
+            }
+        else
+            {
+                m_jobA.m_active = true;
+                m_jobB.m_active = true;
+                m_jobC.m_active = true;
+                m_jobD.m_active = true;
+
+                unsigned int objectCountQuart = allocCount / 4;
+                m_jobA.m_initialIndex = 0 * objectCountQuart; m_jobA.m_endIndex = objectCountQuart * 1;
+                m_jobB.m_initialIndex = 1 * objectCountQuart; m_jobB.m_endIndex = objectCountQuart * 2;
+                m_jobC.m_initialIndex = 2 * objectCountQuart; m_jobC.m_endIndex = objectCountQuart * 3;
+                m_jobD.m_initialIndex = 3 * objectCountQuart; m_jobD.m_endIndex = objectCountQuart * 4;
+            }
     }
 
 fe::physicsEngine::physicsJob::physicsJob(fe::poolAllocater<rigidBody> &rigidBodies, float gravityX, float gravityY) :

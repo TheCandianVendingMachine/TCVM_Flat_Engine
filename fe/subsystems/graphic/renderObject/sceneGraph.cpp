@@ -61,22 +61,104 @@ void fe::sceneGraph::draw(sf::RenderTarget &window)
 fe::renderObject *fe::sceneGraph::createRenderObject()
     {
         fe::renderObject *allocated = m_renderObjects.alloc();
-        unsigned int objectCountQuart = m_renderObjects.getObjectAllocCount() / 4;
-        m_jobA.m_initialIndex = 0 * objectCountQuart; m_jobA.m_endIndex = objectCountQuart * 1;
-        m_jobB.m_initialIndex = 1 * objectCountQuart; m_jobB.m_endIndex = objectCountQuart * 2;
-        m_jobC.m_initialIndex = 2 * objectCountQuart; m_jobC.m_endIndex = objectCountQuart * 3;
-        m_jobD.m_initialIndex = 3 * objectCountQuart; m_jobD.m_endIndex = objectCountQuart * 4;
+        unsigned int allocCount = m_renderObjects.getObjectAllocCount();
+        if (allocCount < 4)
+            {
+                if (allocCount < 4)
+                    {
+                        m_jobA.m_active = true;
+                        m_jobB.m_active = true;
+                        m_jobC.m_active = true;
+                        m_jobD.m_active = false;
+                    }
+                if (allocCount < 3)
+                    {
+                        m_jobA.m_active = true;
+                        m_jobB.m_active = true;
+                        m_jobC.m_active = false;
+
+                    }
+                if (allocCount < 2)
+                    {
+                        m_jobA.m_active = true;
+                        m_jobB.m_active = false;
+                    }
+                if (allocCount < 1)
+                    {
+                        m_jobA.m_active = false;
+                    }
+
+                unsigned int objectCountQuart = allocCount;
+                m_jobA.m_initialIndex = 0 * objectCountQuart; m_jobA.m_endIndex = objectCountQuart * 1;
+                m_jobB.m_initialIndex = 1 * objectCountQuart; m_jobB.m_endIndex = objectCountQuart * 2;
+                m_jobC.m_initialIndex = 2 * objectCountQuart; m_jobC.m_endIndex = objectCountQuart * 3;
+                m_jobD.m_initialIndex = 3 * objectCountQuart; m_jobD.m_endIndex = objectCountQuart * 4;
+            }
+        else
+            {
+                m_jobA.m_active = true;
+                m_jobB.m_active = true;
+                m_jobC.m_active = true;
+                m_jobD.m_active = true;
+
+                unsigned int objectCountQuart = allocCount / 4;
+                m_jobA.m_initialIndex = 0 * objectCountQuart; m_jobA.m_endIndex = objectCountQuart * 1;
+                m_jobB.m_initialIndex = 1 * objectCountQuart; m_jobB.m_endIndex = objectCountQuart * 2;
+                m_jobC.m_initialIndex = 2 * objectCountQuart; m_jobC.m_endIndex = objectCountQuart * 3;
+                m_jobD.m_initialIndex = 3 * objectCountQuart; m_jobD.m_endIndex = objectCountQuart * 4;
+            }
         return allocated;
     }
 
 void fe::sceneGraph::deleteRenderObject(renderObject *obj)
     {
         m_renderObjects.free(obj);
-        unsigned int objectCountQuart = m_renderObjects.getObjectAllocCount() / 4;
-        m_jobA.m_initialIndex = 0 * objectCountQuart; m_jobA.m_endIndex = objectCountQuart * 1;
-        m_jobB.m_initialIndex = 1 * objectCountQuart; m_jobB.m_endIndex = objectCountQuart * 2;
-        m_jobC.m_initialIndex = 2 * objectCountQuart; m_jobC.m_endIndex = objectCountQuart * 3;
-        m_jobD.m_initialIndex = 3 * objectCountQuart; m_jobD.m_endIndex = objectCountQuart * 4;
+        unsigned int allocCount = m_renderObjects.getObjectAllocCount();
+        if (allocCount < 4)
+            {
+                if (allocCount < 4)
+                    {
+                        m_jobA.m_active = true;
+                        m_jobB.m_active = true;
+                        m_jobC.m_active = true;
+                        m_jobD.m_active = false;
+                    }
+                if (allocCount < 3)
+                    {
+                        m_jobA.m_active = true;
+                        m_jobB.m_active = true;
+                        m_jobC.m_active = false;
+
+                    }
+                if (allocCount < 2)
+                    {
+                        m_jobA.m_active = true;
+                        m_jobB.m_active = false;
+                    }
+                if (allocCount < 1)
+                    {
+                        m_jobA.m_active = false;
+                    }
+
+                unsigned int objectCountQuart = allocCount;
+                m_jobA.m_initialIndex = 0 * objectCountQuart; m_jobA.m_endIndex = objectCountQuart * 1;
+                m_jobB.m_initialIndex = 1 * objectCountQuart; m_jobB.m_endIndex = objectCountQuart * 2;
+                m_jobC.m_initialIndex = 2 * objectCountQuart; m_jobC.m_endIndex = objectCountQuart * 3;
+                m_jobD.m_initialIndex = 3 * objectCountQuart; m_jobD.m_endIndex = objectCountQuart * 4;
+            }
+        else
+            {
+                m_jobA.m_active = true;
+                m_jobB.m_active = true;
+                m_jobC.m_active = true;
+                m_jobD.m_active = true;
+
+                unsigned int objectCountQuart = allocCount / 4;
+                m_jobA.m_initialIndex = 0 * objectCountQuart; m_jobA.m_endIndex = objectCountQuart * 1;
+                m_jobB.m_initialIndex = 1 * objectCountQuart; m_jobB.m_endIndex = objectCountQuart * 2;
+                m_jobC.m_initialIndex = 2 * objectCountQuart; m_jobC.m_endIndex = objectCountQuart * 3;
+                m_jobD.m_initialIndex = 3 * objectCountQuart; m_jobD.m_endIndex = objectCountQuart * 4;
+            }
     }
 
 fe::sceneGraph::renderJob::renderJob(fe::poolAllocater<renderObject> &renderObjects, fe::spriteBatch &batch) : m_renderObjects(renderObjects), m_batch(batch)

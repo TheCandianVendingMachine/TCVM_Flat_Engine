@@ -40,10 +40,14 @@ void fe::baseGameState::handleEvents(const sf::Event &event)
 void fe::baseGameState::update()
     {
         FE_PROFILE("game_state_entity_update");
-        for (auto &ent : getObjects())
+        auto objects = getObjects();
+        for (unsigned int i = 0; i < objectCount(); i++)
             {
-                ent->update();
-                ent->postUpdate();
+                if (objects[i])
+                    {
+                        objects[i]->update();
+                        objects[i]->postUpdate();
+                    }
             }
         FE_END_PROFILE;
     }
@@ -58,11 +62,11 @@ void fe::baseGameState::postUpdateDefined()
 
 void fe::baseGameState::draw(sf::RenderTarget &app)
     {
-        FE_PROFILE("state_scene_graph")
+        FE_PROFILE("state_scene_graph_buf1_draw")
         m_sceneGraph.draw(app);
         FE_END_PROFILE
 
-        FE_PROFILE("state_gui")
+        FE_PROFILE("state_gui_buf1_draw")
         for (auto &panel : m_guiPanels)
             {
                 panel->draw(app);

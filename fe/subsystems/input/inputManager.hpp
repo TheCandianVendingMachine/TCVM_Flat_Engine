@@ -13,7 +13,7 @@
 
 namespace fe
     {
-        class inputManager : public fe::handleManager<input*>
+        class inputManager : public fe::handleManager<input*, 0>
             {
                 private:
                     std::unordered_map<sf::Keyboard::Key, std::vector<fe::Handle>> m_keyboardInputs;

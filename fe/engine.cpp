@@ -18,6 +18,46 @@
 
 fe::engine *fe::engine::m_instance = nullptr;
 
+void fe::engine::run()
+    {
+        fe::clock updateClock;
+        float currentTime = updateClock.getTime().asSeconds();
+        float newTime = 0.f;
+        float frameTime = 0.f;
+
+        int framesPassed = 0;
+        while (m_renderer.getRenderWindow().isOpen())
+            {
+                newTime = updateClock.getTime().asSeconds();
+                frameTime = newTime - currentTime;
+
+                if (frameTime > 0.25f) frameTime = 0.25f;
+                currentTime = newTime;
+
+                m_accumulator += frameTime;
+
+                FE_PROFILE("engine_frame");
+                FE_PROFILE("engine_input")
+                m_inputManager->preUpdate();
+                FE_END_PROFILE;
+
+                FE_PROFILE("engine_event");
+                handleEvents();
+                FE_END_PROFILE;
+
+                FE_PROFILE("engine_update")
+                update();
+                FE_END_PROFILE;
+
+                FE_PROFILE("engine_draw")
+                draw();
+                FE_END_PROFILE;
+                FE_END_PROFILE;
+
+                calcFPS();
+            }
+    }
+
 void fe::engine::handleEvents()
     {
         sf::Event currentEvent;
@@ -61,7 +101,9 @@ void fe::engine::update()
         m_physicsEngine->simulateForces();
         FE_END_PROFILE;
 
+        FE_PROFILE("engine_send_events");
         m_eventSender->sendEvents();
+        FE_END_PROFILE;
 
         FE_PROFILE("engine_state_postupdate");
         m_gameStateMachine->postUpdate();
@@ -176,46 +218,6 @@ void fe::engine::close() const
 const fe::engine &fe::engine::get()
     {
         return *m_instance;
-    }
-
-void fe::engine::run()
-    {
-        fe::clock updateClock;
-        float currentTime = updateClock.getTime().asSeconds();
-        float newTime = 0.f;
-        float frameTime = 0.f;
-
-        int framesPassed = 0;
-        while (m_renderer.getRenderWindow().isOpen())
-            {
-                newTime = updateClock.getTime().asSeconds();
-                frameTime = newTime - currentTime;
-
-                if (frameTime > 0.25f) frameTime = 0.25f;
-                currentTime = newTime;
-
-                m_accumulator += frameTime;
-
-                FE_PROFILE("engine_frame");
-                FE_PROFILE("engine_input")
-                m_inputManager->preUpdate();
-                FE_END_PROFILE;
-
-                FE_PROFILE("engine_event");
-                handleEvents();
-                FE_END_PROFILE;
-
-                FE_PROFILE("engine_update")
-                update();
-                FE_END_PROFILE;
-
-                FE_PROFILE("engine_draw")
-                draw();
-                FE_END_PROFILE;
-                FE_END_PROFILE;
-
-                calcFPS();
-            }
     }
 
 const float fe::engine::getDeltaTime() const

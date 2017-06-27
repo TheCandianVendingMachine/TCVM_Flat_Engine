@@ -17,7 +17,7 @@ namespace fe
                         {
                             std::thread m_thread;
                             std::queue<threadJob*> m_jobs;
-                            std::chrono::milliseconds m_sleepTime;
+                            std::chrono::microseconds m_sleepTime;
                             unsigned int m_jobCount;
 
                             bool m_running;
@@ -45,7 +45,7 @@ namespace fe
                 for (unsigned int i = 0; i < 4; i++)
                     {
                         m_pool[i].m_running = true;
-                        m_pool[i].m_sleepTime = std::chrono::milliseconds(1);
+                        m_pool[i].m_sleepTime = std::chrono::microseconds(1);
                         m_pool[i].m_thread = std::thread(&threadPool::threadObj::update, &m_pool[i]);
                         m_pool[i].m_jobCount = 0;
                     }
@@ -55,6 +55,7 @@ namespace fe
         template<unsigned int threadCount>
         void threadPool<threadCount>::addJob(threadJob &job)
             {
+                if (!job.m_active) return;
                 job.m_done = false;
                 threadObj *selected = &m_pool[0];
                 for (unsigned int i = 1; i < 4; i++)
@@ -72,15 +73,19 @@ namespace fe
         template<unsigned int threadCount>
         void threadPool<threadCount>::waitFor(threadJob &job)
             {
-                while (!job.m_done) {}
+                while (!job.m_done && job.m_active) {}
             }
 
         template<unsigned int threadCount>
         void threadPool<threadCount>::shutDown()
             {
-                for (unsigned int i = 0; i < 4; i++)
+                for (unsigned int i = 0; i < threadCount; i++)
                     {
                         m_pool[i].m_running = false;
+                    }
+
+                for (unsigned int i = 0; i < threadCount; i++)
+                    {
                         m_pool[i].m_thread.join();
                     }
             }
@@ -89,7 +94,7 @@ namespace fe
         void threadPool<threadCount>::threadObj::runJob(threadJob *newJob)
             {
                 m_jobs.push(newJob);
-                m_sleepTime = std::chrono::milliseconds(0);
+                m_sleepTime = std::chrono::microseconds(0);
                 m_jobCount++;
             }
 
@@ -116,7 +121,7 @@ namespace fe
 
                         if (m_jobCount <= 0)
                             {
-                                m_sleepTime = std::chrono::milliseconds(1);
+                                m_sleepTime = std::chrono::microseconds(1);
                             }
                     }
             }
