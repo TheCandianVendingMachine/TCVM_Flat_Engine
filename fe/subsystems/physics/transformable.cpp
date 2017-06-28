@@ -13,9 +13,9 @@ fe::transformable::transformable() :
 
 void fe::transformable::setPosition(float x, float y)
     {
+        m_update = abs(m_positionX - x) > 0.00001f || abs(m_positionY - y) > 0.00001f;
         m_positionX = x;
         m_positionY = y;
-        m_update = true;
     }
 
 void fe::transformable::setRotation(float radians)
@@ -66,7 +66,6 @@ fe::lightVector2d fe::transformable::getScale() const
 void fe::transformable::move(float x, float y)
     {
         setPosition(m_positionX + x, m_positionY + y);
-        m_update = true;
     }
 
 void fe::transformable::rotate(float radians)

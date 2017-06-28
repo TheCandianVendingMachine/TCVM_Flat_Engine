@@ -102,7 +102,7 @@ fe::rigidBody *fe::physicsEngine::createRigidBody()
     {
         fe::rigidBody *allocated = m_rigidBodies.alloc();
         unsigned int allocCount = m_rigidBodies.getObjectAllocCount();
-        if (allocCount < m_maxObjectsUntilThread)
+        if (allocCount < 4)
             {
                 if (allocCount < 4)
                     {

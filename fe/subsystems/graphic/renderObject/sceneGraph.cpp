@@ -201,7 +201,7 @@ fe::sceneGraph::renderJob::renderJob(fe::poolAllocater<renderObject> &renderObje
 
 bool fe::sceneGraph::renderJob::execute()
     {
-        unsigned int index = m_initialIndex;
+        unsigned int index = m_initialIndex * 4;
         for (unsigned int i = m_initialIndex; i < m_endIndex; i++)
             {
                 renderObject *render = m_renderObjects.at(i);
