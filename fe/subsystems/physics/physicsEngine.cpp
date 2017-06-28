@@ -201,7 +201,7 @@ void fe::physicsEngine::deleteRigidBody(fe::rigidBody *body)
             }
     }
 
-fe::physicsEngine::physicsJob::physicsJob(fe::poolAllocater<rigidBody> &rigidBodies, float gravityX, float gravityY) :
+fe::physicsEngine::physicsJob::physicsJob(fe::poolAllocater<rigidBody> &rigidBodies, float &gravityX, float &gravityY) :
     m_gravityX(gravityX),
     m_gravityY(gravityY),
     m_rigidBodies(rigidBodies)

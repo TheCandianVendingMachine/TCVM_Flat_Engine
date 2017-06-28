@@ -18,14 +18,14 @@ namespace fe
                         {
                             fe::poolAllocater<rigidBody> &m_rigidBodies;
 
-                            float m_gravityX;
-                            float m_gravityY;
+                            float &m_gravityX;
+                            float &m_gravityY;
                             float m_deltaTime;
                             unsigned int m_iterations;
                             unsigned int m_initialIndex;
                             unsigned int m_endIndex;
 
-                            FLAT_ENGINE_API physicsJob(fe::poolAllocater<rigidBody> &rigidBodies, float gravityX, float gravityY);
+                            FLAT_ENGINE_API physicsJob(fe::poolAllocater<rigidBody> &rigidBodies, float &gravityX, float &gravityY);
                             FLAT_ENGINE_API bool execute();
                         };
 
