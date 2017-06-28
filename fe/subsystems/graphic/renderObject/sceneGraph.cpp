@@ -55,7 +55,6 @@ void fe::sceneGraph::draw(sf::RenderTarget &window)
 
         if (m_renderObjects.getObjectAllocCount() <= m_maxObjectsUntilThread) 
             {
-                fe::transformable a;
                 unsigned int index = 0;
                 for (unsigned int i = 0; i < m_renderObjects.getObjectAllocCount(); i++)
                     {
@@ -67,7 +66,15 @@ void fe::sceneGraph::draw(sf::RenderTarget &window)
                             {}
                         else
                             {
-                                m_batch.add(render, a, index);
+                                if (!render->m_transformable)
+                                    {
+                                        m_batch.add(render, nullptr, index);
+                                    }
+                                else
+                                    {
+                                        m_batch.add(render, &render->m_transformable->getMatrix(), index);
+                                    }
+                                
                             }
                     }
             }
@@ -194,7 +201,6 @@ fe::sceneGraph::renderJob::renderJob(fe::poolAllocater<renderObject> &renderObje
 
 bool fe::sceneGraph::renderJob::execute()
     {
-        fe::transformable a;
         unsigned int index = m_initialIndex;
         for (unsigned int i = m_initialIndex; i < m_endIndex; i++)
             {
@@ -206,7 +212,14 @@ bool fe::sceneGraph::renderJob::execute()
                     {}
                 else
                     {
-                        m_batch.add(render, a, index);
+                        if (!render->m_transformable)
+                            {
+                                m_batch.add(render, nullptr, index);
+                            }
+                        else
+                            {
+                                m_batch.add(render, &render->m_transformable->getMatrix(), index);
+                            }
                     }
             }
         return true;

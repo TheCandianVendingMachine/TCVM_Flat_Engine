@@ -15,7 +15,7 @@ namespace sf
 
 namespace fe
     {
-        class transformable;
+        struct matrix3d;
         class spriteBatch
             {
                 private:
@@ -24,7 +24,7 @@ namespace fe
                 public:
                     FLAT_ENGINE_API spriteBatch();
 
-                    FLAT_ENGINE_API void add(const fe::renderObject *entity, fe::transformable &transform, unsigned int &index);
+                    FLAT_ENGINE_API void add(const fe::renderObject *entity, const fe::matrix3d *transform, unsigned int &index);
                     FLAT_ENGINE_API void clear();
                     FLAT_ENGINE_API void draw(sf::RenderTarget &app, sf::RenderStates states, unsigned int objectCount);
 
