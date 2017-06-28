@@ -67,7 +67,7 @@ void fe::sceneGraph::draw(sf::RenderTarget &window)
                             {}
                         else
                             {
-                                m_batch.add(render, a, index, 0);
+                                m_batch.add(render, a, index);
                             }
                     }
             }
@@ -82,7 +82,7 @@ void fe::sceneGraph::draw(sf::RenderTarget &window)
             }
 
         FE_PROFILE("scene_graph_window_draw");
-        m_batch.draw(window, states);
+        m_batch.draw(window, states, m_renderObjects.getObjectAllocCount());
         FE_END_PROFILE;
     }
 
@@ -206,7 +206,7 @@ bool fe::sceneGraph::renderJob::execute()
                     {}
                 else
                     {
-                        m_batch.add(render, a, index, m_initialIndex);
+                        m_batch.add(render, a, index);
                     }
             }
         return true;

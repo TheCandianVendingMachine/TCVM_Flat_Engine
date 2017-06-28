@@ -6,15 +6,6 @@
 
 fe::gameStateMachine *fe::gameStateMachine::m_instance = nullptr;
 
-void fe::gameStateMachine::drawState(stateList *node, sf::RenderTarget &app)
-    {
-        if (node && node->m_options & RENDER_OVERTOP)
-            {
-                drawState(node->m_tail, app);
-            }
-        node->m_currentState->draw(app);
-    }
-
 void fe::gameStateMachine::startUp()
     {
         if (!m_instance) 
@@ -236,6 +227,15 @@ void fe::gameStateMachine::preDraw()
                         tail = tail->m_tail;
                     }
             }
+    }
+
+void fe::gameStateMachine::drawState(stateList *node, sf::RenderTarget &app)
+    {
+        if (node && node->m_options & RENDER_OVERTOP)
+            {
+                drawState(node->m_tail, app);
+            }
+        node->m_currentState->draw(app);
     }
 
 void fe::gameStateMachine::draw(sf::RenderTarget &app)

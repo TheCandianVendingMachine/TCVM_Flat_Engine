@@ -20,14 +20,13 @@ namespace fe
             {
                 private:
                     sf::Vertex m_batch[FE_MAX_GAME_OBJECTS * 4];
-                    unsigned int m_objectCount;
 
                 public:
                     FLAT_ENGINE_API spriteBatch();
 
-                    FLAT_ENGINE_API void add(const fe::renderObject *entity, fe::transformable &transform, unsigned int &index, unsigned int indexOffset = 0);
+                    FLAT_ENGINE_API void add(const fe::renderObject *entity, fe::transformable &transform, unsigned int &index);
                     FLAT_ENGINE_API void clear();
-                    FLAT_ENGINE_API void draw(sf::RenderTarget &app, sf::RenderStates states);
+                    FLAT_ENGINE_API void draw(sf::RenderTarget &app, sf::RenderStates states, unsigned int objectCount);
 
             };
     }

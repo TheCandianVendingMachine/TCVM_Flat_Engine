@@ -168,9 +168,6 @@ void fe::engine::startUp(unsigned long long totalMemory, unsigned long long stac
                 m_renderer.startUp();
                 m_renderer.load();
 
-                m_threadPool = new fe::threadPool<8>();
-                m_threadPool->startUp();
-
                 m_inputManager = new inputManager;
                 m_inputManager->startUp();
 
@@ -187,6 +184,9 @@ void fe::engine::startUp(unsigned long long totalMemory, unsigned long long stac
 
                 m_screenSize = m_renderer.getWindowSize();
 
+                m_threadPool = new fe::threadPool<8>();
+                m_threadPool->startUp();
+
                 m_random.startUp();
 
                 m_instance = this;
@@ -197,13 +197,14 @@ void fe::engine::shutDown()
     {
         m_shutDown = true;
 
+        m_threadPool->shutDown();
+
         m_fontManager->shutDown();
         m_textureManager->shutDown();
 
         m_physicsEngine->shutDown();
         m_gameStateMachine->shutDown();
         m_inputManager->shutDown();
-        m_threadPool->shutDown();
         m_renderer.shutDown();
         m_logger->shutDown();
         m_logger->~logger();

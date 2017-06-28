@@ -107,12 +107,12 @@ namespace fe
                                 std::this_thread::sleep_for(std::chrono::microseconds(1)); 
                             }
 
-                        while (!m_jobs.back()->execute()) 
+                        while (!m_jobs.front()->execute()) 
                             {
                                 if (!m_running) return;
                             }
 
-                        m_jobs.back()->m_done = true;
+                        m_jobs.front()->m_done = true;
                         m_jobs.pop();
                         m_jobCount--;
                     }
