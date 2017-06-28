@@ -80,7 +80,6 @@ void fe::physicsEngine::simulateForces(float deltaTime, unsigned int iterations)
 
                                 if (abs(body->getForce().x) - abs(forceX) < 0.f) body->setForce(0.f, body->getForce().y);
                                 if (abs(body->getForce().y) - abs(forceY) < 0.f) body->setForce(body->getForce().x, 0.f);
-                                
 
                                 for (int j = 0; j < iterations; j++)
                                     {
@@ -220,14 +219,16 @@ bool fe::physicsEngine::physicsJob::execute()
                     }    
                 else
                     {
-                        fe::Vector2d bodyDir = body->getDirection();
-                        float forceX = (m_gravityX * body->getFrictionCoefficient() * -((0.f < bodyDir.x) - (bodyDir.x < 0.f)));
-                        float forceY = (m_gravityY * body->getFrictionCoefficient() * -((0.f < bodyDir.y) - (bodyDir.y < 0.f)));
+                        fe::Vector2d bodyVel = body->getVelocity();
+                        float forceX = (m_gravityX * body->getFrictionCoefficient() * -bodyVel.x);
+                        float forceY = (m_gravityY * body->getFrictionCoefficient() * -bodyVel.y);
 
-                        body->applyForce(forceX, forceY);
+                        if (abs(body->getForce().x) - abs(forceX) < 0.f) body->setForce(0.f, body->getForce().y);
+                        if (abs(body->getForce().y) - abs(forceY) < 0.f) body->setForce(body->getForce().x, 0.f);
 
                         for (int j = 0; j < m_iterations; j++)
                             {
+                                body->applyForce(forceX, forceY);
                                 body->update(m_deltaTime);
                             }
                     }
