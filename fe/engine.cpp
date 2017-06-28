@@ -98,7 +98,7 @@ void fe::engine::update()
         FE_END_PROFILE;
 
         FE_PROFILE("engine_physics_timestep_sim");
-        m_physicsEngine->simulateForces();
+        m_physicsEngine->simulateForces(m_deltaTime, m_accumulator / m_deltaTime);
         FE_END_PROFILE;
 
         FE_PROFILE("engine_send_events");
@@ -168,7 +168,7 @@ void fe::engine::startUp(unsigned long long totalMemory, unsigned long long stac
                 m_renderer.startUp();
                 m_renderer.load();
 
-                m_threadPool = new fe::threadPool<4>();
+                m_threadPool = new fe::threadPool<8>();
                 m_threadPool->startUp();
 
                 m_inputManager = new inputManager;
@@ -270,7 +270,7 @@ fe::physicsEngine &fe::engine::getPhysicsEngine() const
         return *m_physicsEngine;
     }
 
-fe::threadPool<4> &fe::engine::getThreadPool() const
+fe::threadPool<8> &fe::engine::getThreadPool() const
     {
         return *m_threadPool;
     }

@@ -39,6 +39,8 @@ namespace fe
                     renderJob m_jobC;
                     renderJob m_jobD;
 
+                    const unsigned int m_maxObjectsUntilThread;
+
                 public:
                     FLAT_ENGINE_API sceneGraph();
 

@@ -14,9 +14,6 @@ namespace fe
             {
                 private:
                     fe::poolAllocater<rigidBody> m_rigidBodies;
-                    float m_gravityForceX;
-                    float m_gravityForceY;
-
                     struct physicsJob : public fe::threadJob
                         {
                             fe::poolAllocater<rigidBody> &m_rigidBodies;
@@ -37,6 +34,11 @@ namespace fe
                     physicsJob m_jobC;
                     physicsJob m_jobD;
 
+                    float m_gravityForceX;
+                    float m_gravityForceY;
+
+                    const unsigned int m_maxObjectsUntilThread;
+
                 public:
                     FLAT_ENGINE_API physicsEngine();
 
@@ -50,7 +52,7 @@ namespace fe
                     // Simulates forces on all objects the amount of iterations it takes the fixed time step to complete
                     FLAT_ENGINE_API void preUpdate(float deltaTime, unsigned int iterations);
                     // Waits for the physics jobs to be completed
-                    FLAT_ENGINE_API void simulateForces();
+                    FLAT_ENGINE_API void simulateForces(float deltaTime, unsigned int iterations);
 
                     FLAT_ENGINE_API fe::rigidBody *createRigidBody();
                     FLAT_ENGINE_API void deleteRigidBody(fe::rigidBody *body);

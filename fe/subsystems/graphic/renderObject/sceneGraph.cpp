@@ -9,7 +9,8 @@ fe::sceneGraph::sceneGraph() :
     m_jobA(m_renderObjects, m_batch),
     m_jobB(m_renderObjects, m_batch),
     m_jobC(m_renderObjects, m_batch),
-    m_jobD(m_renderObjects, m_batch)
+    m_jobD(m_renderObjects, m_batch),
+    m_maxObjectsUntilThread(2500) // 2500 = ~when threading and not threading reaches an intersection in FPS
     {
     }
 
@@ -33,10 +34,16 @@ void fe::sceneGraph::preDraw()
         FE_PROFILE("scene_graph_batch_draw");
         m_batch.clear();
 
-        fe::engine::get().getThreadPool().addJob(m_jobA);
-        fe::engine::get().getThreadPool().addJob(m_jobB);
-        fe::engine::get().getThreadPool().addJob(m_jobC);
-        fe::engine::get().getThreadPool().addJob(m_jobD);
+        if (m_renderObjects.getObjectAllocCount() <= m_maxObjectsUntilThread) 
+            {
+            }
+        else
+            {
+                fe::engine::get().getThreadPool().addJob(m_jobA);
+                fe::engine::get().getThreadPool().addJob(m_jobB);
+                fe::engine::get().getThreadPool().addJob(m_jobC);
+                fe::engine::get().getThreadPool().addJob(m_jobD);
+            }
 
         FE_END_PROFILE;
     }
@@ -46,12 +53,33 @@ void fe::sceneGraph::draw(sf::RenderTarget &window)
         sf::RenderStates states;
         states.texture = &fe::engine::get().getResourceManager<sf::Texture>()->get();
 
-        FE_PROFILE("scene_graph_wait_draw");
-        fe::engine::get().getThreadPool().waitFor(m_jobA);
-        fe::engine::get().getThreadPool().waitFor(m_jobB);
-        fe::engine::get().getThreadPool().waitFor(m_jobC);
-        fe::engine::get().getThreadPool().waitFor(m_jobD);
-        FE_END_PROFILE;
+        if (m_renderObjects.getObjectAllocCount() <= m_maxObjectsUntilThread) 
+            {
+                fe::transformable a;
+                unsigned int index = 0;
+                for (unsigned int i = 0; i < m_renderObjects.getObjectAllocCount(); i++)
+                    {
+                        renderObject *render = m_renderObjects.at(i);
+                        // taking advantage of branch prediction. The CPU is assuming the statement will be false
+                        // so I will let it be false. Because most objects in the indicies will exist, this should
+                        // increase performance
+                        if (!render || !render->m_draw)
+                            {}
+                        else
+                            {
+                                m_batch.add(render, a, index, 0);
+                            }
+                    }
+            }
+        else
+            {
+                FE_PROFILE("scene_graph_wait_draw");
+                fe::engine::get().getThreadPool().waitFor(m_jobA);
+                fe::engine::get().getThreadPool().waitFor(m_jobB);
+                fe::engine::get().getThreadPool().waitFor(m_jobC);
+                fe::engine::get().getThreadPool().waitFor(m_jobD);
+                FE_END_PROFILE;
+            }
 
         FE_PROFILE("scene_graph_window_draw");
         m_batch.draw(window, states);

@@ -11,7 +11,8 @@ fe::physicsEngine::physicsEngine() :
     m_jobA(m_rigidBodies, m_gravityForceX, m_gravityForceY),
     m_jobB(m_rigidBodies, m_gravityForceX, m_gravityForceY),
     m_jobC(m_rigidBodies, m_gravityForceX, m_gravityForceY),
-    m_jobD(m_rigidBodies, m_gravityForceX, m_gravityForceY)
+    m_jobD(m_rigidBodies, m_gravityForceX, m_gravityForceY),
+    m_maxObjectsUntilThread(5000) // 5000 = ~when intersection of FPS occurs between threaded physics and not
     {
     }
 
@@ -43,30 +44,60 @@ fe::Vector2d fe::physicsEngine::getGravity() const
 
 void fe::physicsEngine::preUpdate(float deltaTime, unsigned int iterations)
     {
-        m_jobA.m_iterations = iterations; m_jobA.m_deltaTime = deltaTime;
-        m_jobB.m_iterations = iterations; m_jobB.m_deltaTime = deltaTime;
-        m_jobC.m_iterations = iterations; m_jobC.m_deltaTime = deltaTime;
-        m_jobD.m_iterations = iterations; m_jobD.m_deltaTime = deltaTime;
+        if (m_rigidBodies.getObjectAllocCount() <= m_maxObjectsUntilThread)
+            {
+            }
+        else
+            {
+                m_jobA.m_iterations = iterations; m_jobA.m_deltaTime = deltaTime;
+                m_jobB.m_iterations = iterations; m_jobB.m_deltaTime = deltaTime;
+                m_jobC.m_iterations = iterations; m_jobC.m_deltaTime = deltaTime;
+                m_jobD.m_iterations = iterations; m_jobD.m_deltaTime = deltaTime;
 
-        fe::engine::get().getThreadPool().addJob(m_jobA);
-        fe::engine::get().getThreadPool().addJob(m_jobB);
-        fe::engine::get().getThreadPool().addJob(m_jobC);
-        fe::engine::get().getThreadPool().addJob(m_jobD);
+                fe::engine::get().getThreadPool().addJob(m_jobA);
+                fe::engine::get().getThreadPool().addJob(m_jobB);
+                fe::engine::get().getThreadPool().addJob(m_jobC);
+                fe::engine::get().getThreadPool().addJob(m_jobD);
+            }
     }
 
-void fe::physicsEngine::simulateForces()
+void fe::physicsEngine::simulateForces(float deltaTime, unsigned int iterations)
     {
-        fe::engine::get().getThreadPool().waitFor(m_jobA);
-        fe::engine::get().getThreadPool().waitFor(m_jobB);
-        fe::engine::get().getThreadPool().waitFor(m_jobC);
-        fe::engine::get().getThreadPool().waitFor(m_jobD);
+        if (m_rigidBodies.getObjectAllocCount() <= m_maxObjectsUntilThread)
+            {
+                for (unsigned int i = 0; i < m_rigidBodies.getObjectAllocCount(); i++)
+                    {
+                        fe::rigidBody *body = m_rigidBodies.at(i);
+                        // taking advantage of branch prediction as for the CPU assumes that this statement will be false
+                        if (!body)
+                            {
+                            }    
+                        else
+                            {
+                                float accelX = (body->getForce().x + m_gravityForceX * body->getFrictionCoefficient()) / body->getMass();
+                                float accelY = (body->getForce().y + m_gravityForceY * body->getFrictionCoefficient()) / body->getMass();
+
+                                for (int j = 0; j < iterations; j++)
+                                    {
+                                        body->update(accelX, accelY, deltaTime);
+                                    }
+                            }
+                    }
+            }
+        else
+            {
+                fe::engine::get().getThreadPool().waitFor(m_jobA);
+                fe::engine::get().getThreadPool().waitFor(m_jobB);
+                fe::engine::get().getThreadPool().waitFor(m_jobC);
+                fe::engine::get().getThreadPool().waitFor(m_jobD);
+            }
     }
 
 fe::rigidBody *fe::physicsEngine::createRigidBody()
     {
         fe::rigidBody *allocated = m_rigidBodies.alloc();
         unsigned int allocCount = m_rigidBodies.getObjectAllocCount();
-        if (allocCount < 4)
+        if (allocCount < m_maxObjectsUntilThread)
             {
                 if (allocCount < 4)
                     {

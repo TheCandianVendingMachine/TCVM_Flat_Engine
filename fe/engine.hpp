@@ -39,7 +39,7 @@ namespace fe
                     fe::renderer m_renderer;
                     fe::random m_random;
 
-                    fe::threadPool<4> *m_threadPool;
+                    fe::threadPool<8> *m_threadPool;
                     fe::eventSender *m_eventSender;
                     fe::gameStateMachine *m_gameStateMachine;
                     fe::logger *m_logger;
@@ -94,7 +94,7 @@ namespace fe
                     FLAT_ENGINE_API const fe::renderer &getRenderer() const;
                     FLAT_ENGINE_API fe::eventSender *getEventSender() const;
                     FLAT_ENGINE_API fe::physicsEngine &getPhysicsEngine() const;
-                    FLAT_ENGINE_API fe::threadPool<4> &getThreadPool() const;
+                    FLAT_ENGINE_API fe::threadPool<8> &getThreadPool() const;
 
                     template<typename T>
                     fe::resourceManager<T>              *getResourceManager() const;
