@@ -16,9 +16,12 @@ namespace fe
                     // Current velocity of the object during this frame
                     float m_velocityX;
                     float m_velocityY;
-                    // Current force being applied next frame
+                    // Current force
                     float m_forceX;
                     float m_forceY;
+                    // Last force that was applied
+                    float m_impulseX;
+                    float m_impulseY;
 
                     // Max speed object can go
                     float m_maxSpeed;
@@ -50,9 +53,11 @@ namespace fe
                     FLAT_ENGINE_API void setForce(float x, float y);
                     FLAT_ENGINE_API void setDirection(float x, float y);
 
-                    FLAT_ENGINE_API fe::lightVector2d getVelocity() const;
-                    FLAT_ENGINE_API fe::lightVector2d getForce() const;
-                    FLAT_ENGINE_API fe::lightVector2d getDirection() const;
+                    FLAT_ENGINE_API fe::Vector2d getVelocity() const;
+                    FLAT_ENGINE_API fe::Vector2d getForce() const;
+                    FLAT_ENGINE_API fe::Vector2d getDirection() const;
+
+                    FLAT_ENGINE_API fe::transformable *getTransformable();
 
                     FLAT_ENGINE_API float getSpeed() const;
                     FLAT_ENGINE_API float getTotalForce() const;
@@ -63,12 +68,12 @@ namespace fe
                     FLAT_ENGINE_API float getFrictionCoefficient() const;
 
                     // Updates position of object based on force
-                    inline void update(float acellX, float acellY, float deltaTime)
+                    inline void update(float deltaTime)
                         {
                             if (!m_enabled) return;
 
-                            m_velocityX += acellX;
-                            m_velocityY += acellY;
+                            m_velocityX += (m_impulseX / m_mass) * deltaTime;
+                            m_velocityY += (m_impulseY / m_mass) * deltaTime;
 
                             if (m_maxSpeed * m_maxSpeed > m_velocityX * m_velocityX + m_velocityY * m_velocityY) 
                                 {
@@ -78,6 +83,12 @@ namespace fe
                                 }
 
                             m_transform.move(m_velocityX * deltaTime, m_velocityY * deltaTime);
+
+                            m_forceX += m_impulseX;
+                            m_forceY += m_impulseY;
+
+                            m_impulseX = 0.f;
+                            m_impulseY = 0.f;
                         }
 
             };

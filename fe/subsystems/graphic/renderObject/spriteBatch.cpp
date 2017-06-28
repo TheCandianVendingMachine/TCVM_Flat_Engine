@@ -44,11 +44,10 @@ void fe::spriteBatch::add(const fe::renderObject *entity, const fe::matrix3d *tr
             }
         else
             {
-                const fe::matrix3d &matrix = *transform;
-                fe::lightVector2d transform0 = matrix.transformPoint({   entity->m_verticies[0],  entity->m_verticies[1] });
-                fe::lightVector2d transform1 = matrix.transformPoint({   entity->m_verticies[0] + entity->m_verticies[3],  entity->m_verticies[1] });
-                fe::lightVector2d transform2 = matrix.transformPoint({   entity->m_verticies[0] + entity->m_verticies[3],  entity->m_verticies[1] + entity->m_verticies[3] });
-                fe::lightVector2d transform3 = matrix.transformPoint({   entity->m_verticies[0],  entity->m_verticies[1] + entity->m_verticies[3] });
+                fe::lightVector2d transform0 = transform->transformPoint({ entity->m_verticies[0],  entity->m_verticies[1] });
+                fe::lightVector2d transform1 = transform->transformPoint({ entity->m_verticies[0] + entity->m_verticies[3],  entity->m_verticies[1] });
+                fe::lightVector2d transform2 = transform->transformPoint({ entity->m_verticies[0] + entity->m_verticies[3],  entity->m_verticies[1] + entity->m_verticies[3] });
+                fe::lightVector2d transform3 = transform->transformPoint({ entity->m_verticies[0],  entity->m_verticies[1] + entity->m_verticies[3] });
                 sf::Color entColour = sf::Color(entity->m_vertColour[0], entity->m_vertColour[1], entity->m_vertColour[2], entity->m_vertColour[3]);
                 fe::lightVector2d texCoord(entity->m_texCoords[0], entity->m_texCoords[1]);
 

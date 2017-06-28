@@ -79,6 +79,8 @@ namespace fe
                         return modifier < 1.f ? fe::Vector2d(x * modifier, y * modifier) : *this;
                     }
 
+                Vector2<dataType> abs() const { return Vector2(x > dataType() ? x : -x, y > dataType() ? y : -y); }
+
                 Vector2<dataType> normal() const { return Vector2(-y, x); }
 
                 float dot(const Vector2<dataType> &other) const { return x * other.x + y * other.y; }

@@ -1,16 +1,16 @@
 #include "rigidBody.hpp"
 
-fe::rigidBody::rigidBody() : m_mass(1.f), m_maxSpeed(0.f), m_frictionCoeff(1.f) {}
+fe::rigidBody::rigidBody() : m_mass(1.f), m_maxSpeed(0.f), m_frictionCoeff(1.f), m_enabled(true) {}
 
-fe::rigidBody::rigidBody(float mass) : m_mass(mass), m_maxSpeed(0.f), m_frictionCoeff(1.f)
+fe::rigidBody::rigidBody(float mass) : m_mass(mass), m_maxSpeed(0.f), m_frictionCoeff(1.f), m_enabled(true)
     {
     }
 
-fe::rigidBody::rigidBody(float mass, float maxSpeed) : m_mass(mass), m_maxSpeed(maxSpeed), m_frictionCoeff(1.f)
+fe::rigidBody::rigidBody(float mass, float maxSpeed) : m_mass(mass), m_maxSpeed(maxSpeed), m_frictionCoeff(1.f), m_enabled(true)
     {
     }
 
-fe::rigidBody::rigidBody(float mass, float maxSpeed, float frictionCoeff) : m_mass(mass), m_maxSpeed(maxSpeed), m_frictionCoeff(frictionCoeff)
+fe::rigidBody::rigidBody(float mass, float maxSpeed, float frictionCoeff) : m_mass(mass), m_maxSpeed(maxSpeed), m_frictionCoeff(frictionCoeff), m_enabled(true)
     {
     }
 
@@ -44,8 +44,8 @@ void fe::rigidBody::setFrictionCoefficient(float fricCoeff)
 void fe::rigidBody::applyForce(float x, float y)
     {
         if (!m_enabled) return;
-        m_forceX += x;
-        m_forceY += y;
+        m_impulseX += x;
+        m_impulseY += y;
     }
 
 
@@ -65,24 +65,29 @@ void fe::rigidBody::setDirection(float x, float y)
     {
         if (!m_enabled) return;
 
-        m_velocityX *= fe::Vector2d(x, y).normalize().x;
-        m_velocityY *= fe::Vector2d(x, y).normalize().y;
+        m_velocityX = getSpeed() * fe::Vector2d(x, y).normalize().x;
+        m_velocityY = getSpeed() *fe::Vector2d(x, y).normalize().y;
     }
 
 
-fe::lightVector2d fe::rigidBody::getVelocity() const
+fe::Vector2d fe::rigidBody::getVelocity() const
     {
-        return { m_velocityX, m_velocityX };
+        return { m_velocityX, m_velocityY };
     }
 
-fe::lightVector2d fe::rigidBody::getForce() const
+fe::Vector2d fe::rigidBody::getForce() const
     {
         return { m_forceX, m_forceY };
     }
 
-fe::lightVector2d fe::rigidBody::getDirection() const
+fe::Vector2d fe::rigidBody::getDirection() const
     {
-        return lightVector2d(fe::Vector2d(m_velocityX, m_velocityY).normalize());
+        return fe::Vector2d(m_velocityX, m_velocityY).normalize();
+    }
+
+fe::transformable *fe::rigidBody::getTransformable()
+    {
+        return &m_transform;
     }
 
 
@@ -100,7 +105,6 @@ float fe::rigidBody::getHeading() const
     {
         return fe::Vector2d(m_velocityX, m_velocityY).normalize().magnitude();
     }
-
 
 float fe::rigidBody::getMass() const
     {

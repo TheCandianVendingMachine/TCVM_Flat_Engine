@@ -85,8 +85,10 @@ void fe::engine::update()
         FE_PROFILE("engine_state_update");
         m_gameStateMachine->update();
         FE_END_PROFILE;
+
+        unsigned int iterations = m_accumulator / m_deltaTime;
         FE_PROFILE("engine_physics_preupdate");
-        m_physicsEngine->preUpdate(m_deltaTime, m_accumulator / m_deltaTime);
+        m_physicsEngine->preUpdate(m_deltaTime, iterations);
         FE_END_PROFILE;
 
         FE_PROFILE("engine_fixed_timestep");
@@ -98,7 +100,7 @@ void fe::engine::update()
         FE_END_PROFILE;
 
         FE_PROFILE("engine_physics_timestep_sim");
-        m_physicsEngine->simulateForces(m_deltaTime, m_accumulator / m_deltaTime);
+        m_physicsEngine->simulateForces(m_deltaTime, iterations);
         FE_END_PROFILE;
 
         FE_PROFILE("engine_send_events");

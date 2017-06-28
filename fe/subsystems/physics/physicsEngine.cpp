@@ -6,8 +6,8 @@
 #include "../../debug/profiler.hpp"
 
 fe::physicsEngine::physicsEngine() :
-    m_gravityForceX(0.f),
-    m_gravityForceY(0.f),
+    m_gravityForceX(9.81f),
+    m_gravityForceY(9.81f),
     m_jobA(m_rigidBodies, m_gravityForceX, m_gravityForceY),
     m_jobB(m_rigidBodies, m_gravityForceX, m_gravityForceY),
     m_jobC(m_rigidBodies, m_gravityForceX, m_gravityForceY),
@@ -74,12 +74,18 @@ void fe::physicsEngine::simulateForces(float deltaTime, unsigned int iterations)
                             }    
                         else
                             {
-                                float accelX = (body->getForce().x + m_gravityForceX * body->getFrictionCoefficient()) / body->getMass();
-                                float accelY = (body->getForce().y + m_gravityForceY * body->getFrictionCoefficient()) / body->getMass();
+                                fe::Vector2d bodyVel = body->getVelocity();
+                                float forceX = (m_gravityForceX * body->getFrictionCoefficient() * -bodyVel.x);
+                                float forceY = (m_gravityForceY * body->getFrictionCoefficient() * -bodyVel.y);
+
+                                if (abs(body->getForce().x) - abs(forceX) < 0.f) body->setForce(0.f, body->getForce().y);
+                                if (abs(body->getForce().y) - abs(forceY) < 0.f) body->setForce(body->getForce().x, 0.f);
+                                
 
                                 for (int j = 0; j < iterations; j++)
                                     {
-                                        body->update(accelX, accelY, deltaTime);
+                                        body->applyForce(forceX, forceY);
+                                        body->update(deltaTime);
                                     }
                             }
                     }
@@ -214,12 +220,15 @@ bool fe::physicsEngine::physicsJob::execute()
                     }    
                 else
                     {
-                        float accelX = (body->getForce().x + m_gravityX * body->getFrictionCoefficient()) / body->getMass();
-                        float accelY = (body->getForce().y + m_gravityY * body->getFrictionCoefficient()) / body->getMass();
+                        fe::Vector2d bodyDir = body->getDirection();
+                        float forceX = (m_gravityX * body->getFrictionCoefficient() * -((0.f < bodyDir.x) - (bodyDir.x < 0.f)));
+                        float forceY = (m_gravityY * body->getFrictionCoefficient() * -((0.f < bodyDir.y) - (bodyDir.y < 0.f)));
+
+                        body->applyForce(forceX, forceY);
 
                         for (int j = 0; j < m_iterations; j++)
                             {
-                                body->update(accelX, accelY, m_deltaTime);
+                                body->update(m_deltaTime);
                             }
                     }
             }
