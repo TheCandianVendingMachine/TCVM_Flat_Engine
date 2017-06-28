@@ -17,7 +17,6 @@ namespace fe
                         {
                             std::thread m_thread;
                             std::queue<threadJob*> m_jobs;
-                            std::chrono::microseconds m_sleepTime;
                             unsigned int m_jobCount;
 
                             bool m_running;
@@ -42,10 +41,9 @@ namespace fe
         template<unsigned int threadCount>
         void threadPool<threadCount>::startUp()
             {
-                for (unsigned int i = 0; i < 4; i++)
+                for (unsigned int i = 0; i < threadCount; i++)
                     {
                         m_pool[i].m_running = true;
-                        m_pool[i].m_sleepTime = std::chrono::microseconds(1);
                         m_pool[i].m_thread = std::thread(&threadPool::threadObj::update, &m_pool[i]);
                         m_pool[i].m_jobCount = 0;
                     }
@@ -56,7 +54,6 @@ namespace fe
         void threadPool<threadCount>::addJob(threadJob &job)
             {
                 if (!job.m_active) return;
-                job.m_done = false;
                 threadObj *selected = &m_pool[0];
                 for (unsigned int i = 1; i < 4; i++)
                     {
@@ -66,6 +63,7 @@ namespace fe
                             }
                     }
 
+                job.m_done = false;
                 selected->runJob(&job);
             }
 
@@ -94,7 +92,6 @@ namespace fe
         void threadPool<threadCount>::threadObj::runJob(threadJob *newJob)
             {
                 m_jobs.push(newJob);
-                m_sleepTime = std::chrono::microseconds(0);
                 m_jobCount++;
             }
 
@@ -107,7 +104,7 @@ namespace fe
                         while (m_jobs.empty()) 
                             {
                                 if (!m_running) return; 
-                                std::this_thread::sleep_for(m_sleepTime); 
+                                std::this_thread::sleep_for(std::chrono::microseconds(1)); 
                             }
 
                         while (!m_jobs.back()->execute()) 
@@ -118,11 +115,6 @@ namespace fe
                         m_jobs.back()->m_done = true;
                         m_jobs.pop();
                         m_jobCount--;
-
-                        if (m_jobCount <= 0)
-                            {
-                                m_sleepTime = std::chrono::microseconds(1);
-                            }
                     }
             }
     }

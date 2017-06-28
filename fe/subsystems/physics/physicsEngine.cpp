@@ -177,7 +177,11 @@ bool fe::physicsEngine::physicsJob::execute()
         for (unsigned int i = m_initialIndex; i < m_endIndex; i++)
             {
                 fe::rigidBody *body = m_rigidBodies.at(i);
-                if (body)
+                // taking advantage of branch prediction as for the CPU assumes that this statement will be false
+                if (!body)
+                    {
+                    }    
+                else
                     {
                         float accelX = (body->getForce().x + m_gravityX * body->getFrictionCoefficient()) / body->getMass();
                         float accelY = (body->getForce().y + m_gravityY * body->getFrictionCoefficient()) / body->getMass();

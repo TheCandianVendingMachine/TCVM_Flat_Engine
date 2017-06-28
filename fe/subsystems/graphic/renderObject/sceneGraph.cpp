@@ -171,7 +171,12 @@ bool fe::sceneGraph::renderJob::execute()
         for (unsigned int i = m_initialIndex; i < m_endIndex; i++)
             {
                 renderObject *render = m_renderObjects.at(i);
-                if (render && render->m_draw)
+                // taking advantage of branch prediction. The CPU is assuming the statement will be false
+                // so I will let it be false. Because most objects in the indicies will exist, this should
+                // increase performance
+                if (!render || !render->m_draw)
+                    {}
+                else
                     {
                         m_batch.add(render, a, index, m_initialIndex);
                     }
