@@ -74,9 +74,9 @@ void fe::physicsEngine::simulateForces(float deltaTime, unsigned int iterations)
                             }    
                         else
                             {
-                                fe::Vector2d bodyVel = body->getVelocity();
-                                float forceX = (m_gravityForceX * body->getFrictionCoefficient() * -bodyVel.x);
-                                float forceY = (m_gravityForceY * body->getFrictionCoefficient() * -bodyVel.y);
+                                fe::Vector2d bodyForce = body->getForce();
+                                float forceX = (body->getFrictionCoefficient() * -bodyForce.x);
+                                float forceY = (body->getFrictionCoefficient() * -bodyForce.y);
 
                                 if (abs(body->getForce().x) - abs(forceX) < 0.f) body->setForce(0.f, body->getForce().y);
                                 if (abs(body->getForce().y) - abs(forceY) < 0.f) body->setForce(body->getForce().x, 0.f);
