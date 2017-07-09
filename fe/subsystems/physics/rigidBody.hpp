@@ -11,7 +11,9 @@ namespace fe
         class rigidBody
             {
                 private:
-                    fe::transformable m_transform;
+                    // Positions of the entity
+                    float m_positionX;
+                    float m_positionY;
 
                     // Current velocity of the object during this frame
                     float m_velocityX;
@@ -34,13 +36,25 @@ namespace fe
                     bool m_enabled;
 
                 public:
-                    FLAT_ENGINE_API rigidBody();
-                    FLAT_ENGINE_API rigidBody(float mass);
-                    FLAT_ENGINE_API rigidBody(float mass, float maxSpeed);
-                    FLAT_ENGINE_API rigidBody(float mass, float maxSpeed, float frictionCoeff);
+                    FLAT_ENGINE_API float getVelocityX() const;
+                    FLAT_ENGINE_API float getVelocityY() const;
+                    FLAT_ENGINE_API float getForceX() const;
+                    FLAT_ENGINE_API float getForceY() const;
+                    FLAT_ENGINE_API float getPositionX() const;
+                    FLAT_ENGINE_API float getPositionY() const;
 
-                    FLAT_ENGINE_API void enable(bool value);
-                    FLAT_ENGINE_API bool getEnabled() const;
+                    FLAT_ENGINE_API float getSpeed() const;
+                    FLAT_ENGINE_API float getTotalForce() const;
+                    FLAT_ENGINE_API float getHeading() const;
+
+                    FLAT_ENGINE_API float getMass() const;
+                    FLAT_ENGINE_API float getMaxVelocity() const;
+                    FLAT_ENGINE_API float getFrictionCoefficient() const;
+
+                    FLAT_ENGINE_API fe::Vector2d getVelocity() const;
+                    FLAT_ENGINE_API fe::Vector2d getForce() const;
+                    FLAT_ENGINE_API fe::Vector2d getDirection() const;
+                    FLAT_ENGINE_API fe::Vector2d getPosition() const;
 
                     FLAT_ENGINE_API void setMass(float newMass);
                     FLAT_ENGINE_API void setMaxSpeed(float maxSpeed);
@@ -53,19 +67,13 @@ namespace fe
                     FLAT_ENGINE_API void setForce(float x, float y);
                     FLAT_ENGINE_API void setDirection(float x, float y);
 
-                    FLAT_ENGINE_API fe::Vector2d getVelocity() const;
-                    FLAT_ENGINE_API fe::Vector2d getForce() const;
-                    FLAT_ENGINE_API fe::Vector2d getDirection() const;
+                    FLAT_ENGINE_API rigidBody();
+                    FLAT_ENGINE_API rigidBody(float mass);
+                    FLAT_ENGINE_API rigidBody(float mass, float maxSpeed);
+                    FLAT_ENGINE_API rigidBody(float mass, float maxSpeed, float frictionCoeff);
 
-                    FLAT_ENGINE_API fe::transformable *getTransformable();
-
-                    FLAT_ENGINE_API float getSpeed() const;
-                    FLAT_ENGINE_API float getTotalForce() const;
-                    FLAT_ENGINE_API float getHeading() const;
-
-                    FLAT_ENGINE_API float getMass() const;
-                    FLAT_ENGINE_API float getMaxVelocity() const;
-                    FLAT_ENGINE_API float getFrictionCoefficient() const;
+                    FLAT_ENGINE_API void enable(bool value);
+                    FLAT_ENGINE_API bool getEnabled() const;
 
                     // Updates position of object based on force
                     inline void update(float deltaTime)
@@ -82,7 +90,8 @@ namespace fe
                                     m_velocityY *= modifier;
                                 }
 
-                            m_transform.move(m_velocityX * deltaTime, m_velocityY * deltaTime);
+                            m_positionX += m_velocityX * deltaTime;
+                            m_positionY += m_velocityY * deltaTime;
 
                             m_forceX += m_impulseX;
                             m_forceY += m_impulseY;
