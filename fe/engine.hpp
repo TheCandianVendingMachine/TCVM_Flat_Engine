@@ -24,6 +24,7 @@ namespace fe
         class gameStateMachine;
         class eventSender;
         class baseGameState;
+        class debugDraw;
 
         template<typename T>
         class resourceManager;
@@ -36,6 +37,7 @@ namespace fe
                     fe::random m_random;
 
                     fe::logger *m_logger;
+                    fe::debugDraw *m_debugDraw;
                     fe::inputManager *m_inputManager;
                     fe::gameStateMachine *m_gameStateMachine;
                     fe::eventSender *m_eventSender;

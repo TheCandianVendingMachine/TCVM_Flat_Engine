@@ -5,6 +5,7 @@
 #include "subsystems/resourceManager/resourceManager.hpp"
 #include "debug/logger.hpp"
 #include "debug/profiler.hpp"
+#include "debug/debugDraw.hpp"
 
 #include "feAssert.hpp"
 
@@ -63,6 +64,10 @@ void fe::engine::draw()
         m_gameStateMachine->draw(m_renderer.getRenderWindow());
         FE_END_PROFILE;
 
+        FE_PROFILE("engine_debug_buf1_draw");
+        m_debugDraw->draw(m_renderer.getRenderWindow());
+        FE_END_PROFILE;
+
         FE_PROFILE("engine_window_buf2_draw")
         m_renderer.getRenderWindow().display();
         FE_END_PROFILE;
@@ -104,6 +109,9 @@ void fe::engine::startUp(unsigned long long totalMemory, unsigned long long stac
                 m_logger = new(m_memoryManager.alloc(sizeof(fe::logger))) logger;
                 m_logger->startUp("log.log");
 
+                m_debugDraw = new fe::debugDraw();
+                m_debugDraw->startUp();
+
                 m_renderer.startUp();
                 m_renderer.load();
 
@@ -136,6 +144,7 @@ void fe::engine::shutDown()
         m_gameStateMachine->shutDown();
         m_inputManager->shutDown();
         m_renderer.shutDown();
+        m_debugDraw->shutDown();
         m_logger->shutDown();
         m_logger->~logger();
         m_memoryManager.shutDown();
