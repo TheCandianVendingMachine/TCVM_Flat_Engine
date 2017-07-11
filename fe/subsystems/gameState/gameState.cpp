@@ -46,8 +46,6 @@ void fe::baseGameState::update()
                 if (objects[i])
                     {
                         objects[i]->update();
-                        objects[i]->postUpdate();
-                        objects[i]->updateModules();
                     }
             }
         FE_END_PROFILE;
@@ -55,6 +53,16 @@ void fe::baseGameState::update()
 
 void fe::baseGameState::postUpdateDefined()
     {
+        auto objects = getObjects();
+        for (unsigned int i = 0; i < objectCount(); i++)
+            {
+                if (objects[i])
+                {
+                    objects[i]->postUpdate();
+                    objects[i]->updateModules();
+                }
+            }
+
         for (auto &panel : m_guiPanels)
             {
                 panel->update();

@@ -46,5 +46,7 @@ namespace fe
                     FLAT_ENGINE_API virtual void postUpdate() {}
                     FLAT_ENGINE_API void updateModules();
 
+                    void move() { m_rigidBody->applyForce(2500, -200); }
+
             };
     }

@@ -16,6 +16,7 @@ void fe::transformable::setPosition(float x, float y)
         m_update = abs(m_positionX - x) > 0.00001f || abs(m_positionY - y) > 0.00001f;
         m_positionX = x;
         m_positionY = y;
+        m_update = true;
     }
 
 void fe::transformable::setRotation(float radians)
@@ -28,14 +29,14 @@ void fe::transformable::setOrigin(float x, float y)
     {
         m_originX = x;
         m_originY = y;
-        m_update |= true;
+        m_update = true;
     }
 
 void fe::transformable::setScale(float x, float y)
     {
         m_scaleX = x;
         m_scaleY = y;
-        m_update |= true;
+        m_update = true;
     }
 
 void fe::transformable::setScale(float scale)
