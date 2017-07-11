@@ -1,18 +1,25 @@
 #include "debugDraw.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 
+fe::debugDraw *fe::debugDraw::m_instance = nullptr;
+
 void fe::debugDraw::startUp()
     {
-        m_drawVerticies.setPrimitiveType(sf::PrimitiveType::Points);
+        if (!m_instance)
+            {
+                m_instance = this;
+                m_drawVerticies.setPrimitiveType(sf::PrimitiveType::Points);
+            }
     }
 
 void fe::debugDraw::shutDown()
     {
+        m_instance = nullptr;
     }
 
 fe::debugDraw &fe::debugDraw::get()
     {
-        
+        return *m_instance;
     }
 
 void fe::debugDraw::addLine(int x0, int y0, int x1, int y1)
