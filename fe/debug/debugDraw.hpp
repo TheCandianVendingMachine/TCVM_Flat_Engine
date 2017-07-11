@@ -1,6 +1,8 @@
 // debugDraw.hpp
 // A singleton-class to allow for drawing for debug purposes. Software Drawn, so all shapes are wireframes
 #pragma once
+#define FLAT_ENGINE_EXPORT
+#include "../flatEngineExport.hpp"
 #include <SFML/Graphics/VertexArray.hpp>
 
 namespace sf
@@ -18,16 +20,16 @@ namespace fe
                     static debugDraw *m_instance;
 
                 public:
-                    void startUp();
-                    void shutDown();
+                    FLAT_ENGINE_API void startUp();
+                    FLAT_ENGINE_API void shutDown();
 
-                    static debugDraw &get();
+                    FLAT_ENGINE_API static debugDraw &get();
 
-                    void addLine(int x0, int y0, int x1, int y1);
-                    void addSquare(int xSize, int ySize, int xPos, int yPos);
-                    void addCircle(int radius, int xPos, int yPos);
+                    FLAT_ENGINE_API void addLine(int x0, int y0, int x1, int y1);
+                    FLAT_ENGINE_API void addSquare(int xSize, int ySize, int xPos, int yPos);
+                    FLAT_ENGINE_API void addCircle(int radius, int xPos, int yPos);
 
-                    void draw(sf::RenderTarget &target);
+                    FLAT_ENGINE_API void draw(sf::RenderTarget &target);
             };
     }
 
