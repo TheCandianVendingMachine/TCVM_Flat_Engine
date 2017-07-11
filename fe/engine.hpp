@@ -23,6 +23,7 @@ namespace fe
         class eventSender;
         class baseGameState;
         class physicsEngine;
+        class collisionWorld;
         template<unsigned int>
         class threadPool;
 
@@ -42,6 +43,7 @@ namespace fe
                     fe::logger *m_logger;
                     fe::inputManager *m_inputManager;
                     fe::physicsEngine *m_physicsEngine;
+                    fe::collisionWorld *m_collisionWorld;
 
                     fe::resourceManager<sf::Texture> *m_textureManager;
                     fe::resourceManager<sf::Font> *m_fontManager;

@@ -1,18 +1,22 @@
 // collisionData.hpp
-// basic data that gets set when a collision happens
+// Data for when an object collides with another
 #pragma once
-#include "../../../math/Vector2.hpp"
+#include "collisionBody.hpp"
+#include "colliderTypes.hpp"
 
 namespace fe
     {
-        struct collider;
-
         struct collisionData
             {
-                // the collider which hit
-                collider *m_collider;
-                // How deep the collision is
-                fe::Vector2d m_collisionDepth;
-                int m_collisionGroup;
+                // The position of the other collider
+                float m_colliderPositionX;
+                float m_colliderPositionY;
+
+                // How deep the object penetrated into the other
+                float m_penetrationX;
+                float m_penetrationY;
+
+                // The type of collider the other body was
+                fe::colliderType m_colliderType;
             };
     }

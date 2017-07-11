@@ -4,6 +4,7 @@
 #include "subsystems/input/inputManager.hpp"
 #include "subsystems/resourceManager/resourceManager.hpp"
 #include "subsystems/physics/physicsEngine.hpp"
+#include "subsystems/physics/collision/collisionWorld.hpp"
 #include "subsystems/threading/threadPool.hpp"
 #include "debug/logger.hpp"
 #include "debug/profiler.hpp"
@@ -105,12 +106,16 @@ void fe::engine::update()
         m_physicsEngine->simulateForces(m_deltaTime, iterations);
         FE_END_PROFILE;
 
-        FE_PROFILE("engine_send_events");
-        m_eventSender->sendEvents();
+        FE_PROFILE("engine_collision_world_collide");
+        m_collisionWorld->handleCollisions();
         FE_END_PROFILE;
 
         FE_PROFILE("engine_state_postupdate");
         m_gameStateMachine->postUpdate();
+        FE_END_PROFILE;
+
+        FE_PROFILE("engine_send_events");
+        m_eventSender->sendEvents();
         FE_END_PROFILE;
     }
 
@@ -183,6 +188,9 @@ void fe::engine::startUp(unsigned long long totalMemory, unsigned long long stac
                 m_physicsEngine = new physicsEngine;
                 m_physicsEngine->startUp();
 
+                m_collisionWorld = new collisionWorld;
+                m_collisionWorld->startUp();
+
                 m_fontManager = new resourceManager<sf::Font>;
                 m_textureManager = new resourceManager<sf::Texture>;
 
@@ -206,6 +214,7 @@ void fe::engine::shutDown()
         m_fontManager->shutDown();
         m_textureManager->shutDown();
 
+        m_collisionWorld->shutDown();
         m_physicsEngine->shutDown();
         m_gameStateMachine->shutDown();
         m_inputManager->shutDown();
