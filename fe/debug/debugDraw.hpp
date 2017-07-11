@@ -30,3 +30,13 @@ namespace fe
                     void draw(sf::RenderTarget &target);
             };
     }
+
+#ifdef _DEBUG
+    #define FE_DEBUG_DRAW_LINE(x0, y0, x1, y1) fe::debugDraw::get().addLine(x0, y0, x1, y1)
+    #define FE_DEBUG_DRAW_SQUARE(xSize, ySize, xPos, yPos) fe::debugDraw::get().addSquare(xSize, ySize, xPos, yPos)
+    #define FE_DEBUG_DRAW_CIRCLE(radius, xPos, yPos) fe::debugDraw::get().addCircle(radius, xPos, yPos)
+#else
+    #define FE_DEBUG_DRAW_LINE(x0, y0, x1, y1)
+    #define FE_DEBUG_DRAW_SQUARE(xSize, ySize, xPos, yPos)
+    #define FE_DEBUG_DRAW_CIRCLE(radius, xPos, yPos)
+#endif
