@@ -49,11 +49,11 @@ void fe::debugDraw::addLine(int x0, int y0, int x1, int y1)
             {
                 if (steep)
                     {
-                        m_drawVerticies.append(sf::Vertex({ y, x }));
+                        m_drawVerticies.append(sf::Vertex({ (float)y, (float)x }));
                     }
                 else
                     {
-                        m_drawVerticies.append(sf::Vertex({ x, y }));
+                        m_drawVerticies.append(sf::Vertex({ (float)x, (float)y }));
                     }
                 error += dError;
                 if (error > 0.5f)
@@ -82,7 +82,7 @@ void fe::debugDraw::addCircle(int radius, int xPos, int yPos)
 
          while (x >= y)
              {
-                sf::Vertex appVert({ xPos + x, yPos + y }); m_drawVerticies.append(appVert);
+                sf::Vertex appVert({ (float)xPos + x, (float)yPos + y }); m_drawVerticies.append(appVert);
                 appVert.position.x = xPos + y; appVert.position.y = yPos + x; m_drawVerticies.append(appVert);
                 appVert.position.x = xPos - y; appVert.position.y = yPos + x; m_drawVerticies.append(appVert);
                 appVert.position.x = xPos - x; appVert.position.y = yPos + y; m_drawVerticies.append(appVert);

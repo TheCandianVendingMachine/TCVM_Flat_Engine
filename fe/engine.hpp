@@ -22,14 +22,11 @@ namespace fe
         class gameStateMachine;
         class eventSender;
         class baseGameState;
-<<<<<<< HEAD
         class physicsEngine;
         class collisionWorld;
         template<unsigned int>
         class threadPool;
-=======
         class debugDraw;
->>>>>>> 9134e5f0fab7caeeb643c90791604d8c6258c0d7
 
         template<typename T>
         class resourceManager;
