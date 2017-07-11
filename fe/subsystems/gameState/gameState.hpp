@@ -5,7 +5,6 @@
 #include "../../flatEngineExport.hpp"
 #include "../graphic/renderObject/sceneGraph.hpp"
 #include "../../entity/baseEntity.hpp"
-#include "../physics/collision/collisionHandler.hpp"
 #include "../../objectManagement/handleManager.hpp"
 #include "../memory/memoryManager.hpp"
 #include "../../debug/logger.hpp"
@@ -32,7 +31,6 @@ namespace fe
                     std::vector<gui::panel*> m_guiPanels;
 
                     fe::sceneGraph m_sceneGraph;
-                    fe::collisonHandler m_collisionHandler;
 
                 protected:
                     FLAT_ENGINE_API void addPanel(gui::panel *panel);
@@ -66,7 +64,6 @@ namespace fe
                     FLAT_ENGINE_API void shutDown();
 
                     FLAT_ENGINE_API fe::sceneGraph &getSceneGraph();
-                    FLAT_ENGINE_API fe::collisonHandler &getCollisionHandler();
 
                     FLAT_ENGINE_API virtual ~baseGameState();
             };

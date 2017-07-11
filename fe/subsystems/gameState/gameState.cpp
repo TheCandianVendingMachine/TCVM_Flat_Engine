@@ -93,11 +93,6 @@ fe::sceneGraph &fe::baseGameState::getSceneGraph()
         return m_sceneGraph;
     }
 
-fe::collisonHandler &fe::baseGameState::getCollisionHandler()
-    {
-        return m_collisionHandler;
-    }
-
 fe::baseGameState::~baseGameState()
     {}
 
