@@ -9,9 +9,6 @@
 #include "time/clock.hpp"
 #include "typeDefines.hpp"
 
-#define FE_PROFILE_ENGINE false
-#define FE_PROFILE_PRINT_ZEROS false
-
 namespace sf
     {
         class Texture;

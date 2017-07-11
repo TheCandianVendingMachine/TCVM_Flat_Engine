@@ -95,8 +95,6 @@ void fe::rigidBody::setFrictionCoefficient(float fricCoeff)
         m_frictionCoeff = fricCoeff;
     }
 
-
-// applies a force upon the rigid body. 
 void fe::rigidBody::applyForce(float x, float y)
     {
         if (!m_enabled) return;
@@ -104,11 +102,22 @@ void fe::rigidBody::applyForce(float x, float y)
         m_impulseY += y;
     }
 
+void fe::rigidBody::applyForce(fe::lightVector2d force)
+    {
+        m_impulseX += force.x;
+        m_impulseY += force.y;
+    }
 
 void fe::rigidBody::setVelocity(float x, float y)
     {
         m_velocityX = x;
         m_velocityY = y;
+    }
+
+void fe::rigidBody::setVelocity(fe::lightVector2d velocity)
+    {
+        m_velocityX += velocity.x;
+        m_velocityY += velocity.y;
     }
 
 void fe::rigidBody::setForce(float x, float y)
@@ -117,12 +126,38 @@ void fe::rigidBody::setForce(float x, float y)
         m_forceY = y;
     }
 
+void fe::rigidBody::setForce(fe::lightVector2d force)
+    {
+        m_forceX = force.x;
+        m_forceY = force.y;
+    }
+
 void fe::rigidBody::setDirection(float x, float y)
     {
         if (!m_enabled) return;
 
         m_velocityX = getSpeed() * fe::Vector2d(x, y).normalize().x;
-        m_velocityY = getSpeed() *fe::Vector2d(x, y).normalize().y;
+        m_velocityY = getSpeed() * fe::Vector2d(x, y).normalize().y;
+    }
+
+void fe::rigidBody::setDirection(fe::lightVector2d direction)
+    {
+        if (!m_enabled) return;
+
+        m_velocityX = getSpeed() * fe::Vector2d(direction.x, direction.y).normalize().x;
+        m_velocityY = getSpeed() * fe::Vector2d(direction.x, direction.y).normalize().y;
+    }
+
+void fe::rigidBody::setPosition(float x, float y)
+    {
+        m_positionX = x;
+        m_positionY = y;
+    }
+
+void fe::rigidBody::setPosition(fe::lightVector2d position)
+    {
+        m_positionX = position.x;
+        m_positionY = position.y;
     }
 
 fe::rigidBody::rigidBody() : m_mass(1.f), m_maxSpeed(0.f), m_frictionCoeff(1.f), m_enabled(true) {}

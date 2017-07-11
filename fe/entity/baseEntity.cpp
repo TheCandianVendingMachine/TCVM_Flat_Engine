@@ -51,3 +51,8 @@ void fe::baseEntity::onDestroy(fe::baseGameState &state)
         
     }
 
+void fe::baseEntity::updateModules()
+    {
+        m_renderObject->m_transform.setPosition(m_rigidBody->getPositionX(), m_rigidBody->getPositionY());
+    }
+

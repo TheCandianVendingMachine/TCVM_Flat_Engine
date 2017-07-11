@@ -60,7 +60,7 @@ namespace fe
 
                             virtual void handleEvent(const sf::Event &event) {}
                             virtual void update() {}
-                            virtual void draw(sf::RenderTarget &target);
+                            FLAT_ENGINE_API virtual void draw(sf::RenderTarget &target);
                             
                     };
             }

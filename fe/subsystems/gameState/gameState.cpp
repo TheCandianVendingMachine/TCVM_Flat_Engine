@@ -47,6 +47,7 @@ void fe::baseGameState::update()
                     {
                         objects[i]->update();
                         objects[i]->postUpdate();
+                        objects[i]->updateModules();
                     }
             }
         FE_END_PROFILE;

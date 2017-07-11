@@ -1,5 +1,5 @@
-// button.hpp
-// Can be clicked, and when clicked a callback is called
+// <NAME>button.hpp</NAME>
+// <DESCRIPTION>Can be clicked, and when clicked a callback is called</DESCRIPTION>
 #pragma once
 #define FLAT_ENGINE_EXPORT
 #include "../flatEngineExport.hpp"

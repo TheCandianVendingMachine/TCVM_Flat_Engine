@@ -66,15 +66,7 @@ void fe::sceneGraph::draw(sf::RenderTarget &window)
                             {}
                         else
                             {
-                                if (!render->m_transformable)
-                                    {
-                                        m_batch.add(render, nullptr, index);
-                                    }
-                                else
-                                    {
-                                        m_batch.add(render, &render->m_transformable->getMatrix(), index);
-                                    }
-                                
+                                m_batch.add(render, index);
                             }
                     }
             }
@@ -212,14 +204,7 @@ bool fe::sceneGraph::renderJob::execute()
                     {}
                 else
                     {
-                        if (!render->m_transformable)
-                            {
-                                m_batch.add(render, nullptr, index);
-                            }
-                        else
-                            {
-                                m_batch.add(render, &render->m_transformable->getMatrix(), index);
-                            }
+                        m_batch.add(render, index);
                     }
             }
         return true;

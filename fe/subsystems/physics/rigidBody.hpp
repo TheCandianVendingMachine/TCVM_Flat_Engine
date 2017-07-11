@@ -62,10 +62,19 @@ namespace fe
 
                     // applies a force upon the rigid body. 
                     FLAT_ENGINE_API void applyForce(float x, float y);
+                    FLAT_ENGINE_API void applyForce(fe::lightVector2d force);
 
                     FLAT_ENGINE_API void setVelocity(float x, float y);
+                    FLAT_ENGINE_API void setVelocity(fe::lightVector2d velocity);
+
                     FLAT_ENGINE_API void setForce(float x, float y);
+                    FLAT_ENGINE_API void setForce(fe::lightVector2d force);
+
                     FLAT_ENGINE_API void setDirection(float x, float y);
+                    FLAT_ENGINE_API void setDirection(fe::lightVector2d direction);
+
+                    FLAT_ENGINE_API void setPosition(float x, float y);
+                    FLAT_ENGINE_API void setPosition(fe::lightVector2d position);
 
                     FLAT_ENGINE_API rigidBody();
                     FLAT_ENGINE_API rigidBody(float mass);

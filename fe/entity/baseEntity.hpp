@@ -4,6 +4,7 @@
 #define FLAT_ENGINE_EXPORT
 #include "../flatEngineExport.hpp"
 #include "../typeDefines.hpp"
+#include "../subsystems/physics/rigidBody.hpp"
 
 namespace fe
     {
@@ -43,5 +44,7 @@ namespace fe
 
                     FLAT_ENGINE_API virtual void update() {}
                     FLAT_ENGINE_API virtual void postUpdate() {}
+                    FLAT_ENGINE_API void updateModules();
+
             };
     }
