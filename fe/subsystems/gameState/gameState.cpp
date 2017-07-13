@@ -45,7 +45,7 @@ void fe::baseGameState::preUpdateDefined()
             {
                 if (objects[i])
                     {
-                        objects[i]->postUpdate();
+                        objects[i]->updateModules();
                     }
             }
     }
