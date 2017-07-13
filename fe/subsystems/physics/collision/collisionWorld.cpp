@@ -41,6 +41,22 @@ void fe::collisionWorld::handleCollisions()
                                     ((sizeB.x + positionB.x >= positionA.x && positionB.x < sizeA.x + positionA.x) &&
                                      (sizeB.y + positionB.y >= positionA.y && positionB.y < sizeA.y + positionA.y)))
                                 {
+                                    fe::Vector2d centerFirst(positionA.x + (sizeA.x / 2),
+                                                             positionA.y + (sizeA.y / 2));
+
+                                    fe::Vector2d centerSecond(positionB.x + (sizeB.x / 2),
+                                                              positionB.y + (sizeB.y / 2));
+
+                                    fe::lightVector2d distance(centerFirst - centerSecond);
+                                    fe::lightVector2d minDistance((sizeA.x / 2) + (sizeB.x / 2),
+                                                                  (sizeA.y / 2) + (sizeB.y / 2));
+
+                                    m_collisionData[i].m_penetrationX = (distance.x > 0 ? minDistance.x - distance.x : -minDistance.x - distance.x) / 2.f;
+                                    m_collisionData[i].m_penetrationY = (distance.y > 0 ? minDistance.y - distance.y : -minDistance.y - distance.y) / 2.f;
+
+                                    m_collisionData[j].m_penetrationX = -(distance.x > 0 ? minDistance.x - distance.x : -minDistance.x - distance.x) / 2.f;
+                                    m_collisionData[j].m_penetrationY = -(distance.y > 0 ? minDistance.y - distance.y : -minDistance.y - distance.y) / 2.f;
+
                                     a->m_collisonCallback(m_collisionData[i]);
                                     b->m_collisonCallback(m_collisionData[j]);
                                 }
