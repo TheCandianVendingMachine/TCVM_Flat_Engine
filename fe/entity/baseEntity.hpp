@@ -5,6 +5,7 @@
 #include "../flatEngineExport.hpp"
 #include "../typeDefines.hpp"
 #include "../subsystems/physics/rigidBody.hpp"
+#include "../subsystems/physics/collision/collisionBody.hpp"
 
 namespace fe
     {
@@ -17,6 +18,7 @@ namespace fe
                 protected:
                     fe::renderObject *m_renderObject;
                     fe::rigidBody *m_rigidBody;
+                    fe::collisionBody *m_collisionBody;
 
                     fe::Handle m_handle;
 
@@ -46,7 +48,7 @@ namespace fe
                     FLAT_ENGINE_API virtual void postUpdate() {}
                     FLAT_ENGINE_API void updateModules();
 
-                    void move() { m_rigidBody->applyForce(2500, -200); }
+                    void move() { m_rigidBody->applyForce(-2500, 0); }
 
             };
     }

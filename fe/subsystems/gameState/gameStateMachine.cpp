@@ -162,7 +162,7 @@ void fe::gameStateMachine::preUpdate()
 
         if (m_endState && m_endState->m_currentState)
             {
-                m_endState->m_currentState->preUpdate();
+                m_endState->m_currentState->preUpdateDefined();
 
                 stateList *tail = m_endState->m_tail;
                 while (tail && tail->m_currentState && tail->m_options & stateOptions::UPDATE_UNDERNEATH)

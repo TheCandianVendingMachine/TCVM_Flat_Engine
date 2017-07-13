@@ -22,6 +22,6 @@ namespace fe
                 float m_positionY;
                 fe::colliderType m_colliderType;
 
-                std::function<void(fe::collisionData&)> m_collisonCallback;
+                std::function<void(fe::collisionData&)> m_collisonCallback = [] (fe::collisionData&) {};
             };
     }

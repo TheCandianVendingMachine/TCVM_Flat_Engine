@@ -1,5 +1,6 @@
 #include "random.hpp"
 #include "../feAssert.hpp"
+#include "../typeDefines.hpp"
 
 fe::random *fe::random::m_instance = nullptr;
 
@@ -9,7 +10,11 @@ void fe::random::startUp()
         if (!m_instance)
             {
                 m_instance = this;
+            #if FE_DEBUG_NO_SEED
+                m_randomizer.seed(1337);
+            #else
                 m_randomizer.seed(std::random_device{}());
+            #endif
             }
     }
 

@@ -51,6 +51,7 @@ namespace fe
                     FLAT_ENGINE_API void handleEvents(const sf::Event &event);
                     FLAT_ENGINE_API virtual void handleWindowEvent(const sf::Event &event) {}
 
+                    FLAT_ENGINE_API void preUpdateDefined();
                     FLAT_ENGINE_API virtual void preUpdate() {}
                     FLAT_ENGINE_API void update();
                     FLAT_ENGINE_API void postUpdateDefined();

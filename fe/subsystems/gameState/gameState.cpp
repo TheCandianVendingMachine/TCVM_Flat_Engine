@@ -37,6 +37,19 @@ void fe::baseGameState::handleEvents(const sf::Event &event)
         handleWindowEvent(event);
     }
 
+void fe::baseGameState::preUpdateDefined()
+    {
+        preUpdate();
+        auto objects = getObjects();
+        for (unsigned int i = 0; i < objectCount(); i++)
+            {
+                if (objects[i])
+                    {
+                        objects[i]->postUpdate();
+                    }
+            }
+    }
+
 void fe::baseGameState::update()
     {
         FE_PROFILE("game_state_entity_update");
@@ -57,10 +70,9 @@ void fe::baseGameState::postUpdateDefined()
         for (unsigned int i = 0; i < objectCount(); i++)
             {
                 if (objects[i])
-                {
-                    objects[i]->postUpdate();
-                    objects[i]->updateModules();
-                }
+                    {
+                        objects[i]->postUpdate();
+                    }
             }
 
         for (auto &panel : m_guiPanels)

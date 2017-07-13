@@ -293,6 +293,11 @@ fe::physicsEngine &fe::engine::getPhysicsEngine() const
         return *m_physicsEngine;
     }
 
+fe::collisionWorld &fe::engine::getCollisionWorld() const
+    {
+       return *m_collisionWorld;
+    }
+
 fe::threadPool<8> &fe::engine::getThreadPool() const
     {
         return *m_threadPool;

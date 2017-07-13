@@ -95,6 +95,7 @@ namespace fe
                     FLAT_ENGINE_API const fe::renderer &getRenderer() const;
                     FLAT_ENGINE_API fe::eventSender *getEventSender() const;
                     FLAT_ENGINE_API fe::physicsEngine &getPhysicsEngine() const;
+                    FLAT_ENGINE_API fe::collisionWorld &getCollisionWorld() const;
                     FLAT_ENGINE_API fe::threadPool<8> &getThreadPool() const;
 
                     template<typename T>
