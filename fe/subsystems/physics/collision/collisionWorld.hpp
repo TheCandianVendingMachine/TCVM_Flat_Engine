@@ -13,7 +13,7 @@ namespace fe
         class collisionWorld
             {
                 private:
-                    fe::poolAllocater<fe::collisionBody> m_collisionBodies;
+                    fe::poolAllocater<fe::AABB> m_collisionBodies;
                     // Collision data for each collision body. Index is equal to the index of the collision body
                     fe::collisionData m_collisionData[FE_MAX_GAME_OBJECTS];
 
@@ -24,8 +24,8 @@ namespace fe
 
                     FLAT_ENGINE_API void handleCollisions();
 
-                    FLAT_ENGINE_API fe::collisionBody *createCollider();
-                    FLAT_ENGINE_API void deleteCollider(fe::collisionBody *body);
+                    FLAT_ENGINE_API fe::AABB *createCollider();
+                    FLAT_ENGINE_API void deleteCollider(fe::AABB *body);
 
             };
     }

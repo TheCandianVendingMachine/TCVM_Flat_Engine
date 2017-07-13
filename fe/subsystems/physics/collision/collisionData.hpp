@@ -1,8 +1,6 @@
 // collisionData.hpp
 // Data for when an object collides with another
 #pragma once
-#include "collisionBody.hpp"
-#include "colliderTypes.hpp"
 
 namespace fe
     {
@@ -16,7 +14,5 @@ namespace fe
                 float m_penetrationX;
                 float m_penetrationY;
 
-                // The type of collider the other body was
-                fe::colliderType m_colliderType;
             };
     }

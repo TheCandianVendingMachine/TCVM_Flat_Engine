@@ -18,7 +18,7 @@ namespace fe
                 protected:
                     fe::renderObject *m_renderObject;
                     fe::rigidBody *m_rigidBody;
-                    fe::collisionBody *m_collisionBody;
+                    fe::AABB *m_collisionBody;
 
                     fe::Handle m_handle;
 

@@ -31,10 +31,10 @@ void fe::collisionWorld::handleCollisions()
                         else
                             {
                                 fe::lightVector2d positionA(a->m_positionX, a->m_positionY);
-                                fe::lightVector2d sizeA = a->m_colliderSize.m_squareSize;
+                                fe::lightVector2d sizeA(a->m_sizeX, a->m_sizeY);
 
                                 fe::lightVector2d positionB(b->m_positionX, b->m_positionY);
-                                fe::lightVector2d sizeB = b->m_colliderSize.m_squareSize;
+                                fe::lightVector2d sizeB(b->m_sizeX, b->m_sizeY);
 
                                 if (((sizeA.x + positionA.x >= positionB.x && positionA.x < sizeB.x + positionB.x) &&
                                      (sizeA.y + positionA.y >= positionB.y && positionA.y < sizeB.y + positionB.y)) || 
@@ -57,20 +57,20 @@ void fe::collisionWorld::handleCollisions()
                                     m_collisionData[j].m_penetrationX = -(distance.x > 0 ? minDistance.x - distance.x : -minDistance.x - distance.x) / 2.f;
                                     m_collisionData[j].m_penetrationY = -(distance.y > 0 ? minDistance.y - distance.y : -minDistance.y - distance.y) / 2.f;
 
-                                    a->m_collisonCallback(m_collisionData[i]);
-                                    b->m_collisonCallback(m_collisionData[j]);
+                                    a->m_collisionCallback(m_collisionData[i]);
+                                    b->m_collisionCallback(m_collisionData[j]);
                                 }
                             }
                     }
             }
     }
 
-fe::collisionBody *fe::collisionWorld::createCollider()
+fe::AABB *fe::collisionWorld::createCollider()
     {
         return m_collisionBodies.alloc();
     }
 
-void fe::collisionWorld::deleteCollider(fe::collisionBody *body)
+void fe::collisionWorld::deleteCollider(fe::AABB *body)
     {
         m_collisionBodies.free(body);
     }

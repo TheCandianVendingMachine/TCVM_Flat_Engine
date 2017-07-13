@@ -1,27 +1,20 @@
 // collisionBody.hpp
 // Multiple collision bodies that exist.
 #pragma once
-#include "colliderTypes.hpp"
+#include "collisionData.hpp"
 #include "../../../math/Vector2.hpp"
 #include <functional>
 
 namespace fe
     {
-        struct collisionData;
-        struct collisionBody
+        struct AABB
             {
-                union colliderSize
-                    {
-                        float m_circleRadius;
-                        fe::lightVector2d m_squareSize;
-
-                        colliderSize() { std::memset(this, 0, sizeof(colliderSize)); }
-                    } m_colliderSize;
-
                 float m_positionX;
                 float m_positionY;
-                fe::colliderType m_colliderType;
 
-                std::function<void(fe::collisionData&)> m_collisonCallback = [] (fe::collisionData&) {};
+                float m_sizeX;
+                float m_sizeY;
+
+                std::function<void(fe::collisionData&)> m_collisionCallback = [](fe::collisionData&) {};
             };
     }
