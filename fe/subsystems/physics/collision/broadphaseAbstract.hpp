@@ -9,13 +9,13 @@
 
 namespace fe
     {
-        class collider;
-        class AABB;
+        struct collider;
+        struct AABB;
         class broadphaseAbstract
             {
                 public:
                     // Adds an AABB to the broadphase algorithm
-                    virtual void add(fe::AABB *aabb) = 0;
+                    virtual void add(fe::collider *aabb) = 0;
 
                     // Updates all colliders in the broadphase algorithm
                     virtual void update() = 0;
@@ -33,7 +33,7 @@ namespace fe
                     // Returns an array of objects that collide with the AABB argument.
                     // First return value is how many objects collide
                     // Second return value is the array of objects that have collided
-                    virtual std::pair<unsigned int, collider*[FE_MAX_GAME_OBJECTS]> collidesWithAABB(fe::AABB &aabb) = 0;
+                    virtual std::pair<unsigned int, collider*[FE_MAX_GAME_OBJECTS]> collidesWithAABB(fe::collider &aabb) = 0;
 
                     // Casts a ray and tests against the broadphase algorithm
                     virtual raycastResult raycast(float x, float y, float dirX, float dirY) = 0;
