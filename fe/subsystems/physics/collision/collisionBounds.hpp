@@ -14,5 +14,8 @@ namespace fe
             {
                 float m_sizeX;
                 float m_sizeY;
+
+                bool intersects(const fe::AABB *other);
+                bool contains(const fe::AABB *other);
             };
     }

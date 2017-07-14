@@ -62,6 +62,18 @@ fe::aabbTree::node *fe::aabbTree::node::getSibling() const
 
 void fe::aabbTree::updateNodeHelper(node *base, std::vector<node*> &invalidNodes)
     {
+        if (base->isLeaf())
+            {
+                if (!base->aabb.contains(base->data))
+                    {
+                        invalidNodes.push_back(base);
+                    }
+            }
+        else
+            {
+                updateNodeHelper(base->children[0], invalidNodes);
+                updateNodeHelper(base->children[1], invalidNodes);
+            }
     }
 
 void fe::aabbTree::insertNode(node *base, node **parent)
