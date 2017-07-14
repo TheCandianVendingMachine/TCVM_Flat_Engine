@@ -2,8 +2,8 @@
 
 void fe::collisionWorld::handleCollision(fe::collider *a, fe::collider *b)
     {
-        fe::AABB *first = static_cast<fe::AABB*>(a);
-        fe::AABB *second = static_cast<fe::AABB*>(b);
+        fe::AABB *first = static_cast<fe::AABB*>(a->m_bounds);
+        fe::AABB *second = static_cast<fe::AABB*>(b->m_bounds);
 
         fe::collisionData dataFirst;
         fe::collisionData dataSecond;
@@ -31,13 +31,13 @@ void fe::collisionWorld::handleCollision(fe::collider *a, fe::collider *b)
                
                 dataFirst.m_penetrationX = (distance.x > 0 ? minDistance.x - distance.x : -minDistance.x - distance.x) / 2.f;
                 dataFirst.m_penetrationY = (distance.y > 0 ? minDistance.y - distance.y : -minDistance.y - distance.y) / 2.f;
-                dataFirst.m_colliderPositionX = a->m_positionX;
-                dataFirst.m_colliderPositionY = a->m_positionY;
+                dataFirst.m_colliderPositionX = a->m_bounds->m_positionX;
+                dataFirst.m_colliderPositionY = a->m_bounds->m_positionY;
 
                 dataSecond.m_penetrationX = -(distance.x > 0 ? minDistance.x - distance.x : -minDistance.x - distance.x) / 2.f;
                 dataSecond.m_penetrationY = -(distance.y > 0 ? minDistance.y - distance.y : -minDistance.y - distance.y) / 2.f;
-                dataSecond.m_colliderPositionX = b->m_positionX;
-                dataSecond.m_colliderPositionY = b->m_positionY;
+                dataSecond.m_colliderPositionX = b->m_bounds->m_positionX;
+                dataSecond.m_colliderPositionY = b->m_bounds->m_positionY;
 
                 a->m_collisionCallback(dataFirst);
                 b->m_collisionCallback(dataSecond);
@@ -102,12 +102,12 @@ void fe::collisionWorld::handleCollisions()
             }
     }
 
-fe::AABB *fe::collisionWorld::createCollider()
+fe::collider *fe::collisionWorld::createCollider()
     {
         return m_collisionBodies.alloc();
     }
 
-void fe::collisionWorld::deleteCollider(fe::AABB *body)
+void fe::collisionWorld::deleteCollider(fe::collider *body)
     {
         m_collisionBodies.free(body);
     }

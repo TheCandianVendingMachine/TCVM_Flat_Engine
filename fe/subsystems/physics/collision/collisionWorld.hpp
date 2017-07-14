@@ -14,7 +14,7 @@ namespace fe
         class collisionWorld
             {
                 private:
-                    fe::poolAllocater<fe::AABB> m_collisionBodies;
+                    fe::poolAllocater<fe::collider> m_collisionBodies;
                     fe::broadphaseAbstract *m_broadphase;
 
                     FLAT_ENGINE_API void handleCollision(fe::collider *a, fe::collider *b);
@@ -29,8 +29,8 @@ namespace fe
 
                     FLAT_ENGINE_API void handleCollisions();
 
-                    FLAT_ENGINE_API fe::AABB *createCollider();
-                    FLAT_ENGINE_API void deleteCollider(fe::AABB *body);
+                    FLAT_ENGINE_API fe::collider *createCollider();
+                    FLAT_ENGINE_API void deleteCollider(fe::collider *body);
 
             };
     }

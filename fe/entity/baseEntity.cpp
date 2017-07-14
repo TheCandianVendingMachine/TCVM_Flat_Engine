@@ -57,7 +57,9 @@ void fe::baseEntity::updateModules()
         float posY = m_rigidBody->getPositionY();
 
         m_renderObject->m_transform.setPosition(posX, posY);
-        m_collisionBody->m_positionX = posX;
-        m_collisionBody->m_positionY = posY;
+        m_collisionBody->m_bounds->m_positionX = posX;
+        m_collisionBody->m_bounds->m_positionY = posY;
+        m_collisionBody->m_aabb.m_positionX = posX;
+        m_collisionBody->m_aabb.m_positionY = posY;
     }
 
