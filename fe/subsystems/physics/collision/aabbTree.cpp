@@ -60,6 +60,90 @@ fe::aabbTree::node *fe::aabbTree::node::getSibling() const
         return this == parent->children[0] ? parent->children[1] : parent->children[0];
     }
 
+void fe::aabbTree::updateNodeHelper(node *base, std::vector<node*> &invalidNodes)
+    {
+    }
+
+void fe::aabbTree::insertNode(node *base, node **parent)
+    {
+    }
+
+void fe::aabbTree::removeNode(node *base)
+    {
+    }
+
+void fe::aabbTree::computePairsHelper(node *n0, node *n1)
+    {
+    }
+
+void fe::aabbTree::clearChildrenCrossFlagHelper(node *base)
+    {
+    }
+
+void fe::aabbTree::crossChildren(node *base)
+    {
+    }
+
 fe::aabbTree::aabbTree() : m_root(nullptr), m_margin(0.2f)
     {
+    }
+
+void fe::aabbTree::add(fe::collider *collider)
+    {
+    }
+
+void fe::aabbTree::remove(fe::collider *collider)
+    {
+    }
+
+void fe::aabbTree::update(float dt)
+    {
+        if (m_root)
+            {
+                if (m_root->isLeaf())
+                    {
+                        m_root->updateAABB(m_margin);
+                    }
+                else
+                    {
+                        m_invalidNodes.clear();
+                        updateNodeHelper(m_root, m_invalidNodes);
+
+                        for (node *base : m_invalidNodes)
+                            {
+                                node *parent = base->parent;
+                                node *sibling = base->getSibling();
+                                node **parentLink = parent->parent ? (parent == parent->parent->children[0] ? &parent->parent->children[0] : &parent->parent->children[1]) : &m_root;
+
+                                sibling->parent = parent->parent ? parent->parent : nullptr;
+
+                                *parentLink = sibling;
+                                delete parent;
+
+                                base->updateAABB(m_margin);
+                                insertNode(base, &m_root);
+                            }
+                    }
+                m_invalidNodes.clear();
+            }
+    }
+
+const std::list<std::pair<fe::collider*, fe::collider*>> fe::aabbTree::computeColliderPairs()
+    {
+        return std::list<std::pair<fe::collider*, fe::collider*>>();
+    }
+
+fe::collider *fe::aabbTree::colliderAtPoint(float x, float y)
+    {
+        return nullptr;
+    }
+
+std::pair<unsigned int, fe::collider*[FE_MAX_GAME_OBJECTS]> fe::aabbTree::collidesWithAABB(fe::collider &aabb)
+    {
+        return std::pair<unsigned int, fe::collider*[FE_MAX_GAME_OBJECTS]>();
+    }
+
+fe::raycastResult fe::aabbTree::raycast(float x, float y, float dirX, float dirY)
+    {
+        return fe::raycastResult();
     }
