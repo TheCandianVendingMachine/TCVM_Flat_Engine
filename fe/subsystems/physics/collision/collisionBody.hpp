@@ -7,14 +7,17 @@
 
 namespace fe
     {
-        struct AABB
+        struct collider 
             {
                 float m_positionX;
                 float m_positionY;
 
+                std::function<void(fe::collisionData&)> m_collisionCallback = [](fe::collisionData&) {};
+            };
+
+        struct AABB : public collider
+            {
                 float m_sizeX;
                 float m_sizeY;
-
-                std::function<void(fe::collisionData&)> m_collisionCallback = [](fe::collisionData&) {};
             };
     }
