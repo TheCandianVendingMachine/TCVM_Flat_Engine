@@ -10,6 +10,7 @@
 namespace fe
     {
         struct collider;
+        // Created using http://allenchou.net/2014/02/game-physics-broadphase-dynamic-aabb-tree/
         class aabbTree : public broadphaseAbstract
             {
                 private:
@@ -23,10 +24,11 @@ namespace fe
                             fe::AABB *data;
 
                             node();
-                            bool isLeaf();
+                            bool isLeaf() const;
                             void setBranch(node *n0, node *n1);
                             void setLeaf(fe::AABB *data);
                             void updateAABB(float margin);
+                            node *getSibling() const;
                         };
 
                     void updateNodeHelper(node *base, std::vector<node*> &invalidNodes);
@@ -51,7 +53,7 @@ namespace fe
                     void remove(fe::collider *collider);
 
                     // Updates all colliders in the broadphase algorithm
-                    void update();
+                    void update(float dt);
 
                     // Returns a list of the colliders that are possibly intersecting
                     const std::list<std::pair<fe::collider*, fe::collider*>> computeColliderPairs();
