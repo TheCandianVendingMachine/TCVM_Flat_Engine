@@ -15,7 +15,9 @@ namespace fe
             {
                 public:
                     // Adds an AABB to the broadphase algorithm
-                    virtual void add(fe::collider *aabb) = 0;
+                    virtual void add(fe::collider *collider) = 0;
+                    // Removes the collider from the broadphase algorithm
+                    virtual void remove(fe::collider *collider) = 0;
 
                     // Updates all colliders in the broadphase algorithm
                     virtual void update(float dt) = 0;

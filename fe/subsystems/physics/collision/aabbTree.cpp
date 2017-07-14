@@ -22,10 +22,10 @@ void fe::aabbTree::node::setBranch(node *n0, node *n1)
         children[1] = n1;
     }
 
-void fe::aabbTree::node::setLeaf(fe::AABB *data, void **userData)
+void fe::aabbTree::node::setLeaf(fe::collider *data)
     {
         this->data = data;
-        (*userData) = this;
+        data->m_userData = this;
 
         children[0] = nullptr;
         children[1] = nullptr;
@@ -35,11 +35,11 @@ void fe::aabbTree::node::updateAABB(float margin)
     {
         if (isLeaf())
             {
-                aabb.m_positionX = data->m_positionX - margin;
-                aabb.m_positionY = data->m_positionY - margin;
+                aabb.m_positionX = data->m_aabb.m_positionX - margin;
+                aabb.m_positionY = data->m_aabb.m_positionY - margin;
 
-                aabb.m_sizeX = data->m_sizeX + margin;
-                aabb.m_sizeY = data->m_sizeY + margin;
+                aabb.m_sizeX = data->m_aabb.m_sizeX + margin;
+                aabb.m_sizeY = data->m_aabb.m_sizeY + margin;
             }
         else
             {
@@ -56,7 +56,7 @@ void fe::aabbTree::updateNodeHelper(node *base, std::vector<node*> &invalidNodes
     {
         if (base->isLeaf())
             {
-                if (!base->aabb.contains(base->data))
+                if (!base->aabb.contains(&base->data->m_aabb))
                     {
                         invalidNodes.push_back(base);
                     }
@@ -137,7 +137,7 @@ void fe::aabbTree::crossChildren(node *base)
     {
     }
 
-fe::aabbTree::aabbTree() : m_root(nullptr), m_margin(0.2f)
+fe::aabbTree::aabbTree() : m_root(nullptr), m_margin(0.5f)
     {
     }
 
@@ -146,14 +146,14 @@ void fe::aabbTree::add(fe::collider *collider)
         if (m_root)
             {
                 node *base = new node();
-                base->setLeaf(&collider->m_aabb, &collider->m_userData);
+                base->setLeaf(collider);
                 base->updateAABB(m_margin);
                 insertNode(base, &m_root);
             }
         else
             {
                 m_root = new node();
-                m_root->setLeaf(&collider->m_aabb, &collider->m_userData);
+                m_root->setLeaf(collider);
                 m_root->updateAABB(m_margin);
             }
     }

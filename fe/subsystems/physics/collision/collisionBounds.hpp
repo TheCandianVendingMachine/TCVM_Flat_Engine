@@ -15,8 +15,8 @@ namespace fe
                 float m_sizeX;
                 float m_sizeY;
 
-                bool intersects(const fe::AABB *other);
-                bool contains(const fe::AABB *other);
+                bool intersects(const fe::AABB *other) const;
+                bool contains(const fe::AABB *other) const;
                 fe::AABB merge(const fe::AABB *other);
                 float volume() const;
             };

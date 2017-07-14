@@ -94,6 +94,7 @@ void fe::collisionWorld::handleCollisions()
             }
         else
             {
+                m_broadphase->update(0.f);
                 auto pairs = m_broadphase->computeColliderPairs();
                 for (auto &pair : pairs)
                     {
@@ -102,12 +103,23 @@ void fe::collisionWorld::handleCollisions()
             }
     }
 
-fe::collider *fe::collisionWorld::createCollider()
+fe::collider *fe::collisionWorld::createCollider(float sizeX, float sizeY)
     {
-        return m_collisionBodies.alloc();
+        fe::collider *collider = m_collisionBodies.alloc();
+        collider->m_aabb.m_sizeX = sizeX;
+        collider->m_aabb.m_sizeY = sizeY;
+        if (m_broadphase)
+            {
+                m_broadphase->add(collider);
+            }
+        return collider;
     }
 
 void fe::collisionWorld::deleteCollider(fe::collider *body)
     {
+        if (m_broadphase)
+            {
+                m_broadphase->remove(body);
+            }
         m_collisionBodies.free(body);
     }

@@ -29,7 +29,7 @@ namespace fe
 
                     FLAT_ENGINE_API void handleCollisions();
 
-                    FLAT_ENGINE_API fe::collider *createCollider();
+                    FLAT_ENGINE_API fe::collider *createCollider(float sizeX, float sizeY);
                     FLAT_ENGINE_API void deleteCollider(fe::collider *body);
 
             };

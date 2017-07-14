@@ -21,22 +21,22 @@ namespace fe
 
                             bool childrenCrossed;
                             fe::AABB aabb;
-                            fe::AABB *data;
+                            fe::collider *data;
 
-                            node();
-                            bool isLeaf() const;
-                            void setBranch(node *n0, node *n1);
-                            void setLeaf(fe::AABB *data, void **userData);
-                            void updateAABB(float margin);
-                            node *getSibling() const;
+                            FLAT_ENGINE_API node();
+                            FLAT_ENGINE_API bool isLeaf() const;
+                            FLAT_ENGINE_API void setBranch(node *n0, node *n1);
+                            FLAT_ENGINE_API void setLeaf(fe::collider *data);
+                            FLAT_ENGINE_API void updateAABB(float margin);
+                            FLAT_ENGINE_API node *getSibling() const;
                         };
 
-                    void updateNodeHelper(node *base, std::vector<node*> &invalidNodes);
-                    void insertNode(node *base, node **parent);
-                    void removeNode(node *base);
-                    void computePairsHelper(node *n0, node *n1);
-                    void clearChildrenCrossFlagHelper(node *base);
-                    void crossChildren(node *base);
+                    FLAT_ENGINE_API void updateNodeHelper(node *base, std::vector<node*> &invalidNodes);
+                    FLAT_ENGINE_API void insertNode(node *base, node **parent);
+                    FLAT_ENGINE_API void removeNode(node *base);
+                    FLAT_ENGINE_API void computePairsHelper(node *n0, node *n1);
+                    FLAT_ENGINE_API void clearChildrenCrossFlagHelper(node *base);
+                    FLAT_ENGINE_API void crossChildren(node *base);
 
                     node *m_root;
                     std::list<std::pair<collider*, collider*>> m_pairs;
@@ -44,30 +44,30 @@ namespace fe
                     std::vector<node*> m_invalidNodes;
 
                 public:
-                    aabbTree();
+                    FLAT_ENGINE_API aabbTree();
 
                     // Adds an AABB to the broadphase algorithm
-                    void add(fe::collider *collider);
+                    FLAT_ENGINE_API void add(fe::collider *collider);
 
                     // Removes  an AABB from the tree
-                    void remove(fe::collider *collider);
+                    FLAT_ENGINE_API void remove(fe::collider *collider);
 
                     // Updates all colliders in the broadphase algorithm
-                    void update(float dt);
+                    FLAT_ENGINE_API void update(float dt);
 
                     // Returns a list of the colliders that are possibly intersecting
-                    const std::list<std::pair<fe::collider*, fe::collider*>> computeColliderPairs();
+                    FLAT_ENGINE_API const std::list<std::pair<fe::collider*, fe::collider*>> computeColliderPairs();
 
                     // Returns the collider that is at the point
-                    fe::collider *colliderAtPoint(float x, float y);
+                    FLAT_ENGINE_API fe::collider *colliderAtPoint(float x, float y);
 
                     // Returns an array of objects that collide with the AABB argument.
                     // First return value is how many objects collide
                     // Second return value is the array of objects that have collided
-                    std::pair<unsigned int, fe::collider*[FE_MAX_GAME_OBJECTS]> collidesWithAABB(fe::collider &aabb);
+                    FLAT_ENGINE_API std::pair<unsigned int, fe::collider*[FE_MAX_GAME_OBJECTS]> collidesWithAABB(fe::collider &aabb);
 
                     // Casts a ray and tests against the broadphase algorithm
-                    fe::raycastResult raycast(float x, float y, float dirX, float dirY);
+                    FLAT_ENGINE_API fe::raycastResult raycast(float x, float y, float dirX, float dirY);
 
             };
     }

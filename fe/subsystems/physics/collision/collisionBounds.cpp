@@ -1,16 +1,16 @@
 #include "collisionBounds.hpp"
 #include <algorithm>
 
-bool fe::AABB::intersects(const fe::AABB *other)
+bool fe::AABB::intersects(const fe::AABB *other) const
     {
         return  (other->m_positionX >= m_positionX && other->m_positionX < m_positionX + m_sizeX) &&
                 (other->m_positionY >= m_positionY && other->m_positionY < m_positionY + m_sizeY);
     }
 
-bool fe::AABB::contains(const fe::AABB *other)
+bool fe::AABB::contains(const fe::AABB *other) const
     {
-        return  (other->m_positionX >= m_positionX && other->m_positionX + other->m_sizeX < m_positionX + m_sizeX) &&
-                (other->m_positionY >= m_positionY && other->m_positionY + other->m_sizeY < m_positionY + m_sizeY);
+        return  (other->m_positionX >= m_positionX && other->m_positionX + other->m_sizeX <= m_positionX + m_sizeX) &&
+                (other->m_positionY >= m_positionY && other->m_positionY + other->m_sizeY <= m_positionY + m_sizeY);
     }
 
 fe::AABB fe::AABB::merge(const fe::AABB *other)
