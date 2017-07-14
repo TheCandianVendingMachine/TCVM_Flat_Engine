@@ -26,7 +26,7 @@ namespace fe
                             node();
                             bool isLeaf() const;
                             void setBranch(node *n0, node *n1);
-                            void setLeaf(fe::AABB *data);
+                            void setLeaf(fe::AABB *data, void **userData);
                             void updateAABB(float margin);
                             node *getSibling() const;
                         };

@@ -27,9 +27,10 @@ fe::AABB fe::AABB::merge(const fe::AABB *other)
 
         aabb.m_sizeX = m_positionX + other->m_sizeX + (highestMinX - lowestMaxX);
         aabb.m_sizeY = m_positionY + other->m_sizeY + (highestMinY - lowestMaxY);
+        return aabb;
     }
 
-float fe::AABB::volume()
+float fe::AABB::volume() const
     {
         return m_sizeX * m_sizeY;
     }

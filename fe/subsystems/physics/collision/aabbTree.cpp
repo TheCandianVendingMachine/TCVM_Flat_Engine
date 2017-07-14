@@ -22,9 +22,10 @@ void fe::aabbTree::node::setBranch(node *n0, node *n1)
         children[1] = n1;
     }
 
-void fe::aabbTree::node::setLeaf(fe::AABB *data)
+void fe::aabbTree::node::setLeaf(fe::AABB *data, void **userData)
     {
         this->data = data;
+        (*userData) = this;
 
         children[0] = nullptr;
         children[1] = nullptr;
@@ -100,6 +101,28 @@ void fe::aabbTree::insertNode(node *base, node **parent)
 
 void fe::aabbTree::removeNode(node *base)
     {
+        node *parent = base->parent;
+        if (parent)
+            {
+                node *sibling = base->getSibling();
+                if (parent->parent)
+                    {
+                        sibling->parent = parent->parent;
+                        (parent == parent->parent->children[0] ? parent->parent->children[0] : parent->parent->children[1]) = sibling;
+                    }
+                else
+                    {
+                        node *sibling = base->getSibling();
+                        m_root = sibling;
+                        sibling->parent = nullptr;
+                    }
+                delete parent;
+            }
+        else
+            {
+                m_root = nullptr;
+            }
+        delete base;
     }
 
 void fe::aabbTree::computePairsHelper(node *n0, node *n1)
@@ -123,20 +146,26 @@ void fe::aabbTree::add(fe::collider *collider)
         if (m_root)
             {
                 node *base = new node();
-                base->setLeaf(&collider->m_aabb);
+                base->setLeaf(&collider->m_aabb, &collider->m_userData);
                 base->updateAABB(m_margin);
                 insertNode(base, &m_root);
             }
         else
             {
                 m_root = new node();
-                m_root->setLeaf(&collider->m_aabb);
+                m_root->setLeaf(&collider->m_aabb, &collider->m_userData);
                 m_root->updateAABB(m_margin);
             }
     }
 
 void fe::aabbTree::remove(fe::collider *collider)
     {
+        node *base = static_cast<node*>(collider->m_userData);
+
+        base->data = nullptr;
+        collider->m_userData = nullptr;
+
+        removeNode(base);
     }
 
 void fe::aabbTree::update(float dt)

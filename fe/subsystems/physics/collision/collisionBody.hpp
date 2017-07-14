@@ -12,7 +12,8 @@ namespace fe
             {
                 std::function<void(fe::collisionData&)> m_collisionCallback = [](fe::collisionData&) {};
 
-                collisionBounds *m_bounds;
                 AABB m_aabb;
+                collisionBounds *m_bounds;
+                void *m_userData; // any additional data that needs to be stored
             };
     }
