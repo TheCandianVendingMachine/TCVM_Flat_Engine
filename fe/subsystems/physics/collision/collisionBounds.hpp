@@ -17,5 +17,7 @@ namespace fe
 
                 bool intersects(const fe::AABB *other);
                 bool contains(const fe::AABB *other);
+                fe::AABB merge(const fe::AABB *other);
+                float volume() const;
             };
     }

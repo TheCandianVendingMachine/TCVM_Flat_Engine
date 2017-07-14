@@ -1,4 +1,5 @@
 #include "aabbTree.hpp"
+#include "collisionBody.hpp"
 #include <algorithm>
 
 fe::aabbTree::node::node() : parent(nullptr), data(nullptr)
@@ -41,17 +42,7 @@ void fe::aabbTree::node::updateAABB(float margin)
             }
         else
             {
-                aabb.m_positionX = std::min(children[0]->aabb.m_positionX, children[1]->aabb.m_positionX);
-                aabb.m_positionY = std::min(children[0]->aabb.m_positionY, children[1]->aabb.m_positionY);
-
-                float lowestMaxX = children[0]->aabb.m_positionX < children[1]->aabb.m_positionX ? children[0]->aabb.m_positionX : children[1]->aabb.m_positionX;
-                float highestMinX = children[0]->aabb.m_positionX > children[1]->aabb.m_positionX ? children[0]->aabb.m_positionX : children[1]->aabb.m_positionX;
-
-                float lowestMaxY = children[0]->aabb.m_positionY < children[1]->aabb.m_positionY ? children[0]->aabb.m_positionY : children[1]->aabb.m_positionY;
-                float highestMinY = children[0]->aabb.m_positionY > children[1]->aabb.m_positionY ? children[0]->aabb.m_positionY : children[1]->aabb.m_positionY;
-
-                aabb.m_sizeX = children[0]->aabb.m_sizeX + children[1]->aabb.m_sizeX + (highestMinX - lowestMaxX);
-                aabb.m_sizeY = children[0]->aabb.m_sizeY + children[1]->aabb.m_sizeY + (highestMinY - lowestMaxY);
+                aabb = children[0]->aabb.merge(&children[1]->aabb);
             }
     }
 
@@ -78,6 +69,33 @@ void fe::aabbTree::updateNodeHelper(node *base, std::vector<node*> &invalidNodes
 
 void fe::aabbTree::insertNode(node *base, node **parent)
     {
+        node *p = *parent;
+        if (p->isLeaf())
+            {
+                node *newParent = new node();
+                newParent->parent = p->parent;
+                newParent->setBranch(base, p);
+                *parent = newParent;
+            }
+        else
+            {
+                fe::AABB &aabb0 = p->children[0]->aabb;
+                fe::AABB &aabb1 = p->children[1]->aabb;
+
+                float volumeDiff0 = aabb0.merge(&base->aabb).volume() - aabb0.volume();
+                float volumeDiff1 = aabb1.merge(&base->aabb).volume() - aabb1.volume();
+
+                if (volumeDiff0 < volumeDiff1)
+                    {
+                        insertNode(base, &p->children[0]);
+                    }
+                else
+                    {
+                        insertNode(base, &p->children[1]);
+                    }
+            }
+
+        (*parent)->updateAABB(m_margin);
     }
 
 void fe::aabbTree::removeNode(node *base)
@@ -102,6 +120,19 @@ fe::aabbTree::aabbTree() : m_root(nullptr), m_margin(0.2f)
 
 void fe::aabbTree::add(fe::collider *collider)
     {
+        if (m_root)
+            {
+                node *base = new node();
+                base->setLeaf(&collider->m_aabb);
+                base->updateAABB(m_margin);
+                insertNode(base, &m_root);
+            }
+        else
+            {
+                m_root = new node();
+                m_root->setLeaf(&collider->m_aabb);
+                m_root->updateAABB(m_margin);
+            }
     }
 
 void fe::aabbTree::remove(fe::collider *collider)
