@@ -127,14 +127,62 @@ void fe::aabbTree::removeNode(node *base)
 
 void fe::aabbTree::computePairsHelper(node *n0, node *n1)
     {
+        if (!n0 || !n1)
+            {
+                return;
+            }
+
+        if (n0->isLeaf())
+            {
+                // 2 Leaves, check proxies instead of fat AABBs
+                if (n1->isLeaf() && n0->data->m_aabb.intersects(&n0->data->m_aabb))
+                    {
+                        m_pairs.push_back(std::make_pair(n0->data, n1->data));
+                    }
+                else // 1 Branch / 1 Leaf, 2 cross checks
+                    {
+                        crossChildren(n1);
+                        computePairsHelper(n0, n1->children[0]);
+                        computePairsHelper(n0, n1->children[1]);
+                    }
+            }
+        else
+            {
+                if (n1->isLeaf())
+                    {
+                        crossChildren(n0);
+                        computePairsHelper(n0, n1->children[0]);
+                        computePairsHelper(n0, n1->children[1]);
+                    }
+                else
+                    {
+                        crossChildren(n0);
+                        crossChildren(n1);
+                        computePairsHelper(n0->children[0], n1->children[0]);
+                        computePairsHelper(n0->children[0], n1->children[1]);
+                        computePairsHelper(n0->children[1], n1->children[0]);
+                        computePairsHelper(n0->children[1], n1->children[1]);
+                    }
+            }
     }
 
 void fe::aabbTree::clearChildrenCrossFlagHelper(node *base)
     {
+        base->childrenCrossed = false;
+        if (!base->isLeaf())
+            {
+                clearChildrenCrossFlagHelper(base->children[0]);
+                clearChildrenCrossFlagHelper(base->children[1]);
+            }
     }
 
 void fe::aabbTree::crossChildren(node *base)
     {
+        if (!base->childrenCrossed)
+            {
+                computePairsHelper(base->children[0], base->children[1]);
+                base->childrenCrossed = true;
+            }
     }
 
 fe::aabbTree::aabbTree() : m_root(nullptr), m_margin(0.5f)
@@ -202,7 +250,18 @@ void fe::aabbTree::update(float dt)
 
 const std::list<std::pair<fe::collider*, fe::collider*>> fe::aabbTree::computeColliderPairs()
     {
-        return std::list<std::pair<fe::collider*, fe::collider*>>();
+        m_pairs.clear();
+
+        if (!m_root || m_root->isLeaf())
+            {
+                return m_pairs;
+            }
+
+        clearChildrenCrossFlagHelper(m_root);
+
+        computePairsHelper(m_root->children[0], m_root->children[1]);
+
+        return m_pairs;
     }
 
 fe::collider *fe::aabbTree::colliderAtPoint(float x, float y)
