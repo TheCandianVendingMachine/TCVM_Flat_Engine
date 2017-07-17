@@ -1,8 +1,27 @@
 #include "time.hpp"
+#include <utility>
 
 fe::time::time()
     {
         m_time = 0;
+    }
+
+fe::time::time(long long time)
+    {
+        m_time = time;
+    }
+
+fe::time::time(const fe::time &time)
+    {
+        if (&time != this)
+            {
+                m_time = time.m_time;
+            }
+    }
+
+fe::time::time(const fe::time &&time)
+    {
+        m_time = std::forward<const long long>(time.m_time);
     }
 
 float fe::time::asSeconds()
@@ -48,6 +67,16 @@ fe::time &fe::time::operator=(const fe::time &rhs)
                 m_time = rhs.m_time;
             }
         return *this;
+    }
+
+fe::time &fe::time::operator/(unsigned int rhs)
+    {
+        return fe::time(m_time / rhs);
+    }
+
+void fe::time::operator/=(unsigned int rhs)
+    {
+        m_time /= rhs;
     }
 
 bool fe::time::operator==(const fe::time &rhs)

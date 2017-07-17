@@ -19,6 +19,9 @@ namespace fe
 
                 public:
                     FLAT_ENGINE_API time();
+                    FLAT_ENGINE_API time(long long time);
+                    FLAT_ENGINE_API time(const fe::time &time);
+                    FLAT_ENGINE_API time(const fe::time &&time);
 
                     FLAT_ENGINE_API float asSeconds();
                     FLAT_ENGINE_API int32_t asMilliseconds();
@@ -30,6 +33,8 @@ namespace fe
                     FLAT_ENGINE_API void operator-=(const fe::time &rhs);
 
                     FLAT_ENGINE_API fe::time &operator=(const fe::time &rhs);
+                    FLAT_ENGINE_API fe::time &operator/(unsigned int rhs);
+                    FLAT_ENGINE_API void operator/=(unsigned int rhs);
 
                     FLAT_ENGINE_API bool operator==(const fe::time &rhs);
 
