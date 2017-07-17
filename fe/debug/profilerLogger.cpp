@@ -40,13 +40,17 @@ void fe::profilerLogger::add(const char *profile, fe::time time)
 void fe::profilerLogger::add(const char *group, const char *profile, fe::time time)
     {
         bool groupMade = m_profileGroups.find(FE_STR(group)) != m_profileGroups.end();
+        bool profileAdded = m_profiles.find(FE_STR(profile)) != m_profiles.end();
         add(profile, time);
 
         if (!groupMade)
             {
                 auto groupPair = &m_profileGroups[FE_STR(group)];
                 groupPair->first[groupPair->second++] = FE_STR(profile);
+            }
 
+        if (!profileAdded)
+            {
                 std::strcpy(m_profileData[m_profiles[FE_STR(profile)]].m_group, group);
             }
     }
