@@ -22,7 +22,7 @@ fe::debugDraw &fe::debugDraw::get()
         return *m_instance;
     }
 
-void fe::debugDraw::addLine(int x0, int y0, int x1, int y1)
+void fe::debugDraw::addLine(int x0, int y0, int x1, int y1, sf::Color colour)
     {
         bool steep = false;
         if (abs(x0 - x1) < abs(y0 - y1))
@@ -49,11 +49,11 @@ void fe::debugDraw::addLine(int x0, int y0, int x1, int y1)
             {
                 if (steep)
                     {
-                        m_drawVerticies.append(sf::Vertex({ (float)y, (float)x }));
+                        m_drawVerticies.append(sf::Vertex({ (float)y, (float)x }, colour));
                     }
                 else
                     {
-                        m_drawVerticies.append(sf::Vertex({ (float)x, (float)y }));
+                        m_drawVerticies.append(sf::Vertex({ (float)x, (float)y }, colour));
                     }
                 error += dError;
                 if (error > 0.5f)
@@ -64,15 +64,15 @@ void fe::debugDraw::addLine(int x0, int y0, int x1, int y1)
             }
     }
 
-void fe::debugDraw::addSquare(int xSize, int ySize, int xPos, int yPos)
+void fe::debugDraw::addSquare(int xSize, int ySize, int xPos, int yPos, sf::Color colour)
     {
-        addLine(xPos, yPos,                     xPos + xSize,   yPos);
-        addLine(xPos + xSize,   yPos,           xPos + xSize,   yPos + ySize);
-        addLine(xPos + xSize,   yPos + ySize,   xPos,           yPos + ySize);
-        addLine(xPos,           yPos + ySize,   xPos,           yPos);
+        addLine(xPos, yPos,                     xPos + xSize,   yPos, colour);
+        addLine(xPos + xSize,   yPos,           xPos + xSize,   yPos + ySize, colour);
+        addLine(xPos + xSize,   yPos + ySize,   xPos,           yPos + ySize, colour);
+        addLine(xPos,           yPos + ySize,   xPos,           yPos, colour);
     }
 
-void fe::debugDraw::addCircle(int radius, int xPos, int yPos)
+void fe::debugDraw::addCircle(int radius, int xPos, int yPos, sf::Color colour)
     {
          int x = radius - 1;
          int y = 0;
@@ -82,7 +82,7 @@ void fe::debugDraw::addCircle(int radius, int xPos, int yPos)
 
          while (x >= y)
              {
-                sf::Vertex appVert({ (float)xPos + x, (float)yPos + y }); m_drawVerticies.append(appVert);
+                sf::Vertex appVert({ (float)xPos + x, (float)yPos + y }, colour); m_drawVerticies.append(appVert);
                 appVert.position.x = xPos + y; appVert.position.y = yPos + x; m_drawVerticies.append(appVert);
                 appVert.position.x = xPos - y; appVert.position.y = yPos + x; m_drawVerticies.append(appVert);
                 appVert.position.x = xPos - x; appVert.position.y = yPos + y; m_drawVerticies.append(appVert);

@@ -2,6 +2,10 @@
 #include "collisionBody.hpp"
 #include <algorithm>
 
+#include "../../../debug/debugDraw.hpp"
+#include "../../../debug/profiler.hpp"
+
+
 fe::aabbTree::node::node() : parent(nullptr), data(nullptr)
     {
         children[0] = nullptr;
@@ -38,8 +42,8 @@ void fe::aabbTree::node::updateAABB(float margin)
                 aabb.m_positionX = data->m_aabb.m_positionX - margin;
                 aabb.m_positionY = data->m_aabb.m_positionY - margin;
 
-                aabb.m_sizeX = data->m_aabb.m_sizeX + margin;
-                aabb.m_sizeY = data->m_aabb.m_sizeY + margin;
+                aabb.m_sizeX = data->m_aabb.m_sizeX + margin + margin;
+                aabb.m_sizeY = data->m_aabb.m_sizeY + margin + margin;
             }
         else
             {
@@ -52,13 +56,13 @@ fe::aabbTree::node *fe::aabbTree::node::getSibling() const
         return this == parent->children[0] ? parent->children[1] : parent->children[0];
     }
 
-void fe::aabbTree::updateNodeHelper(node *base, std::vector<node*> &invalidNodes)
+void fe::aabbTree::updateNodeHelper(node *base, node *invalidNodes[FE_MAX_GAME_OBJECTS])
     {
         if (base->isLeaf())
             {
                 if (!base->aabb.contains(&base->data->m_aabb))
                     {
-                        invalidNodes.push_back(base);
+                        invalidNodes[m_invalidNodesIndex++] = base;
                     }
             }
         else
@@ -135,9 +139,11 @@ void fe::aabbTree::computePairsHelper(node *n0, node *n1)
         if (n0->isLeaf())
             {
                 // 2 Leaves, check proxies instead of fat AABBs
-                if (n1->isLeaf() && n0->data->m_aabb.intersects(&n0->data->m_aabb))
+                if (n1->isLeaf() && n0->data->m_aabb.intersects(&n1->data->m_aabb))
                     {
-                        m_pairs.push_back(std::make_pair(n0->data, n1->data));
+                        m_pairs[m_pairsIndex].first =   n0->data;
+                        m_pairs[m_pairsIndex].second =  n1->data;
+                        m_pairsIndex++;
                     }
                 else // 1 Branch / 1 Leaf, 2 cross checks
                     {
@@ -146,23 +152,20 @@ void fe::aabbTree::computePairsHelper(node *n0, node *n1)
                         computePairsHelper(n0, n1->children[1]);
                     }
             }
+        else if (n1->isLeaf())
+            {
+                crossChildren(n0);
+                computePairsHelper(n0->children[0], n1);
+                computePairsHelper(n0->children[1], n1);
+            }
         else
             {
-                if (n1->isLeaf())
-                    {
-                        crossChildren(n0);
-                        computePairsHelper(n0, n1->children[0]);
-                        computePairsHelper(n0, n1->children[1]);
-                    }
-                else
-                    {
-                        crossChildren(n0);
-                        crossChildren(n1);
-                        computePairsHelper(n0->children[0], n1->children[0]);
-                        computePairsHelper(n0->children[0], n1->children[1]);
-                        computePairsHelper(n0->children[1], n1->children[0]);
-                        computePairsHelper(n0->children[1], n1->children[1]);
-                    }
+                crossChildren(n0);
+                crossChildren(n1);
+                computePairsHelper(n0->children[0], n1->children[0]);
+                computePairsHelper(n0->children[0], n1->children[1]);
+                computePairsHelper(n0->children[1], n1->children[0]);
+                computePairsHelper(n0->children[1], n1->children[1]);
             }
     }
 
@@ -185,7 +188,20 @@ void fe::aabbTree::crossChildren(node *base)
             }
     }
 
-fe::aabbTree::aabbTree() : m_root(nullptr), m_margin(0.5f)
+void fe::aabbTree::drawAABB(node *base)
+    {
+        if (base->isLeaf())
+            {
+                FE_DEBUG_DRAW_SQUARE(base->aabb.m_sizeX, base->aabb.m_sizeY, base->aabb.m_positionX, base->aabb.m_positionY, sf::Color::Red);
+            }
+        else
+            {
+                drawAABB(base->children[0]);
+                drawAABB(base->children[1]);
+            }
+    }
+
+fe::aabbTree::aabbTree() : m_root(nullptr), m_margin(12.0f), m_pairsIndex(0), m_invalidNodesIndex(0)
     {
     }
 
@@ -218,19 +234,26 @@ void fe::aabbTree::remove(fe::collider *collider)
 
 void fe::aabbTree::update(float dt)
     {
+        m_invalidNodesIndex = 0;
         if (m_root)
             {
                 if (m_root->isLeaf())
                     {
+                        FE_PROFILE("aabb_tree_root_aabb_update");
                         m_root->updateAABB(m_margin);
+                        FE_END_PROFILE;
                     }
                 else
                     {
-                        m_invalidNodes.clear();
+                        FE_PROFILE("aabb_tree_update_node_helper");
                         updateNodeHelper(m_root, m_invalidNodes);
+                        FE_END_PROFILE;
 
-                        for (node *base : m_invalidNodes)
+                        FE_PROFILE("aabb_tree_invalid_node_computation");
+                        for (unsigned int i = 0; i < m_invalidNodesIndex; i++)
                             {
+                                node *base = m_invalidNodes[i];
+
                                 node *parent = base->parent;
                                 node *sibling = base->getSibling();
                                 node **parentLink = parent->parent ? (parent == parent->parent->children[0] ? &parent->parent->children[0] : &parent->parent->children[1]) : &m_root;
@@ -243,25 +266,31 @@ void fe::aabbTree::update(float dt)
                                 base->updateAABB(m_margin);
                                 insertNode(base, &m_root);
                             }
+                        FE_END_PROFILE;
                     }
-                m_invalidNodes.clear();
+
+                FE_PROFILE("aabb_tree_debug_draw");
+                if (m_debug)
+                    {
+                        drawAABB(m_root);
+                    }
+                FE_END_PROFILE;
             }
     }
 
-const std::list<std::pair<fe::collider*, fe::collider*>> fe::aabbTree::computeColliderPairs()
+const std::pair<std::pair<fe::collider*, fe::collider*>*, unsigned int> fe::aabbTree::computeColliderPairs()
     {
-        m_pairs.clear();
-
+        m_pairsIndex = 0;
         if (!m_root || m_root->isLeaf())
             {
-                return m_pairs;
+                return std::make_pair(m_pairs, 0);
             }
 
         clearChildrenCrossFlagHelper(m_root);
 
         computePairsHelper(m_root->children[0], m_root->children[1]);
 
-        return m_pairs;
+        return std::make_pair(m_pairs, m_pairsIndex);
     }
 
 fe::collider *fe::aabbTree::colliderAtPoint(float x, float y)

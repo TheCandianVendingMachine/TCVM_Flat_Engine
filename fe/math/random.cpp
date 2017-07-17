@@ -11,7 +11,7 @@ void fe::random::startUp()
             {
                 m_instance = this;
             #if FE_DEBUG_NO_SEED
-                m_randomizer.seed(1337);
+                m_randomizer.seed(FE_DEFAULT_RANDOM_SEED);
             #else
                 m_randomizer.seed(std::random_device{}());
             #endif

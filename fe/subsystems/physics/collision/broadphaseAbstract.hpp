@@ -1,6 +1,9 @@
 // broadphaseAbstract.hpp
 // An abstract class to serve for the collision engine's broadphase collision detection
 #pragma once
+#define FLAT_ENGINE_EXPORT
+#include "../../../flatEngineExport.hpp"
+
 #include <list>
 #include <utility>
 #include "raycastResult.hpp"
@@ -13,6 +16,9 @@ namespace fe
         struct AABB;
         class broadphaseAbstract
             {
+                protected:
+                    bool m_debug;
+
                 public:
                     // Adds an AABB to the broadphase algorithm
                     virtual void add(fe::collider *collider) = 0;
@@ -23,7 +29,7 @@ namespace fe
                     virtual void update(float dt) = 0;
 
                     // Returns a list of the colliders that are possibly intersecting
-                    virtual const std::list<std::pair<collider*, collider*>> computeColliderPairs() = 0;
+                    virtual const std::pair<std::pair<fe::collider*, fe::collider*>*, unsigned int> computeColliderPairs() = 0;
 
                     // Returns the collider that is at the point
                     virtual collider *colliderAtPoint(float x, float y) = 0;
@@ -43,6 +49,9 @@ namespace fe
                     inline raycastResult raycast(fe::Vector2d &origin, fe::Vector2d &direction) { return raycast(origin.x, origin.y, direction.x, direction.y); }
                     // Casts a ray and tests against the broadphase algorithm
                     inline raycastResult raycast(fe::lightVector2d &origin, fe::lightVector2d &direction) { return raycast(origin.x, origin.y, direction.x, direction.y); }
+
+                    // Toggles debug drawing
+                    FLAT_ENGINE_API void debugMode(bool value);
 
             };
     }

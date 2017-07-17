@@ -31,17 +31,23 @@ namespace fe
                             FLAT_ENGINE_API node *getSibling() const;
                         };
 
-                    FLAT_ENGINE_API void updateNodeHelper(node *base, std::vector<node*> &invalidNodes);
+                    FLAT_ENGINE_API void updateNodeHelper(node *base, node *invalidNodes[FE_MAX_GAME_OBJECTS]);
                     FLAT_ENGINE_API void insertNode(node *base, node **parent);
                     FLAT_ENGINE_API void removeNode(node *base);
                     FLAT_ENGINE_API void computePairsHelper(node *n0, node *n1);
                     FLAT_ENGINE_API void clearChildrenCrossFlagHelper(node *base);
                     FLAT_ENGINE_API void crossChildren(node *base);
 
+                    FLAT_ENGINE_API void drawAABB(node *base);
+
+                    std::pair<collider*, collider*> m_pairs[FE_MAX_GAME_OBJECTS];
+                    node *m_invalidNodes[FE_MAX_GAME_OBJECTS];
+
+                    unsigned int m_pairsIndex;
+                    unsigned int m_invalidNodesIndex;
+
                     node *m_root;
-                    std::list<std::pair<collider*, collider*>> m_pairs;
                     float m_margin;
-                    std::vector<node*> m_invalidNodes;
 
                 public:
                     FLAT_ENGINE_API aabbTree();
@@ -56,7 +62,7 @@ namespace fe
                     FLAT_ENGINE_API void update(float dt);
 
                     // Returns a list of the colliders that are possibly intersecting
-                    FLAT_ENGINE_API const std::list<std::pair<fe::collider*, fe::collider*>> computeColliderPairs();
+                    FLAT_ENGINE_API const std::pair<std::pair<fe::collider*, fe::collider*>*, unsigned int> computeColliderPairs();
 
                     // Returns the collider that is at the point
                     FLAT_ENGINE_API fe::collider *colliderAtPoint(float x, float y);

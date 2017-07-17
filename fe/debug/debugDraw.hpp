@@ -25,18 +25,18 @@ namespace fe
 
                     FLAT_ENGINE_API static debugDraw &get();
 
-                    FLAT_ENGINE_API void addLine(int x0, int y0, int x1, int y1);
-                    FLAT_ENGINE_API void addSquare(int xSize, int ySize, int xPos, int yPos);
-                    FLAT_ENGINE_API void addCircle(int radius, int xPos, int yPos);
+                    FLAT_ENGINE_API void addLine(int x0, int y0, int x1, int y1, sf::Color colour = sf::Color::White);
+                    FLAT_ENGINE_API void addSquare(int xSize, int ySize, int xPos, int yPos, sf::Color colour = sf::Color::White);
+                    FLAT_ENGINE_API void addCircle(int radius, int xPos, int yPos, sf::Color colour = sf::Color::White);
 
                     FLAT_ENGINE_API void draw(sf::RenderTarget &target);
             };
     }
 
 #ifdef _DEBUG
-    #define FE_DEBUG_DRAW_LINE(x0, y0, x1, y1) fe::debugDraw::get().addLine(x0, y0, x1, y1)
-    #define FE_DEBUG_DRAW_SQUARE(xSize, ySize, xPos, yPos) fe::debugDraw::get().addSquare(xSize, ySize, xPos, yPos)
-    #define FE_DEBUG_DRAW_CIRCLE(radius, xPos, yPos) fe::debugDraw::get().addCircle(radius, xPos, yPos)
+    #define FE_DEBUG_DRAW_LINE(x0, y0, x1, y1, colour) fe::debugDraw::get().addLine(x0, y0, x1, y1, colour)
+    #define FE_DEBUG_DRAW_SQUARE(xSize, ySize, xPos, yPos, colour) fe::debugDraw::get().addSquare(xSize, ySize, xPos, yPos, colour)
+    #define FE_DEBUG_DRAW_CIRCLE(radius, xPos, yPos, colour) fe::debugDraw::get().addCircle(radius, xPos, yPos, colour)
 #else
     #define FE_DEBUG_DRAW_LINE(x0, y0, x1, y1)
     #define FE_DEBUG_DRAW_SQUARE(xSize, ySize, xPos, yPos)
