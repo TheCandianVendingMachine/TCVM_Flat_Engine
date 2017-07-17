@@ -18,6 +18,7 @@
 
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Font.hpp>
+#include <fstream>
 
 fe::engine *fe::engine::m_instance = nullptr;
 
@@ -29,6 +30,7 @@ void fe::engine::run()
         float frameTime = 0.f;
 
         int framesPassed = 0;
+        int inverseDeltaTime = 1 / m_deltaTime;
         while (m_renderer.getRenderWindow().isOpen())
             {
                 newTime = updateClock.getTime().asSeconds();
@@ -40,7 +42,7 @@ void fe::engine::run()
                 m_accumulator += frameTime;
 
                 FE_PROFILE("engine", "frame");
-                FE_PROFILE("engine", "input")
+                FE_PROFILE("engine", "input_preUpdate")
                 m_inputManager->preUpdate();
                 FE_END_PROFILE;
 
@@ -57,7 +59,16 @@ void fe::engine::run()
                 FE_END_PROFILE;
                 FE_END_PROFILE;
 
-                m_profileLogger->printToStream(std::cout);
+            #if FE_PROFILE_ENGINE
+                if (m_elapsedFrames % inverseDeltaTime == 0) 
+                    {
+                        std::ofstream out("profileOutput.txt");
+                        m_profileLogger->printToStream(out);
+                        out.flush();
+                        out.close();
+                    }
+            #endif
+
                 m_profileLogger->clearTotalCalls();
                 calcFPS();
             }

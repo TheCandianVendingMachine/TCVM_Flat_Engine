@@ -21,7 +21,7 @@ namespace fe
 		
 		        profiler(const char *group, const char *name) 
 		            {
-                    #ifdef FE_PROFILE_ENGINE
+                    #if _DEBUG
                         strcpy(m_nameStr, name);
                         strcpy(m_groupStr, group);
 			            m_startTime = fe::clock::getTimeSinceEpoch();
@@ -30,7 +30,7 @@ namespace fe
 		
 		        ~profiler()
 		            {
-                    #if FE_PROFILE_ENGINE
+                    #if _DEBUG
 			            m_endTime = fe::clock::getTimeSinceEpoch();
 			            fe::time runtime = m_endTime - m_startTime;
                         fe::profilerLogger::get().add(m_groupStr, m_nameStr, runtime);
