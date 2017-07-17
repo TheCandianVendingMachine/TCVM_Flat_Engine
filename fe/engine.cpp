@@ -6,6 +6,7 @@
 #include "subsystems/physics/physicsEngine.hpp"
 #include "subsystems/physics/collision/collisionWorld.hpp"
 #include "subsystems/threading/threadPool.hpp"
+#include "subsystems/threading/threadJob.hpp"
 #include "debug/logger.hpp"
 #include "debug/profiler.hpp"
 #include "debug/profilerLogger.hpp"
@@ -22,8 +23,24 @@
 
 fe::engine *fe::engine::m_instance = nullptr;
 
+struct profilerJob : fe::threadJob
+    {
+        fe::profilerLogger *logger;
+        bool execute()
+            {
+                std::ofstream out("profileOutput.txt");
+                logger->printToStream(out);
+                out.flush();
+                out.close();
+                return true;
+            }
+    };
+
 void fe::engine::run()
     {
+        profilerJob profileJob;
+        profileJob.logger = m_profileLogger;
+
         fe::clock updateClock;
         float currentTime = updateClock.getTime().asSeconds();
         float newTime = 0.f;
@@ -62,10 +79,8 @@ void fe::engine::run()
             #if FE_PROFILE_ENGINE
                 if (m_elapsedFrames % inverseDeltaTime == 0) 
                     {
-                        std::ofstream out("profileOutput.txt");
-                        m_profileLogger->printToStream(out);
-                        out.flush();
-                        out.close();
+                        m_threadPool->waitFor(profileJob);
+                        m_threadPool->addJob(profileJob);
                     }
             #endif
 
