@@ -23,24 +23,8 @@
 
 fe::engine *fe::engine::m_instance = nullptr;
 
-struct profilerJob : fe::threadJob
-    {
-        fe::profilerLogger *logger;
-        bool execute()
-            {
-                std::ofstream out("profileOutput.txt");
-                logger->printToStream(out);
-                out.flush();
-                out.close();
-                return true;
-            }
-    };
-
 void fe::engine::run()
     {
-        profilerJob profileJob;
-        profileJob.logger = m_profileLogger;
-
         fe::clock updateClock;
         float currentTime = updateClock.getTime().asSeconds();
         float newTime = 0.f;
@@ -79,8 +63,10 @@ void fe::engine::run()
             #if FE_PROFILE_ENGINE
                 if (m_elapsedFrames % inverseDeltaTime == 0) 
                     {
-                        m_threadPool->waitFor(profileJob);
-                        m_threadPool->addJob(profileJob);
+                        std::ofstream out("profileOutput.txt");
+                        m_profileLogger->printToStream(out);
+                        out.flush();
+                        out.close();
                     }
             #endif
 
