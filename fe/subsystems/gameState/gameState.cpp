@@ -52,7 +52,7 @@ void fe::baseGameState::preUpdateDefined()
 
 void fe::baseGameState::update()
     {
-        FE_PROFILE("game_state_entity_update");
+        FE_PROFILE("game_state", "entity_update");
         auto objects = getObjects();
         for (unsigned int i = 0; i < objectCount(); i++)
             {
@@ -83,11 +83,11 @@ void fe::baseGameState::postUpdateDefined()
 
 void fe::baseGameState::draw(sf::RenderTarget &app)
     {
-        FE_PROFILE("state_scene_graph_buf1_draw")
+        FE_PROFILE("state_scene", "graph_buf1_draw")
         m_sceneGraph.draw(app);
         FE_END_PROFILE
 
-        FE_PROFILE("state_gui_buf1_draw")
+        FE_PROFILE("state_gui", "buf1_draw")
         for (auto &panel : m_guiPanels)
             {
                 panel->draw(app);

@@ -8,6 +8,7 @@
 #include "subsystems/threading/threadPool.hpp"
 #include "debug/logger.hpp"
 #include "debug/profiler.hpp"
+#include "debug/profilerLogger.hpp"
 #include "debug/debugDraw.hpp"
 
 #include "feAssert.hpp"
@@ -38,24 +39,26 @@ void fe::engine::run()
 
                 m_accumulator += frameTime;
 
-                FE_PROFILE("engine_frame");
-                FE_PROFILE("engine_input")
+                FE_PROFILE("engine", "frame");
+                FE_PROFILE("engine", "input")
                 m_inputManager->preUpdate();
                 FE_END_PROFILE;
 
-                FE_PROFILE("engine_event");
+                FE_PROFILE("engine", "event");
                 handleEvents();
                 FE_END_PROFILE;
 
-                FE_PROFILE("engine_update")
+                FE_PROFILE("engine", "update")
                 update();
                 FE_END_PROFILE;
 
-                FE_PROFILE("engine_draw")
+                FE_PROFILE("engine", "draw")
                 draw();
                 FE_END_PROFILE;
                 FE_END_PROFILE;
 
+                m_profileLogger->printToStream(std::cout);
+                m_profileLogger->clearTotalCalls();
                 calcFPS();
             }
     }
@@ -81,20 +84,20 @@ void fe::engine::handleEvents()
 
 void fe::engine::update()
     {
-        FE_PROFILE("engine_state_preupdate");
+        FE_PROFILE("engine", "state_preupdate");
         m_gameStateMachine->preUpdate();
         FE_END_PROFILE;
-        FE_PROFILE("engine_state_update");
+        FE_PROFILE("engine", "state_update");
         m_gameStateMachine->update();
         FE_END_PROFILE;
 
         unsigned int iterations = m_accumulator / m_deltaTime;
-        FE_PROFILE("engine_physics_preupdate");
+        FE_PROFILE("engine", "physics_preupdate");
         m_physicsEngine->preUpdate(m_deltaTime, iterations);
         FE_END_PROFILE;
 
         int iterationTest = 0;
-        FE_PROFILE("engine_fixed_timestep");
+        FE_PROFILE("engine", "fixed_timestep");
         while (m_accumulator >= m_deltaTime)
             {
                 m_inputManager->handleKeyPress();
@@ -103,46 +106,46 @@ void fe::engine::update()
             }
         FE_END_PROFILE;
 
-        FE_PROFILE("engine_physics_timestep_sim");
+        FE_PROFILE("engine", "physics_timestep_sim");
         m_physicsEngine->simulateForces(m_deltaTime, iterations);
         FE_END_PROFILE;
 
-        FE_PROFILE("engine_collision_world_collide");
+        FE_PROFILE("engine", "collision_world_collide");
         m_collisionWorld->handleCollisions();
         FE_END_PROFILE;
 
-        FE_PROFILE("engine_state_postupdate");
+        FE_PROFILE("engine", "state_postupdate");
         m_gameStateMachine->postUpdate();
         FE_END_PROFILE;
 
-        FE_PROFILE("engine_send_events");
+        FE_PROFILE("engine", "send_events");
         m_eventSender->sendEvents();
         FE_END_PROFILE;
     }
 
 void fe::engine::draw()
     {
-        FE_PROFILE("engine_pre_draw")
+        FE_PROFILE("engine", "pre_draw")
         m_gameStateMachine->preDraw();
         FE_END_PROFILE
 
-        FE_PROFILE("engine_window_clear")
+        FE_PROFILE("engine", "window_clear")
         m_renderer.getRenderWindow().clear(sf::Color::Black);
         FE_END_PROFILE
 
-        FE_PROFILE("engine_window_buf1_draw");
+        FE_PROFILE("engine", "window_buf1_draw");
         m_gameStateMachine->draw(m_renderer.getRenderWindow());
         FE_END_PROFILE;
 
-        FE_PROFILE("engine_debug_buf1_draw");
+        FE_PROFILE("engine", "debug_buf1_draw");
         m_debugDraw->draw(m_renderer.getRenderWindow());
         FE_END_PROFILE;
 
-        FE_PROFILE("engine_window_buf2_draw")
+        FE_PROFILE("engine", "window_buf2_draw")
         m_renderer.getRenderWindow().display();
         FE_END_PROFILE;
 
-        FE_PROFILE("engine_post_draw")
+        FE_PROFILE("engine", "post_draw")
         m_gameStateMachine->postDraw();
         FE_END_PROFILE;
     }
@@ -178,6 +181,9 @@ void fe::engine::startUp(unsigned long long totalMemory, unsigned long long stac
 
                 m_logger = new(m_memoryManager.alloc(sizeof(fe::logger))) logger;
                 m_logger->startUp("log.log");
+
+                m_profileLogger = new fe::profilerLogger();
+                m_profileLogger->startUp();
 
                 m_debugDraw = new fe::debugDraw();
                 m_debugDraw->startUp();
@@ -228,6 +234,7 @@ void fe::engine::shutDown()
         m_inputManager->shutDown();
         m_renderer.shutDown();
         m_debugDraw->shutDown();
+        m_profileLogger->shutDown();
         m_logger->shutDown();
         m_logger->~logger();
         m_memoryManager.shutDown();

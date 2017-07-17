@@ -27,6 +27,7 @@ namespace fe
         template<unsigned int>
         class threadPool;
         class debugDraw;
+        class profilerLogger;
 
         template<typename T>
         class resourceManager;
@@ -42,6 +43,7 @@ namespace fe
                     fe::eventSender *m_eventSender;
                     fe::gameStateMachine *m_gameStateMachine;
                     fe::logger *m_logger;
+                    fe::profilerLogger *m_profileLogger;
                     fe::debugDraw *m_debugDraw;
                     fe::inputManager *m_inputManager;
                     fe::physicsEngine *m_physicsEngine;

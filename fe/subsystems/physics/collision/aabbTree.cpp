@@ -239,17 +239,17 @@ void fe::aabbTree::update(float dt)
             {
                 if (m_root->isLeaf())
                     {
-                        FE_PROFILE("aabb_tree_root_aabb_update");
+                        FE_PROFILE("aabb_tree", "root_aabb_update");
                         m_root->updateAABB(m_margin);
                         FE_END_PROFILE;
                     }
                 else
                     {
-                        FE_PROFILE("aabb_tree_update_node_helper");
+                        FE_PROFILE("aabb_tree", "update_node_helper");
                         updateNodeHelper(m_root, m_invalidNodes);
                         FE_END_PROFILE;
 
-                        FE_PROFILE("aabb_tree_invalid_node_computation");
+                        FE_PROFILE("aabb_tree", "invalid_node_computation");
                         for (unsigned int i = 0; i < m_invalidNodesIndex; i++)
                             {
                                 node *base = m_invalidNodes[i];
@@ -269,7 +269,7 @@ void fe::aabbTree::update(float dt)
                         FE_END_PROFILE;
                     }
 
-                FE_PROFILE("aabb_tree_debug_draw");
+                FE_PROFILE("aabb_tree", "debug_draw");
                 if (m_debug)
                     {
                         drawAABB(m_root);

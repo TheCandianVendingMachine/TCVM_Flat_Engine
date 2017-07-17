@@ -88,7 +88,7 @@ void fe::collisionWorld::handleCollisions()
                                     }
                                 else
                                     {
-                                        FE_PROFILE("collison_world_handle_collisions_no_broadphase");
+                                        FE_PROFILE("collison_world", "handle_collisions_no_broadphase");
                                         handleCollision(a, b);
                                         FE_END_PROFILE;
                                     }
@@ -97,16 +97,16 @@ void fe::collisionWorld::handleCollisions()
             }
         else
             {
-                FE_PROFILE("collision_world_broadphase_update");
+                FE_PROFILE("collision_world", "broadphase_update");
                 m_broadphase->update(0.f);
                 FE_END_PROFILE;
                 std::pair<std::pair<fe::collider*, fe::collider*>*, unsigned int> pairs;
-                FE_PROFILE("collision_world_broadphase_pair_compute");
+                FE_PROFILE("collision_world", "broadphase_pair_compute");
                 pairs = m_broadphase->computeColliderPairs();
                 FE_END_PROFILE;
                 for (unsigned int i = 0; i < pairs.second; i++)
                     {
-                        FE_PROFILE("collison_world_handle_collisions_broadphase");
+                        FE_PROFILE("collison_world", "handle_collisions_broadphase");
                         handleCollision(pairs.first[i].first, pairs.first[i].second);
                         FE_END_PROFILE;
                     }
