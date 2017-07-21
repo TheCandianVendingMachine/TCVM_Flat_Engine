@@ -20,6 +20,8 @@ namespace fe
                     bool m_debug;
 
                 public:
+                    virtual void startUp() {}
+
                     // Adds an AABB to the broadphase algorithm
                     virtual void add(fe::collider *collider) = 0;
                     // Removes the collider from the broadphase algorithm
@@ -41,7 +43,7 @@ namespace fe
                     // Returns an array of objects that collide with the AABB argument.
                     // First return value is how many objects collide
                     // Second return value is the array of objects that have collided
-                    virtual std::pair<unsigned int, collider*[FE_MAX_GAME_OBJECTS]> collidesWithAABB(fe::collider &aabb) = 0;
+                    virtual std::pair<collider*[FE_MAX_GAME_OBJECTS], unsigned int> collidesWithAABB(fe::collider &aabb) = 0;
 
                     // Casts a ray and tests against the broadphase algorithm
                     virtual raycastResult raycast(float x, float y, float dirX, float dirY) = 0;

@@ -2,55 +2,48 @@
 // A broadphase algorithm that uses dynamic AABB's
 #pragma once
 #define FLAT_ENGINE_EXPORT
-#include <vector>
 #include "../../../flatEngineExport.hpp"
 #include "broadphaseAbstract.hpp"
 #include "collisionBounds.hpp"
+#include "../../memory/poolAllocater.hpp"
 
 namespace fe
     {
         struct collider;
-        // Created using http://allenchou.net/2014/02/game-physics-broadphase-dynamic-aabb-tree/
         class aabbTree : public broadphaseAbstract
             {
                 private:
-                    struct node 
+                    struct node
                         {
-                            node *parent;
-                            node *children[2];
+                            fe::AABB m_fatAABB;
 
-                            bool childrenCrossed;
-                            fe::AABB aabb;
-                            fe::collider *data;
+                            node *m_parent;
+                            union
+                                {
+                                    struct
+                                        {
+                                            node *m_leftChild;
+                                            node *m_rightChild;
+                                        };
+                                    fe::collider *m_userData;
+                                };
 
-                            FLAT_ENGINE_API node();
-                            FLAT_ENGINE_API bool isLeaf() const;
-                            FLAT_ENGINE_API void setBranch(node *n0, node *n1);
-                            FLAT_ENGINE_API void setLeaf(fe::collider *data);
-                            FLAT_ENGINE_API void updateAABB(float margin);
-                            FLAT_ENGINE_API node *getSibling() const;
+                            bool isLeaf() const { return m_userData != nullptr; }
                         };
 
-                    FLAT_ENGINE_API void updateNodeHelper(node *base, node *invalidNodes[FE_MAX_GAME_OBJECTS]);
-                    FLAT_ENGINE_API void insertNode(node *base, node **parent);
-                    FLAT_ENGINE_API void removeNode(node *base);
-                    FLAT_ENGINE_API void computePairsHelper(node *n0, node *n1);
-                    FLAT_ENGINE_API void clearChildrenCrossFlagHelper(node *base);
-                    FLAT_ENGINE_API void crossChildren(node *base);
+                    fe::poolAllocater<node> m_nodes;
+                    node *m_base;
+                    float m_fatness; // how much extra space the AABB contains
 
-                    FLAT_ENGINE_API void drawAABB(node *base);
+                    FLAT_ENGINE_API void debugDrawAABB(node *base);
 
-                    std::pair<collider*, collider*> m_pairs[FE_MAX_GAME_OBJECTS];
-                    node *m_invalidNodes[FE_MAX_GAME_OBJECTS];
-
-                    unsigned int m_pairsIndex;
-                    unsigned int m_invalidNodesIndex;
-
-                    node *m_root;
-                    float m_margin;
+                    FLAT_ENGINE_API void updateAABB(node *baseNode);
+                    FLAT_ENGINE_API void insert(node *baseNode, node **parent);
 
                 public:
                     FLAT_ENGINE_API aabbTree();
+
+                    FLAT_ENGINE_API void startUp();
 
                     // Adds an AABB to the broadphase algorithm
                     FLAT_ENGINE_API void add(fe::collider *collider);
@@ -70,7 +63,7 @@ namespace fe
                     // Returns an array of objects that collide with the AABB argument.
                     // First return value is how many objects collide
                     // Second return value is the array of objects that have collided
-                    FLAT_ENGINE_API std::pair<unsigned int, fe::collider*[FE_MAX_GAME_OBJECTS]> collidesWithAABB(fe::collider &aabb);
+                    FLAT_ENGINE_API std::pair<fe::collider*[FE_MAX_GAME_OBJECTS], unsigned int> collidesWithAABB(fe::collider &aabb);
 
                     // Casts a ray and tests against the broadphase algorithm
                     FLAT_ENGINE_API fe::raycastResult raycast(float x, float y, float dirX, float dirY);

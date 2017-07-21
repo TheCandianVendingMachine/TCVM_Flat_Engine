@@ -4,10 +4,11 @@
 
 namespace fe
     {
-        class collider;
+        struct collider;
         struct raycastResult
             {
                 fe::collider *m_colliderHit;
+                // Ray Hit Position
                 float m_positionX;
                 float m_positionY;
                 bool m_hit;

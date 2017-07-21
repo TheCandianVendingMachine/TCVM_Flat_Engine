@@ -30,14 +30,11 @@ fe::AABB fe::AABB::merge(const fe::AABB *other)
         aabb.m_positionX = std::min(m_positionX, other->m_positionX);
         aabb.m_positionY = std::min(m_positionY, other->m_positionY);
 
-        float lowestMaxX = m_positionX <  other->m_positionX ? m_positionX : other->m_positionX;
-        float highestMinX = m_positionX > other->m_positionX ? m_positionX : other->m_positionX;
+        float highestMinX = std::max(m_positionX, other->m_positionX);
+        float highestMinY = std::max(m_positionY, other->m_positionY);
 
-        float lowestMaxY =  m_positionY < other->m_positionY ? m_positionY : other->m_positionY;
-        float highestMinY = m_positionY > other->m_positionY ? m_positionY : other->m_positionY;
-
-        aabb.m_sizeX = m_positionX + other->m_sizeX + (highestMinX - lowestMaxX);
-        aabb.m_sizeY = m_positionY + other->m_sizeY + (highestMinY - lowestMaxY);
+        aabb.m_sizeX = m_positionX + other->m_sizeX + (highestMinX - aabb.m_positionX);
+        aabb.m_sizeY = m_positionY + other->m_sizeY + (highestMinY - aabb.m_positionY);
         return aabb;
     }
 

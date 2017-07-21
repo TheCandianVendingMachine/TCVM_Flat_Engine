@@ -1,15 +1,15 @@
 // collisionBounds.hpp
 // A group of structs that represent different types of bounds
 #pragma once
-#define FE_ENGINE_EXPORT
+#define FLAT_ENGINE_EXPORT
 #include "../../../flatEngineExport.hpp"
 
 namespace fe
     {
         struct collisionBounds
             {
-                float m_positionX;
-                float m_positionY;
+                float m_positionX = 0.f;
+                float m_positionY = 0.f;
 
                 virtual bool intersects(const collisionBounds *other) const = 0;
                 virtual bool contains(const collisionBounds *other) const = 0;
@@ -17,8 +17,8 @@ namespace fe
 
         struct AABB : collisionBounds
             {
-                float m_sizeX;
-                float m_sizeY;
+                float m_sizeX = 0.f;
+                float m_sizeY = 0.f;
 
                 FLAT_ENGINE_API bool intersects(const collisionBounds *other) const;
                 FLAT_ENGINE_API bool contains(const collisionBounds *other) const;
