@@ -38,7 +38,7 @@ void fe::aabbTree::updateAABB(node *baseNode)
                 float leftSizeY = baseNode->m_leftChild->m_fatAABB.m_positionY < baseNode->m_rightChild->m_fatAABB.m_sizeY ? baseNode->m_leftChild->m_fatAABB.m_sizeY : baseNode->m_rightChild->m_fatAABB.m_sizeY;
 
                 baseNode->m_fatAABB.m_positionX = minX - m_fatness;
-                baseNode->m_fatAABB.m_positionX = minY - m_fatness;
+                baseNode->m_fatAABB.m_positionY = minY - m_fatness;
                 baseNode->m_fatAABB.m_sizeX = baseNode->m_leftChild->m_fatAABB.m_sizeX + baseNode->m_rightChild->m_fatAABB.m_sizeX + (maxX - (minX + leftSizeX)) + m_fatness;
                 baseNode->m_fatAABB.m_sizeY = baseNode->m_leftChild->m_fatAABB.m_sizeY + baseNode->m_rightChild->m_fatAABB.m_sizeY + (maxY - (minY + leftSizeY)) + m_fatness;
             }
@@ -50,6 +50,7 @@ void fe::aabbTree::insert(node *baseNode, node **parent)
             {
                 node *newNode = m_nodes.alloc();
                 newNode->m_userData = (*parent)->m_userData;
+                (*parent)->m_userData = nullptr;
 
                 (*parent)->m_leftChild = newNode;
                 (*parent)->m_rightChild = baseNode;
@@ -73,12 +74,11 @@ fe::aabbTree::aabbTree() : m_fatness(5.f), m_base(nullptr)
 void fe::aabbTree::startUp()
     {
         m_nodes.startUp(FE_MAX_GAME_OBJECTS);
-        m_base = m_nodes.alloc();
     }
 
 void fe::aabbTree::add(fe::collider *collider)
     {
-        if (m_base->isLeaf())
+        if (m_base)
             {
                 node *newNode = m_nodes.alloc();
                 newNode->m_userData = collider;
@@ -86,6 +86,7 @@ void fe::aabbTree::add(fe::collider *collider)
             }
         else
             {
+                m_base = m_nodes.alloc();
                 m_base->m_userData = collider;
             }
     }
@@ -97,6 +98,7 @@ void fe::aabbTree::remove(fe::collider *collider)
 
 void fe::aabbTree::update(float dt)
     {
+        updateAABB(m_base);
         if (m_debug)
             {
                 debugDrawAABB(m_base);

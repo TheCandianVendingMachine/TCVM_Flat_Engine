@@ -64,6 +64,7 @@ void fe::collisionWorld::clear()
 void fe::collisionWorld::setBroadphase(fe::broadphaseAbstract *broadphase)
     {
         m_broadphase = broadphase;
+        m_broadphase->startUp();
     }
 
 fe::broadphaseAbstract *fe::collisionWorld::getBroadphase() const

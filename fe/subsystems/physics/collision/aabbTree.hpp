@@ -18,17 +18,13 @@ namespace fe
                             fe::AABB m_fatAABB;
 
                             node *m_parent;
-                            union
+                            struct
                                 {
-                                    struct
-                                        {
-                                            node *m_leftChild;
-                                            node *m_rightChild;
-                                        };
-                                    fe::collider *m_userData;
+                                    node *m_leftChild;
+                                    node *m_rightChild;
                                 };
-
-                            bool isLeaf() const { return m_userData != nullptr; }
+                            fe::collider *m_userData;
+                            bool isLeaf() const { return m_leftChild == nullptr; }
                         };
 
                     fe::poolAllocater<node> m_nodes;
