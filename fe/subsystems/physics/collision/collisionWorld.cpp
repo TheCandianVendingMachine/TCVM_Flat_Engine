@@ -1,5 +1,8 @@
 #include "collisionWorld.hpp"
 #include "../../../debug/profiler.hpp"
+#include "../../../engine.hpp"
+#include "../../threading/threadPool.hpp"
+#include <functional>
 
 void fe::collisionWorld::handleCollision(fe::collider *a, fe::collider *b)
     {
@@ -45,10 +48,15 @@ void fe::collisionWorld::handleCollision(fe::collider *a, fe::collider *b)
             }
     }
 
+fe::collisionWorld::collisionWorld() : m_collisionWorldUpdate([this]() { m_broadphase->update();  return true; })
+    {
+    }
+
 void fe::collisionWorld::startUp()
     {
         m_collisionBodies.startUp(FE_MAX_GAME_OBJECTS);
         m_broadphase = nullptr;
+        m_threaded = false;
     }
 
 void fe::collisionWorld::shutDown()
@@ -59,6 +67,19 @@ void fe::collisionWorld::shutDown()
 void fe::collisionWorld::clear()
     {
         m_collisionBodies.clear();
+    }
+
+void fe::collisionWorld::update()
+    {
+        if (m_collisionBodies.getObjectAllocCount() > 2000)
+            {
+                fe::engine::get().getThreadPool().addJob(m_collisionWorldUpdate);
+                m_threaded = true;
+            }
+        else
+            {
+                m_threaded = false;
+            }
     }
 
 void fe::collisionWorld::setBroadphase(fe::broadphaseAbstract *broadphase)
@@ -98,9 +119,18 @@ void fe::collisionWorld::handleCollisions()
             }
         else
             {
-                FE_PROFILE("collision_world", "broadphase_update");
-                m_broadphase->update(0.f);
-                FE_END_PROFILE;
+                if (m_threaded)
+                    {
+                        FE_PROFILE("collision_world", "wait_for_broadphase_update");
+                        fe::engine::get().getThreadPool().waitFor(m_collisionWorldUpdate);
+                        FE_END_PROFILE;
+                    }
+                else
+                    {
+                        FE_PROFILE("collision_world", "broadphase_update");
+                        m_broadphase->update();
+                        FE_END_PROFILE;
+                    }
                 std::pair<std::pair<fe::collider*, fe::collider*>*, unsigned int> pairs;
                 FE_PROFILE("collision_world", "broadphase_pair_compute");
                 pairs = m_broadphase->computeColliderPairs();

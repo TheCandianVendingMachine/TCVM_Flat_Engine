@@ -25,16 +25,21 @@ namespace fe
                                 };
                             fe::collider *m_userData;
                             bool isLeaf() const { return m_leftChild == nullptr; }
+                            node *getSibling() const { return m_parent->m_leftChild != this ? m_parent->m_leftChild : m_parent->m_rightChild; }
                         };
 
                     fe::poolAllocater<node> m_nodes;
+                    node *m_movedNodes[FE_MAX_GAME_OBJECTS];
+
                     node *m_base;
                     float m_fatness; // how much extra space the AABB contains
+                    unsigned int m_movedNodesIndex;
 
                     FLAT_ENGINE_API void debugDrawAABB(node *base);
 
                     FLAT_ENGINE_API void updateAABB(node *baseNode);
-                    FLAT_ENGINE_API void insert(node *baseNode, node **parent);
+                    FLAT_ENGINE_API void checkMovedColliders(node *baseNode);
+                    FLAT_ENGINE_API void insert(node *baseNode, node *parent);
 
                 public:
                     FLAT_ENGINE_API aabbTree();
@@ -48,7 +53,7 @@ namespace fe
                     FLAT_ENGINE_API void remove(fe::collider *collider);
 
                     // Updates all colliders in the broadphase algorithm
-                    FLAT_ENGINE_API void update(float dt);
+                    FLAT_ENGINE_API void update();
 
                     // Returns a list of the colliders that are possibly intersecting
                     FLAT_ENGINE_API const std::pair<std::pair<fe::collider*, fe::collider*>*, unsigned int> computeColliderPairs();

@@ -15,7 +15,6 @@ void fe::aabbTree::debugDrawAABB(node *base)
 
 void fe::aabbTree::updateAABB(node *baseNode)
     {
-        if (!baseNode) return;
         if (baseNode->isLeaf())
             {
                 fe::collider *collider = baseNode->m_userData;
@@ -29,41 +28,79 @@ void fe::aabbTree::updateAABB(node *baseNode)
                 updateAABB(baseNode->m_leftChild);
                 updateAABB(baseNode->m_rightChild);
 
-                float minX = std::min(baseNode->m_leftChild->m_fatAABB.m_positionX, baseNode->m_rightChild->m_fatAABB.m_positionX);
-                float minY = std::min(baseNode->m_leftChild->m_fatAABB.m_positionY, baseNode->m_rightChild->m_fatAABB.m_positionY);
-                float maxX = std::max(baseNode->m_leftChild->m_fatAABB.m_positionX, baseNode->m_rightChild->m_fatAABB.m_positionX);
-                float maxY = std::max(baseNode->m_leftChild->m_fatAABB.m_positionY, baseNode->m_rightChild->m_fatAABB.m_positionY);
-
-                float leftSizeX = baseNode->m_leftChild->m_fatAABB.m_positionX < baseNode->m_rightChild->m_fatAABB.m_sizeX ? baseNode->m_leftChild->m_fatAABB.m_sizeX : baseNode->m_rightChild->m_fatAABB.m_sizeX;
-                float leftSizeY = baseNode->m_leftChild->m_fatAABB.m_positionY < baseNode->m_rightChild->m_fatAABB.m_sizeY ? baseNode->m_leftChild->m_fatAABB.m_sizeY : baseNode->m_rightChild->m_fatAABB.m_sizeY;
-
-                baseNode->m_fatAABB.m_positionX = minX - m_fatness;
-                baseNode->m_fatAABB.m_positionY = minY - m_fatness;
-                baseNode->m_fatAABB.m_sizeX = baseNode->m_leftChild->m_fatAABB.m_sizeX + baseNode->m_rightChild->m_fatAABB.m_sizeX + (maxX - (minX + leftSizeX)) + m_fatness;
-                baseNode->m_fatAABB.m_sizeY = baseNode->m_leftChild->m_fatAABB.m_sizeY + baseNode->m_rightChild->m_fatAABB.m_sizeY + (maxY - (minY + leftSizeY)) + m_fatness;
+                baseNode->m_fatAABB = baseNode->m_leftChild->m_fatAABB.merge(baseNode->m_rightChild->m_fatAABB);
             }
     }
 
-void fe::aabbTree::insert(node *baseNode, node **parent)
+void fe::aabbTree::checkMovedColliders(node *baseNode)
     {
-        if ((*parent)->isLeaf())
+        if (baseNode->isLeaf())
             {
-                node *newNode = m_nodes.alloc();
-                newNode->m_userData = (*parent)->m_userData;
-                (*parent)->m_userData = nullptr;
-
-                (*parent)->m_leftChild = newNode;
-                (*parent)->m_rightChild = baseNode;
-
-                newNode->m_parent = (*parent);
-                baseNode->m_parent = (*parent);
+                if (!baseNode->m_fatAABB.contains(baseNode->m_userData->m_aabb))
+                    {
+                        m_movedNodes[m_movedNodesIndex++] = baseNode;
+                    }
             }
         else
             {
-                insert(baseNode, &((*parent)->m_leftChild->m_fatAABB.volume() < (*parent)->m_rightChild->m_fatAABB.volume() ? (*parent)->m_leftChild : (*parent)->m_rightChild));
+                checkMovedColliders(baseNode->m_leftChild);
+                checkMovedColliders(baseNode->m_rightChild);
+            }
+    }
+
+void fe::aabbTree::insert(node *baseNode, node *parent)
+    {
+        if (parent->isLeaf())
+            {
+                node *newNode = m_nodes.alloc();
+                newNode->m_userData = parent->m_userData;
+                parent->m_userData = nullptr;
+
+                parent->m_leftChild = newNode;
+                parent->m_rightChild = baseNode;
+
+                newNode->m_parent = parent;
+                baseNode->m_parent = parent;
+            }
+        else
+            {
+                // Cost Calculation taken from Box2d: https://github.com/erincatto/Box2D/blob/master/Box2D/Box2D/Collision/b2DynamicTree.cpp
+
+                float area = baseNode->m_fatAABB.perimeter();
+
+                fe::AABB combinedAABB = parent->m_fatAABB.merge(baseNode->m_fatAABB);
+                float combinedArea = combinedAABB.perimeter();
+                float cost = 2.f * combinedArea;
+
+                float inheritCost = 2.f * (combinedArea - area);
+                float cost1 = 0.f;
+                float cost2 = 0.f;
+                if (parent->m_leftChild->isLeaf())
+                    {
+                        cost1 = baseNode->m_fatAABB.merge(parent->m_leftChild->m_fatAABB).perimeter() + inheritCost;
+                    }
+                else
+                    {
+                        float oldArea = parent->m_leftChild->m_fatAABB.perimeter();
+                        float newArea = baseNode->m_fatAABB.merge(parent->m_leftChild->m_fatAABB).perimeter();
+                        cost1 = (newArea - oldArea) + inheritCost;
+                    }
+
+                if (parent->m_rightChild->isLeaf())
+                    {
+                        cost2 = baseNode->m_fatAABB.merge(parent->m_rightChild->m_fatAABB).perimeter() + inheritCost;
+                    }
+                else
+                    {
+                        float oldArea = parent->m_rightChild->m_fatAABB.perimeter();
+                        float newArea = baseNode->m_fatAABB.merge(parent->m_rightChild->m_fatAABB).perimeter();
+                        cost2 = (newArea - oldArea) + inheritCost;
+                    }
+
+                insert(baseNode, cost1 < cost2 ? parent->m_leftChild : parent->m_rightChild);
             }
 
-        updateAABB((*parent));
+        updateAABB(parent);
     }
 
 
@@ -82,7 +119,7 @@ void fe::aabbTree::add(fe::collider *collider)
             {
                 node *newNode = m_nodes.alloc();
                 newNode->m_userData = collider;
-                insert(newNode, &m_base);
+                insert(newNode, m_base);
             }
         else
             {
@@ -96,12 +133,49 @@ void fe::aabbTree::remove(fe::collider *collider)
         
     }
 
-void fe::aabbTree::update(float dt)
+void fe::aabbTree::update()
     {
-        updateAABB(m_base);
-        if (m_debug)
+        m_movedNodesIndex = 0;
+        if (m_base)
             {
-                debugDrawAABB(m_base);
+                if (m_base->isLeaf())
+                    {
+                        updateAABB(m_base);
+                    }
+                else
+                    {
+                        checkMovedColliders(m_base);
+                        for (unsigned int i = 0; i < m_movedNodesIndex; i++)
+                            {
+                                node *baseNode = m_movedNodes[i];
+                                node *sibling = baseNode->getSibling();
+                                node *parent = baseNode->m_parent;
+                                
+                                if (sibling->m_userData) 
+                                    {
+                                        parent->m_userData = sibling->m_userData;
+                                        parent->m_leftChild = nullptr;
+                                        parent->m_rightChild = nullptr;
+                                    }
+                                else
+                                    {
+                                        parent->m_leftChild = sibling->m_leftChild;
+                                        parent->m_rightChild = sibling->m_rightChild;
+                                        sibling->m_leftChild->m_parent = parent;
+                                        sibling->m_rightChild->m_parent = parent;
+                                    }
+
+                                m_nodes.free(sibling);
+
+                                updateAABB(baseNode);
+                                insert(baseNode, m_base);
+                            }
+                    }
+
+                if (m_debug)
+                    {
+                        debugDrawAABB(m_base);
+                    }
             }
     }
 

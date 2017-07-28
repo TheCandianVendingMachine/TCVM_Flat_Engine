@@ -122,12 +122,16 @@ void fe::engine::update()
         m_physicsEngine->simulateForces(m_deltaTime, iterations);
         FE_END_PROFILE;
 
-        FE_PROFILE("engine", "collision_world_collide");
-        m_collisionWorld->handleCollisions();
+        FE_PROFILE("engine", "collision_world_update_threaded");
+        m_collisionWorld->update();
         FE_END_PROFILE;
 
         FE_PROFILE("engine", "state_postupdate");
         m_gameStateMachine->postUpdate();
+        FE_END_PROFILE;
+
+        FE_PROFILE("engine", "collision_world_collide");
+        m_collisionWorld->handleCollisions();
         FE_END_PROFILE;
 
         FE_PROFILE("engine", "send_events");

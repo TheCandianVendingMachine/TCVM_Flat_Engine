@@ -28,7 +28,7 @@ namespace fe
                     virtual void remove(fe::collider *collider) = 0;
 
                     // Updates all colliders in the broadphase algorithm
-                    virtual void update(float dt) = 0;
+                    virtual void update() = 0;
 
                     // Returns a list of the colliders that are possibly intersecting
                     virtual const std::pair<std::pair<fe::collider*, fe::collider*>*, unsigned int> computeColliderPairs() = 0;

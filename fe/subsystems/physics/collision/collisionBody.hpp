@@ -8,9 +8,12 @@
 
 namespace fe
     {
+        static int count = 0;
         struct collider 
             {
                 std::function<void(fe::collisionData&)> m_collisionCallback = [](fe::collisionData&) {};
+
+                int id = count++;
 
                 AABB m_aabb;
                 collisionBounds *m_bounds;
