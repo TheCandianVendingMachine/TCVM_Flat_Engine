@@ -26,6 +26,7 @@ namespace fe
                     std::map<fe::guid, std::pair<fe::guid[FE_MAX_PROFILER_PROFILES], unsigned int>> m_profileGroups;
                     std::map<fe::guid, unsigned int> m_profiles;
                     fe::profilerLogger::profileData m_profileData[FE_MAX_PROFILER_PROFILES];
+                    std::map<fe::guid, bool> m_nonProfileGroups;
 
                     unsigned int m_profilesCreated;
 
@@ -41,6 +42,9 @@ namespace fe
                     FLAT_ENGINE_API void add(const char *group, const char *profile, fe::time time);
                     FLAT_ENGINE_API void printToStream(std::ostream &out);
                     FLAT_ENGINE_API void printToStream(fe::guid group, std::ostream &out);
+
+                    FLAT_ENGINE_API void profileGrouo(fe::guid group, bool profile);
+                    FLAT_ENGINE_API bool wantProfile(fe::guid group);
 
                     // Clears all profiles of the amount of calls in the frame
                     FLAT_ENGINE_API void clearTotalCalls();

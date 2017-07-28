@@ -41,6 +41,7 @@ void fe::profilerLogger::add(const char *group, const char *profile, fe::time ti
     {
         bool groupMade = m_profileGroups.find(FE_STR(group)) != m_profileGroups.end();
         bool profileAdded = m_profiles.find(FE_STR(profile)) != m_profiles.end();
+        m_nonProfileGroups[FE_STR(group)] = true;
         add(profile, time);
 
         if (!groupMade)
@@ -121,6 +122,16 @@ void fe::profilerLogger::printToStream(fe::guid group, std::ostream &out)
                     }
             #endif
             }
+    }
+
+void fe::profilerLogger::profileGrouo(fe::guid group, bool profile)
+    {
+        m_nonProfileGroups[group] = profile;
+    }
+
+bool fe::profilerLogger::wantProfile(fe::guid group)
+    {
+        return !(m_nonProfileGroups.find(group) != m_nonProfileGroups.end()) || (m_nonProfileGroups.find(group) != m_nonProfileGroups.end() && m_nonProfileGroups[group]);
     }
 
 void fe::profilerLogger::clearTotalCalls()

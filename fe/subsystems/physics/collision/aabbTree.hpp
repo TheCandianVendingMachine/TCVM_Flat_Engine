@@ -16,7 +16,6 @@ namespace fe
                     struct node
                         {
                             fe::AABB m_fatAABB;
-
                             node *m_parent;
                             struct
                                 {

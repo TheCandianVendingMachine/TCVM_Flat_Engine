@@ -18,22 +18,31 @@ namespace fe
 		
                 char m_groupStr[512];
                 char m_nameStr[512];
+                bool m_profile;
 		
 		        profiler(const char *group, const char *name) 
 		            {
-                    #if _DEBUG
-                        strcpy(m_nameStr, name);
-                        strcpy(m_groupStr, group);
-			            m_startTime = fe::clock::getTimeSinceEpoch();
+                    #if FE_PROFILE_RELEASE || _DEBUG
+                        m_profile = false;
+                        if (fe::profilerLogger::get().wantProfile(FE_STR(group)))
+                            {
+                                strcpy(m_nameStr, name);
+                                strcpy(m_groupStr, group);
+			                    m_startTime = fe::clock::getTimeSinceEpoch();
+                                m_profile = true;
+                            }
                     #endif
 		            }
 		
 		        ~profiler()
 		            {
-                    #if _DEBUG
-			            m_endTime = fe::clock::getTimeSinceEpoch();
-			            fe::time runtime = m_endTime - m_startTime;
-                        fe::profilerLogger::get().add(m_groupStr, m_nameStr, runtime);
+                    #if FE_PROFILE_RELEASE || _DEBUG
+                        if (m_profile)
+                            {
+			                    m_endTime = fe::clock::getTimeSinceEpoch();
+			                    fe::time runtime = m_endTime - m_startTime;
+                                fe::profilerLogger::get().add(m_groupStr, m_nameStr, runtime);
+                            }
                     #endif
 		            }
 	        };

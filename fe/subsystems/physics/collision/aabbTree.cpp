@@ -17,18 +17,22 @@ void fe::aabbTree::updateAABB(node *baseNode)
     {
         if (baseNode->isLeaf())
             {
+                FE_PROFILE("aabb_tree", "update_aabb");
                 fe::collider *collider = baseNode->m_userData;
                 baseNode->m_fatAABB.m_positionX = collider->m_aabb.m_positionX - m_fatness;
                 baseNode->m_fatAABB.m_positionY = collider->m_aabb.m_positionY - m_fatness;
                 baseNode->m_fatAABB.m_sizeX = collider->m_aabb.m_sizeX + m_fatness;
                 baseNode->m_fatAABB.m_sizeY = collider->m_aabb.m_sizeY + m_fatness;
+                FE_END_PROFILE;
             }
         else
             {
+                FE_PROFILE("aabb_tree", "parent_update_aabb");
                 updateAABB(baseNode->m_leftChild);
                 updateAABB(baseNode->m_rightChild);
 
                 baseNode->m_fatAABB = baseNode->m_leftChild->m_fatAABB.merge(baseNode->m_rightChild->m_fatAABB);
+                FE_END_PROFILE;
             }
     }
 
@@ -36,10 +40,12 @@ void fe::aabbTree::checkMovedColliders(node *baseNode)
     {
         if (baseNode->isLeaf())
             {
+                FE_PROFILE("aabb_tree", "moved_collider_check_aabb");
                 if (!baseNode->m_fatAABB.contains(baseNode->m_userData->m_aabb))
                     {
                         m_movedNodes[m_movedNodesIndex++] = baseNode;
                     }
+                FE_END_PROFILE;
             }
         else
             {
@@ -50,6 +56,7 @@ void fe::aabbTree::checkMovedColliders(node *baseNode)
 
 void fe::aabbTree::insert(node *baseNode, node *parent)
     {
+        FE_PROFILE("aabb_tree", "collider_insert");
         if (parent->isLeaf())
             {
                 node *newNode = m_nodes.alloc();
@@ -99,6 +106,7 @@ void fe::aabbTree::insert(node *baseNode, node *parent)
 
                 insert(baseNode, cost1 < cost2 ? parent->m_leftChild : parent->m_rightChild);
             }
+        FE_END_PROFILE;
 
         updateAABB(parent);
     }
@@ -144,9 +152,12 @@ void fe::aabbTree::update()
                     }
                 else
                     {
+                        FE_PROFILE("aabb_tree", "check_moved_colliders");
                         checkMovedColliders(m_base);
+                        FE_END_PROFILE;
                         for (unsigned int i = 0; i < m_movedNodesIndex; i++)
                             {
+                                FE_PROFILE("aabb_tree", "invalid_node_update");
                                 node *baseNode = m_movedNodes[i];
                                 node *sibling = baseNode->getSibling();
                                 node *parent = baseNode->m_parent;
@@ -169,12 +180,15 @@ void fe::aabbTree::update()
 
                                 updateAABB(baseNode);
                                 insert(baseNode, m_base);
+                                FE_END_PROFILE;
                             }
                     }
 
                 if (m_debug)
                     {
+                        FE_PROFILE("aabb_tree", "debug_draw");
                         debugDrawAABB(m_base);
+                        FE_END_PROFILE;
                     }
             }
     }
