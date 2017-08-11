@@ -25,7 +25,7 @@ fe::debugDraw &fe::debugDraw::get()
 
 void fe::debugDraw::addLine(int x0, int y0, int x1, int y1, sf::Color colour)
     {
-        FE_PROFILE("debug_draw", "add_line");
+        FE_ENGINE_PROFILE("debug_draw", "add_line");
         bool steep = false;
         if (abs(x0 - x1) < abs(y0 - y1))
             {
@@ -69,7 +69,7 @@ void fe::debugDraw::addLine(int x0, int y0, int x1, int y1, sf::Color colour)
 
 void fe::debugDraw::addSquare(int xSize, int ySize, int xPos, int yPos, sf::Color colour)
     {
-        FE_PROFILE("debug_draw", "add_square");
+        FE_ENGINE_PROFILE("debug_draw", "add_square");
         addLine(xPos, yPos,                     xPos + xSize,   yPos, colour);
         addLine(xPos + xSize,   yPos,           xPos + xSize,   yPos + ySize, colour);
         addLine(xPos + xSize,   yPos + ySize,   xPos,           yPos + ySize, colour);
@@ -79,43 +79,43 @@ void fe::debugDraw::addSquare(int xSize, int ySize, int xPos, int yPos, sf::Colo
 
 void fe::debugDraw::addCircle(int radius, int xPos, int yPos, sf::Color colour)
     {
-        FE_PROFILE("debug_draw", "add_circle");
-         int x = radius - 1;
-         int y = 0;
-         int dx = 1;
-         int dy = 1;
-         int err = dx - (radius << 1);
+        FE_ENGINE_PROFILE("debug_draw", "add_circle");
+        int x = radius - 1;
+        int y = 0;
+        int dx = 1;
+        int dy = 1;
+        int err = dx - (radius << 1);
 
-         while (x >= y)
-             {
-                sf::Vertex appVert({ (float)xPos + x, (float)yPos + y }, colour); m_drawVerticies.append(appVert);
-                appVert.position.x = xPos + y; appVert.position.y = yPos + x; m_drawVerticies.append(appVert);
-                appVert.position.x = xPos - y; appVert.position.y = yPos + x; m_drawVerticies.append(appVert);
-                appVert.position.x = xPos - x; appVert.position.y = yPos + y; m_drawVerticies.append(appVert);
-                appVert.position.x = xPos - x; appVert.position.y = yPos - y; m_drawVerticies.append(appVert);
-                appVert.position.x = xPos - y; appVert.position.y = yPos - x; m_drawVerticies.append(appVert);
-                appVert.position.x = xPos + y; appVert.position.y = yPos - x; m_drawVerticies.append(appVert);
-                appVert.position.x = xPos + x; appVert.position.y = yPos - y; m_drawVerticies.append(appVert);
+        while (x >= y)
+            {
+            sf::Vertex appVert({ (float)xPos + x, (float)yPos + y }, colour); m_drawVerticies.append(appVert);
+            appVert.position.x = xPos + y; appVert.position.y = yPos + x; m_drawVerticies.append(appVert);
+            appVert.position.x = xPos - y; appVert.position.y = yPos + x; m_drawVerticies.append(appVert);
+            appVert.position.x = xPos - x; appVert.position.y = yPos + y; m_drawVerticies.append(appVert);
+            appVert.position.x = xPos - x; appVert.position.y = yPos - y; m_drawVerticies.append(appVert);
+            appVert.position.x = xPos - y; appVert.position.y = yPos - x; m_drawVerticies.append(appVert);
+            appVert.position.x = xPos + y; appVert.position.y = yPos - x; m_drawVerticies.append(appVert);
+            appVert.position.x = xPos + x; appVert.position.y = yPos - y; m_drawVerticies.append(appVert);
 
-                 if (err <= 0)
-                    {
-                        y++;
-                        err += dy;
-                        dy += 2;
-                    }
-                 else
-                    {
-                        x--;
-                        dx += 2;
-                        err += (-radius << 1) + dx;
-                    }
-             }
-         FE_END_PROFILE;
+                if (err <= 0)
+                {
+                    y++;
+                    err += dy;
+                    dy += 2;
+                }
+                else
+                {
+                    x--;
+                    dx += 2;
+                    err += (-radius << 1) + dx;
+                }
+            }
+        FE_END_PROFILE;
     }
 
 void fe::debugDraw::draw(sf::RenderTarget &target)
     {
-        FE_PROFILE("debug_draw", "draw_to_window");
+        FE_ENGINE_PROFILE("debug_draw", "draw_to_window");
         target.draw(m_drawVerticies);
         m_drawVerticies.clear();
         FE_END_PROFILE;

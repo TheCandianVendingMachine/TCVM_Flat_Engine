@@ -16,15 +16,13 @@ namespace fe
                     struct node
                         {
                             fe::AABB m_fatAABB;
+                            unsigned int m_height;
                             node *m_parent;
-                            struct
-                                {
-                                    node *m_leftChild;
-                                    node *m_rightChild;
-                                };
+                            node *m_leftChild;
+                            node *m_rightChild;
                             fe::collider *m_userData;
-                            bool isLeaf() const { return m_leftChild == nullptr; }
-                            node *getSibling() const { return m_parent->m_leftChild != this ? m_parent->m_leftChild : m_parent->m_rightChild; }
+                            inline bool isLeaf() const { return m_leftChild == nullptr; }
+                            inline node *getSibling() const { return m_parent->m_leftChild != this ? m_parent->m_leftChild : m_parent->m_rightChild; }
                         };
 
                     fe::poolAllocater<node> m_nodes;
@@ -39,6 +37,7 @@ namespace fe
                     FLAT_ENGINE_API void updateAABB(node *baseNode);
                     FLAT_ENGINE_API void checkMovedColliders(node *baseNode);
                     FLAT_ENGINE_API void insert(node *baseNode, node *parent);
+                    FLAT_ENGINE_API void balance(node **baseNode);
 
                 public:
                     FLAT_ENGINE_API aabbTree();

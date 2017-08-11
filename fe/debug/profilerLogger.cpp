@@ -67,14 +67,14 @@ void fe::profilerLogger::printToStream(std::ostream &out)
                         avg += data.m_time[j];
                     }
 
-                if (data.m_calls > 0)
+                if (data.m_totalCalls > 0)
                     {
-                        avg /= data.m_calls;
+                        avg /= data.m_totalCalls;
                     }
 
             #if FE_PROFILE_PRINT_ZEROS
                 out <<  data.m_group << "::" << data.m_name <<
-                        "\nCalls per frame: "   << data.m_totalCalls <<
+                        "\nCalls per frame: "   << data.m_calls <<
                         "\nMicroseconds: "      << avg.asMicroseconds() <<
                         "\nMilliseconds: "      << avg.asMilliseconds() <<
                         "\nSeconds: "           << avg.asSeconds() << "\n\n";
@@ -82,7 +82,44 @@ void fe::profilerLogger::printToStream(std::ostream &out)
                 if (avg.asMicroseconds() > 0)
                     {
                         out <<  data.m_group << "::" << data.m_name <<
-                                "\nCalls per frame: "   << data.m_totalCalls <<
+                                "\nCalls per frame: "   << data.m_calls <<
+                                "\nMicroseconds: "      << avg.asMicroseconds() <<
+                                "\nMilliseconds: "      << avg.asMilliseconds() <<
+                                "\nSeconds: "           << avg.asSeconds() << "\n\n";
+                    }
+            #endif
+            }
+    }
+
+void fe::profilerLogger::printToStream(fe::guid group, std::ostream &out)
+    {
+        auto profiles = m_profileGroups[group];
+        for (int i = 0; i < profiles.second; i++)
+            {
+                profileData data = m_profileData[i];
+                fe::time avg;
+                for (int j = 0; j < data.m_calls; j++)
+                    {
+                        avg += data.m_time[j];
+                    }
+
+                if (data.m_totalCalls > 0)
+                    {
+                        avg /= data.m_totalCalls;
+                        data.m_calls / data.m_totalCalls;
+                    }
+
+            #if FE_PROFILE_PRINT_ZEROS
+                out <<  data.m_group << "::" << data.m_name <<
+                        "\nCalls per frame: "   << data.m_calls <<
+                        "\nMicroseconds: "      << avg.asMicroseconds() <<
+                        "\nMilliseconds: "      << avg.asMilliseconds() <<
+                        "\nSeconds: "           << avg.asSeconds() << "\n\n";
+            #else
+                if (avg.asMicroseconds() > 0)
+                    {
+                        out <<  data.m_group << "::" << data.m_name <<
+                                "\nCalls per frame: "   << data.m_calls <<
                                 "\nMicroseconds: "      << avg.asMicroseconds() <<
                                 "\nMilliseconds: "      << avg.asMilliseconds() <<
                                 "\nSeconds: "           << avg.asSeconds() << "\n\n";
@@ -92,39 +129,7 @@ void fe::profilerLogger::printToStream(std::ostream &out)
             }
     }
 
-void fe::profilerLogger::printToStream(fe::guid group, std::ostream &out)
-    {
-        auto profiles = m_profileGroups[group];
-        for (int i = 0; i < profiles.second; i++)
-            {
-                profileData &data = m_profileData[m_profiles[profiles.first[i]]];
-                fe::time avg;
-                for (int j = 0; j < data.m_calls - 1; j++)
-                    {
-                        avg += data.m_time[j];
-                    }
-                avg /= data.m_calls - 1;
-
-            #if FE_PROFILE_PRINT_ZEROS
-                out <<  data.m_group << "::" << data.m_name <<
-                        "\nCalls per frame: "   << data.m_totalCalls <<
-                        "\nMicroseconds: "      << avg.asMicroseconds() <<
-                        "\nMilliseconds: "      << avg.asMilliseconds() <<
-                        "\nSeconds: "           << avg.asSeconds() << "\n\n";
-            #else
-                if (avg.asMicroseconds() > 0)
-                    {
-                        out <<  data.m_group << "::" << data.m_name <<
-                                "\nCalls per frame: "   << data.m_totalCalls <<
-                                "\nMicroseconds: "      << avg.asMicroseconds() <<
-                                "\nMilliseconds: "      << avg.asMilliseconds() <<
-                                "\nSeconds: "           << avg.asSeconds() << "\n\n";
-                    }
-            #endif
-            }
-    }
-
-void fe::profilerLogger::profileGrouo(fe::guid group, bool profile)
+void fe::profilerLogger::profileGroup(fe::guid group, bool profile)
     {
         m_nonProfileGroups[group] = profile;
     }
@@ -139,6 +144,5 @@ void fe::profilerLogger::clearTotalCalls()
         for (unsigned int i = 0; i < m_profilesCreated; i++)
             {
                 m_profileData[i].m_calls = 0;
-                m_profileData[i].m_totalCalls = 0;
             }
     }

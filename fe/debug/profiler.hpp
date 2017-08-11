@@ -50,3 +50,9 @@ namespace fe
 
 #define FE_PROFILE(group, name) { fe::profiler t(group, name);
 #define FE_END_PROFILE }
+
+#if FE_PROFILE_ENGINE
+    #define FE_ENGINE_PROFILE(group, name) { fe::profiler t(group, name);
+#else
+    #define FE_ENGINE_PROFILE(group, name) {
+#endif

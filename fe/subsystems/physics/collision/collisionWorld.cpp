@@ -110,7 +110,7 @@ void fe::collisionWorld::handleCollisions()
                                     }
                                 else
                                     {
-                                        FE_PROFILE("collison_world", "handle_collisions_no_broadphase");
+                                        FE_ENGINE_PROFILE("collison_world", "handle_collisions_no_broadphase");
                                         handleCollision(a, b);
                                         FE_END_PROFILE;
                                     }
@@ -121,23 +121,23 @@ void fe::collisionWorld::handleCollisions()
             {
                 if (m_threaded)
                     {
-                        FE_PROFILE("collision_world", "wait_for_broadphase_update");
+                        FE_ENGINE_PROFILE("collision_world", "wait_for_broadphase_update");
                         fe::engine::get().getThreadPool().waitFor(m_collisionWorldUpdate);
                         FE_END_PROFILE;
                     }
                 else
                     {
-                        FE_PROFILE("collision_world", "broadphase_update");
+                        FE_ENGINE_PROFILE("collision_world", "broadphase_update");
                         m_broadphase->update();
                         FE_END_PROFILE;
                     }
                 std::pair<std::pair<fe::collider*, fe::collider*>*, unsigned int> pairs;
-                FE_PROFILE("collision_world", "broadphase_pair_compute");
+                FE_ENGINE_PROFILE("collision_world", "broadphase_pair_compute");
                 pairs = m_broadphase->computeColliderPairs();
                 FE_END_PROFILE;
                 for (unsigned int i = 0; i < pairs.second; i++)
                     {
-                        FE_PROFILE("collison_world", "handle_collisions_broadphase");
+                        FE_ENGINE_PROFILE("collison_world", "handle_collisions_broadphase");
                         handleCollision(pairs.first[i].first, pairs.first[i].second);
                         FE_END_PROFILE;
                     }

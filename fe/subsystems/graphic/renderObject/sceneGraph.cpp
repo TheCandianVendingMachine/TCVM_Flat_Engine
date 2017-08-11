@@ -31,7 +31,7 @@ void fe::sceneGraph::clear()
 
 void fe::sceneGraph::preDraw()
     {
-        FE_PROFILE("scene_graph", "batch_draw");
+        FE_ENGINE_PROFILE("scene_graph", "batch_draw");
         m_batch.clear();
 
         if (m_renderObjects.getObjectAllocCount() <= m_maxObjectsUntilThread) 
@@ -72,7 +72,7 @@ void fe::sceneGraph::draw(sf::RenderTarget &window)
             }
         else
             {
-                FE_PROFILE("scene_graph", "wait_draw");
+                FE_ENGINE_PROFILE("scene_graph", "wait_draw");
                 fe::engine::get().getThreadPool().waitFor(m_jobA);
                 fe::engine::get().getThreadPool().waitFor(m_jobB);
                 fe::engine::get().getThreadPool().waitFor(m_jobC);
@@ -80,7 +80,7 @@ void fe::sceneGraph::draw(sf::RenderTarget &window)
                 FE_END_PROFILE;
             }
 
-        FE_PROFILE("scene_graph", "window_draw");
+        FE_ENGINE_PROFILE("scene_graph", "window_draw");
         m_batch.draw(window, states, m_renderObjects.getObjectAllocCount());
         FE_END_PROFILE;
     }

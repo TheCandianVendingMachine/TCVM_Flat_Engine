@@ -43,30 +43,29 @@ void fe::engine::run()
 
                 m_accumulator += frameTime;
 
-                FE_PROFILE("engine", "frame");
-                FE_PROFILE("engine", "input_preUpdate")
+                FE_ENGINE_PROFILE("engine", "frame");
+                FE_ENGINE_PROFILE("engine", "input_preUpdate")
                 m_inputManager->preUpdate();
                 FE_END_PROFILE;
 
-                FE_PROFILE("engine", "event");
+                FE_ENGINE_PROFILE("engine", "event");
                 handleEvents();
                 FE_END_PROFILE;
 
-                FE_PROFILE("engine", "update")
+                FE_ENGINE_PROFILE("engine", "update")
                 update();
                 FE_END_PROFILE;
 
-                FE_PROFILE("engine", "draw")
+                FE_ENGINE_PROFILE("engine", "draw")
                 draw();
                 FE_END_PROFILE;
                 FE_END_PROFILE;
 
-            #if FE_PROFILE_ENGINE
+            #if FE_OUTPUT_PROFILE_RESULTS
                 if (m_elapsedFrames % inverseDeltaTime == 0) 
                     {
                         out.open("profileOutput.txt", std::ios::trunc);
                         m_profileLogger->printToStream(out);
-                        out.flush();
                         out.close();
                     }
             #endif
@@ -97,20 +96,20 @@ void fe::engine::handleEvents()
 
 void fe::engine::update()
     {
-        FE_PROFILE("engine", "state_preupdate");
+        FE_ENGINE_PROFILE("engine", "state_preupdate");
         m_gameStateMachine->preUpdate();
         FE_END_PROFILE;
-        FE_PROFILE("engine", "state_update");
+        FE_ENGINE_PROFILE("engine", "state_update");
         m_gameStateMachine->update();
         FE_END_PROFILE;
 
         unsigned int iterations = m_accumulator / m_deltaTime;
-        FE_PROFILE("engine", "physics_preupdate");
+        FE_ENGINE_PROFILE("engine", "physics_preupdate");
         m_physicsEngine->preUpdate(m_deltaTime, iterations);
         FE_END_PROFILE;
 
         int iterationTest = 0;
-        FE_PROFILE("engine", "fixed_timestep");
+        FE_ENGINE_PROFILE("engine", "fixed_timestep");
         while (m_accumulator >= m_deltaTime)
             {
                 m_inputManager->handleKeyPress();
@@ -119,50 +118,50 @@ void fe::engine::update()
             }
         FE_END_PROFILE;
 
-        FE_PROFILE("engine", "physics_timestep_sim");
+        FE_ENGINE_PROFILE("engine", "physics_timestep_sim");
         m_physicsEngine->simulateForces(m_deltaTime, iterations);
         FE_END_PROFILE;
 
-        FE_PROFILE("engine", "collision_world_update_threaded");
+        FE_ENGINE_PROFILE("engine", "collision_world_update_threaded");
         m_collisionWorld->update();
         FE_END_PROFILE;
 
-        FE_PROFILE("engine", "state_postupdate");
+        FE_ENGINE_PROFILE("engine", "state_postupdate");
         m_gameStateMachine->postUpdate();
         FE_END_PROFILE;
 
-        FE_PROFILE("engine", "collision_world_collide");
+        FE_ENGINE_PROFILE("engine", "collision_world_collide");
         m_collisionWorld->handleCollisions();
         FE_END_PROFILE;
 
-        FE_PROFILE("engine", "send_events");
+        FE_ENGINE_PROFILE("engine", "send_events");
         m_eventSender->sendEvents();
         FE_END_PROFILE;
     }
 
 void fe::engine::draw()
     {
-        FE_PROFILE("engine", "pre_draw")
+        FE_ENGINE_PROFILE("engine", "pre_draw")
         m_gameStateMachine->preDraw();
         FE_END_PROFILE
 
-        FE_PROFILE("engine", "window_clear")
+        FE_ENGINE_PROFILE("engine", "window_clear")
         m_renderer.getRenderWindow().clear(sf::Color::Black);
         FE_END_PROFILE
 
-        FE_PROFILE("engine", "window_buf1_draw");
+        FE_ENGINE_PROFILE("engine", "window_buf1_draw");
         m_gameStateMachine->draw(m_renderer.getRenderWindow());
         FE_END_PROFILE;
 
-        FE_PROFILE("engine", "debug_buf1_draw");
+        FE_ENGINE_PROFILE("engine", "debug_buf1_draw");
         m_debugDraw->draw(m_renderer.getRenderWindow());
         FE_END_PROFILE;
 
-        FE_PROFILE("engine", "window_buf2_draw")
+        FE_ENGINE_PROFILE("engine", "window_buf2_draw")
         m_renderer.getRenderWindow().display();
         FE_END_PROFILE;
 
-        FE_PROFILE("engine", "post_draw")
+        FE_ENGINE_PROFILE("engine", "post_draw")
         m_gameStateMachine->postDraw();
         FE_END_PROFILE;
     }
