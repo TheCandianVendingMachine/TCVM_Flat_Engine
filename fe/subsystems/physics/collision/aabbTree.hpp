@@ -13,31 +13,40 @@ namespace fe
         class aabbTree : public broadphaseAbstract
             {
                 private:
-                    struct node
+                    struct treeNode
                         {
+                            static const int Null = -1;    
                             fe::AABB m_fatAABB;
-                            unsigned int m_height;
-                            node *m_parent;
-                            node *m_leftChild;
-                            node *m_rightChild;
-                            fe::collider *m_userData;
-                            inline bool isLeaf() const { return m_leftChild == nullptr; }
-                            inline node *getSibling() const { return m_parent->m_leftChild != this ? m_parent->m_leftChild : m_parent->m_rightChild; }
-                        };
+                            union
+                                {
+                                    int m_parent;
+                                    int m_next;
+                                };
 
-                    fe::poolAllocater<node> m_nodes;
-                    node *m_movedNodes[FE_MAX_GAME_OBJECTS];
+                            union
+                                {
+                                    struct
+                                        {
+                                            int m_left;
+                                            int m_right;
+                                        };
 
-                    node *m_base;
+                                    void *m_userData;
+                                };
+
+                            int m_height;
+
+                            bool isLeaf() { return m_left == treeNode::Null; }
+                        } m_nodes[(FE_MAX_GAME_OBJECTS * 2) - 1];
+
+                    unsigned int m_base = 0;
                     float m_fatness; // how much extra space the AABB contains
-                    unsigned int m_movedNodesIndex;
 
-                    FLAT_ENGINE_API void debugDrawAABB(node *base);
+                    FLAT_ENGINE_API void debugDrawAABB(int node);
 
-                    FLAT_ENGINE_API void updateAABB(node *baseNode);
-                    FLAT_ENGINE_API void checkMovedColliders(node *baseNode);
-                    FLAT_ENGINE_API void insert(node *baseNode, node *parent);
-                    FLAT_ENGINE_API void balance(node **baseNode);
+                    FLAT_ENGINE_API void updateAABB(int node);
+                    FLAT_ENGINE_API void insert(int node, int parent);
+                    FLAT_ENGINE_API void balance(int node);
 
                 public:
                     FLAT_ENGINE_API aabbTree();

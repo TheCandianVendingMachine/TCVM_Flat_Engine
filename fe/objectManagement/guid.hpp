@@ -11,7 +11,13 @@ namespace fe
         
         constexpr fe::guid hash(const char *input, unsigned int hash)
             {
-                return input[0] == '\0' ? hash : fe::hash(&input[1], hash * 33 ^ (fe::guid)(input[0]));
+                unsigned int index = 0;
+                while (input[index] != '\0')
+                    {
+                        hash *= 33 ^ (fe::guid)(input[index++]);
+                    }
+
+                return hash;
             }
         // implicitely calls the hash with the magic number "5381"
         constexpr fe::guid hashImpl(const char *input)
