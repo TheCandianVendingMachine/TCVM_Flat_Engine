@@ -1,5 +1,6 @@
 // aabbTree.hpp
 // A broadphase algorithm that uses dynamic AABB's
+// Implementation taken from Box2d (https://github.com/erincatto/Box2D/blob/master/Box2D/Box2D/Collision/b2DynamicTree.cpp)
 #pragma once
 #define FLAT_ENGINE_EXPORT
 #include "../../../flatEngineExport.hpp"
@@ -36,17 +37,22 @@ namespace fe
 
                             int m_height;
 
-                            bool isLeaf() { return m_left == treeNode::Null; }
+                            bool isLeaf() { return m_right == treeNode::Null; }
                         } m_nodes[(FE_MAX_GAME_OBJECTS * 2) - 1];
 
-                    unsigned int m_base = 0;
+                    const unsigned int m_nodeCapacity = (FE_MAX_GAME_OBJECTS * 2) - 1;
+                    unsigned int m_freeList;
+
+                    unsigned int m_base;
                     float m_fatness; // how much extra space the AABB contains
 
                     FLAT_ENGINE_API void debugDrawAABB(int node);
 
-                    FLAT_ENGINE_API void updateAABB(int node);
-                    FLAT_ENGINE_API void insert(int node, int parent);
-                    FLAT_ENGINE_API void balance(int node);
+                    FLAT_ENGINE_API void freeNode(int node);
+                    FLAT_ENGINE_API int allocateNode();
+                    FLAT_ENGINE_API void insert(int node);
+                    FLAT_ENGINE_API void remove(int node);
+                    FLAT_ENGINE_API int balance(int node);
 
                 public:
                     FLAT_ENGINE_API aabbTree();

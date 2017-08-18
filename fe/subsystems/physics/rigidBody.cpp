@@ -160,17 +160,67 @@ void fe::rigidBody::setPosition(fe::lightVector2d position)
         m_positionY = position.y;
     }
 
-fe::rigidBody::rigidBody() : m_mass(1.f), m_maxSpeed(0.f), m_frictionCoeff(1.f), m_enabled(true) {}
-
-fe::rigidBody::rigidBody(float mass) : m_mass(mass), m_maxSpeed(0.f), m_frictionCoeff(1.f), m_enabled(true)
+fe::rigidBody::rigidBody() : 
+    m_mass(1.f),
+    m_maxSpeed(0.f),
+    m_frictionCoeff(1.f),
+    m_enabled(true),
+    m_positionX(0.f),
+    m_positionY(0.f),
+    m_velocityX(0.f),
+    m_velocityY(0.f),
+    m_forceX(0.f),
+    m_forceY(0.f),
+    m_impulseX(0.f),
+    m_impulseY(0.f) 
     {
     }
 
-fe::rigidBody::rigidBody(float mass, float maxSpeed) : m_mass(mass), m_maxSpeed(maxSpeed), m_frictionCoeff(1.f), m_enabled(true)
+fe::rigidBody::rigidBody(float mass) : 
+    m_mass(mass),
+    m_maxSpeed(0.f),
+    m_frictionCoeff(1.f),
+    m_enabled(true),
+    m_positionX(0.f),
+    m_positionY(0.f),
+    m_velocityX(0.f),
+    m_velocityY(0.f),
+    m_forceX(0.f),
+    m_forceY(0.f),
+    m_impulseX(0.f),
+    m_impulseY(0.f)
     {
     }
 
-fe::rigidBody::rigidBody(float mass, float maxSpeed, float frictionCoeff) : m_mass(mass), m_maxSpeed(maxSpeed), m_frictionCoeff(frictionCoeff), m_enabled(true)
+fe::rigidBody::rigidBody(float mass, float maxSpeed) : 
+    m_mass(mass),
+    m_maxSpeed(maxSpeed),
+    m_frictionCoeff(1.f),
+    m_enabled(true),
+    m_positionX(0.f),
+    m_positionY(0.f),
+    m_velocityX(0.f),
+    m_velocityY(0.f),
+    m_forceX(0.f),
+    m_forceY(0.f),
+    m_impulseX(0.f),
+    m_impulseY(0.f)
+    {
+    }
+
+fe::rigidBody::rigidBody(float mass, float maxSpeed, float frictionCoeff) : 
+    m_mass(mass),
+    m_maxSpeed(maxSpeed),
+    m_frictionCoeff(frictionCoeff),
+    m_enabled(true),
+    m_positionX(0.f),
+    m_positionY(0.f),
+    m_velocityX(0.f),
+    m_velocityY(0.f),
+    m_forceX(0.f),
+    m_forceY(0.f),
+    m_impulseX(0.f),
+    m_impulseY(0.f)
     {
     }
 

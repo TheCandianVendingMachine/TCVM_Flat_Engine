@@ -67,6 +67,7 @@ void fe::engine::run()
                         out.open("profileOutput.txt", std::ios::trunc);
                         m_profileLogger->printToStream(out);
                         out.close();
+                        FE_LOG_DEBUG(getFPS());
                     }
             #endif
 
