@@ -345,6 +345,38 @@ int fe::aabbTree::balance(int node)
         FE_END_PROFILE;
     }
 
+fe::aabbTree::treeNode *fe::aabbTree::pointCollideBranch(float x, float y, int branch)
+    {
+        if (m_nodes[branch].isLeaf())
+            {
+                return &m_nodes[branch];
+            }
+        else if (m_nodes[branch].m_fatAABB.contains(x, y))
+            {
+                treeNode *a = pointCollideBranch(x, y, m_nodes[branch].m_left);
+                if (a) return a;
+                return pointCollideBranch(x, y, m_nodes[branch].m_right);
+            }
+        return nullptr;
+    }
+
+void fe::aabbTree::AABBCollideBranch(fe::AABB &testAABB, std::function<void(void*)> callback, int branch)
+    {
+        if (m_nodes[branch].isLeaf())
+            {
+                if (m_nodes[branch].m_fatAABB.intersects(testAABB))
+                    {
+                        callback(m_nodes[branch].m_userData);
+                        return;
+                    }
+            }
+        else
+            {
+                AABBCollideBranch(testAABB, callback, m_nodes[branch].m_left);
+                AABBCollideBranch(testAABB, callback, m_nodes[branch].m_right);
+            }
+    }
+
 fe::aabbTree::aabbTree() : m_base(treeNode::Null), m_fatness(5.f)
     {
         for (int i = 0; i < m_nodeCapacity - 1; i++)
@@ -408,19 +440,14 @@ void fe::aabbTree::update(fe::collider *collider)
         FE_END_PROFILE;
     }
 
-const std::pair<std::pair<fe::collider*, fe::collider*>*, unsigned int> fe::aabbTree::computeColliderPairs()
+void fe::aabbTree::colliderAABB(fe::AABB &testAABB, std::function<void(void*)> callback)
     {
-        return std::pair<std::pair<fe::collider*, fe::collider*>*, unsigned int>();
+        AABBCollideBranch(testAABB, callback, m_base);
     }
 
-fe::collider *fe::aabbTree::colliderAtPoint(float x, float y)
+void *fe::aabbTree::colliderAtPoint(float x, float y)
     {
-        return nullptr;
-    }
-
-std::pair<fe::collider*[FE_MAX_GAME_OBJECTS], unsigned int> fe::aabbTree::collidesWithAABB(fe::collider &aabb)
-    {
-        return std::pair<fe::collider*[FE_MAX_GAME_OBJECTS], unsigned int>();
+        return pointCollideBranch(x, y, m_base);
     }
 
 fe::raycastResult fe::aabbTree::raycast(float x, float y, float dirX, float dirY)

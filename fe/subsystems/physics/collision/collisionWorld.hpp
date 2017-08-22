@@ -19,6 +19,7 @@ namespace fe
                     fe::broadphaseAbstract *m_broadphase;
 
                     FLAT_ENGINE_API void handleCollision(fe::collider *a, fe::collider *b);
+                    FLAT_ENGINE_API void handleCollision(void *leftCollider, void *rightCollider);
 
                 public:
                     FLAT_ENGINE_API collisionWorld();

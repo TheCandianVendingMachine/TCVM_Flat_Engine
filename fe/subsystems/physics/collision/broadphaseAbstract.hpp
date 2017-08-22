@@ -6,6 +6,7 @@
 
 #include <list>
 #include <utility>
+#include <functional>
 #include "raycastResult.hpp"
 #include "../../../math/Vector2.hpp"
 #include "../../../typeDefines.hpp"
@@ -30,20 +31,15 @@ namespace fe
                     // Updates all colliders in the broadphase algorithm
                     virtual void update(fe::collider *collider) = 0;
 
-                    // Returns a list of the colliders that are possibly intersecting
-                    virtual const std::pair<std::pair<fe::collider*, fe::collider*>*, unsigned int> computeColliderPairs() = 0;
+                    // Returns user data containing what is needed to resolve the query
+                    virtual void colliderAABB(fe::AABB &testAABB, std::function<void(void*)> callback) = 0;
 
                     // Returns the collider that is at the point
-                    virtual collider *colliderAtPoint(float x, float y) = 0;
+                    virtual void *colliderAtPoint(float x, float y) = 0;
                     // Returns the collider that is at the point
-                    inline collider *colliderAtPoint(fe::Vector2d &point) { return colliderAtPoint(point.x, point.y); }
+                    inline void *colliderAtPoint(fe::Vector2d &point) { return colliderAtPoint(point.x, point.y); }
                     // Returns the collider that is at the point
-                    inline collider *colliderAtPoint(fe::lightVector2d &point) { return colliderAtPoint(point.x, point.y); }
-
-                    // Returns an array of objects that collide with the AABB argument.
-                    // First return value is how many objects collide
-                    // Second return value is the array of objects that have collided
-                    virtual std::pair<collider*[FE_MAX_GAME_OBJECTS], unsigned int> collidesWithAABB(fe::collider &aabb) = 0;
+                    inline void *colliderAtPoint(fe::lightVector2d &point) { return colliderAtPoint(point.x, point.y); }
 
                     // Casts a ray and tests against the broadphase algorithm
                     virtual raycastResult raycast(float x, float y, float dirX, float dirY) = 0;

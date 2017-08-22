@@ -13,6 +13,7 @@ namespace fe
 
                 virtual bool intersects(const collisionBounds &other) const = 0;
                 virtual bool contains(const collisionBounds &other) const = 0;
+                virtual bool contains(float x, float y) const = 0;
             };
 
         struct AABB : collisionBounds
@@ -22,6 +23,7 @@ namespace fe
 
                 FLAT_ENGINE_API bool intersects(const collisionBounds &other) const;
                 FLAT_ENGINE_API bool contains(const collisionBounds &other) const;
+                FLAT_ENGINE_API bool contains(float x, float y) const;
 
                 FLAT_ENGINE_API bool intersects(const fe::AABB &other) const;
                 FLAT_ENGINE_API bool contains(const fe::AABB &other) const;

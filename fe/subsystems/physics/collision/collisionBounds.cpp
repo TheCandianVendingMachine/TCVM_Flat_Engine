@@ -11,6 +11,11 @@ bool fe::AABB::contains(const collisionBounds &other) const
         return contains(static_cast<const fe::AABB&>(other));
     }
 
+bool fe::AABB::contains(float x, float y) const
+    {
+        return x >= m_positionX && y >= m_positionY && x < m_positionX + m_sizeX && y < m_positionY + m_sizeY;
+    }
+
 bool fe::AABB::intersects(const fe::AABB &other) const
     {
         if (m_positionX + m_sizeX < other.m_positionX || m_positionX > other.m_positionX + other.m_sizeX) return false;

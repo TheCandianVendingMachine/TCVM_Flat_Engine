@@ -2,6 +2,7 @@
 #include "../../../debug/profiler.hpp"
 #include "../../../engine.hpp"
 #include "../../threading/threadPool.hpp"
+#include "aabbTree.hpp"
 #include <functional>
 
 void fe::collisionWorld::handleCollision(fe::collider *a, fe::collider *b)
@@ -46,6 +47,12 @@ void fe::collisionWorld::handleCollision(fe::collider *a, fe::collider *b)
                 a->m_collisionCallback(dataFirst);
                 b->m_collisionCallback(dataSecond);
             }
+    }
+
+void fe::collisionWorld::handleCollision(void *leftCollider, void *rightCollider)
+    {
+        if (leftCollider == rightCollider) return;
+        handleCollision(static_cast<fe::collider*>(leftCollider), static_cast<fe::collider*>(rightCollider));
     }
 
 fe::collisionWorld::collisionWorld()
@@ -111,17 +118,12 @@ void fe::collisionWorld::handleCollisions()
             }
         else
             {
-                std::pair<std::pair<fe::collider*, fe::collider*>*, unsigned int> pairs;
-                FE_ENGINE_PROFILE("collision_world", "broadphase_pair_compute");
-                pairs = m_broadphase->computeColliderPairs();
-                FE_END_PROFILE;
-                for (unsigned int i = 0; i < pairs.second; i++)
+                FE_ENGINE_PROFILE("collision_world", "broadphase_compute");
+                for (int i = 0; i < m_collisionBodies.getObjectAllocCount(); i++)
                     {
-                        FE_ENGINE_PROFILE("collison_world", "handle_collisions_broadphase");
-                        handleCollision(pairs.first[i].first, pairs.first[i].second);
-                        FE_END_PROFILE;
+                        m_broadphase->colliderAABB(m_collisionBodies.at(i)->m_aabb, std::bind(static_cast<void(fe::collisionWorld::*)(void*, void*)>(&fe::collisionWorld::handleCollision), this, std::placeholders::_1, m_collisionBodies.at(i)));
                     }
-
+                FE_END_PROFILE;
                 m_broadphase->debugDraw();
             }
     }

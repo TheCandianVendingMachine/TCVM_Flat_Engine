@@ -54,6 +54,11 @@ namespace fe
                     FLAT_ENGINE_API void remove(int node);
                     FLAT_ENGINE_API int balance(int node);
 
+                    FLAT_ENGINE_API treeNode *pointCollideBranch(float x, float y, int branch);
+                    FLAT_ENGINE_API void AABBCollideBranch(fe::AABB &testAABB, std::function<void(void*)> callback, int branch);
+
+                    friend class collisionWorld;
+
                 public:
                     FLAT_ENGINE_API aabbTree();
 
@@ -68,16 +73,10 @@ namespace fe
                     // Updates all colliders in the broadphase algorithm
                     FLAT_ENGINE_API void update(fe::collider *collider);
 
-                    // Returns a list of the colliders that are possibly intersecting
-                    FLAT_ENGINE_API const std::pair<std::pair<fe::collider*, fe::collider*>*, unsigned int> computeColliderPairs();
+                    FLAT_ENGINE_API void colliderAABB(fe::AABB &testAABB, std::function<void(void*)> callback);
 
                     // Returns the collider that is at the point
-                    FLAT_ENGINE_API fe::collider *colliderAtPoint(float x, float y);
-
-                    // Returns an array of objects that collide with the AABB argument.
-                    // First return value is how many objects collide
-                    // Second return value is the array of objects that have collided
-                    FLAT_ENGINE_API std::pair<fe::collider*[FE_MAX_GAME_OBJECTS], unsigned int> collidesWithAABB(fe::collider &aabb);
+                    FLAT_ENGINE_API void *colliderAtPoint(float x, float y);
 
                     // Casts a ray and tests against the broadphase algorithm
                     FLAT_ENGINE_API fe::raycastResult raycast(float x, float y, float dirX, float dirY);
