@@ -15,6 +15,10 @@ namespace fe
                     float m_positionX;
                     float m_positionY;
 
+                    // old positions of the entitiy. Used for optimizaitons regarding collision world
+                    float m_oldPositionX;
+                    float m_oldPositionY;
+
                     // Current velocity of the object during this frame
                     float m_velocityX;
                     float m_velocityY;
@@ -34,6 +38,8 @@ namespace fe
 
                     // if the object will be updated or not
                     bool m_enabled;
+
+                    friend class baseEntity;
 
                 public:
                     FLAT_ENGINE_API float getVelocityX() const;
@@ -98,6 +104,9 @@ namespace fe
                                     m_velocityX *= modifier;
                                     m_velocityY *= modifier;
                                 }
+
+                            m_oldPositionX = m_positionX;
+                            m_oldPositionY = m_positionY;
 
                             m_positionX += m_velocityX * deltaTime;
                             m_positionY += m_velocityY * deltaTime;

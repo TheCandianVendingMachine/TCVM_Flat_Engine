@@ -67,7 +67,7 @@ void fe::engine::run()
                         out.open("profileOutput.txt", std::ios::trunc);
                         m_profileLogger->printToStream(out);
                         out.close();
-                        FE_LOG_DEBUG(getFPS());
+                        //FE_LOG_DEBUG(getFPS());
                     }
             #endif
 
@@ -101,7 +101,7 @@ void fe::engine::update()
         m_gameStateMachine->preUpdate();
         FE_END_PROFILE;
         FE_ENGINE_PROFILE("engine", "state_update");
-        m_gameStateMachine->update();
+        m_gameStateMachine->update(m_collisionWorld);
         FE_END_PROFILE;
 
         unsigned int iterations = m_accumulator / m_deltaTime;
@@ -121,10 +121,6 @@ void fe::engine::update()
 
         FE_ENGINE_PROFILE("engine", "physics_timestep_sim");
         m_physicsEngine->simulateForces(m_deltaTime, iterations);
-        FE_END_PROFILE;
-
-        FE_ENGINE_PROFILE("engine", "collision_world_update_threaded");
-        m_collisionWorld->update();
         FE_END_PROFILE;
 
         FE_ENGINE_PROFILE("engine", "state_postupdate");

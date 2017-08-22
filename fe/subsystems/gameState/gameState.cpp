@@ -1,6 +1,7 @@
 #include "gameState.hpp"
 #include "../../gui/panel.hpp"
 #include "../../gui/guiElement.hpp"
+#include "../physics/collision/collisionWorld.hpp"
 
 #include "../../debug/profiler.hpp"
 
@@ -50,7 +51,7 @@ void fe::baseGameState::preUpdateDefined()
             }
     }
 
-void fe::baseGameState::update()
+void fe::baseGameState::update(collisionWorld *collisionWorld)
     {
         FE_ENGINE_PROFILE("game_state", "entity_update");
         auto objects = getObjects();
@@ -59,6 +60,11 @@ void fe::baseGameState::update()
                 if (objects[i])
                     {
                         objects[i]->update();
+
+                        if (objects[i]->m_moved)
+                            {
+                                collisionWorld->updateCollider(objects[i]->getCollider());
+                            }
                     }
             }
         FE_END_PROFILE;

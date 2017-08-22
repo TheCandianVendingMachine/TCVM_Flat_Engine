@@ -18,9 +18,6 @@ namespace fe
                     fe::poolAllocater<fe::collider> m_collisionBodies;
                     fe::broadphaseAbstract *m_broadphase;
 
-                    fe::threadFunction m_collisionWorldUpdate;
-                    bool m_threaded;
-
                     FLAT_ENGINE_API void handleCollision(fe::collider *a, fe::collider *b);
 
                 public:
@@ -30,7 +27,7 @@ namespace fe
                     FLAT_ENGINE_API void shutDown();
                     FLAT_ENGINE_API void clear();
 
-                    FLAT_ENGINE_API void update();
+                    FLAT_ENGINE_API void updateCollider(fe::collider *collider);
 
                     FLAT_ENGINE_API void setBroadphase(fe::broadphaseAbstract *broadphase);
                     FLAT_ENGINE_API fe::broadphaseAbstract *getBroadphase() const;

@@ -16,6 +16,7 @@ namespace fe
     {
         class baseGameState;
         class sceneGraph;
+        class collisionWorld;
         
         class gameStateMachine
             {
@@ -96,7 +97,7 @@ namespace fe
                     FLAT_ENGINE_API void handleEvents(const sf::Event &event);
 
                     FLAT_ENGINE_API void preUpdate();
-                    FLAT_ENGINE_API void update();
+                    FLAT_ENGINE_API void update(collisionWorld *collisionWorld);
                     FLAT_ENGINE_API void postUpdate();
 
                     FLAT_ENGINE_API void preDraw();

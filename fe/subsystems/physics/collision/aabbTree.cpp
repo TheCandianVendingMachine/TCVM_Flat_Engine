@@ -391,43 +391,19 @@ void fe::aabbTree::remove(fe::collider *collider)
         FE_END_PROFILE;
     }
 
-void fe::aabbTree::update()
+void fe::aabbTree::update(fe::collider *collider)
     {
-        FE_PROFILE("aabb_tree", "update");
-        if (m_nodes[m_base].isLeaf())
+        FE_PROFILE("aabb_tree", "update_collider");
+        int nodeIndex = (int)collider->m_userData;
+        if (!m_nodes[nodeIndex].m_fatAABB.contains(collider->m_aabb))
             {
-                
-            }
-        else
-            {
-                for (int i = 0; i < m_nodeCapacity; i++)
-                    {
-                        FE_ENGINE_PROFILE("aabb_tree", "check_for_invalid_nodes");
-                        // if the node doesnt contain the AABB anymore update the node and reinsert
-                        treeNode *currentNode = &m_nodes[i];
-                        if (currentNode->m_height == 0 && !currentNode->m_fatAABB.contains(static_cast<fe::collider*>(currentNode->m_userData)->m_aabb))
-                            {
-                                FE_ENGINE_PROFILE("aabb_tree", "invalid_node_update");
-                                remove(i);
-                                fe::collider *userData = static_cast<fe::collider*>(currentNode->m_userData);
-                                currentNode->m_fatAABB.m_positionX = userData->m_aabb.m_positionX - m_fatness;
-                                currentNode->m_fatAABB.m_positionY = userData->m_aabb.m_positionY - m_fatness;
-                                currentNode->m_fatAABB.m_sizeX = userData->m_aabb.m_sizeX + m_fatness + m_fatness;
-                                currentNode->m_fatAABB.m_sizeY = userData->m_aabb.m_sizeY + m_fatness + m_fatness;
-                                insert(i);
-                                FE_END_PROFILE;
-                            }
-
-                        if (m_nodes[m_nodes[i].m_next].m_height == -1) break;
-                        FE_END_PROFILE;
-                    }
-            }
-        FE_END_PROFILE;
-
-        FE_PROFILE("aabb_tree", "debug_draw");
-        if (m_debug)
-            {
-                debugDrawAABB(m_base);
+                remove(nodeIndex);
+                treeNode *currentNode = &m_nodes[nodeIndex];
+                currentNode->m_fatAABB.m_positionX = collider->m_aabb.m_positionX - m_fatness;
+                currentNode->m_fatAABB.m_positionY = collider->m_aabb.m_positionY - m_fatness;
+                currentNode->m_fatAABB.m_sizeX = collider->m_aabb.m_sizeX + m_fatness + m_fatness;
+                currentNode->m_fatAABB.m_sizeY = collider->m_aabb.m_sizeY + m_fatness + m_fatness;
+                insert(nodeIndex);
             }
         FE_END_PROFILE;
     }
@@ -450,4 +426,12 @@ std::pair<fe::collider*[FE_MAX_GAME_OBJECTS], unsigned int> fe::aabbTree::collid
 fe::raycastResult fe::aabbTree::raycast(float x, float y, float dirX, float dirY)
     {
         return fe::raycastResult();
+    }
+
+void fe::aabbTree::debugDraw()
+    {
+        if (m_debug)
+            {
+                debugDrawAABB(m_base);
+            }
     }

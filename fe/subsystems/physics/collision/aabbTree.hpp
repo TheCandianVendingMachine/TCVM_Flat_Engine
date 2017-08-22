@@ -66,7 +66,7 @@ namespace fe
                     FLAT_ENGINE_API void remove(fe::collider *collider);
 
                     // Updates all colliders in the broadphase algorithm
-                    FLAT_ENGINE_API void update();
+                    FLAT_ENGINE_API void update(fe::collider *collider);
 
                     // Returns a list of the colliders that are possibly intersecting
                     FLAT_ENGINE_API const std::pair<std::pair<fe::collider*, fe::collider*>*, unsigned int> computeColliderPairs();
@@ -81,6 +81,8 @@ namespace fe
 
                     // Casts a ray and tests against the broadphase algorithm
                     FLAT_ENGINE_API fe::raycastResult raycast(float x, float y, float dirX, float dirY);
+
+                    FLAT_ENGINE_API void debugDraw();
 
             };
     }

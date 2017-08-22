@@ -61,5 +61,22 @@ void fe::baseEntity::updateModules()
         m_collisionBody->m_bounds->m_positionY = posY;
         m_collisionBody->m_aabb.m_positionX = posX;
         m_collisionBody->m_aabb.m_positionY = posY;
+
+        m_moved = abs(m_rigidBody->m_oldPositionX - m_rigidBody->m_positionX) > 0.0001f || abs(m_rigidBody->m_oldPositionY - m_rigidBody->m_positionY) > 0.0001f;
+    }
+
+fe::renderObject *fe::baseEntity::getRenderObject() const
+    {
+        return m_renderObject;
+    }
+
+fe::rigidBody *fe::baseEntity::getRigidBody() const
+    {
+        return m_rigidBody;
+    }
+
+fe::collider *fe::baseEntity::getCollider() const
+    {
+        return m_collisionBody;
     }
 

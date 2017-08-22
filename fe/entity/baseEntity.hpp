@@ -24,6 +24,9 @@ namespace fe
 
                     bool m_killEntity;
                     bool m_enabled;
+                    bool m_moved;
+
+                    friend class baseGameState;
 
                 public:
                     FLAT_ENGINE_API baseEntity();
@@ -47,6 +50,10 @@ namespace fe
                     FLAT_ENGINE_API virtual void update() {}
                     FLAT_ENGINE_API virtual void postUpdate() {}
                     FLAT_ENGINE_API void updateModules();
+
+                    FLAT_ENGINE_API fe::renderObject *getRenderObject() const;
+                    FLAT_ENGINE_API fe::rigidBody *getRigidBody() const;
+                    FLAT_ENGINE_API fe::collider *getCollider() const;
 
                     void move() { m_rigidBody->applyForce(-2500, 0); }
 

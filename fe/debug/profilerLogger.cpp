@@ -1,5 +1,6 @@
 #include "profilerLogger.hpp"
 #include "../objectManagement/guid.hpp"
+#include <algorithm>
 
 fe::profilerLogger *fe::profilerLogger::m_instance = nullptr;
 
@@ -32,8 +33,9 @@ void fe::profilerLogger::add(const char *profile, fe::time time)
         profileData &data = m_profileData[m_profiles[FE_STR(profile)]];
         if (data.m_calls < FE_PROFILER_AVERAGE_MAX) 
             {
-                data.m_time[data.m_calls++] = time;
+                data.m_time[data.m_calls] = time;
             }
+        data.m_calls += 1;
         data.m_totalCalls++;
     }
 
@@ -62,14 +64,14 @@ void fe::profilerLogger::printToStream(std::ostream &out)
             {
                 profileData data = m_profileData[i];
                 fe::time avg;
-                for (int j = 0; j < data.m_calls; j++)
+                for (int j = 0; j < std::min(data.m_calls, 500u); j++)
                     {
                         avg += data.m_time[j];
                     }
 
-                if (data.m_totalCalls > 0)
+                if (data.m_calls > 0)
                     {
-                        avg /= data.m_totalCalls;
+                        avg /= std::min(data.m_calls, 500u);
                     }
 
             #if FE_PROFILE_PRINT_ZEROS
@@ -98,15 +100,14 @@ void fe::profilerLogger::printToStream(fe::guid group, std::ostream &out)
             {
                 profileData data = m_profileData[i];
                 fe::time avg;
-                for (int j = 0; j < data.m_calls; j++)
+                for (int j = 0; j < std::min(data.m_calls, 500u); j++)
                     {
                         avg += data.m_time[j];
                     }
 
-                if (data.m_totalCalls > 0)
+                if (data.m_calls > 0)
                     {
-                        avg /= data.m_totalCalls;
-                        data.m_calls / data.m_totalCalls;
+                        avg /= std::min(data.m_calls, 500u);
                     }
 
             #if FE_PROFILE_PRINT_ZEROS
@@ -125,7 +126,6 @@ void fe::profilerLogger::printToStream(fe::guid group, std::ostream &out)
                                 "\nSeconds: "           << avg.asSeconds() << "\n\n";
                     }
             #endif
-                out.flush();
             }
     }
 

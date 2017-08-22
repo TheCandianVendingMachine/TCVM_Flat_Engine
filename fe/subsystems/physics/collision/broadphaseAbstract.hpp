@@ -28,7 +28,7 @@ namespace fe
                     virtual void remove(fe::collider *collider) = 0;
 
                     // Updates all colliders in the broadphase algorithm
-                    virtual void update() = 0;
+                    virtual void update(fe::collider *collider) = 0;
 
                     // Returns a list of the colliders that are possibly intersecting
                     virtual const std::pair<std::pair<fe::collider*, fe::collider*>*, unsigned int> computeColliderPairs() = 0;
@@ -51,6 +51,8 @@ namespace fe
                     inline raycastResult raycast(fe::Vector2d &origin, fe::Vector2d &direction) { return raycast(origin.x, origin.y, direction.x, direction.y); }
                     // Casts a ray and tests against the broadphase algorithm
                     inline raycastResult raycast(fe::lightVector2d &origin, fe::lightVector2d &direction) { return raycast(origin.x, origin.y, direction.x, direction.y); }
+
+                    virtual void debugDraw() {}
 
                     // Toggles debug drawing
                     FLAT_ENGINE_API void debugMode(bool value);
