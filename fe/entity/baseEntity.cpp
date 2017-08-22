@@ -200,6 +200,21 @@ void fe::baseEntity::setColour(const sf::Color colour)
             }
     }
 
+fe::lightVector2d fe::baseEntity::getPosition() const
+    {
+        return fe::lightVector2d(m_positionX, m_positionY);
+    }
+
+fe::lightVector2d fe::baseEntity::getSize() const
+    {
+        return fe::lightVector2d(m_sizeX, m_sizeY);
+    }
+
+sf::Color fe::baseEntity::getColour() const
+    {
+        return m_colour;
+    }
+
 fe::renderObject *fe::baseEntity::getRenderObject() const
     {
         return m_renderObject;

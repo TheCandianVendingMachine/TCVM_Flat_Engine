@@ -90,6 +90,10 @@ namespace fe
 
                     FLAT_ENGINE_API void setColour(const sf::Color colour);
 
+                    FLAT_ENGINE_API fe::lightVector2d getPosition() const;
+                    FLAT_ENGINE_API fe::lightVector2d getSize() const;
+                    FLAT_ENGINE_API sf::Color getColour() const;
+
                     FLAT_ENGINE_API fe::renderObject *getRenderObject() const;
                     FLAT_ENGINE_API fe::rigidBody *getRigidBody() const;
                     FLAT_ENGINE_API fe::collider *getCollider() const;
