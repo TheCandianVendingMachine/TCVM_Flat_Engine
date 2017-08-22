@@ -79,9 +79,29 @@ void fe::time::operator/=(unsigned int rhs)
         m_time /= rhs;
     }
 
+bool fe::time::operator>(const fe::time &rhs)
+    {
+        return m_time > rhs.m_time;
+    }
+
+bool fe::time::operator>=(const fe::time &rhs)
+    {
+        return m_time >= rhs.m_time;
+    }
+
+bool fe::time::operator<(const fe::time &rhs)
+    {
+        return m_time < rhs.m_time;
+    }
+
+bool fe::time::operator<=(const fe::time &rhs)
+    {
+        return m_time <= rhs.m_time;
+    }
+
 bool fe::time::operator==(const fe::time &rhs)
     {
-        return m_time = rhs.m_time;
+        return m_time == rhs.m_time;
     }
 
 
