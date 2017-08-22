@@ -6,11 +6,7 @@
 #include "../typeDefines.hpp"
 #include "../subsystems/physics/rigidBody.hpp"
 #include "../subsystems/physics/collision/collisionBody.hpp"
-
-namespace sf
-    {
-        class Color;
-    }
+#include <SFML/Graphics/Color.hpp>
 
 namespace fe
     {
@@ -45,6 +41,13 @@ namespace fe
                     fe::Handle m_handle;
 
                     entityModules m_modulesEnabled;
+
+                    // Local variables to keep updated for debugging. Is only used to set position on initialization
+                    float m_positionX;
+                    float m_positionY;
+                    float m_sizeX;
+                    float m_sizeY;
+                    sf::Color m_colour;
 
                     bool m_killEntity;
                     bool m_enabled;
@@ -85,7 +88,6 @@ namespace fe
                     FLAT_ENGINE_API void setSize(fe::Vector2d size);
                     FLAT_ENGINE_API void setSize(fe::lightVector2d size);
 
-                    FLAT_ENGINE_API void setColour(sf::Color &colour);
                     FLAT_ENGINE_API void setColour(const sf::Color colour);
 
                     FLAT_ENGINE_API fe::renderObject *getRenderObject() const;

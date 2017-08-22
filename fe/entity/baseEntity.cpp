@@ -13,6 +13,11 @@ fe::baseEntity::baseEntity(entityModules modules) :
     m_renderObject(nullptr),
     m_rigidBody(nullptr),
     m_moved(false),
+    m_positionX(0.f),
+    m_positionY(0.f),
+    m_sizeX(0.f),
+    m_sizeY(0.f),
+    m_colour(sf::Color::White),
     m_modulesEnabled(modules)
     {}
 
@@ -32,6 +37,10 @@ void fe::baseEntity::initialize()
             {
                 m_collisionBody = fe::engine::get().getCollisionWorld().createCollider(0.f, 0.f);
             }
+
+        setPosition(m_positionX, m_positionY);
+        setSize(m_sizeX, m_sizeY);
+        setColour(m_colour);
     }
 
 void fe::baseEntity::deinitialize()
@@ -121,6 +130,9 @@ void fe::baseEntity::updateModules()
 
 void fe::baseEntity::setPosition(float x, float y)
     {
+        m_positionX = x;
+        m_positionY = y;
+
         if (m_renderObject)
             {
                 m_renderObject->m_transform.setPosition(x, y);
@@ -140,16 +152,19 @@ void fe::baseEntity::setPosition(float x, float y)
 
 void fe::baseEntity::setPosition(fe::Vector2d position)
     {
-        return void();
+        setPosition(position.x, position.y);
     }
 
 void fe::baseEntity::setPosition(fe::lightVector2d position)
     {
-        return void();
+        setPosition(position.x, position.y);
     }
 
 void fe::baseEntity::setSize(float x, float y)
     {
+        m_sizeX = x;
+        m_sizeY = y;
+
         if (m_renderObject)
             {
                 m_renderObject->m_verticies[2] = x;
@@ -173,19 +188,9 @@ void fe::baseEntity::setSize(fe::lightVector2d size)
         setSize(size.x, size.y);
     }
 
-void fe::baseEntity::setColour(sf::Color &colour)
-    {
-        if (m_renderObject)
-            {
-                m_renderObject->m_vertColour[0] = colour.r;
-                m_renderObject->m_vertColour[1] = colour.g;
-                m_renderObject->m_vertColour[2] = colour.b;
-                m_renderObject->m_vertColour[3] = colour.a;
-            }
-    }
-
 void fe::baseEntity::setColour(const sf::Color colour)
     {
+        m_colour = colour;
         if (m_renderObject)
             {
                 m_renderObject->m_vertColour[0] = colour.r;
