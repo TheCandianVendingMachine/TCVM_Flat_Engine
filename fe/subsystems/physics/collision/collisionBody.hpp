@@ -16,7 +16,6 @@ namespace fe
                 int id = count++;
 
                 AABB m_aabb;
-                collisionBounds *m_bounds;
                 void *m_userData; // any additional data that needs to be stored
             };
     }

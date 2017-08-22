@@ -20,6 +20,7 @@ void fe::baseGameState::removePanel(gui::panel *panel)
 
 void fe::baseGameState::onAdd(baseEntity *object, fe::Handle objectHandle)
     {
+        object->initialize();
         object->onAdd(*this);
     }
 

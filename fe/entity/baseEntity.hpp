@@ -7,11 +7,33 @@
 #include "../subsystems/physics/rigidBody.hpp"
 #include "../subsystems/physics/collision/collisionBody.hpp"
 
+namespace sf
+    {
+        class Color;
+    }
+
 namespace fe
     {
         struct renderObject;
         class rigidBody;
         class baseGameState;
+
+        enum class entityModules : std::int16_t
+            {
+                RENDER_OBJECT   = 1 << 0,
+                RIGID_BODY      = 1 << 1,
+                COLLISION_BODY  = 1 << 2,
+            };
+
+        inline entityModules operator | (entityModules lhs, entityModules rhs)
+            {
+                return static_cast<entityModules>(static_cast<std::int16_t>(lhs) | static_cast<std::int16_t>(rhs));
+            }
+
+        inline int16_t operator & (entityModules lhs, entityModules rhs)
+            {
+                return static_cast<std::int16_t>(lhs) & static_cast<std::int16_t>(rhs);
+            }
 
         class baseEntity
             {
@@ -22,6 +44,8 @@ namespace fe
 
                     fe::Handle m_handle;
 
+                    entityModules m_modulesEnabled;
+
                     bool m_killEntity;
                     bool m_enabled;
                     bool m_moved;
@@ -29,7 +53,9 @@ namespace fe
                     friend class baseGameState;
 
                 public:
-                    FLAT_ENGINE_API baseEntity();
+                    FLAT_ENGINE_API baseEntity(entityModules modules);
+                    FLAT_ENGINE_API void initialize();
+                    FLAT_ENGINE_API void deinitialize();
 
                     FLAT_ENGINE_API void enable(bool value);
                     FLAT_ENGINE_API bool getEnabled() const;
@@ -50,6 +76,17 @@ namespace fe
                     FLAT_ENGINE_API virtual void update() {}
                     FLAT_ENGINE_API virtual void postUpdate() {}
                     FLAT_ENGINE_API void updateModules();
+
+                    FLAT_ENGINE_API void setPosition(float x, float y);
+                    FLAT_ENGINE_API void setPosition(fe::Vector2d position);
+                    FLAT_ENGINE_API void setPosition(fe::lightVector2d position);
+
+                    FLAT_ENGINE_API void setSize(float x, float y);
+                    FLAT_ENGINE_API void setSize(fe::Vector2d size);
+                    FLAT_ENGINE_API void setSize(fe::lightVector2d size);
+
+                    FLAT_ENGINE_API void setColour(sf::Color &colour);
+                    FLAT_ENGINE_API void setColour(const sf::Color colour);
 
                     FLAT_ENGINE_API fe::renderObject *getRenderObject() const;
                     FLAT_ENGINE_API fe::rigidBody *getRigidBody() const;

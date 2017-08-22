@@ -1,13 +1,59 @@
 #include "baseEntity.hpp"
 #include "../subsystems/physics/rigidBody.hpp"
 #include "../subsystems/graphic/renderObject/renderObject.hpp"
+#include "../engine.hpp"
+#include "../subsystems/gameState/gameStateMachine.hpp"
+#include "../subsystems/graphic/renderObject/sceneGraph.hpp"
+#include "../subsystems/physics/physicsEngine.hpp"
+#include "../subsystems/physics/collision/collisionWorld.hpp"
 
-fe::baseEntity::baseEntity() : 
+fe::baseEntity::baseEntity(entityModules modules) :
     m_killEntity(false),
     m_enabled(false),
     m_renderObject(nullptr),
-    m_rigidBody(nullptr)
+    m_rigidBody(nullptr),
+    m_moved(false),
+    m_modulesEnabled(modules)
     {}
+
+void fe::baseEntity::initialize()
+    {
+        if (m_modulesEnabled & entityModules::RENDER_OBJECT)
+            {
+                m_renderObject = fe::engine::get().getStateMachine().getSceneGraph().createRenderObject();
+            }
+
+        if (m_modulesEnabled & entityModules::RIGID_BODY)
+            {
+                m_rigidBody = fe::engine::get().getPhysicsEngine().createRigidBody();
+            }
+
+        if (m_modulesEnabled & entityModules::COLLISION_BODY)
+            {
+                m_collisionBody = fe::engine::get().getCollisionWorld().createCollider(0.f, 0.f);
+            }
+    }
+
+void fe::baseEntity::deinitialize()
+    {
+        if (m_modulesEnabled & entityModules::RENDER_OBJECT)
+            {
+                fe::engine::get().getStateMachine().getSceneGraph().deleteRenderObject(m_renderObject);
+                m_renderObject = nullptr;
+            }
+
+        if (m_modulesEnabled & entityModules::RIGID_BODY)
+            {
+                fe::engine::get().getPhysicsEngine().deleteRigidBody(m_rigidBody);
+                m_rigidBody = nullptr;
+            }
+
+        if (m_modulesEnabled & entityModules::COLLISION_BODY)
+            {
+                fe::engine::get().getCollisionWorld().deleteCollider(m_collisionBody);
+                m_collisionBody = nullptr;
+            }
+    }
 
 void fe::baseEntity::enable(bool value)
     {
@@ -53,16 +99,100 @@ void fe::baseEntity::onDestroy(fe::baseGameState &state)
 
 void fe::baseEntity::updateModules()
     {
-        float posX = m_rigidBody->getPositionX();
-        float posY = m_rigidBody->getPositionY();
+        if (m_rigidBody)
+            {
+                float posX = m_rigidBody->getPositionX();
+                float posY = m_rigidBody->getPositionY();
 
-        m_renderObject->m_transform.setPosition(posX, posY);
-        m_collisionBody->m_bounds->m_positionX = posX;
-        m_collisionBody->m_bounds->m_positionY = posY;
-        m_collisionBody->m_aabb.m_positionX = posX;
-        m_collisionBody->m_aabb.m_positionY = posY;
+                if (m_renderObject) 
+                    {
+                        m_renderObject->m_transform.setPosition(posX, posY);
+                    }
 
-        m_moved = abs(m_rigidBody->m_oldPositionX - m_rigidBody->m_positionX) > 0.0001f || abs(m_rigidBody->m_oldPositionY - m_rigidBody->m_positionY) > 0.0001f;
+                if (m_collisionBody) 
+                    {
+                        m_collisionBody->m_aabb.m_positionX = posX;
+                        m_collisionBody->m_aabb.m_positionY = posY;
+                    }
+
+                m_moved = abs(m_rigidBody->m_oldPositionX - m_rigidBody->m_positionX) > 0.0001f || abs(m_rigidBody->m_oldPositionY - m_rigidBody->m_positionY) > 0.0001f;
+            }
+    }
+
+void fe::baseEntity::setPosition(float x, float y)
+    {
+        if (m_renderObject)
+            {
+                m_renderObject->m_transform.setPosition(x, y);
+            }
+
+        if (m_rigidBody)
+            {
+                m_rigidBody->setPosition(x, y);
+            }
+
+        if (m_collisionBody)
+            {
+                m_collisionBody->m_aabb.m_positionX = x;
+                m_collisionBody->m_aabb.m_positionY = y;
+            }
+    }
+
+void fe::baseEntity::setPosition(fe::Vector2d position)
+    {
+        return void();
+    }
+
+void fe::baseEntity::setPosition(fe::lightVector2d position)
+    {
+        return void();
+    }
+
+void fe::baseEntity::setSize(float x, float y)
+    {
+        if (m_renderObject)
+            {
+                m_renderObject->m_verticies[2] = x;
+                m_renderObject->m_verticies[3] = y;
+            }
+
+        if (m_collisionBody)
+            {
+                m_collisionBody->m_aabb.m_sizeX = x;
+                m_collisionBody->m_aabb.m_sizeY = y;
+            }
+    }
+
+void fe::baseEntity::setSize(fe::Vector2d size)
+    {
+        setSize(size.x, size.y);
+    }
+
+void fe::baseEntity::setSize(fe::lightVector2d size)
+    {
+        setSize(size.x, size.y);
+    }
+
+void fe::baseEntity::setColour(sf::Color &colour)
+    {
+        if (m_renderObject)
+            {
+                m_renderObject->m_vertColour[0] = colour.r;
+                m_renderObject->m_vertColour[1] = colour.g;
+                m_renderObject->m_vertColour[2] = colour.b;
+                m_renderObject->m_vertColour[3] = colour.a;
+            }
+    }
+
+void fe::baseEntity::setColour(const sf::Color colour)
+    {
+        if (m_renderObject)
+            {
+                m_renderObject->m_vertColour[0] = colour.r;
+                m_renderObject->m_vertColour[1] = colour.g;
+                m_renderObject->m_vertColour[2] = colour.b;
+                m_renderObject->m_vertColour[3] = colour.a;
+            }
     }
 
 fe::renderObject *fe::baseEntity::getRenderObject() const
