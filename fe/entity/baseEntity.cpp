@@ -12,6 +12,7 @@ fe::baseEntity::baseEntity(entityModules modules) :
     m_enabled(false),
     m_renderObject(nullptr),
     m_rigidBody(nullptr),
+    m_collisionBody(nullptr),
     m_moved(false),
     m_positionX(0.f),
     m_positionY(0.f),
