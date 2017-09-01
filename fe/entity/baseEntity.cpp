@@ -70,6 +70,7 @@ void fe::baseEntity::enable(bool value)
         m_enabled = value;
         m_renderObject->m_draw = value;
         m_rigidBody->enable(value);
+        m_collisionBody->m_enabled = value;
     }
 
 bool fe::baseEntity::getEnabled() const

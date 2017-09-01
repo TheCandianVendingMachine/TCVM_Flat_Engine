@@ -1,5 +1,5 @@
 // engineInit.hpp
-// a class with a static function to init/deinit the engine
+// The game engine. The main game loop and all of the systems associated with it
 #pragma once
 #define FLAT_ENGINE_EXPORT
 #include "flatEngineExport.hpp"

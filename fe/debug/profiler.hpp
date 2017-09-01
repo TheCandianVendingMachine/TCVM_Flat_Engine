@@ -19,7 +19,6 @@ namespace fe
                 char m_groupStr[512];
                 char m_nameStr[512];
                 bool m_profile;
-		
 		        profiler(const char *group, const char *name) 
 		            {
                     #if FE_PROFILE_RELEASE || _DEBUG
