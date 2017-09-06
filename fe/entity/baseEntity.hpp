@@ -53,7 +53,7 @@ namespace fe
                     bool m_enabled;
                     bool m_moved;
 
-                    friend class baseGameState;
+                    friend class gameWorld;
 
                 public:
                     FLAT_ENGINE_API baseEntity(entityModules modules);

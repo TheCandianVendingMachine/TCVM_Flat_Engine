@@ -62,7 +62,6 @@ fe::collisionWorld::collisionWorld()
 void fe::collisionWorld::startUp()
     {
         m_collisionBodies.startUp(FE_MAX_GAME_OBJECTS);
-        m_broadphase = nullptr;
     }
 
 void fe::collisionWorld::shutDown()
@@ -75,26 +74,9 @@ void fe::collisionWorld::clear()
         m_collisionBodies.clear();
     }
 
-void fe::collisionWorld::updateCollider(fe::collider *collider)
+void fe::collisionWorld::handleCollisions(const fe::broadphaseAbstract *broadphase)
     {
-        if (!collider) return;
-        m_broadphase->update(collider);
-    }
-
-void fe::collisionWorld::setBroadphase(fe::broadphaseAbstract *broadphase)
-    {
-        m_broadphase = broadphase;
-        m_broadphase->startUp();
-    }
-
-fe::broadphaseAbstract *fe::collisionWorld::getBroadphase() const
-    {
-        return m_broadphase;
-    }
-
-void fe::collisionWorld::handleCollisions()
-    {
-        if (!m_broadphase)
+        if (!broadphase)
             {
                 for (int i = 0; i < m_collisionBodies.getObjectAllocCount(); i++)
                     {
@@ -121,10 +103,9 @@ void fe::collisionWorld::handleCollisions()
                 FE_ENGINE_PROFILE("collision_world", "broadphase_compute");
                 for (int i = 0; i < m_collisionBodies.getObjectAllocCount(); i++)
                     {
-                        m_broadphase->colliderAABB(m_collisionBodies.at(i)->m_aabb, std::bind(static_cast<void(fe::collisionWorld::*)(void*, void*)>(&fe::collisionWorld::handleCollision), this, std::placeholders::_1, m_collisionBodies.at(i)));
+                        broadphase->colliderAABB(m_collisionBodies.at(i)->m_aabb, std::bind(static_cast<void(fe::collisionWorld::*)(void*, void*)>(&fe::collisionWorld::handleCollision), this, std::placeholders::_1, m_collisionBodies.at(i)));
                     }
                 FE_END_PROFILE;
-                m_broadphase->debugDraw();
             }
     }
 
@@ -133,18 +114,10 @@ fe::collider *fe::collisionWorld::createCollider(float sizeX, float sizeY)
         fe::collider *collider = m_collisionBodies.alloc();
         collider->m_aabb.m_sizeX = sizeX;
         collider->m_aabb.m_sizeY = sizeY;
-        if (m_broadphase)
-            {
-                m_broadphase->add(collider);
-            }
         return collider;
     }
 
 void fe::collisionWorld::deleteCollider(fe::collider *body)
     {
-        if (m_broadphase)
-            {
-                m_broadphase->remove(body);
-            }
         m_collisionBodies.free(body);
     }

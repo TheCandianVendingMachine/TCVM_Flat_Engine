@@ -16,7 +16,6 @@ namespace fe
             {
                 private:
                     fe::poolAllocater<fe::collider> m_collisionBodies;
-                    fe::broadphaseAbstract *m_broadphase;
 
                     FLAT_ENGINE_API void handleCollision(fe::collider *a, fe::collider *b);
                     FLAT_ENGINE_API void handleCollision(void *leftCollider, void *rightCollider);
@@ -28,12 +27,7 @@ namespace fe
                     FLAT_ENGINE_API void shutDown();
                     FLAT_ENGINE_API void clear();
 
-                    FLAT_ENGINE_API void updateCollider(fe::collider *collider);
-
-                    FLAT_ENGINE_API void setBroadphase(fe::broadphaseAbstract *broadphase);
-                    FLAT_ENGINE_API fe::broadphaseAbstract *getBroadphase() const;
-
-                    FLAT_ENGINE_API void handleCollisions();
+                    FLAT_ENGINE_API void handleCollisions(const fe::broadphaseAbstract *broadphase);
 
                     FLAT_ENGINE_API fe::collider *createCollider(float sizeX, float sizeY);
                     FLAT_ENGINE_API void deleteCollider(fe::collider *body);

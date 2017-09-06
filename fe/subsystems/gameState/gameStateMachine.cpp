@@ -215,7 +215,7 @@ void fe::gameStateMachine::preDraw()
         if (m_endState && m_endState->m_currentState)
             {
                 m_endState->m_currentState->preDraw();
-                m_endState->m_currentState->getSceneGraph().preDraw();
+                m_endState->m_currentState->preDrawDefined();
 
                 stateList *listTop = m_endState;
                 stateList *tail = m_endState->m_tail;
@@ -266,10 +266,16 @@ void fe::gameStateMachine::postDraw()
 
 fe::sceneGraph &fe::gameStateMachine::getSceneGraph()
     {
-        return m_endState->m_currentState->getSceneGraph();
+        return m_endState->m_currentState->getGameWorld().getSceneGraph();
     }
 
 const fe::baseGameState &fe::gameStateMachine::getCurrentState()
     {
         return *m_endState->m_currentState;
+    }
+
+const fe::broadphaseAbstract *fe::gameStateMachine::getBroadphase()
+    {
+        if (!m_endState) return nullptr;
+        return m_endState->m_currentState->getGameWorld().getBroadphase();
     }

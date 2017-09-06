@@ -128,7 +128,7 @@ void fe::engine::update()
         FE_END_PROFILE;
 
         FE_ENGINE_PROFILE("engine", "collision_world_collide");
-        m_collisionWorld->handleCollisions();
+        m_collisionWorld->handleCollisions(m_gameStateMachine->getBroadphase());
         FE_END_PROFILE;
 
         FE_ENGINE_PROFILE("engine", "send_events");

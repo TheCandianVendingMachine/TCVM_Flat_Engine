@@ -17,6 +17,7 @@ namespace fe
         class baseGameState;
         class sceneGraph;
         class collisionWorld;
+        class broadphaseAbstract;
         
         class gameStateMachine
             {
@@ -105,8 +106,9 @@ namespace fe
                     FLAT_ENGINE_API void postDraw();
 
                     FLAT_ENGINE_API fe::sceneGraph &getSceneGraph();
-
                     FLAT_ENGINE_API const fe::baseGameState &getCurrentState();
+                    FLAT_ENGINE_API const fe::broadphaseAbstract *getBroadphase();
+
 
                     FLAT_ENGINE_API virtual ~gameStateMachine() {}
 

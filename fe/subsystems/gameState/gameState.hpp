@@ -3,11 +3,9 @@
 #pragma once
 #define FLAT_ENGINE_EXPORT
 #include "../../flatEngineExport.hpp"
-#include "../graphic/renderObject/sceneGraph.hpp"
-#include "../../entity/baseEntity.hpp"
-#include "../../objectManagement/handleManager.hpp"
 #include "../memory/memoryManager.hpp"
 #include "../../debug/logger.hpp"
+#include "gameWorld.hpp"
 
 #include <vector>
 
@@ -20,24 +18,22 @@ namespace sf
 namespace fe
     {
         class collisionWorld;
+        class baseEntity;
         namespace gui
             {
                 class panel;
                 class guiElement;
             }
 
-        class baseGameState : public fe::handleManager<baseEntity*, FE_MAX_GAME_OBJECTS>
+        class baseGameState
             {
                 private:
                     std::vector<gui::panel*> m_guiPanels;
-
-                    fe::sceneGraph m_sceneGraph;
+                    fe::gameWorld m_gameWorld;
 
                 protected:
                     FLAT_ENGINE_API void addPanel(gui::panel *panel);
                     FLAT_ENGINE_API void removePanel(gui::panel *panel);
-
-                    FLAT_ENGINE_API void onAdd(baseEntity *object, fe::Handle objectHandle);
 
                 public:
                     FLAT_ENGINE_API baseGameState() {}
@@ -58,6 +54,7 @@ namespace fe
                     FLAT_ENGINE_API void postUpdateDefined();
                     FLAT_ENGINE_API virtual void postUpdate() {}
 
+                    FLAT_ENGINE_API void preDrawDefined();
                     FLAT_ENGINE_API virtual void preDraw() {}
                     FLAT_ENGINE_API void draw(sf::RenderTarget &app);
                     FLAT_ENGINE_API virtual void postDraw() {}
@@ -65,7 +62,7 @@ namespace fe
                     FLAT_ENGINE_API virtual void deinit() {}
                     FLAT_ENGINE_API void shutDown();
 
-                    FLAT_ENGINE_API fe::sceneGraph &getSceneGraph();
+                    FLAT_ENGINE_API fe::gameWorld &getGameWorld();
 
                     FLAT_ENGINE_API virtual ~baseGameState();
             };
