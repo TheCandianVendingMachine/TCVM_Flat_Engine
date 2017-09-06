@@ -37,7 +37,7 @@ namespace fe
 
                             int m_height;
 
-                            bool isLeaf() { return m_right == treeNode::Null; }
+                            bool isLeaf() const { return m_right == treeNode::Null; }
                         } m_nodes[(FE_MAX_GAME_OBJECTS * 2) - 1];
 
                     const unsigned int m_nodeCapacity = (FE_MAX_GAME_OBJECTS * 2) - 1;
@@ -54,8 +54,8 @@ namespace fe
                     FLAT_ENGINE_API void remove(int node);
                     FLAT_ENGINE_API int balance(int node);
 
-                    FLAT_ENGINE_API treeNode *pointCollideBranch(float x, float y, int branch);
-                    FLAT_ENGINE_API void AABBCollideBranch(fe::AABB &testAABB, std::function<void(void*)> callback, int branch);
+                    FLAT_ENGINE_API void *pointCollideBranch(float x, float y, int branch) const;
+                    FLAT_ENGINE_API void AABBCollideBranch(fe::AABB &testAABB, std::function<void(void*)> callback, int branch) const;
 
                     friend class collisionWorld;
 
@@ -73,13 +73,13 @@ namespace fe
                     // Updates all colliders in the broadphase algorithm
                     FLAT_ENGINE_API void update(fe::collider *collider);
 
-                    FLAT_ENGINE_API void colliderAABB(fe::AABB &testAABB, std::function<void(void*)> callback);
+                    FLAT_ENGINE_API void colliderAABB(fe::AABB &testAABB, std::function<void(void*)> callback) const;
 
                     // Returns the collider that is at the point
-                    FLAT_ENGINE_API void *colliderAtPoint(float x, float y);
+                    FLAT_ENGINE_API void *colliderAtPoint(float x, float y) const;
 
                     // Casts a ray and tests against the broadphase algorithm
-                    FLAT_ENGINE_API fe::raycastResult raycast(float x, float y, float dirX, float dirY);
+                    FLAT_ENGINE_API fe::raycastResult raycast(float x, float y, float dirX, float dirY) const;
 
                     FLAT_ENGINE_API void debugDraw();
 

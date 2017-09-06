@@ -345,22 +345,22 @@ int fe::aabbTree::balance(int node)
         FE_END_PROFILE;
     }
 
-fe::aabbTree::treeNode *fe::aabbTree::pointCollideBranch(float x, float y, int branch)
+void *fe::aabbTree::pointCollideBranch(float x, float y, int branch) const
     {
         if (m_nodes[branch].isLeaf())
             {
-                return &m_nodes[branch];
+                return (void*)(&m_nodes[branch]);
             }
         else if (m_nodes[branch].m_fatAABB.contains(x, y))
             {
-                treeNode *a = pointCollideBranch(x, y, m_nodes[branch].m_left);
+                treeNode *a = static_cast<treeNode*>(pointCollideBranch(x, y, m_nodes[branch].m_left));
                 if (a) return a;
                 return pointCollideBranch(x, y, m_nodes[branch].m_right);
             }
         return nullptr;
     }
 
-void fe::aabbTree::AABBCollideBranch(fe::AABB &testAABB, std::function<void(void*)> callback, int branch)
+void fe::aabbTree::AABBCollideBranch(fe::AABB &testAABB, std::function<void(void*)> callback, int branch) const
     {
         if (m_nodes[branch].isLeaf())
             {
@@ -442,17 +442,17 @@ void fe::aabbTree::update(fe::collider *collider)
         FE_END_PROFILE;
     }
 
-void fe::aabbTree::colliderAABB(fe::AABB &testAABB, std::function<void(void*)> callback)
+void fe::aabbTree::colliderAABB(fe::AABB &testAABB, std::function<void(void*)> callback) const
     {
         AABBCollideBranch(testAABB, callback, m_base);
     }
 
-void *fe::aabbTree::colliderAtPoint(float x, float y)
+void *fe::aabbTree::colliderAtPoint(float x, float y) const
     {
         return pointCollideBranch(x, y, m_base);
     }
 
-fe::raycastResult fe::aabbTree::raycast(float x, float y, float dirX, float dirY)
+fe::raycastResult fe::aabbTree::raycast(float x, float y, float dirX, float dirY) const
     {
         return fe::raycastResult();
     }

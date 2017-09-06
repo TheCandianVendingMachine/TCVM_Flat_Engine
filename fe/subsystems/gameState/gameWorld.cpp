@@ -14,6 +14,11 @@ void fe::gameWorld::onAdd(fe::baseEntity *object, fe::Handle objectHandle)
             }
     }
 
+void fe::gameWorld::onRemove(fe::baseEntity * object, fe::Handle objectHandle)
+    {
+        object->deinitialize();
+    }
+
 void fe::gameWorld::startUp()
     {
         m_sceneGraph.startUp();
@@ -91,5 +96,5 @@ void fe::gameWorld::preDraw()
 void fe::gameWorld::draw(sf::RenderTarget &app)
     {
         m_sceneGraph.draw(app);
-        m_broadphase->debugDraw();
+        if (m_broadphase) m_broadphase->debugDraw();
     }

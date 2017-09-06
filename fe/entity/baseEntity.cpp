@@ -232,3 +232,8 @@ fe::collider *fe::baseEntity::getCollider() const
         return m_collisionBody;
     }
 
+fe::Handle fe::baseEntity::GUID() const
+    {
+        return m_handle;
+    }
+

@@ -2,6 +2,7 @@
 #include "../../gui/panel.hpp"
 #include "../../gui/guiElement.hpp"
 #include "../../debug/profiler.hpp"
+#include "../../entity/baseEntity.hpp"
 #include <algorithm>
 
 void fe::baseGameState::addPanel(gui::panel *panel)
@@ -12,6 +13,21 @@ void fe::baseGameState::addPanel(gui::panel *panel)
 void fe::baseGameState::removePanel(gui::panel *panel)
     {
         m_guiPanels.erase(std::remove(m_guiPanels.begin(), m_guiPanels.end(), panel), m_guiPanels.end());
+    }
+
+fe::Handle fe::baseGameState::addObject(fe::baseEntity *ent)
+    {
+        return m_gameWorld.addObject(ent);
+    }
+
+void fe::baseGameState::removeObject(fe::guid ent)
+    {
+        m_gameWorld.removeObject(ent);
+    }
+
+void fe::baseGameState::removeObject(fe::baseEntity *ent)
+    {
+        removeObject(ent->GUID());
     }
 
 void fe::baseGameState::startUp()

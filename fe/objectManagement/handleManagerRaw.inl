@@ -53,7 +53,8 @@ fe::Handle fe::handleManager<T, objectCount>::addObject(T object)
 template<typename T, unsigned int objectCount>
 void fe::handleManager<T, objectCount>::removeObject(Handle handle)
     {
-        m_handles[handle]->active = false;
+        onRemove(m_objects[m_handles[handle].handle], m_handles[handle].handle);
+        m_handles[handle].active = false;
         m_objects[m_handles[handle].handle] = T();
     }
 
