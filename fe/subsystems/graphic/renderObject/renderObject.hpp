@@ -12,5 +12,6 @@ namespace fe
                 float m_verticies[4]; // x, y, w, h
                 float m_texCoords[2];// x, y
                 bool m_draw = true;
+                bool m_static = false;
             };
     }

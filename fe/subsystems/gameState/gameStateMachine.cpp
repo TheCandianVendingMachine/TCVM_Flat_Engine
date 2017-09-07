@@ -274,8 +274,15 @@ const fe::baseGameState &fe::gameStateMachine::getCurrentState()
         return *m_endState->m_currentState;
     }
 
-const fe::broadphaseAbstract *fe::gameStateMachine::getBroadphase()
+const fe::broadphaseAbstract *fe::gameStateMachine::getDynamicBroadphase()
     {
         if (!m_endState) return nullptr;
-        return m_endState->m_currentState->getGameWorld().getBroadphase();
+        return m_endState->m_currentState->getGameWorld().getDynamicBroadphase();
     }
+
+const fe::broadphaseAbstract *fe::gameStateMachine::getStaticBroadphase()
+    {
+        if (!m_endState) return nullptr;
+        return m_endState->m_currentState->getGameWorld().getStaticBroadphase();
+    }
+

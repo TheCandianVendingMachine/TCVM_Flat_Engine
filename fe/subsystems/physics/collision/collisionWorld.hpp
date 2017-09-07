@@ -28,6 +28,7 @@ namespace fe
                     FLAT_ENGINE_API void clear();
 
                     FLAT_ENGINE_API void handleCollisions(const fe::broadphaseAbstract *broadphase);
+                    FLAT_ENGINE_API void handleCollisions(const fe::broadphaseAbstract *broadphaseDynamic, const fe::broadphaseAbstract *broadphaseStatic);
 
                     FLAT_ENGINE_API fe::collider *createCollider(float sizeX, float sizeY);
                     FLAT_ENGINE_API void deleteCollider(fe::collider *body);

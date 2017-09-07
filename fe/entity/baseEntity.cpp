@@ -7,13 +7,14 @@
 #include "../subsystems/physics/physicsEngine.hpp"
 #include "../subsystems/physics/collision/collisionWorld.hpp"
 
-fe::baseEntity::baseEntity(entityModules modules) :
+fe::baseEntity::baseEntity(entityModules modules, bool staticObject) :
     m_killEntity(false),
     m_enabled(false),
     m_renderObject(nullptr),
     m_rigidBody(nullptr),
     m_collisionBody(nullptr),
     m_moved(false),
+    m_static(staticObject),
     m_positionX(0.f),
     m_positionY(0.f),
     m_sizeX(0.f),
@@ -27,9 +28,10 @@ void fe::baseEntity::initialize()
         if (m_modulesEnabled & entityModules::RENDER_OBJECT)
             {
                 m_renderObject = fe::engine::get().getStateMachine().getSceneGraph().createRenderObject();
+                m_renderObject->m_static = m_static;
             }
 
-        if (m_modulesEnabled & entityModules::RIGID_BODY)
+        if (m_modulesEnabled & entityModules::RIGID_BODY && !m_static)
             {
                 m_rigidBody = fe::engine::get().getPhysicsEngine().createRigidBody();
             }
@@ -37,6 +39,7 @@ void fe::baseEntity::initialize()
         if (m_modulesEnabled & entityModules::COLLISION_BODY)
             {
                 m_collisionBody = fe::engine::get().getCollisionWorld().createCollider(0.f, 0.f);
+                m_collisionBody->m_static = m_static;
             }
 
         setPosition(m_positionX, m_positionY);

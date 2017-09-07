@@ -10,11 +10,18 @@ void fe::gameWorld::onAdd(fe::baseEntity *object, fe::Handle objectHandle)
         object->setHandle(objectHandle);
         if (object->m_collisionBody)
             {
-                m_broadphase->add(object->m_collisionBody);
+                if (object->m_collisionBody->m_static)
+                    {
+                        m_staticBroadphase->add(object->m_collisionBody);
+                    }
+                else
+                    {
+                        m_dynamicBroadphase->add(object->m_collisionBody);
+                    }
             }
     }
 
-void fe::gameWorld::onRemove(fe::baseEntity * object, fe::Handle objectHandle)
+void fe::gameWorld::onRemove(fe::baseEntity *object, fe::Handle objectHandle)
     {
         object->deinitialize();
     }
@@ -22,6 +29,8 @@ void fe::gameWorld::onRemove(fe::baseEntity * object, fe::Handle objectHandle)
 void fe::gameWorld::startUp()
     {
         m_sceneGraph.startUp();
+        m_dynamicBroadphase = nullptr;
+        m_staticBroadphase = nullptr;
     }
 
 void fe::gameWorld::shutDown()
@@ -29,16 +38,28 @@ void fe::gameWorld::shutDown()
         m_sceneGraph.shutDown();
     }
 
-void fe::gameWorld::setBroadphase(fe::broadphaseAbstract *broadphase)
+void fe::gameWorld::setDynamicBroadphase(fe::broadphaseAbstract *broadphase)
     {
-        m_broadphase = broadphase;
-        m_broadphase->startUp();
-        m_broadphase->debugMode(false);
+        m_dynamicBroadphase = broadphase;
+        m_dynamicBroadphase->startUp();
+        m_dynamicBroadphase->debugMode(false);
     }
 
-fe::broadphaseAbstract *fe::gameWorld::getBroadphase() const
+void fe::gameWorld::setStaticBroadphase(fe::broadphaseAbstract *broadphase)
     {
-        return m_broadphase;
+        m_staticBroadphase = broadphase;
+        m_staticBroadphase->startUp();
+        m_staticBroadphase->debugMode(false);
+    }
+
+fe::broadphaseAbstract *fe::gameWorld::getDynamicBroadphase() const
+    {
+        return m_dynamicBroadphase;
+    }
+
+fe::broadphaseAbstract *fe::gameWorld::getStaticBroadphase() const
+    {
+        return m_staticBroadphase;
     }
 
 fe::sceneGraph &fe::gameWorld::getSceneGraph()
@@ -70,9 +91,9 @@ void fe::gameWorld::update(collisionWorld *collisionWorld)
                     {
                         objects[i]->update();
 
-                        if (objects[i]->m_collisionBody)
+                        if (objects[i]->m_collisionBody && !objects[i]->m_collisionBody->m_static)
                             {
-                                m_broadphase->update(objects[i]->m_collisionBody);
+                                m_dynamicBroadphase->update(objects[i]->m_collisionBody);
                             }
                     }
             }
@@ -101,5 +122,6 @@ void fe::gameWorld::preDraw()
 void fe::gameWorld::draw(sf::RenderTarget &app)
     {
         m_sceneGraph.draw(app);
-        if (m_broadphase) m_broadphase->debugDraw();
+        if (m_dynamicBroadphase) m_dynamicBroadphase->debugDraw();
+        if (m_staticBroadphase) m_staticBroadphase->debugDraw();
     }

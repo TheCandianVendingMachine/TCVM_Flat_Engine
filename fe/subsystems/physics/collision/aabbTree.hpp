@@ -73,8 +73,6 @@ namespace fe
                     // Updates all colliders in the broadphase algorithm
                     FLAT_ENGINE_API void update(fe::collider *collider);
 
-                    FLAT_ENGINE_API void colliderTreeTest(fe::collider *collider, std::function<void(void*)> callback) const;
-
                     FLAT_ENGINE_API void colliderAABB(fe::AABB &testAABB, std::function<void(void*)> callback) const;
 
                     // Returns the collider that is at the point

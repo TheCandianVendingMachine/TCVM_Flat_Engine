@@ -446,52 +446,10 @@ void fe::aabbTree::update(fe::collider *collider)
         FE_END_PROFILE;
     }
 
-void fe::aabbTree::colliderTreeTest(fe::collider *collider, std::function<void(void*)> callback) const
-    {
-        int colliderNode = (int)collider->m_userData;
-        int sibling = m_nodes[m_nodes[colliderNode].m_parent].m_left == colliderNode ? m_nodes[m_nodes[colliderNode].m_parent].m_right : m_nodes[m_nodes[colliderNode].m_parent].m_left;
-        if (m_nodes[sibling].isLeaf())
-            {
-                if (m_nodes[sibling].m_fatAABB.intersects(collider->m_aabb))
-                    {
-                        callback(m_nodes[sibling].m_userData);
-                    }
-            }
-        else
-            {
-                std::stack<int> nodeStack;
-                nodeStack.push(sibling);
-                int iteration = 0;
-                while (!nodeStack.empty())
-                    {
-                        iteration++;
-                        int currentNode = nodeStack.top();
-                        nodeStack.pop();
-                        if (currentNode == treeNode::Null)
-                            {
-                                continue;
-                            }
-                        const treeNode *node = &m_nodes[currentNode];
-
-                        if (m_nodes[currentNode].m_fatAABB.intersects(collider->m_aabb))
-                            {
-                                if (m_nodes[currentNode].isLeaf())
-                                    {
-                                        callback(m_nodes[currentNode].m_userData);
-                                    }
-                                else
-                                    {
-                                        nodeStack.push(m_nodes[currentNode].m_left);
-                                        nodeStack.push(m_nodes[currentNode].m_right);
-                                    }
-                            }
-                
-                    }
-            }
-    }
-
 void fe::aabbTree::colliderAABB(fe::AABB &testAABB, std::function<void(void*)> callback) const
     {
+        void *colliderCallbacks[FE_MAX_GAME_OBJECTS];
+        int colliderCallbackIndex = 0;
         FE_ENGINE_PROFILE("aabb_tree", "test_aabb_against_tree");
         std::stack<int> nodeStack;
         nodeStack.push(m_base);
@@ -501,17 +459,11 @@ void fe::aabbTree::colliderAABB(fe::AABB &testAABB, std::function<void(void*)> c
                 iteration++;
                 int currentNode = nodeStack.top();
                 nodeStack.pop();
-                if (currentNode == treeNode::Null)
-                    {
-                        continue;
-                    }
-                const treeNode *node = &m_nodes[currentNode];
-
                 if (m_nodes[currentNode].m_fatAABB.intersects(testAABB))
                     {
                         if (m_nodes[currentNode].isLeaf())
                             {
-                                callback(m_nodes[currentNode].m_userData);
+                                colliderCallbacks[colliderCallbackIndex++] = m_nodes[currentNode].m_userData;
                             }
                         else
                             {
@@ -520,6 +472,13 @@ void fe::aabbTree::colliderAABB(fe::AABB &testAABB, std::function<void(void*)> c
                             }
                     }
                 
+            }
+        FE_END_PROFILE;
+
+        FE_ENGINE_PROFILE("aabb_tree", "collider_callback_calls");
+        for (int i = 0; i < colliderCallbackIndex; i++)
+            {
+                callback(colliderCallbacks[i]);
             }
         FE_END_PROFILE;
     }

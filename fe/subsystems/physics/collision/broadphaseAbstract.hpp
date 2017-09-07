@@ -31,9 +31,6 @@ namespace fe
                     // Updates all colliders in the broadphase algorithm
                     virtual void update(fe::collider *collider) = 0;
 
-                    // Tests the broadphase against a collider
-                    virtual void colliderTreeTest(fe::collider *collider, std::function<void(void*)> callback) const = 0;
-
                     // Returns user data containing what is needed to resolve the query
                     virtual void colliderAABB(fe::AABB &testAABB, std::function<void(void*)> callback) const = 0;
 

@@ -16,5 +16,6 @@ namespace fe
                 void *m_userData; // any additional data that needs to be stored
 
                 bool m_enabled = true;
+                bool m_static;
             };
     }

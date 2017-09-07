@@ -11,9 +11,9 @@ namespace fe
         class squareEntity : public fe::baseEntity
             {
                 public:
-                    FLAT_ENGINE_API squareEntity(entityModules modules = fe::entityModules::RENDER_OBJECT);
-                    FLAT_ENGINE_API squareEntity(fe::Vector2d size, entityModules modules = fe::entityModules::RENDER_OBJECT);
-                    FLAT_ENGINE_API squareEntity(sf::Color colour, entityModules modules = fe::entityModules::RENDER_OBJECT);
-                    FLAT_ENGINE_API squareEntity(fe::Vector2d size, sf::Color colour, entityModules modules = fe::entityModules::RENDER_OBJECT);
+                    FLAT_ENGINE_API squareEntity(entityModules modules = fe::entityModules::RENDER_OBJECT, bool staticObject = false);
+                    FLAT_ENGINE_API squareEntity(fe::Vector2d size, entityModules modules = fe::entityModules::RENDER_OBJECT, bool staticObject = false);
+                    FLAT_ENGINE_API squareEntity(sf::Color colour, entityModules modules = fe::entityModules::RENDER_OBJECT, bool staticObject = false);
+                    FLAT_ENGINE_API squareEntity(fe::Vector2d size, sf::Color colour, entityModules modules = fe::entityModules::RENDER_OBJECT, bool staticObject = false);
             };
     }

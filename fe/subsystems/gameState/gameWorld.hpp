@@ -19,7 +19,8 @@ namespace fe
             {
                 private:
                     fe::sceneGraph m_sceneGraph;
-                    fe::broadphaseAbstract *m_broadphase;
+                    fe::broadphaseAbstract *m_dynamicBroadphase;
+                    fe::broadphaseAbstract *m_staticBroadphase;
 
                     FLAT_ENGINE_API void onAdd(fe::baseEntity *object, fe::Handle objectHandle);
                     FLAT_ENGINE_API void onRemove(fe::baseEntity *object, fe::Handle objectHandle);
@@ -28,8 +29,10 @@ namespace fe
                     FLAT_ENGINE_API void startUp();
                     FLAT_ENGINE_API void shutDown();
 
-                    FLAT_ENGINE_API void setBroadphase(fe::broadphaseAbstract *broadphase);
-                    FLAT_ENGINE_API fe::broadphaseAbstract *getBroadphase() const;
+                    FLAT_ENGINE_API void setDynamicBroadphase(fe::broadphaseAbstract *broadphase);
+                    FLAT_ENGINE_API void setStaticBroadphase(fe::broadphaseAbstract *broadphase);
+                    FLAT_ENGINE_API fe::broadphaseAbstract *getDynamicBroadphase() const;
+                    FLAT_ENGINE_API fe::broadphaseAbstract *getStaticBroadphase() const;
 
                     FLAT_ENGINE_API fe::sceneGraph &getSceneGraph();
 

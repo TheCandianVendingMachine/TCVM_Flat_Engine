@@ -107,7 +107,8 @@ namespace fe
 
                     FLAT_ENGINE_API fe::sceneGraph &getSceneGraph();
                     FLAT_ENGINE_API const fe::baseGameState &getCurrentState();
-                    FLAT_ENGINE_API const fe::broadphaseAbstract *getBroadphase();
+                    FLAT_ENGINE_API const fe::broadphaseAbstract *getDynamicBroadphase();
+                    FLAT_ENGINE_API const fe::broadphaseAbstract *getStaticBroadphase();
 
 
                     FLAT_ENGINE_API virtual ~gameStateMachine() {}

@@ -106,10 +106,37 @@ void fe::collisionWorld::handleCollisions(const fe::broadphaseAbstract *broadpha
             }
         else
             {
-                FE_ENGINE_PROFILE("collision_world", "broadphase_compute");
+                FE_ENGINE_PROFILE("collision_world", "broadphase_compute_partial");
                 for (int i = 0; i < m_collisionBodies.getObjectAllocCount(); i++)
                     {
-                        broadphase->colliderTreeTest(m_collisionBodies.at(i), std::bind(static_cast<void(fe::collisionWorld::*)(void*, void*)>(&fe::collisionWorld::handleCollision), this, std::placeholders::_1, m_collisionBodies.at(i)));
+                        if (!m_collisionBodies.at(i)->m_static)
+                            {
+                                broadphase->colliderAABB(
+                                    m_collisionBodies.at(i)->m_aabb, 
+                                    std::bind(static_cast<void(fe::collisionWorld::*)(void*, void*)>(&fe::collisionWorld::handleCollision), this, std::placeholders::_1, m_collisionBodies.at(i)));
+                            }
+                    }
+                FE_END_PROFILE;
+            }
+    }
+
+void fe::collisionWorld::handleCollisions(const fe::broadphaseAbstract *broadphaseDynamic, const fe::broadphaseAbstract *broadphaseStatic)
+    {
+        if (!broadphaseStatic)
+            {
+                handleCollisions(broadphaseDynamic);
+            }
+        else
+            {
+                FE_ENGINE_PROFILE("collision_world", "broadphase_compute_full");
+                for (int i = 0; i < m_collisionBodies.getObjectAllocCount(); i++)
+                    {
+                        if (!m_collisionBodies.at(i)->m_static)
+                            {
+                                auto func = std::bind(static_cast<void(fe::collisionWorld::*)(void*, void*)>(&fe::collisionWorld::handleCollision), this, std::placeholders::_1, m_collisionBodies.at(i));
+                                broadphaseDynamic->colliderAABB(m_collisionBodies.at(i)->m_aabb, func);
+                                broadphaseStatic->colliderAABB(m_collisionBodies.at(i)->m_aabb, func);
+                            }
                     }
                 FE_END_PROFILE;
             }

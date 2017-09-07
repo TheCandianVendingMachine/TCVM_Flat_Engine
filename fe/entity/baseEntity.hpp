@@ -52,11 +52,12 @@ namespace fe
                     bool m_killEntity;
                     bool m_enabled;
                     bool m_moved;
+                    bool m_static;
 
                     friend class gameWorld;
 
                 public:
-                    FLAT_ENGINE_API baseEntity(entityModules modules);
+                    FLAT_ENGINE_API baseEntity(entityModules modules, bool staticObject);
                     FLAT_ENGINE_API void initialize();
                     FLAT_ENGINE_API void deinitialize();
 
