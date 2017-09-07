@@ -42,10 +42,13 @@ void fe::baseEntity::initialize()
         setPosition(m_positionX, m_positionY);
         setSize(m_sizeX, m_sizeY);
         setColour(m_colour);
+
+        enable(true);
     }
 
 void fe::baseEntity::deinitialize()
     {
+        enable(false);
         if (m_modulesEnabled & entityModules::RENDER_OBJECT)
             {
                 fe::engine::get().getStateMachine().getSceneGraph().deleteRenderObject(m_renderObject);
@@ -68,9 +71,20 @@ void fe::baseEntity::deinitialize()
 void fe::baseEntity::enable(bool value)
     {
         m_enabled = value;
-        m_renderObject->m_draw = value;
-        m_rigidBody->enable(value);
-        m_collisionBody->m_enabled = value;
+        if (m_modulesEnabled & entityModules::RENDER_OBJECT) 
+            {
+                m_renderObject->m_draw = value;
+            }
+
+        if (m_modulesEnabled & entityModules::RIGID_BODY) 
+            {
+                m_rigidBody->enable(value);
+            }
+
+        if (m_modulesEnabled & entityModules::COLLISION_BODY)
+            {
+                m_collisionBody->m_enabled = value;
+            }
     }
 
 bool fe::baseEntity::getEnabled() const
@@ -100,7 +114,7 @@ fe::Handle fe::baseEntity::getHandle() const
 
 void fe::baseEntity::enableCollision(bool value)
     {
-        
+        m_collisionBody->m_enabled = value;
     }
 
 void fe::baseEntity::onDestroy(fe::baseGameState &state)

@@ -20,7 +20,7 @@ fe::Handle fe::baseGameState::addObject(fe::baseEntity *ent)
         return m_gameWorld.addObject(ent);
     }
 
-void fe::baseGameState::removeObject(fe::guid ent)
+void fe::baseGameState::removeObject(fe::Handle ent)
     {
         m_gameWorld.removeObject(ent);
     }
@@ -28,6 +28,11 @@ void fe::baseGameState::removeObject(fe::guid ent)
 void fe::baseGameState::removeObject(fe::baseEntity *ent)
     {
         removeObject(ent->GUID());
+    }
+
+fe::baseEntity *fe::baseGameState::getObject(fe::Handle handle) const
+    {
+        return m_gameWorld.getObject(handle);
     }
 
 void fe::baseGameState::startUp()

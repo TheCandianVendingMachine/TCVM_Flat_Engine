@@ -36,8 +36,9 @@ namespace fe
                     FLAT_ENGINE_API void removePanel(gui::panel *panel);
 
                     FLAT_ENGINE_API fe::Handle addObject(fe::baseEntity *ent);
-                    FLAT_ENGINE_API void removeObject(fe::guid ent);
+                    FLAT_ENGINE_API void removeObject(fe::Handle ent);
                     FLAT_ENGINE_API void removeObject(fe::baseEntity *ent);
+                    FLAT_ENGINE_API fe::baseEntity *getObject(fe::Handle handle) const;
 
                 public:
                     FLAT_ENGINE_API baseGameState() {}

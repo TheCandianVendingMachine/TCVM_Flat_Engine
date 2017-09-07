@@ -3,7 +3,7 @@
 #pragma once
 #define FE_PROFILE_ENGINE true
 #define FE_OUTPUT_PROFILE_RESULTS true
-#define FE_PROFILE_RELEASE false
+#define FE_PROFILE_RELEASE true
 #define FE_PROFILE_PRINT_ZEROS false
 #define FE_MAX_PROFILER_PROFILES 5000 // How many different profiler profiles can be created
 #define FE_PROFILER_AVERAGE_MAX 500 // how much data needs to be recorded before an average is computed

@@ -7,6 +7,7 @@
 
 void fe::collisionWorld::handleCollision(fe::collider *a, fe::collider *b)
     {
+        FE_ENGINE_PROFILE("collision_world", "collision_check");
         fe::AABB *first = static_cast<fe::AABB*>(&a->m_aabb);
         fe::AABB *second = static_cast<fe::AABB*>(&b->m_aabb);
 
@@ -47,12 +48,17 @@ void fe::collisionWorld::handleCollision(fe::collider *a, fe::collider *b)
                 a->m_collisionCallback(dataFirst);
                 b->m_collisionCallback(dataSecond);
             }
+        FE_END_PROFILE;
     }
 
 void fe::collisionWorld::handleCollision(void *leftCollider, void *rightCollider)
     {
         if (leftCollider == rightCollider) return;
-        handleCollision(static_cast<fe::collider*>(leftCollider), static_cast<fe::collider*>(rightCollider));
+        fe::collider *left = static_cast<fe::collider*>(leftCollider);
+        fe::collider *right = static_cast<fe::collider*>(rightCollider);
+
+        handleCollision(static_cast<fe::collider*>(left), static_cast<fe::collider*>(right));
+
     }
 
 fe::collisionWorld::collisionWorld()
@@ -103,7 +109,7 @@ void fe::collisionWorld::handleCollisions(const fe::broadphaseAbstract *broadpha
                 FE_ENGINE_PROFILE("collision_world", "broadphase_compute");
                 for (int i = 0; i < m_collisionBodies.getObjectAllocCount(); i++)
                     {
-                        broadphase->colliderAABB(m_collisionBodies.at(i)->m_aabb, std::bind(static_cast<void(fe::collisionWorld::*)(void*, void*)>(&fe::collisionWorld::handleCollision), this, std::placeholders::_1, m_collisionBodies.at(i)));
+                        broadphase->colliderTreeTest(m_collisionBodies.at(i), std::bind(static_cast<void(fe::collisionWorld::*)(void*, void*)>(&fe::collisionWorld::handleCollision), this, std::placeholders::_1, m_collisionBodies.at(i)));
                     }
                 FE_END_PROFILE;
             }

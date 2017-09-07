@@ -33,6 +33,7 @@ void fe::gameWorld::setBroadphase(fe::broadphaseAbstract *broadphase)
     {
         m_broadphase = broadphase;
         m_broadphase->startUp();
+        m_broadphase->debugMode(false);
     }
 
 fe::broadphaseAbstract *fe::gameWorld::getBroadphase() const
@@ -47,6 +48,7 @@ fe::sceneGraph &fe::gameWorld::getSceneGraph()
 
 void fe::gameWorld::preUpdate()
     {
+        FE_ENGINE_PROFILE("game_world", "entity_pre_update");
         auto objects = getObjects();
         for (unsigned int i = 0; i < objectCount(); i++)
             {
@@ -55,6 +57,7 @@ void fe::gameWorld::preUpdate()
                         objects[i]->updateModules();
                     }
             }
+        FE_END_PROFILE;
     }
 
 void fe::gameWorld::update(collisionWorld *collisionWorld)
@@ -67,7 +70,7 @@ void fe::gameWorld::update(collisionWorld *collisionWorld)
                     {
                         objects[i]->update();
 
-                        if (objects[i]->m_moved && objects[i]->m_collisionBody)
+                        if (objects[i]->m_collisionBody)
                             {
                                 m_broadphase->update(objects[i]->m_collisionBody);
                             }
@@ -78,6 +81,7 @@ void fe::gameWorld::update(collisionWorld *collisionWorld)
 
 void fe::gameWorld::postUpdate()
     {
+        FE_ENGINE_PROFILE("game_world", "entity_post_update");
         auto objects = getObjects();
         for (unsigned int i = 0; i < objectCount(); i++)
             {
@@ -86,6 +90,7 @@ void fe::gameWorld::postUpdate()
                         objects[i]->postUpdate();
                     }
             }
+        FE_END_PROFILE;
     }
 
 void fe::gameWorld::preDraw()

@@ -4,6 +4,8 @@
 #include "../../../debug/debugDraw.hpp"
 #include "../../../debug/profiler.hpp"
 
+#include <stack>
+
 void fe::aabbTree::debugDrawAABB(int node)
     {
         if (node == treeNode::Null) return;
@@ -347,33 +349,35 @@ int fe::aabbTree::balance(int node)
 
 void *fe::aabbTree::pointCollideBranch(float x, float y, int branch) const
     {
-        if (m_nodes[branch].isLeaf())
+        if (m_nodes[branch].m_fatAABB.contains(x, y))
             {
-                return (void*)(&m_nodes[branch]);
-            }
-        else if (m_nodes[branch].m_fatAABB.contains(x, y))
-            {
-                treeNode *a = static_cast<treeNode*>(pointCollideBranch(x, y, m_nodes[branch].m_left));
-                if (a) return a;
-                return pointCollideBranch(x, y, m_nodes[branch].m_right);
+                if (m_nodes[branch].isLeaf())
+                    {
+                        return (void*)(&m_nodes[branch]);
+                    }
+                else
+                    {
+                        treeNode *a = static_cast<treeNode*>(pointCollideBranch(x, y, m_nodes[branch].m_left));
+                        if (a) return a;
+                        return pointCollideBranch(x, y, m_nodes[branch].m_right);
+                    }
             }
         return nullptr;
     }
 
 void fe::aabbTree::AABBCollideBranch(fe::AABB &testAABB, std::function<void(void*)> callback, int branch) const
     {
-        if (m_nodes[branch].isLeaf())
+        if (m_nodes[branch].m_fatAABB.intersects(testAABB))
             {
-                if (m_nodes[branch].m_fatAABB.intersects(testAABB))
+                if (m_nodes[branch].isLeaf())
                     {
                         callback(m_nodes[branch].m_userData);
-                        return;
                     }
-            }
-        else
-            {
-                AABBCollideBranch(testAABB, callback, m_nodes[branch].m_left);
-                AABBCollideBranch(testAABB, callback, m_nodes[branch].m_right);
+                else
+                    {
+                        AABBCollideBranch(testAABB, callback, m_nodes[branch].m_left);
+                        AABBCollideBranch(testAABB, callback, m_nodes[branch].m_right);
+                    }
             }
     }
 
@@ -442,9 +446,82 @@ void fe::aabbTree::update(fe::collider *collider)
         FE_END_PROFILE;
     }
 
+void fe::aabbTree::colliderTreeTest(fe::collider *collider, std::function<void(void*)> callback) const
+    {
+        int colliderNode = (int)collider->m_userData;
+        int sibling = m_nodes[m_nodes[colliderNode].m_parent].m_left == colliderNode ? m_nodes[m_nodes[colliderNode].m_parent].m_right : m_nodes[m_nodes[colliderNode].m_parent].m_left;
+        if (m_nodes[sibling].isLeaf())
+            {
+                if (m_nodes[sibling].m_fatAABB.intersects(collider->m_aabb))
+                    {
+                        callback(m_nodes[sibling].m_userData);
+                    }
+            }
+        else
+            {
+                std::stack<int> nodeStack;
+                nodeStack.push(sibling);
+                int iteration = 0;
+                while (!nodeStack.empty())
+                    {
+                        iteration++;
+                        int currentNode = nodeStack.top();
+                        nodeStack.pop();
+                        if (currentNode == treeNode::Null)
+                            {
+                                continue;
+                            }
+                        const treeNode *node = &m_nodes[currentNode];
+
+                        if (m_nodes[currentNode].m_fatAABB.intersects(collider->m_aabb))
+                            {
+                                if (m_nodes[currentNode].isLeaf())
+                                    {
+                                        callback(m_nodes[currentNode].m_userData);
+                                    }
+                                else
+                                    {
+                                        nodeStack.push(m_nodes[currentNode].m_left);
+                                        nodeStack.push(m_nodes[currentNode].m_right);
+                                    }
+                            }
+                
+                    }
+            }
+    }
+
 void fe::aabbTree::colliderAABB(fe::AABB &testAABB, std::function<void(void*)> callback) const
     {
-        AABBCollideBranch(testAABB, callback, m_base);
+        FE_ENGINE_PROFILE("aabb_tree", "test_aabb_against_tree");
+        std::stack<int> nodeStack;
+        nodeStack.push(m_base);
+        int iteration = 0;
+        while (!nodeStack.empty())
+            {
+                iteration++;
+                int currentNode = nodeStack.top();
+                nodeStack.pop();
+                if (currentNode == treeNode::Null)
+                    {
+                        continue;
+                    }
+                const treeNode *node = &m_nodes[currentNode];
+
+                if (m_nodes[currentNode].m_fatAABB.intersects(testAABB))
+                    {
+                        if (m_nodes[currentNode].isLeaf())
+                            {
+                                callback(m_nodes[currentNode].m_userData);
+                            }
+                        else
+                            {
+                                nodeStack.push(m_nodes[currentNode].m_left);
+                                nodeStack.push(m_nodes[currentNode].m_right);
+                            }
+                    }
+                
+            }
+        FE_END_PROFILE;
     }
 
 void *fe::aabbTree::colliderAtPoint(float x, float y) const
