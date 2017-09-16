@@ -1,6 +1,9 @@
 // graph.hpp
 // graph class. Is a basic graph
 #pragma once
+#define FLAT_ENGINE_EXPORT
+#include "../../flatEngineExport.hpp"
+
 #include <vector>
 #include <memory>
 
@@ -37,12 +40,12 @@ namespace fe
 					friend std::vector<int> graphNav::aStar(graph&, int, int, float);
 
 				public:
-					int addNode(float posX, float posY, float cost = 1.f);
+					FLAT_ENGINE_API int addNode(float posX, float posY, float cost = 1.f);
 
-					void addEdge(int nodeA, int nodeB);
-					void removeEdge(int nodeID, int edge);
-					node *getNode(int nodeID);
-					const std::vector<int> &getAllNodes();
+                    FLAT_ENGINE_API void addEdge(int nodeA, int nodeB);
+                    FLAT_ENGINE_API void removeEdge(int nodeID, int edge);
+                    FLAT_ENGINE_API node *getNode(int nodeID);
+                    FLAT_ENGINE_API const std::vector<int> &getAllNodes();
 
 			};
 	}

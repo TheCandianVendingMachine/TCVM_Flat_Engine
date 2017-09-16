@@ -25,7 +25,7 @@ void fe::graph::removeEdge(int nodeID, int edge)
         node->m_connectedNodes.erase(std::remove(node->m_connectedNodes.begin(), node->m_connectedNodes.end(), edge));
     }
 
-fe::graph::node *graph::getNode(int nodeID)
+fe::graph::node *fe::graph::getNode(int nodeID)
     {
         return m_nodes[m_nodeHandles[nodeID]].get();
     }
