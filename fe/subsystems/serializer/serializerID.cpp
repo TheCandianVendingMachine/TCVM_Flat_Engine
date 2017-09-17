@@ -1,96 +1,152 @@
 #include "serializerID.hpp"
-#include "../../debug/logger.hpp"
+//#include "../../debug/logger.hpp"
 #include <string.h>
+#include <stack>
 
-void fe::serializerID::dataBlock::outData(std::ostream &out)
+void fe::serializerID::dataBlock::outData(std::ostream &out, const char *preDataText)
     {
-        out << m_id << "{\n";
+        out << preDataText << "obj " << m_id << "{\n";
         for (auto &dat : m_mappedData)
             {
-                out << dat.first << ":" << dat.second << ";\n";
+                out << preDataText << "\tdat " << dat.first << ":" << dat.second << ";\n";
             }
-        out << "}\n";
+
+        char preDataTextApp[512] = "\0";
+        std::strcat(preDataTextApp, preDataText);
+        std::strcat(preDataTextApp, "\t");
+
+        for (auto &memberDat : m_childDataBlocks)
+            {
+                memberDat.second->outData(out, preDataTextApp);
+            }
+        out << preDataText << "}\n";
     }
 
 void fe::serializerID::dataBlock::readData(const char *block)
     {
+        std::string id;
+        std::string dat;
+        bool readingID = true;
+        for (unsigned int i = 0; i < std::strlen(block); i++)
+            {
+                if (block[i] == ':')
+                    {
+                        readingID = false;
+                    }
+                else if (readingID)
+                    {
+                        id += block[i];
+                    }
+                else
+                    {
+                        dat += block[i];
+                    }
+            }
+        m_mappedData[id] = dat;
+    }
+
+void fe::serializerID::interpretData(const char *block)
+    {
         enum readState
             {
-                ID,
-                DATA,
-                END
+                OBJ_START,
+                OBJ_END,
+                OBJ_NAME_START,
+                OBJ_NAME_END,
+                DAT_START,
+                DAT_END
             };
-        readState curState = readState::ID;
+        std::stack<std::pair<readState, unsigned int>> readingState;
 
-        char line[1024] = "\0";
-        unsigned int index = 0;
-        bool readBlock = true;
-
-        while (readBlock)
+        for (unsigned int i = 0; i < std::strlen(block); i++)
             {
-                bool foundEOL = false;
-                while (!foundEOL)
+                if (i + 3 < std::strlen(block) && block[i + 3] == ' ')
                     {
-                        if (block[index] != ';' && block[index] != '{' && block[index] != '}')
+                        if (block[i + 0] == 'o' && block[i + 1] == 'b' && block[i + 2] == 'j')
                             {
-                                char curChar[2] = "\0";
-                                curChar[0] = block[index];
-                                std::strcat(line, curChar);
+                                readingState.push(std::make_pair(OBJ_START, i));
+                                readingState.push(std::make_pair(OBJ_NAME_START, i + 4));
                             }
-                        else
+                        else if (block[i + 0] == 'd' && block[i + 1] == 'a' && block[i + 2] == 't')
                             {
-                                foundEOL = true;
-                            }
-
-                        if (index++ > std::strlen(block))
-                            {
-                                return;
+                                readingState.push(std::make_pair(DAT_START, i));
                             }
                     }
 
-                switch (curState)
+                if (block[i] == '}')
                     {
-                        case ID:
-                            {                
-                                m_id = line;
-                                curState = readState::DATA;
-                                line[0] = '\0';
+                        readingState.push(std::make_pair(OBJ_END, i));
+                    }
+                else if (block[i] == '{')
+                    {
+                        readingState.push(std::make_pair(OBJ_NAME_END, i));
+                    }
+                else if (block[i] == ';')
+                    {
+                        readingState.push(std::make_pair(DAT_END, i));
+                    }
+            }
+
+        std::stack<std::pair<readState, unsigned int>> reverseReadingStack;
+        while (!readingState.empty())
+            {
+                reverseReadingStack.push(readingState.top());
+                readingState.pop();
+            }
+
+        std::stack<std::unique_ptr<dataBlock>> currentBlock;
+        while (!reverseReadingStack.empty())
+            {
+                switch (reverseReadingStack.top().first)
+                    {
+                        case OBJ_START:
+                            currentBlock.emplace(new dataBlock);
+                            break;
+                        case OBJ_END:
+                            {
+                                dataBlock *top = currentBlock.top().release();
+                                currentBlock.pop();
+                                if (!currentBlock.empty())
+                                    {
+                                        currentBlock.top()->m_childDataBlocks[top->m_id].reset(top);
+                                        top->m_child = true;
+                                    }
+                                else
+                                    {
+                                        m_data.emplace_back(top);
+                                    }
                             }
                             break;
-                        case DATA:
+                        case OBJ_NAME_START:
                             {
-                                char datID[1024] = "\0";
-                                std::string datStr;
-                                bool findingID = true;
-                                for (int i = 0; i < std::strlen(line); i++)
-                                    {
-                                        if (line[i] == '}')
-                                            {
-                                                curState = readState::END;
-                                                break;
-                                            }
-                                        else if (line[i] == ':')
-                                            {
-                                                findingID = false;
-                                            }
-                                        else if (findingID)
-                                            {
-                                                char curChar[2] = "\0";
-                                                curChar[0] = line[i];
-                                                std::strcat(datID, curChar);
-                                            }
-                                        else
-                                            {
-                                                datStr += line[i];
-                                            }
-                                    }
-                                line[0] = '\0';
-                                m_mappedData[datID] = datStr;
+                                unsigned int startIndex = reverseReadingStack.top().second;
+                                reverseReadingStack.pop();
+                                unsigned int endIndex = reverseReadingStack.top().second;
+
+                                char data[512] = "\0";
+                                std::memcpy(data, block + startIndex, endIndex - startIndex);
+                                currentBlock.top()->m_id = data;
                             }
+                            break;
+                        case OBJ_NAME_END:
+                            break;
+                        case DAT_START:
+                            {
+                                unsigned int startIndex = reverseReadingStack.top().second + 4;
+                                reverseReadingStack.pop();
+                                unsigned int endIndex = reverseReadingStack.top().second;
+
+                                char data[512] = "\0";
+                                std::memcpy(data, block + startIndex, endIndex - startIndex);
+                                currentBlock.top()->readData(data);
+                            }
+                            break;
+                        case DAT_END:
                             break;
                         default:
                             break;
                     }
+                reverseReadingStack.pop();
             }
     }
 
@@ -103,18 +159,12 @@ void fe::serializerID::readData(std::istream &in)
     {
         m_data.clear();
 
-        char datBlock[1024] = "\0";
+        std::string datBlock;
         std::string line;
         while (std::getline(in, line))
             {
-                std::strcat(datBlock, line.c_str());
-                if (line == "}")
-                    {
-                        dataBlock newData;
-                        newData.readData(datBlock);
-                        datBlock[0] = '\0';
-
-                        m_data.push_back(newData);
-                    }
+                datBlock += line;
             }
+
+        interpretData(datBlock.c_str());
     }

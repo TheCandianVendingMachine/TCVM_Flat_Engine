@@ -3,33 +3,42 @@
 // get and set data easily
 #pragma once
 #define FLAT_ENGINE_EXPORT
-#include "../../flatEngineExport.hpp"
+#define FLAT_ENGINE_API
+//#include "../../flatEngineExport.hpp"
 #include <ostream>
 #include <string>
 #include <unordered_map>
 #include <vector>
 #include <algorithm>
 #include <cctype>
+#include <utility>
+#include <type_traits>
+#include <sstream>
+#include <memory>
 
 namespace fe
     {
         class serializerID
             {
-                protected:
+                public:
                     struct dataBlock 
                         {
                             std::string m_id;
                             std::unordered_map<std::string, std::string> m_mappedData;
+                            std::unordered_map<std::string, std::unique_ptr<dataBlock>> m_childDataBlocks;
+
                             bool m_read; // if this block has already been read, we dont want
                                          // to get data from it again
+                            bool m_child;
 
-                            dataBlock() : m_id(""), m_read(false) {}
+                            dataBlock() : m_id(""), m_read(false), m_child(false) {}
 
-                            FLAT_ENGINE_API void outData(std::ostream &out);
+                            FLAT_ENGINE_API void outData(std::ostream &out, const char *preDataText = "\0");
                             FLAT_ENGINE_API void readData(const char *block);
                         };
+                private:
 
-                    std::vector<dataBlock> m_data;
+                    std::vector<std::unique_ptr<dataBlock>> m_data;
 
                     template<typename T>
                     T convertValue(const std::string &in, T val) { return T(); }
@@ -46,22 +55,31 @@ namespace fe
                     template<>
                     bool convertValue(const std::string &in, bool val);
 
-                public:
-                    void serialize() 
-                        {}
+                    FLAT_ENGINE_API void interpretData(const char *dataBlock);
 
-                    template<typename T>
-                    void serialize(dataBlock &block, const char *id, T &&data);
+                public:
+                    void serialize() {}
+                    void serialize(dataBlock&) {}
+                    void deserialize(dataBlock&) {}
+                    void deserializeData(dataBlock&, const char*) {}
+
+                    template<typename T, typename std::enable_if<!std::is_class<typename std::remove_reference<T>::type>::value, int>::type = 0>
+                    void serializeData(dataBlock &block, const char *id, T &&data);
+
+                    template<typename T, typename std::enable_if<std::is_class<typename std::remove_reference<T>::type>::value, int>::type = 0>
+                    void serializeData(dataBlock &block, const char *id, T &&data);
 
                     template<typename T, typename ...Args>
                     void serialize(dataBlock &block, const char *id, T &&data, Args &&...args);
 
                     template<typename ...Args>
+                    void serializeBlock(dataBlock &block, const char *blockID, Args &&...Args);
+
+                    template<typename ...Args>
                     void serializeBlock(const char *blockID, Args &&...args);
 
-                    void deserialize() {}
                     template<typename T>
-                    void deserialize(dataBlock &dataBlock, const char *id, T &newValue);
+                    void deserializeData(dataBlock &dataBlock, const char *id, T &newValue);
 
                     template<typename T, typename ...Args>
                     void deserialize(dataBlock &dataBlock, const char *id, T &newValue, Args &&...args);
@@ -75,7 +93,7 @@ namespace fe
                         {
                             for (auto &data : m_data)
                                 {
-                                    data.outData(out);
+                                    data->outData(out);
                                 }
                         }
 
@@ -97,7 +115,7 @@ namespace fe
             }
 
         template<>
-        inline unsigned long serializerID::convertValue(const std::string & in, unsigned long val)
+        inline unsigned long serializerID::convertValue(const std::string &in, unsigned long val)
             {
                 if (in.empty()) return unsigned int();
                 return std::stoul(in);
@@ -136,39 +154,55 @@ namespace fe
                 return std::stoi(in);
             }
 
-        template<typename T>
-        void serializerID::serialize(dataBlock &block, const char *id, T &&data)
+        template<typename T, typename std::enable_if<!std::is_class<typename std::remove_reference<T>::type>::value, int>::type>
+        void serializerID::serializeData(dataBlock &block, const char *id, T &&data)
             {
                 block.m_mappedData[id] = std::to_string(data);
+            }
+
+        template<typename T, typename std::enable_if<std::is_class<typename std::remove_reference<T>::type>::value, int>::type>
+        void serializerID::serializeData(dataBlock &block, const char *id, T &&data)
+            {
+                block.m_childDataBlocks[id].reset(new dataBlock);
+                data.serialize(*this, *block.m_childDataBlocks[id].get());
             }
 
         template<typename T, typename ...Args>
         void serializerID::serialize(dataBlock &block, const char *id, T &&data, Args &&...args)
             {
-                serialize(block, id, data);
+                serializeData(block, id, data);
+                serialize(block, std::forward<Args>(args)...);
+            }
+
+        template<typename ...Args>
+        void fe::serializerID::serializeBlock(dataBlock &block, const char *blockID, Args &&...args)
+            {
+                block.m_id = blockID;
                 serialize(block, std::forward<Args>(args)...);
             }
 
         template<typename ...Args>
         void serializerID::serializeBlock(const char *blockID, Args &&...args)
             {
-                dataBlock block;
-                block.m_id = blockID;
-                serialize(block, args...);
-                m_data.push_back(block);
+                m_data.emplace_back(new dataBlock);
+                dataBlock *block = m_data.back().get();
+                block->m_id = blockID;
+                serialize(*block, std::forward<Args>(args)...);
             }
 
         template<typename T>
-        void serializerID::deserialize(dataBlock &dataBlock, const char *id, T &newValue)
+        void serializerID::deserializeData(dataBlock &dataBlock, const char *id, T &newValue)
             {
-                newValue = convertValue(dataBlock.m_mappedData[id], newValue);
-                int i = 0;
+                if (dataBlock.m_childDataBlocks.find(id) == dataBlock.m_childDataBlocks.end())
+                    {
+                        newValue = convertValue(dataBlock.m_mappedData[id], newValue);
+                    }
             }
 
         template<typename T, typename ...Args>
         void serializerID::deserialize(dataBlock &dataBlock, const char *id, T &newValue, Args &&...args)
             {
-                deserialize(dataBlock, id, newValue);
+                deserializeData(dataBlock, id, newValue);
                 deserialize(dataBlock, std::forward<Args>(args)...);
             }
 
@@ -178,9 +212,9 @@ namespace fe
                 dataBlock *selectedBlock = nullptr;
                 for (auto &datBlock : m_data)
                     {
-                        if (datBlock.m_id == blockID && !datBlock.m_read)
+                        if (datBlock->m_id == blockID && !datBlock->m_read)
                             {
-                                selectedBlock = &datBlock;
+                                selectedBlock = datBlock.get();
                             }
                     }
 
@@ -192,9 +226,10 @@ namespace fe
                     }
                 return false;
             }
-
     }
 
 #define SERIALIZE_ID(...) \
 void serialize(fe::serializerID &serial) const { serial.serializeBlock(__VA_ARGS__); }\
-bool deserialize(fe::serializerID &serial) { return serial.deserializeBlock(__VA_ARGS__); }
+bool deserialize(fe::serializerID &serial) { return serial.deserializeBlock(__VA_ARGS__); }\
+void serialize(fe::serializerID &serial, fe::serializerID::dataBlock &block) const { serial.serializeBlock(block, __VA_ARGS__); }\
+bool deserialize(fe::serializerID &serial, fe::serializerID::dataBlock &block) { return false; }
