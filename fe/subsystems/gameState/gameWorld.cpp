@@ -67,6 +67,11 @@ fe::sceneGraph &fe::gameWorld::getSceneGraph()
         return m_sceneGraph;
     }
 
+fe::graph &fe::gameWorld::getAIGraph()
+    {
+        return m_aiGraph;
+    }
+
 void fe::gameWorld::preUpdate()
     {
         FE_ENGINE_PROFILE("game_world", "entity_pre_update");

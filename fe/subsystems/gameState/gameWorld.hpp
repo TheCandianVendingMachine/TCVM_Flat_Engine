@@ -3,6 +3,7 @@
 #pragma once
 #include "../graphic/renderObject/sceneGraph.hpp"
 #include "../../objectManagement/handleManager.hpp"
+#include "../ai/graph.hpp"
 
 namespace sf
     {
@@ -19,6 +20,7 @@ namespace fe
             {
                 private:
                     fe::sceneGraph m_sceneGraph;
+                    fe::graph m_aiGraph;
                     fe::broadphaseAbstract *m_dynamicBroadphase;
                     fe::broadphaseAbstract *m_staticBroadphase;
 
@@ -35,6 +37,8 @@ namespace fe
                     FLAT_ENGINE_API fe::broadphaseAbstract *getStaticBroadphase() const;
 
                     FLAT_ENGINE_API fe::sceneGraph &getSceneGraph();
+
+                    FLAT_ENGINE_API fe::graph &getAIGraph();
 
                     FLAT_ENGINE_API void preUpdate();
                     FLAT_ENGINE_API void update(collisionWorld *collisionWorld);
