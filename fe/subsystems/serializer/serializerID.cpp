@@ -45,6 +45,30 @@ void fe::serializerID::dataBlock::readData(const char *block)
         m_mappedData[id] = dat;
     }
 
+bool fe::serializerID::dataBlock::hasData(const char *dataId)
+    {
+        if (m_read) return false;
+        if (m_id == dataId) return true;
+        for (auto &childObject : m_childDataBlocks)
+            {
+                if (childObject.second->hasData(dataId)) return true;
+            }
+
+        return false;
+    }
+
+fe::serializerID::dataBlock *fe::serializerID::getDataBlock(dataBlock *initial, const char *id)
+    {
+        if (initial->m_id == id && !initial->m_read) return initial;
+        dataBlock *ret = nullptr;
+        for (auto &child : initial->m_childDataBlocks)
+            {
+                ret = getDataBlock(child.second.get(), id);
+                if (ret) break;
+            }
+        return ret;
+    }
+
 void fe::serializerID::interpretData(const char *block)
     {
         enum readState
@@ -108,7 +132,7 @@ void fe::serializerID::interpretData(const char *block)
                                 currentBlock.pop();
                                 if (!currentBlock.empty())
                                     {
-                                        currentBlock.top()->m_childDataBlocks[top->m_id].reset(top);
+                                        currentBlock.top()->m_childDataBlocks.emplace_back(top->m_id, top);
                                         top->m_child = true;
                                     }
                                 else
@@ -167,4 +191,13 @@ void fe::serializerID::readData(std::istream &in)
             }
 
         interpretData(datBlock.c_str());
+    }
+
+bool fe::serializerID::objectExists(const char *id)
+    {
+        for (auto &object : m_data)
+            {
+                if (object->hasData(id)) return true;
+            }
+        return false;
     }

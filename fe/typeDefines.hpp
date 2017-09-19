@@ -11,7 +11,7 @@
 #define FE_DEBUG_NO_SEED true
 #define FE_DEFAULT_RANDOM_SEED 555
 
-#define FE_MAX_GAME_OBJECTS 65536 // 2^16
+#define FE_MAX_GAME_OBJECTS 1024 // Max = 2^16
 
 namespace fe
     {

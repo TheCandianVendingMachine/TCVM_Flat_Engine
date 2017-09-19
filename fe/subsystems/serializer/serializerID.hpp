@@ -3,8 +3,7 @@
 // get and set data easily
 #pragma once
 #define FLAT_ENGINE_EXPORT
-#define FLAT_ENGINE_API
-//#include "../../flatEngineExport.hpp"
+#include "../../flatEngineExport.hpp"
 #include <ostream>
 #include <string>
 #include <unordered_map>
@@ -25,7 +24,7 @@ namespace fe
                         {
                             std::string m_id;
                             std::unordered_map<std::string, std::string> m_mappedData;
-                            std::unordered_map<std::string, std::unique_ptr<dataBlock>> m_childDataBlocks;
+                            std::vector<std::pair<std::string, std::unique_ptr<dataBlock>>> m_childDataBlocks;
 
                             bool m_read; // if this block has already been read, we dont want
                                          // to get data from it again
@@ -35,6 +34,7 @@ namespace fe
 
                             FLAT_ENGINE_API void outData(std::ostream &out, const char *preDataText = "\0");
                             FLAT_ENGINE_API void readData(const char *block);
+                            FLAT_ENGINE_API bool hasData(const char *dataId);
                         };
                 private:
 
@@ -55,6 +55,7 @@ namespace fe
                     template<>
                     bool convertValue(const std::string &in, bool val);
 
+                    FLAT_ENGINE_API dataBlock *getDataBlock(dataBlock *initial, const char *id);
                     FLAT_ENGINE_API void interpretData(const char *dataBlock);
 
                 public:
@@ -98,6 +99,9 @@ namespace fe
                         }
 
                     FLAT_ENGINE_API void readData(std::istream &in);
+
+                    // Returns true as long as the requested serialized data exists
+                    FLAT_ENGINE_API bool objectExists(const char *id);
             };
 
         template<>
@@ -193,10 +197,7 @@ namespace fe
         template<typename T>
         void serializerID::deserializeData(dataBlock &dataBlock, const char *id, T &newValue)
             {
-                if (dataBlock.m_childDataBlocks.find(id) == dataBlock.m_childDataBlocks.end())
-                    {
-                        newValue = convertValue(dataBlock.m_mappedData[id], newValue);
-                    }
+                newValue = convertValue(dataBlock.m_mappedData[id], newValue);
             }
 
         template<typename T, typename ...Args>
@@ -212,10 +213,8 @@ namespace fe
                 dataBlock *selectedBlock = nullptr;
                 for (auto &datBlock : m_data)
                     {
-                        if (datBlock->m_id == blockID && !datBlock->m_read)
-                            {
-                                selectedBlock = datBlock.get();
-                            }
+                        selectedBlock = getDataBlock(datBlock.get(), blockID);
+                        if (selectedBlock) break;
                     }
 
                 if (selectedBlock) 
@@ -231,5 +230,4 @@ namespace fe
 #define SERIALIZE_ID(...) \
 void serialize(fe::serializerID &serial) const { serial.serializeBlock(__VA_ARGS__); }\
 bool deserialize(fe::serializerID &serial) { return serial.deserializeBlock(__VA_ARGS__); }\
-void serialize(fe::serializerID &serial, fe::serializerID::dataBlock &block) const { serial.serializeBlock(block, __VA_ARGS__); }\
-bool deserialize(fe::serializerID &serial, fe::serializerID::dataBlock &block) { return false; }
+void serialize(fe::serializerID &serial, fe::serializerID::dataBlock &block) const { serial.serializeBlock(block, __VA_ARGS__); }
