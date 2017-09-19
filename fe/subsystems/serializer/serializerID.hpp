@@ -4,6 +4,7 @@
 #pragma once
 #define FLAT_ENGINE_EXPORT
 #include "../../flatEngineExport.hpp"
+#include "../../utilities.hpp"
 #include <ostream>
 #include <string>
 #include <unordered_map>
@@ -55,10 +56,6 @@ namespace fe
                     template<>
                     bool convertValue(const std::string &in, bool val);
 
-                    FLAT_ENGINE_API dataBlock *getDataBlock(dataBlock *initial, const char *id);
-                    FLAT_ENGINE_API void interpretData(const char *dataBlock);
-
-                public:
                     void serialize() {}
                     void serialize(dataBlock&) {}
                     void deserialize(dataBlock&) {}
@@ -70,14 +67,11 @@ namespace fe
                     template<typename T, typename std::enable_if<std::is_class<typename std::remove_reference<T>::type>::value, int>::type = 0>
                     void serializeData(dataBlock &block, const char *id, T &&data);
 
-                    template<typename T, typename ...Args>
+                    template<typename T, typename ...Args, typename std::enable_if<!fe::is_vector<typename std::remove_reference<T>::type>::value, int>::type = 0>
+                    void serialize(dataBlock &block, const char *id, T &&dataVec, Args &&...args);
+
+                    template<typename T, typename ...Args, typename std::enable_if<fe::is_vector<typename std::remove_reference<T>::type>::value, int>::type = 0>
                     void serialize(dataBlock &block, const char *id, T &&data, Args &&...args);
-
-                    template<typename ...Args>
-                    void serializeBlock(dataBlock &block, const char *blockID, Args &&...Args);
-
-                    template<typename ...Args>
-                    void serializeBlock(const char *blockID, Args &&...args);
 
                     template<typename T>
                     void deserializeData(dataBlock &dataBlock, const char *id, T &newValue);
@@ -85,6 +79,14 @@ namespace fe
                     template<typename T, typename ...Args>
                     void deserialize(dataBlock &dataBlock, const char *id, T &newValue, Args &&...args);
 
+                    FLAT_ENGINE_API dataBlock *getDataBlock(dataBlock *initial, const char *id);
+                    FLAT_ENGINE_API void interpretData(const char *dataBlock);
+
+                public:
+                    template<typename ...Args>
+                    void serializeBlock(const char *blockID, Args &&...args);
+                    template<typename ...Args>
+                    void serializeBlock(dataBlock &block, const char *blockID, Args &&...Args);
                     template<typename T, typename ...Args>
                     bool deserializeBlock(const char *blockID, const char *id, T &newValue, Args &&...args);
 
@@ -167,11 +169,21 @@ namespace fe
         template<typename T, typename std::enable_if<std::is_class<typename std::remove_reference<T>::type>::value, int>::type>
         void serializerID::serializeData(dataBlock &block, const char *id, T &&data)
             {
-                block.m_childDataBlocks[id].reset(new dataBlock);
-                data.serialize(*this, *block.m_childDataBlocks[id].get());
+                block.m_childDataBlocks.emplace_back(id, new dataBlock);
+                data.serialize(*this, *block.m_childDataBlocks.back().second.get());
             }
 
-        template<typename T, typename ...Args>
+        template<typename T, typename ...Args, typename std::enable_if<fe::is_vector<typename std::remove_reference<T>::type>::value, int>::type>
+        void serializerID::serialize(dataBlock &block, const char *id, T &&dataVec, Args &&...args)
+            {
+                for (auto &data : dataVec)
+                    {
+                        serializeData(block, id, data);
+                    }
+                serialize(block, std::forward<Args>(args)...);
+            }
+
+        template<typename T, typename ...Args, typename std::enable_if<!fe::is_vector<typename std::remove_reference<T>::type>::value, int>::type>
         void serializerID::serialize(dataBlock &block, const char *id, T &&data, Args &&...args)
             {
                 serializeData(block, id, data);
