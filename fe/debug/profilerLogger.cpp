@@ -64,7 +64,7 @@ void fe::profilerLogger::printToStream(std::ostream &out)
             {
                 profileData data = m_profileData[i];
                 fe::time avg;
-                for (int j = 0; j < std::min(data.m_calls, 500u); j++)
+                for (unsigned int j = 0; j < std::min(data.m_calls, 500u); j++)
                     {
                         avg += data.m_time[j];
                     }
@@ -96,11 +96,11 @@ void fe::profilerLogger::printToStream(std::ostream &out)
 void fe::profilerLogger::printToStream(fe::guid group, std::ostream &out)
     {
         auto profiles = m_profileGroups[group];
-        for (int i = 0; i < profiles.second; i++)
+        for (unsigned int i = 0; i < profiles.second; i++)
             {
                 profileData data = m_profileData[i];
                 fe::time avg;
-                for (int j = 0; j < std::min(data.m_calls, 500u); j++)
+                for (unsigned int j = 0; j < std::min(data.m_calls, 500u); j++)
                     {
                         avg += data.m_time[j];
                     }

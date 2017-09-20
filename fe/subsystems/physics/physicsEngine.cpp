@@ -80,7 +80,7 @@ void fe::physicsEngine::simulateForces(float deltaTime, unsigned int iterations)
                                 //if (abs(body->getForce().x) - abs(forceX) < 0.f) body->setForce(0.f, body->getForce().y);
                                 //if (abs(body->getForce().y) - abs(forceY) < 0.f) body->setForce(body->getForce().x, 0.f);
 
-                                for (int j = 0; j < iterations; j++)
+                                for (unsigned int j = 0; j < iterations; j++)
                                     {
                                         body->applyForce(forceX, forceY);
                                         body->update(deltaTime);
@@ -224,7 +224,7 @@ bool fe::physicsEngine::physicsJob::execute()
                         //if (abs(body->getForce().x) - abs(forceX) < 0.f) body->setForce(0.f, body->getForce().y);
                         //if (abs(body->getForce().y) - abs(forceY) < 0.f) body->setForce(body->getForce().x, 0.f);
 
-                        for (int j = 0; j < m_iterations; j++)
+                        for (unsigned int j = 0; j < m_iterations; j++)
                             {
                                 body->applyForce(forceX, forceY);
                                 body->update(m_deltaTime);

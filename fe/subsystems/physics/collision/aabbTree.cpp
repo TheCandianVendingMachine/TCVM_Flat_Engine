@@ -383,7 +383,7 @@ void fe::aabbTree::AABBCollideBranch(fe::AABB &testAABB, std::function<void(void
 
 fe::aabbTree::aabbTree() : m_base(treeNode::Null), m_fatness(5.f)
     {
-        for (int i = 0; i < m_nodeCapacity - 1; i++)
+        for (unsigned int i = 0; i < m_nodeCapacity - 1; i++)
             {
                 m_nodes[i].m_next = i + 1;
                 m_nodes[i].m_height = -1;

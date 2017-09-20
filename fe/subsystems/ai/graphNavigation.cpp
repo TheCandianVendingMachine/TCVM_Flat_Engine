@@ -4,13 +4,13 @@
 #include <memory>
 #include <algorithm>
 
-std::vector<int> fe::graphNav::aStar(graph &graph, int start, int end, float alpha)
+std::vector<unsigned int> fe::graphNav::aStar(graph &graph, unsigned int start, unsigned int end, float alpha)
     {
-        std::vector<int> open;
-        std::vector<int> closed;
+        std::vector<unsigned int> open;
+        std::vector<unsigned int> closed;
 
         open.push_back(start);
-        int current = start;
+        unsigned int current = start;
         graph::node *endNode = graph.getNode(end);
 
         const float H_COST_MOD = 1.f;
@@ -55,7 +55,7 @@ std::vector<int> fe::graphNav::aStar(graph &graph, int start, int end, float alp
                     }
             }
         
-        std::vector<int> path;
+        std::vector<unsigned int> path;
         path.push_back(end);
         graph::node *currentNode = endNode;
         while (currentNode->m_parent >= 0)

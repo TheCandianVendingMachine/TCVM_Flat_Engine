@@ -17,7 +17,7 @@ fe::gui::panel::panel(fe::Vector2d size, int modifiers, const char *title, sf::F
     m_dragging(false),
     m_isFolded(false),
     m_windowOffset(0.f),
-    m_minSize(30.f * ((modifiers & panelModifiers::CAN_MINIMIZE > 0) + (modifiers & panelModifiers::CAN_CLOSE > 0)), 5.f), // if both modifiers are true, then we will multiply the amount by 2
+    m_minSize(30.f * (((modifiers & panelModifiers::CAN_MINIMIZE) > 0) + ((modifiers & panelModifiers::CAN_CLOSE) > 0)), 5.f), // if both modifiers are true, then we will multiply the amount by 2
     m_buttonSize(20.f),
     m_distanceFromEnd(5.f),
     m_distanceFromTop(5.f) 

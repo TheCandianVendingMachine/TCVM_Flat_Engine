@@ -84,9 +84,9 @@ void fe::collisionWorld::handleCollisions(const fe::broadphaseAbstract *broadpha
     {
         if (!broadphase)
             {
-                for (int i = 0; i < m_collisionBodies.getObjectAllocCount(); i++)
+                for (unsigned int i = 0; i < m_collisionBodies.getObjectAllocCount(); i++)
                     {
-                        for (int j = i + 1; j < m_collisionBodies.getObjectAllocCount(); j++)
+                        for (unsigned int j = i + 1; j < m_collisionBodies.getObjectAllocCount(); j++)
                             {
                                 auto a = m_collisionBodies.at(i);
                                 auto b = m_collisionBodies.at(j);
@@ -107,7 +107,7 @@ void fe::collisionWorld::handleCollisions(const fe::broadphaseAbstract *broadpha
         else
             {
                 FE_ENGINE_PROFILE("collision_world", "broadphase_compute_partial");
-                for (int i = 0; i < m_collisionBodies.getObjectAllocCount(); i++)
+                for (unsigned int i = 0; i < m_collisionBodies.getObjectAllocCount(); i++)
                     {
                         if (!m_collisionBodies.at(i)->m_static)
                             {
@@ -129,7 +129,7 @@ void fe::collisionWorld::handleCollisions(const fe::broadphaseAbstract *broadpha
         else
             {
                 FE_ENGINE_PROFILE("collision_world", "broadphase_compute_full");
-                for (int i = 0; i < m_collisionBodies.getObjectAllocCount(); i++)
+                for (unsigned int i = 0; i < m_collisionBodies.getObjectAllocCount(); i++)
                     {
                         if (!m_collisionBodies.at(i)->m_static)
                             {

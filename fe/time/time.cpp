@@ -69,7 +69,7 @@ fe::time &fe::time::operator=(const fe::time &rhs)
         return *this;
     }
 
-fe::time &fe::time::operator/(unsigned int rhs)
+fe::time fe::time::operator/(unsigned int rhs)
     {
         return fe::time(m_time / rhs);
     }

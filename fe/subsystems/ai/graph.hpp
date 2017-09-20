@@ -12,7 +12,7 @@ namespace fe
 		class graph;
 		namespace graphNav
 			{
-				std::vector<int> aStar(graph&, int, int, float);
+				std::vector<unsigned int> aStar(graph&, unsigned int, unsigned int, float);
 			}
 
 		class graph
@@ -21,7 +21,7 @@ namespace fe
 					struct node
 						{
 							// Nodes this node is connected to
-							std::vector<int> m_connectedNodes;
+							std::vector<unsigned int> m_connectedNodes;
 							int m_parent; // used for pathfinding
 
 							float m_gCost;
@@ -35,17 +35,17 @@ namespace fe
 						};
 
 					std::vector<std::unique_ptr<node>> m_nodes;
-					std::vector<int> m_nodeHandles;
+					std::vector<unsigned int> m_nodeHandles;
 
-					friend std::vector<int> graphNav::aStar(graph&, int, int, float);
+					friend std::vector<unsigned int> graphNav::aStar(graph&, unsigned int, unsigned int, float);
 
 				public:
 					FLAT_ENGINE_API int addNode(float posX, float posY, float cost = 1.f);
 
-                    FLAT_ENGINE_API void addEdge(int nodeA, int nodeB);
-                    FLAT_ENGINE_API void removeEdge(int nodeID, int edge);
-                    FLAT_ENGINE_API node *getNode(int nodeID);
-                    FLAT_ENGINE_API const std::vector<int> &getAllNodes();
+                    FLAT_ENGINE_API void addEdge(unsigned int nodeA, unsigned int nodeB);
+                    FLAT_ENGINE_API void removeEdge(unsigned int nodeID, unsigned int edge);
+                    FLAT_ENGINE_API node *getNode(unsigned int nodeID);
+                    FLAT_ENGINE_API const std::vector<unsigned int> &getAllNodes();
 
 			};
 	}

@@ -33,7 +33,7 @@ namespace fe
                     FLAT_ENGINE_API void operator-=(const fe::time &rhs);
 
                     FLAT_ENGINE_API fe::time &operator=(const fe::time &rhs);
-                    FLAT_ENGINE_API fe::time &operator/(unsigned int rhs);
+                    FLAT_ENGINE_API fe::time operator/(unsigned int rhs);
                     FLAT_ENGINE_API void operator/=(unsigned int rhs);
 
                     FLAT_ENGINE_API bool operator>(const fe::time &rhs);

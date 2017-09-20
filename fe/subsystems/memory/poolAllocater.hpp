@@ -80,7 +80,7 @@ namespace fe
                         return nullptr;
                     }
 
-                int index = 0;
+                unsigned int index = 0;
                 while (!m_freeIndicies[index])
                     {
                         index++;
