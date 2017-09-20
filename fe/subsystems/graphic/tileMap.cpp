@@ -46,7 +46,7 @@ fe::Handle fe::tileMap::add(fe::Vector2d position, fe::guid tileId)
             {
                 if (tile.id == tileId)
                     {
-                        // I assing the position to the prefab since this will be copied to the new element, and this will be overwritten and not used
+                        // Im adding the position to the prefab since this will be copied to the new element, and this will be overwritten and not used
                         tile.xPosition = position.x;
                         tile.yPosition = position.y;
 
