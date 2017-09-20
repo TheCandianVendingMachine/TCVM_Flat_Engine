@@ -25,10 +25,11 @@ namespace fe
                         {
                             std::string m_id;
                             std::unordered_map<std::string, std::string> m_mappedData;
+                            std::unordered_map<std::string, std::vector<std::string>> m_mappedListPrimitiveData;
+                            std::unordered_map<std::string, std::vector<std::unique_ptr<dataBlock>>> m_mappedListObjectData;
                             std::vector<std::pair<std::string, std::unique_ptr<dataBlock>>> m_childDataBlocks;
 
-                            bool m_read; // if this block has already been read, we dont want
-                                         // to get data from it again
+                            bool m_read; // if this block has already been read, we dont want to get data from it again
                             bool m_child;
 
                             dataBlock() : m_id(""), m_read(false), m_child(false) {}
@@ -42,7 +43,7 @@ namespace fe
                     std::vector<std::unique_ptr<dataBlock>> m_data;
 
                     template<typename T>
-                    T convertValue(const std::string &in, T val) { return T(); }
+                    T convertValue(const std::string &in, T val = T()) { return T(); }
                     template<>
                     int convertValue(const std::string &in, int val);
                     template<>
@@ -60,6 +61,13 @@ namespace fe
                     void serialize(dataBlock&) {}
                     void deserialize(dataBlock&) {}
                     void deserializeData(dataBlock&, const char*) {}
+                    
+                    template<typename T, typename std::enable_if<!std::is_class<typename std::remove_reference<T>::type>::value, int>::type = 0>
+                    void serializeListData(dataBlock &block, const char *id, T &&data);
+
+                    template<typename T, typename std::enable_if<std::is_class<typename std::remove_reference<T>::type>::value, int>::type = 0>
+                    void serializeListData(dataBlock &block, const char *id, T &&data);
+
 
                     template<typename T, typename std::enable_if<!std::is_class<typename std::remove_reference<T>::type>::value, int>::type = 0>
                     void serializeData(dataBlock &block, const char *id, T &&data);
@@ -67,19 +75,26 @@ namespace fe
                     template<typename T, typename std::enable_if<std::is_class<typename std::remove_reference<T>::type>::value, int>::type = 0>
                     void serializeData(dataBlock &block, const char *id, T &&data);
 
+
                     template<typename T, typename ...Args, typename std::enable_if<!fe::is_vector<typename std::remove_reference<T>::type>::value, int>::type = 0>
                     void serialize(dataBlock &block, const char *id, T &&dataVec, Args &&...args);
 
                     template<typename T, typename ...Args, typename std::enable_if<fe::is_vector<typename std::remove_reference<T>::type>::value, int>::type = 0>
                     void serialize(dataBlock &block, const char *id, T &&data, Args &&...args);
 
-                    template<typename T>
+                    template<typename T, typename std::enable_if<fe::is_vector<typename std::remove_reference<T>::type>::value, int>::type = 0>
                     void deserializeData(dataBlock &dataBlock, const char *id, T &newValue);
+
+                    template<typename T, typename std::enable_if<!fe::is_vector<typename std::remove_reference<T>::type>::value, int>::type = 0>
+                    void deserializeData(dataBlock &dataBlock, const char *id, T &newValue);
+
 
                     template<typename T, typename ...Args>
                     void deserialize(dataBlock &dataBlock, const char *id, T &newValue, Args &&...args);
 
+
                     FLAT_ENGINE_API dataBlock *getDataBlock(dataBlock *initial, const char *id);
+                    FLAT_ENGINE_API dataBlock *getDataBlock(dataBlock *initial);
                     FLAT_ENGINE_API void interpretData(const char *dataBlock);
 
                 public:
@@ -89,6 +104,8 @@ namespace fe
                     void serializeBlock(dataBlock &block, const char *blockID, Args &&...Args);
                     template<typename T, typename ...Args>
                     bool deserializeBlock(const char *blockID, const char *id, T &newValue, Args &&...args);
+                    template<typename T, typename ...Args>
+                    bool deserializeBlock(std::vector<std::unique_ptr<dataBlock>> &blocks, const char*, const char *id, T &newValue, Args &&...args);
 
                     FLAT_ENGINE_API void clearData();
 
@@ -161,6 +178,20 @@ namespace fe
             }
 
         template<typename T, typename std::enable_if<!std::is_class<typename std::remove_reference<T>::type>::value, int>::type>
+        void serializerID::serializeListData(dataBlock &block, const char *id, T &&data)
+            {
+                block.m_mappedListPrimitiveData[id].push_back(std::to_string(data));
+            }
+
+        template<typename T, typename std::enable_if<std::is_class<typename std::remove_reference<T>::type>::value, int>::type>
+        void serializerID::serializeListData(dataBlock &block, const char *id, T &&data)
+            {
+                block.m_mappedListObjectData[id].emplace_back(new dataBlock);
+                block.m_mappedListObjectData[id].back()->m_id = id;
+                data.serialize(*this, *block.m_mappedListObjectData[id].back().get());
+            }
+
+        template<typename T, typename std::enable_if<!std::is_class<typename std::remove_reference<T>::type>::value, int>::type>
         void serializerID::serializeData(dataBlock &block, const char *id, T &&data)
             {
                 block.m_mappedData[id] = std::to_string(data);
@@ -178,7 +209,7 @@ namespace fe
             {
                 for (auto &data : dataVec)
                     {
-                        serializeData(block, id, data);
+                        serializeListData(block, id, data);
                     }
                 serialize(block, std::forward<Args>(args)...);
             }
@@ -206,10 +237,33 @@ namespace fe
                 serialize(*block, std::forward<Args>(args)...);
             }
 
-        template<typename T>
+        template<typename T, typename std::enable_if<!fe::is_vector<typename std::remove_reference<T>::type>::value, int>::type>
         void serializerID::deserializeData(dataBlock &dataBlock, const char *id, T &newValue)
             {
-                newValue = convertValue(dataBlock.m_mappedData[id], newValue);
+                if (dataBlock.m_mappedData.find(id) != dataBlock.m_mappedData.end())
+                    {
+                        newValue = convertValue(dataBlock.m_mappedData[id], newValue);
+                    }
+            }
+
+        template<typename T, typename std::enable_if<fe::is_vector<typename std::remove_reference<T>::type>::value, int>::type>
+        void serializerID::deserializeData(dataBlock &dataBlock, const char *id, T &newValue)
+            {
+                if (dataBlock.m_mappedListPrimitiveData.find(id) != dataBlock.m_mappedListPrimitiveData.end())
+                    {
+                        for (auto &element : dataBlock.m_mappedListPrimitiveData[id])
+                            {
+                                newValue.emplace_back(convertValue<typename T::value_type>(element));
+                            }
+                    }
+                else if (dataBlock.m_mappedListObjectData.find(id) != dataBlock.m_mappedListObjectData.end())
+                    {
+                        for (auto &element : dataBlock.m_mappedListObjectData[id])
+                            {
+                                newValue.emplace_back();
+                                newValue.back().deserialize(*this, dataBlock.m_mappedListObjectData[id]);
+                            }
+                    }
             }
 
         template<typename T, typename ...Args>
@@ -237,9 +291,29 @@ namespace fe
                     }
                 return false;
             }
+
+        template<typename T, typename ...Args>
+        bool serializerID::deserializeBlock(std::vector<std::unique_ptr<dataBlock>> &blocks, const char*, const char *id, T &newValue, Args &&...args)
+            {
+                dataBlock *selectedBlock = nullptr;
+                for (auto &datBlock : blocks)
+                    {
+                        selectedBlock = getDataBlock(datBlock.get());
+                        if (selectedBlock) break;
+                    }
+
+                if (selectedBlock) 
+                    {
+                        selectedBlock->m_read = true;
+                        deserialize(*selectedBlock, id, newValue, args...);
+                        return true;
+                    }
+                return false;
+            }
     }
 
 #define SERIALIZE_ID(...) \
 void serialize(fe::serializerID &serial) const { serial.serializeBlock(__VA_ARGS__); }\
 bool deserialize(fe::serializerID &serial) { return serial.deserializeBlock(__VA_ARGS__); }\
-void serialize(fe::serializerID &serial, fe::serializerID::dataBlock &block) const { serial.serializeBlock(block, __VA_ARGS__); }
+void serialize(fe::serializerID &serial, fe::serializerID::dataBlock &block) const { serial.serializeBlock(block, __VA_ARGS__); }\
+bool deserialize(fe::serializerID &serial, std::vector<std::unique_ptr<fe::serializerID::dataBlock>> &blocks) { return serial.deserializeBlock(blocks, __VA_ARGS__); }

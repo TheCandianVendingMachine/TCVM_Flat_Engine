@@ -15,10 +15,32 @@ void fe::serializerID::dataBlock::outData(std::ostream &out, const char *preData
         std::strcat(preDataTextApp, preDataText);
         std::strcat(preDataTextApp, "\t");
 
+        for (auto &listDat : m_mappedListPrimitiveData)
+            {
+                out << preDataText << "\tils " << listDat.first << ":[\n";
+                for (auto &item : listDat.second)
+                    {
+                        out << preDataTextApp << "\titm " << item << ";\n";
+                    }
+                out << preDataText << "\t]\n";
+            }
+
         for (auto &memberDat : m_childDataBlocks)
             {
                 memberDat.second->outData(out, preDataTextApp);
             }
+
+        std::strcat(preDataTextApp, "\t");
+        for (auto &listDat : m_mappedListObjectData)
+            {
+                out << preDataText << "\tols " << listDat.first << ":[\n";
+                for (auto &item : listDat.second)
+                    {
+                        item->outData(out, preDataTextApp);
+                    }
+                out << preDataText << "\t]\n";
+            }
+
         out << preDataText << "}\n";
     }
 
@@ -69,6 +91,18 @@ fe::serializerID::dataBlock *fe::serializerID::getDataBlock(dataBlock *initial, 
         return ret;
     }
 
+fe::serializerID::dataBlock *fe::serializerID::getDataBlock(dataBlock *initial)
+    {
+        if (!initial->m_read) return initial;
+        dataBlock *ret = nullptr;
+        for (auto &child : initial->m_childDataBlocks)
+            {
+                ret = getDataBlock(child.second.get());
+                if (ret) break;
+            }
+        return ret;
+    }
+
 void fe::serializerID::interpretData(const char *block)
     {
         enum readState
@@ -78,9 +112,17 @@ void fe::serializerID::interpretData(const char *block)
                 OBJ_NAME_START,
                 OBJ_NAME_END,
                 DAT_START,
-                DAT_END
+                DAT_END,
+                PRIMITIVE_LIST_START,
+                OBJECT_LIST_START,
+                LIST_NAME_START,
+                LIST_NAME_END,
+                LIST_ITEM_START,
+                LIST_ITEM_END,
+                LIST_END,
             };
         std::stack<std::pair<readState, unsigned int>> readingState;
+        std::stack<readState> lastDataReadState;
 
         for (unsigned int i = 0; i < std::strlen(block); i++)
             {
@@ -94,6 +136,23 @@ void fe::serializerID::interpretData(const char *block)
                         else if (block[i + 0] == 'd' && block[i + 1] == 'a' && block[i + 2] == 't')
                             {
                                 readingState.push(std::make_pair(DAT_START, i));
+                                lastDataReadState.push(DAT_START);
+                            }
+                        else if (block[i + 0] == 'i' && block[i + 1] == 'l' && block[i + 2] == 's')
+                            {
+                                readingState.push(std::make_pair(PRIMITIVE_LIST_START, i));
+                                readingState.push(std::make_pair(LIST_NAME_START, i));
+                                lastDataReadState.push(PRIMITIVE_LIST_START);
+                            }
+                        else if (block[i + 0] == 'o' && block[i + 1] == 'l' && block[i + 2] == 's')
+                            {
+                                readingState.push(std::make_pair(OBJECT_LIST_START, i));
+                                readingState.push(std::make_pair(LIST_NAME_START, i));
+                                lastDataReadState.push(OBJECT_LIST_START);
+                            }
+                        else if (block[i + 0] == 'i' && block[i + 1] == 't' && block[i + 2] == 'm')
+                            {
+                                readingState.push(std::make_pair(LIST_ITEM_START, i + 4));
                             }
                     }
 
@@ -105,9 +164,26 @@ void fe::serializerID::interpretData(const char *block)
                     {
                         readingState.push(std::make_pair(OBJ_NAME_END, i));
                     }
+                else if (block[i] == ']')
+                    {
+                        readingState.push(std::make_pair(LIST_END, i));
+                        lastDataReadState.pop();
+                    }
+                else if (block[i] == '[')
+                    {
+                        readingState.push(std::make_pair(LIST_NAME_END, i));
+                    }
                 else if (block[i] == ';')
                     {
-                        readingState.push(std::make_pair(DAT_END, i));
+                        if (lastDataReadState.top() == DAT_START)
+                            {
+                                readingState.push(std::make_pair(DAT_END, i));
+                                lastDataReadState.pop();
+                            }
+                        else if (lastDataReadState.top() == PRIMITIVE_LIST_START || lastDataReadState.top() == OBJECT_LIST_START)
+                            {
+                                readingState.push(std::make_pair(LIST_ITEM_END, i));
+                            }
                     }
             }
 
@@ -118,7 +194,17 @@ void fe::serializerID::interpretData(const char *block)
                 readingState.pop();
             }
 
+        enum readingStorage
+            {
+                NONE,
+                LIST,
+            };
+
+        std::stack<readingStorage> currentStorageRead;
+        currentStorageRead.push(NONE);
+
         std::stack<std::unique_ptr<dataBlock>> currentBlock;
+        std::stack<std::string> currentListID;
         while (!reverseReadingStack.empty())
             {
                 switch (reverseReadingStack.top().first)
@@ -132,7 +218,17 @@ void fe::serializerID::interpretData(const char *block)
                                 currentBlock.pop();
                                 if (!currentBlock.empty())
                                     {
-                                        currentBlock.top()->m_childDataBlocks.emplace_back(top->m_id, top);
+                                        switch(currentStorageRead.top())
+                                            {
+                                                case NONE:
+                                                    currentBlock.top()->m_childDataBlocks.emplace_back(top->m_id, top);
+                                                    break;
+                                                case LIST:
+                                                    currentBlock.top()->m_mappedListObjectData[currentListID.top()].emplace_back(top);
+                                                    break;
+                                                default:
+                                                    break;
+                                            }
                                         top->m_child = true;
                                     }
                                 else
@@ -166,6 +262,41 @@ void fe::serializerID::interpretData(const char *block)
                             }
                             break;
                         case DAT_END:
+                            break;
+                        case PRIMITIVE_LIST_START:
+                            break;
+                        case OBJECT_LIST_START:
+                            currentStorageRead.push(LIST);
+                            break;
+                        case LIST_END:
+                            currentListID.pop();
+                            currentStorageRead.pop();
+                            break;
+                        case LIST_NAME_START:
+                            {
+                                int nameStart = reverseReadingStack.top().second + 4;
+                                reverseReadingStack.pop();
+                                int nameEnd = reverseReadingStack.top().second - 1;
+
+                                char name[512] = "\0";
+                                std::memcpy(name, block + nameStart, nameEnd - nameStart);
+                                currentListID.push(name);
+                            }
+                            break;
+                        case LIST_NAME_END:
+                            break;
+                        case LIST_ITEM_START:
+                            {
+                                int itemStart = reverseReadingStack.top().second;
+                                reverseReadingStack.pop();
+                                int itemEnd = reverseReadingStack.top().second;
+
+                                char data[512] = "\0";
+                                std::memcpy(data, block + itemStart, itemEnd - itemStart);
+                                currentBlock.top()->m_mappedListPrimitiveData[currentListID.top()].push_back(data);
+                            }
+                            break;
+                        case LIST_ITEM_END:
                             break;
                         default:
                             break;
