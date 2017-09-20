@@ -79,6 +79,22 @@ bool fe::serializerID::dataBlock::hasData(const char *dataId)
         return false;
     }
 
+fe::serializerID::dataBlock::~dataBlock()
+    {
+        for (auto &pair : m_mappedListObjectData)
+            {
+                for (auto &uPtr : pair.second)
+                    {
+                        delete uPtr.release();
+                    }
+            }
+
+        for (auto &pair : m_childDataBlocks)
+            {
+                delete pair.second.release();
+            }
+    }
+
 fe::serializerID::dataBlock *fe::serializerID::getDataBlock(dataBlock *initial, const char *id)
     {
         if (initial->m_id == id && !initial->m_read) return initial;
@@ -331,4 +347,12 @@ bool fe::serializerID::objectExists(const char *id)
                 if (object->hasData(id)) return true;
             }
         return false;
+    }
+
+fe::serializerID::~serializerID()
+    {
+        for (auto &uPtr : m_data)
+            {
+                delete uPtr.release();
+            }
     }

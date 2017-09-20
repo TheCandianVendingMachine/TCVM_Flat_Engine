@@ -37,6 +37,7 @@ namespace fe
                             FLAT_ENGINE_API void outData(std::ostream &out, const char *preDataText = "\0");
                             FLAT_ENGINE_API void readData(const char *block);
                             FLAT_ENGINE_API bool hasData(const char *dataId);
+                            FLAT_ENGINE_API ~dataBlock();
                         };
                 private:
 
@@ -121,6 +122,8 @@ namespace fe
 
                     // Returns true as long as the requested serialized data exists
                     FLAT_ENGINE_API bool objectExists(const char *id);
+
+                    FLAT_ENGINE_API ~serializerID();
             };
 
         template<>
