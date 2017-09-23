@@ -21,13 +21,13 @@ void fe::graph::addEdge(int nodeA, int nodeB)
 
 void fe::graph::removeEdge(int nodeID, int edge)
     {
-        auto *node = m_nodes[m_nodeHandles[nodeID]].get();
+        auto *node = m_nodes[m_nodeHandles[nodeID]];
         node->m_connectedNodes.erase(std::remove(node->m_connectedNodes.begin(), node->m_connectedNodes.end(), edge));
     }
 
 fe::graph::node *fe::graph::getNode(int nodeID)
     {
-        return m_nodes[m_nodeHandles[nodeID]].get();
+        return m_nodes[m_nodeHandles[nodeID]];
     }
 
 const std::vector<int> &fe::graph::getAllNodes()

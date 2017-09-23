@@ -3,7 +3,7 @@
 #pragma once
 #define FLAT_ENGINE_EXPORT
 #include "../../flatEngineExport.hpp"
-
+#include "../serializer/serializerID.hpp"
 #include <vector>
 #include <memory>
 
@@ -34,7 +34,7 @@ namespace fe
 							node() : m_parent(-1), m_gCost(-1.f), m_hCost(-1.f), m_fCost(-1.f), m_posX(0.f), m_posY(0.f) {}
 						};
 
-					std::vector<std::unique_ptr<node>> m_nodes;
+					std::vector<node*> m_nodes;
 					std::vector<int> m_nodeHandles;
 
 					friend std::vector<int> graphNav::aStar(graph&, int, int, float);
