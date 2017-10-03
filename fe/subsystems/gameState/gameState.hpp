@@ -55,7 +55,8 @@ namespace fe
 
                     FLAT_ENGINE_API void preUpdateDefined();
                     FLAT_ENGINE_API virtual void preUpdate() {}
-                    FLAT_ENGINE_API void update(collisionWorld *collisionWorld);
+                    FLAT_ENGINE_API virtual void update() {}
+                    FLAT_ENGINE_API void updateDefined(collisionWorld *collisionWorld);
                     FLAT_ENGINE_API void postUpdateDefined();
                     FLAT_ENGINE_API virtual void postUpdate() {}
 

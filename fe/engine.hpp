@@ -58,6 +58,7 @@ namespace fe
 
                     const float m_deltaTime;
                     float m_accumulator;
+                    float m_elapsedTime;
                     float m_fps; // used to calculate fps
 
                     fe::Vector2d m_screenSize;
@@ -87,6 +88,8 @@ namespace fe
 
                     FLAT_ENGINE_API const float getDeltaTime() const;
                     FLAT_ENGINE_API const float getFPS() const;
+                    FLAT_ENGINE_API fe::time getElapsedTime() const;
+
                     FLAT_ENGINE_API const fe::Vector2d getWindowSize() const;
 
                     FLAT_ENGINE_API const fe::Vector2d getMousePos() const;

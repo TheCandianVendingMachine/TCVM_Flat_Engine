@@ -56,8 +56,9 @@ void fe::baseGameState::preUpdateDefined()
         m_gameWorld.preUpdate();
     }
 
-void fe::baseGameState::update(collisionWorld *collisionWorld)
+void fe::baseGameState::updateDefined(collisionWorld *collisionWorld)
     {
+        update();
         FE_PROFILE("game_state", "game_world_update");
         m_gameWorld.update(collisionWorld);
         FE_END_PROFILE;

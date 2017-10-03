@@ -73,6 +73,7 @@ void fe::engine::run()
 
                 m_profileLogger->clearTotalCalls();
                 calcFPS();
+                m_elapsedTime = currentTime;
             }
     }
 
@@ -271,6 +272,11 @@ const float fe::engine::getDeltaTime() const
 const float fe::engine::getFPS() const
     {
         return m_fps;
+    }
+
+fe::time fe::engine::getElapsedTime() const
+    {
+        return fe::seconds(m_elapsedTime);
     }
 
 const fe::Vector2d fe::engine::getWindowSize() const

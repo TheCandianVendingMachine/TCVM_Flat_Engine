@@ -177,12 +177,12 @@ void fe::gameStateMachine::update(collisionWorld *collisionWorld)
     {
         if (m_endState && m_endState->m_currentState && m_update)
             {
-                m_endState->m_currentState->update(collisionWorld);
+                m_endState->m_currentState->updateDefined(collisionWorld);
 
                 stateList *tail = m_endState->m_tail;
                 while (tail && tail->m_currentState && tail->m_options & stateOptions::UPDATE_UNDERNEATH)
                     {
-                        tail->m_currentState->update(collisionWorld);
+                        tail->m_currentState->updateDefined(collisionWorld);
                         tail = tail->m_tail;
                     }
             }
