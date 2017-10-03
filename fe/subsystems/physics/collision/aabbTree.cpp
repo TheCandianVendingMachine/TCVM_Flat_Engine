@@ -485,7 +485,9 @@ void fe::aabbTree::colliderAABB(fe::AABB &testAABB, std::function<void(void*)> c
 
 void *fe::aabbTree::colliderAtPoint(float x, float y) const
     {
-        return static_cast<fe::aabbTree::treeNode*>(pointCollideBranch(x, y, m_base))->m_userData;
+        auto branch = pointCollideBranch(x, y, m_base);
+        if (!branch) { return nullptr; }
+        return static_cast<fe::aabbTree::treeNode*>(branch)->m_userData;
     }
 
 fe::raycastResult fe::aabbTree::raycast(float x, float y, float dirX, float dirY) const

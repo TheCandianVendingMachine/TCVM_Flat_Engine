@@ -10,7 +10,7 @@ void fe::gameWorld::onAdd(fe::baseEntity *object, fe::Handle objectHandle)
         object->setHandle(objectHandle);
         if (object->m_collisionBody)
             {
-                if (object->m_collisionBody->m_static)
+                if (object->m_collisionBody->m_static && m_staticBroadphase)
                     {
                         m_staticBroadphase->add(object->m_collisionBody);
                     }

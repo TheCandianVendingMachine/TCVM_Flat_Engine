@@ -72,7 +72,7 @@ void fe::collisionWorld::handleCollision(void *collider)
         static_cast<fe::collider*>(collider)->m_collisionCallback(a);
     }
 
-fe::collisionWorld::collisionWorld()
+fe::collisionWorld::collisionWorld() : m_maxPointIndex(0)
     {
     }
 
@@ -141,6 +141,10 @@ void fe::collisionWorld::handleCollisions(const fe::broadphaseAbstract *broadpha
         if (!broadphaseStatic)
             {
                 handleCollisions(broadphaseDynamic);
+            }
+        else if (!broadphaseDynamic)
+            {
+                handleCollisions(broadphaseStatic);
             }
         else
             {
