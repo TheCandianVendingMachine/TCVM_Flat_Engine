@@ -18,17 +18,24 @@ namespace fe
                         public:
                             enum options
                                 {
-                                    DISABLE_ALPHABET = 1 << 0,
-                                    DISABLE_NUMERICS = 1 << 1,
-                                    DISABLE_INPUT = 1 << 2,
-                                    WORD_WRAP = 1 << 3
+                                    DISABLE_ALPHABET    = 1 << 0,
+                                    DISABLE_NUMERICS    = 1 << 1,
+                                    DISABLE_INPUT       = 1 << 2,
+                                    WORD_WRAP           = 1 << 3,
+                                    SIZE_TO_TEXT        = 1 << 4,
                                 };
+
+                            friend options operator|(const options &lhs, const options &rhs)
+                                {
+                                    return (options)((int)lhs | (int)rhs);
+                                }
 
                         protected:
                             fe::gui::label m_drawText;
                             std::string m_inputText;
 
                             fe::Vector2d m_lastCharPos;
+                            fe::Vector2d m_textSize; // the direct size of the text itself
 
                             unsigned int m_maxChars;
                             int m_maxLineHeight; // the max height of a glyph in pixels
@@ -37,6 +44,7 @@ namespace fe
                             bool m_allowNumerics;
                             bool m_allowInput;
                             bool m_wordWrap;
+                            bool m_sizeToText;
 
                             float m_paddingX;
                             float m_paddingY;

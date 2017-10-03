@@ -303,9 +303,9 @@ const fe::renderer &fe::engine::getRenderer() const
         return m_renderer;
     }
 
-fe::eventSender *fe::engine::getEventSender() const
+fe::eventSender &fe::engine::getEventSender() const
     {
-        return m_eventSender;
+        return *m_eventSender;
     }
 
 fe::physicsEngine &fe::engine::getPhysicsEngine() const
