@@ -9,6 +9,7 @@
 #include "collisionBody.hpp"
 #include "collisionData.hpp"
 #include "broadphaseAbstract.hpp"
+#include "../../../math/Vector2.hpp"
 
 namespace fe
     {
@@ -16,9 +17,12 @@ namespace fe
             {
                 private:
                     fe::poolAllocater<fe::collider> m_collisionBodies;
+                    fe::lightVector2d m_pointCollision[512];
+                    unsigned int m_maxPointIndex;
 
                     FLAT_ENGINE_API void handleCollision(fe::collider *a, fe::collider *b);
                     FLAT_ENGINE_API void handleCollision(void *leftCollider, void *rightCollider);
+                    FLAT_ENGINE_API void handleCollision(void *collider); // point collision
 
                 public:
                     FLAT_ENGINE_API collisionWorld();
@@ -26,6 +30,13 @@ namespace fe
                     FLAT_ENGINE_API void startUp();
                     FLAT_ENGINE_API void shutDown();
                     FLAT_ENGINE_API void clear();
+
+                    // checks for and collides with any collider at the point. Does not collide instantly; it collides at next collision check
+                    FLAT_ENGINE_API void queryPoint(fe::lightVector2d point);
+                    // checks for and collides with any collider at the point. Does not collide instantly; it collides at next collision check
+                    FLAT_ENGINE_API void queryPoint(fe::Vector2d point);
+                    // checks for and collides with any collider at the point. Does not collide instantly; it collides at next collision check
+                    FLAT_ENGINE_API void queryPoint(float x, float y);
 
                     FLAT_ENGINE_API void handleCollisions(const fe::broadphaseAbstract *broadphase);
                     FLAT_ENGINE_API void handleCollisions(const fe::broadphaseAbstract *broadphaseDynamic, const fe::broadphaseAbstract *broadphaseStatic);

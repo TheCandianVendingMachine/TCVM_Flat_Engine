@@ -138,7 +138,7 @@ namespace fe
                 T x;
                 T y;
 
-                lightVector2() : x(T), y(T) {}
+                lightVector2() : x(T()), y(T()) {}
                 lightVector2(T x, T y) : x(x), y(y) {}
                 lightVector2(const fe::Vector2<T> &copy) : x(copy.x), y(copy.y) {}
 

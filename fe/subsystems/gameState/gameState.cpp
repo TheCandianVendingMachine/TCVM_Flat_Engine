@@ -17,11 +17,14 @@ void fe::baseGameState::removePanel(gui::panel *panel)
 
 fe::Handle fe::baseGameState::addObject(fe::baseEntity *ent, bool staticObject)
     {
-        return m_gameWorld.addObject(ent);
+        fe::Handle objhandle = m_gameWorld.addObject(ent);
+        m_gameWorld.getObject(objhandle)->onAdd(*this);
+        return objhandle;
     }
 
 void fe::baseGameState::removeObject(fe::Handle ent)
     {
+        m_gameWorld.getObject(ent)->onRemove(*this);
         m_gameWorld.removeObject(ent);
     }
 

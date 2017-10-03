@@ -61,6 +61,17 @@ void fe::collisionWorld::handleCollision(void *leftCollider, void *rightCollider
 
     }
 
+void fe::collisionWorld::handleCollision(void *collider)
+    {
+        if (collider == nullptr) return;
+        fe::collisionData a;
+        a.m_colliderPositionX = 0.f;
+        a.m_colliderPositionY = 0.f;
+        a.m_penetrationX = 0.f;
+        a.m_penetrationY = 0.f;
+        static_cast<fe::collider*>(collider)->m_collisionCallback(a);
+    }
+
 fe::collisionWorld::collisionWorld()
     {
     }
@@ -80,29 +91,26 @@ void fe::collisionWorld::clear()
         m_collisionBodies.clear();
     }
 
+void fe::collisionWorld::queryPoint(fe::lightVector2d point)
+    {
+        m_pointCollision[m_maxPointIndex++] = point;
+    }
+
+void fe::collisionWorld::queryPoint(fe::Vector2d point)
+    {
+        queryPoint(fe::lightVector2d(point));
+    }
+
+void fe::collisionWorld::queryPoint(float x, float y)
+    {
+        queryPoint(fe::lightVector2d(x, y));
+    }
+
 void fe::collisionWorld::handleCollisions(const fe::broadphaseAbstract *broadphase)
     {
         if (!broadphase)
             {
-                for (unsigned int i = 0; i < m_collisionBodies.getObjectAllocCount(); i++)
-                    {
-                        for (unsigned int j = i + 1; j < m_collisionBodies.getObjectAllocCount(); j++)
-                            {
-                                auto a = m_collisionBodies.at(i);
-                                auto b = m_collisionBodies.at(j);
-
-                                if (!a || !b)
-                                    {
-                                        break;
-                                    }
-                                else
-                                    {
-                                        FE_ENGINE_PROFILE("collison_world", "handle_collisions_no_broadphase");
-                                        handleCollision(a, b);
-                                        FE_END_PROFILE;
-                                    }
-                            }
-                    }
+                // Nothing
             }
         else
             {
@@ -117,7 +125,15 @@ void fe::collisionWorld::handleCollisions(const fe::broadphaseAbstract *broadpha
                             }
                     }
                 FE_END_PROFILE;
+
+                FE_ENGINE_PROFILE("collision_world", "broadphase_compute_point_collision_partial");
+                for (unsigned int i = 0; i < m_maxPointIndex; i++)
+                    {
+                        handleCollision(broadphase->colliderAtPoint(m_pointCollision[i]));
+                    }
+                FE_END_PROFILE;
             }
+        m_maxPointIndex = 0;
     }
 
 void fe::collisionWorld::handleCollisions(const fe::broadphaseAbstract *broadphaseDynamic, const fe::broadphaseAbstract *broadphaseStatic)
@@ -139,7 +155,16 @@ void fe::collisionWorld::handleCollisions(const fe::broadphaseAbstract *broadpha
                             }
                     }
                 FE_END_PROFILE;
+
+                FE_ENGINE_PROFILE("collision_world", "broadphase_compute_point_collision_full");
+                for (unsigned int i = 0; i < m_maxPointIndex; i++)
+                    {
+                        handleCollision(broadphaseDynamic->colliderAtPoint(m_pointCollision[i]));
+                        handleCollision(broadphaseStatic->colliderAtPoint(m_pointCollision[i]));
+                    }
+                FE_END_PROFILE;
             }
+        m_maxPointIndex = 0;
     }
 
 fe::collider *fe::collisionWorld::createCollider(float sizeX, float sizeY)

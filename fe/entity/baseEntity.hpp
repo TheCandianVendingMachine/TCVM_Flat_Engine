@@ -101,7 +101,5 @@ namespace fe
 
                     FLAT_ENGINE_API fe::Handle GUID() const;
 
-                    void move() { m_rigidBody->applyForce(-2500, 0); }
-
             };
     }
