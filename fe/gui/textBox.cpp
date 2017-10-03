@@ -184,10 +184,10 @@ void fe::gui::textBox::update()
 void fe::gui::textBox::setString(const char *str)
     {
         m_textSize = fe::Vector2d(0, 0);
-        std::string input = str;
-        for (auto &character : input)
+        m_inputText = "";
+        for (unsigned int i = 0; i < std::strlen(str); i++)
             {
-                addChar(character);
+                addChar(str[i]);
             }
     }
 
