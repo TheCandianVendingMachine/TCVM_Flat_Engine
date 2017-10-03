@@ -171,7 +171,7 @@ void fe::gui::textBox::handleEvent(const sf::Event &event)
 
 void fe::gui::textBox::update()
     {
-        if ((m_parentElement && m_parentPanel->mouseHover(m_parentElement->getParentTransform().transformPoint(getPosition()), m_size)) || m_parentPanel->mouseHover(getPosition(), m_size) || m_input)
+        if (m_allowInput && ((m_parentElement && m_parentPanel->mouseHover(m_parentElement->getParentTransform().transformPoint(getPosition()), m_size)) || m_parentPanel->mouseHover(getPosition(), m_size) || m_input))
             {
                 setActive(true);
             }
