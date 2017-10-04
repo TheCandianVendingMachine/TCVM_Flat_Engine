@@ -24,16 +24,13 @@ namespace fe
                                     int m_next;
                                 };
 
-                            union
+                            struct
                                 {
-                                    struct
-                                        {
-                                            int m_left;
-                                            int m_right;
-                                        };
-
-                                    void *m_userData;
+                                    int m_left;
+                                    int m_right;
                                 };
+
+                            void *m_userData;
 
                             int m_height;
 

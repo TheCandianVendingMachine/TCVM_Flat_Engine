@@ -25,32 +25,31 @@ void *fe::dynamicMemoryAllocater::alloc(fe::uInt64 size)
         freeBlock *allocBlock = m_freeBlocks;
         while (allocBlock)
             {
-                if (allocBlock->m_size + sizeDifference >= size)
+                if (allocBlock->m_size - sizeOfFreeBlock > size)
                     {
                         break;
                     }
                 previousNode = allocBlock;
                 allocBlock = allocBlock->m_next;
             }
-        FE_ASSERT(allocBlock, "Dynamic Memory Allocater out of memory");
+        FE_ASSERT(allocBlock, "Dynamic Memory Allocater out of memory 1");
+        FE_ASSERT(allocBlock->m_size - sizeOfFreeBlock > size, "Dynamic Memory Allocater out of memory 2");
+        FE_ASSERT(allocBlock->m_size <= m_totalSize, "Dynamic Memory Manager out of range");
         if (previousNode) { previousNode->m_next = allocBlock->m_next; }
 
         // Allocate new free block node
         freeBlock *newBlock = nullptr;
-        if (allocBlock->m_size - sizeOfFreeBlock > size) // We subtract the size of the free block so when we free the memory we can add back the free block without fear
-            {
-                newBlock = static_cast<freeBlock*>(static_cast<void*>(m_memoryBuffer + ((fe::uInt8*)allocBlock - m_memoryBuffer) + size + sizeOfFreeBlock));
-                if (previousNode)
-                    {
-                        newBlock->m_next = previousNode->m_next;
-                        previousNode->m_next = newBlock;
-                    }
-                newBlock->m_size = allocBlock->m_size - size - sizeOfFreeBlock;
-            }
-        
+        newBlock = static_cast<freeBlock*>(static_cast<void*>(m_memoryBuffer + ((fe::uInt8*)allocBlock - m_memoryBuffer) + size + sizeOfFreeBlock));
+        newBlock->m_next = allocBlock->m_next;
         if (previousNode)
             {
-                previousNode->m_next = nullptr;
+                previousNode->m_next = newBlock;
+            }
+        newBlock->m_size = allocBlock->m_size - size - sizeOfFreeBlock;
+
+        if (previousNode)
+            {
+                previousNode->m_next = newBlock;
             }
         else
             {
@@ -62,6 +61,8 @@ void *fe::dynamicMemoryAllocater::alloc(fe::uInt64 size)
         memoryHeader *header = static_cast<memoryHeader*>(static_cast<void*>(m_memoryBuffer + allocBlockOffset));
         header->m_size = size;
         data = static_cast<void*>(m_memoryBuffer + allocBlockOffset + sizeOfHeader);
+
+        std::memset(data, 0, size);
 
         return data;
     }
@@ -79,16 +80,26 @@ void fe::dynamicMemoryAllocater::free(void *memory)
         newBlock->m_size = sizeOfMemory;
 
         freeBlock *blockList = m_freeBlocks;
-        while (blockList)
+        if (blockList > newBlock)
             {
-                if (blockList > newBlock)
-                    {
-                        newBlock->m_next = blockList;
-                        break;
-                    }
-                blockList = blockList->m_next;
+                // If the first node is higher than the current freed node, we
+                // need to set the first free block to the new block
+                newBlock->m_next = blockList;
+                m_freeBlocks = newBlock;
             }
-        m_freeBlocks = newBlock;
+        else
+            {
+                while (blockList)
+                    {
+                        if (blockList > newBlock)
+                            {
+                                newBlock->m_next = blockList;
+                                break;
+                            }
+                        blockList = blockList->m_next;
+                    }
+            }
+        
 
         blockList = m_freeBlocks;
         while (blockList)
