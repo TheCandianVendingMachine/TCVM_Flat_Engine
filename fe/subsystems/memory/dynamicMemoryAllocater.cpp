@@ -25,7 +25,8 @@ void *fe::dynamicMemoryAllocater::alloc(fe::uInt64 size)
         freeBlock *allocBlock = m_freeBlocks;
         while (allocBlock)
             {
-                if (allocBlock->m_size - sizeOfFreeBlock > size)
+                fe::int64 a = (fe::int64)allocBlock->m_size - (fe::int64)sizeOfFreeBlock;
+                if (a > fe::int64(size))
                     {
                         break;
                     }
@@ -33,7 +34,7 @@ void *fe::dynamicMemoryAllocater::alloc(fe::uInt64 size)
                 allocBlock = allocBlock->m_next;
             }
         FE_ASSERT(allocBlock, "Dynamic Memory Allocater out of memory 1");
-        FE_ASSERT(allocBlock->m_size - sizeOfFreeBlock > size, "Dynamic Memory Allocater out of memory 2");
+        FE_ASSERT(fe::int64(allocBlock->m_size) - fe::int64(sizeOfFreeBlock) > fe::int64(size), "Dynamic Memory Allocater underflow");
         FE_ASSERT(allocBlock->m_size <= m_totalSize, "Dynamic Memory Manager out of range");
         if (previousNode) { previousNode->m_next = allocBlock->m_next; }
 
