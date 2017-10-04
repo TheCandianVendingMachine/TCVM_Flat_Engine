@@ -38,14 +38,15 @@ void fe::inputManager::handleEvents(const sf::Event &event)
     {
         for (auto &inputData : m_keyboardInputs)
             {
-                if (event.type == sf::Event::KeyPressed && event.key.code == inputData.first)
+                if (event.key.code == inputData.first)
                     {
                         for (auto &data : inputData.second)
                             {
                                 auto input = getObject(data);
-                                if (input)
+                                if (input && !input->m_realTime && !input->m_frozen)
                                     {
-                                        if (!input->m_realTime && !input->m_frozen)
+                                        if ((!input->m_inverse && event.type == sf::Event::KeyPressed) ||
+                                            (input->m_inverse && event.type == sf::Event::KeyReleased))
                                             {
                                                 input->m_callback();
                                             }
@@ -56,14 +57,15 @@ void fe::inputManager::handleEvents(const sf::Event &event)
 
         for (auto &inputData : m_mouseInputs)
             {
-                if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == inputData.first)
+                if (event.mouseButton.button == inputData.first)
                     {
                         for (auto &data : inputData.second)
                             {
                                 auto input = getObject(data);
-                                if (input)
+                                if (input && !input->m_realTime && !input->m_frozen)
                                     {
-                                        if (!input->m_realTime && !input->m_frozen)
+                                        if ((!input->m_inverse && event.type == sf::Event::MouseButtonPressed) || 
+                                            (input->m_inverse && event.type == sf::Event::MouseButtonReleased))
                                             {
                                                 input->m_callback();
                                             }
