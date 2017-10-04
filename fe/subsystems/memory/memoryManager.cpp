@@ -4,7 +4,7 @@
 
 fe::memoryManager *fe::memoryManager::m_instance = nullptr;
 
-void fe::memoryManager::startUp(size_t bufferSize, size_t stackSize)
+void fe::memoryManager::startUp(size_t bufferSize, size_t stackSize, size_t dynamicSize)
     {
         if (!m_instance)
             {
@@ -14,6 +14,7 @@ void fe::memoryManager::startUp(size_t bufferSize, size_t stackSize)
 
                 // start up the different types of memory allocaters
                 m_stackAllocater.startUp(static_cast<char*>(alloc(stackSize)), stackSize);
+                m_dynamicAllocater.startUp(static_cast<fe::uInt8*>(alloc(dynamicSize)), dynamicSize);
             }
 
         m_shutDown = false;
@@ -25,6 +26,7 @@ void fe::memoryManager::shutDown()
             {
                 // shut down all types of memory allocation and free the pointers allocated inside them
                 m_stackAllocater.clear();
+                m_dynamicAllocater.clear();
 
                 free(m_allocatedBuffer);
                 m_allocatedBuffer = nullptr;
@@ -66,6 +68,11 @@ void *fe::memoryManager::alloc(size_t size)
 fe::stackAllocater &fe::memoryManager::getStackAllocater()
     {
         return m_stackAllocater;
+    }
+
+fe::dynamicMemoryAllocater &fe::memoryManager::getDynamicAllocater()
+    {
+        return m_dynamicAllocater;
     }
 
 char *fe::memoryManager::getBuffer() const

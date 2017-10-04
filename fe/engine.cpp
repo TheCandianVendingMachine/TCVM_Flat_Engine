@@ -185,46 +185,46 @@ fe::engine::engine(const float updateRate) :
         FE_ASSERT((m_instance == nullptr), "Engine instance already created!");
     }
 
-void fe::engine::startUp(unsigned long long totalMemory, unsigned long long stackMemory)
+void fe::engine::startUp(fe::uInt64 totalMemory, fe::uInt64 stackMemory, fe::uInt64 dynamicMemory)
     { 
         FE_ASSERT((m_instance == nullptr), "Engine instance already created!");
 
         if (!m_instance)
             {
-                m_memoryManager.startUp(totalMemory, stackMemory);
+                m_memoryManager.startUp(totalMemory, stackMemory, dynamicMemory);
 
                 m_logger = new(m_memoryManager.alloc(sizeof(fe::logger))) logger;
                 m_logger->startUp("log.log");
 
-                m_profileLogger = new fe::profilerLogger();
+                m_profileLogger = new(m_memoryManager.getStackAllocater().alloc(sizeof(fe::profilerLogger))) fe::profilerLogger();
                 m_profileLogger->startUp();
 
-                m_debugDraw = new fe::debugDraw();
+                m_debugDraw = new(m_memoryManager.getStackAllocater().alloc(sizeof(fe::debugDraw))) fe::debugDraw();
                 m_debugDraw->startUp();
 
                 m_renderer.startUp();
                 m_renderer.load();
 
-                m_inputManager = new inputManager;
+                m_inputManager = new(m_memoryManager.getStackAllocater().alloc(sizeof(fe::inputManager))) inputManager;
                 m_inputManager->startUp();
 
-                m_eventSender = new fe::eventSender;
+                m_eventSender = new(m_memoryManager.getStackAllocater().alloc(sizeof(fe::eventSender))) fe::eventSender;
 
-                m_gameStateMachine = new gameStateMachine;
+                m_gameStateMachine = new(m_memoryManager.getStackAllocater().alloc(sizeof(fe::gameStateMachine))) gameStateMachine;
                 m_gameStateMachine->startUp();
 
-                m_physicsEngine = new physicsEngine;
+                m_physicsEngine = new(m_memoryManager.getStackAllocater().alloc(sizeof(fe::physicsEngine))) physicsEngine;
                 m_physicsEngine->startUp();
 
-                m_collisionWorld = new collisionWorld;
+                m_collisionWorld = new(m_memoryManager.getStackAllocater().alloc(sizeof(fe::collisionWorld))) collisionWorld;
                 m_collisionWorld->startUp();
 
-                m_fontManager = new resourceManager<sf::Font>;
-                m_textureManager = new resourceManager<sf::Texture>;
+                m_fontManager = new(m_memoryManager.getStackAllocater().alloc(sizeof(fe::resourceManager<sf::Font>))) resourceManager<sf::Font>;
+                m_textureManager = new(m_memoryManager.getStackAllocater().alloc(sizeof(fe::resourceManager<sf::Texture>))) resourceManager<sf::Texture>;
 
                 m_screenSize = m_renderer.getWindowSize();
 
-                m_threadPool = new fe::threadPool<8>();
+                m_threadPool = new(m_memoryManager.getStackAllocater().alloc(sizeof(fe::threadPool<8>))) fe::threadPool<8>();
                 m_threadPool->startUp();
 
                 m_random.startUp();

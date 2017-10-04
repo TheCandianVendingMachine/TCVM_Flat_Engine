@@ -4,10 +4,12 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <fstream>
 
+#include "../memory/memoryManager.hpp"
+
 void fe::renderer::startUp()
     {
-		m_renderWindow = new sf::RenderWindow;
-        m_windowSettings = new fe::serializerID;
+		m_renderWindow = new(fe::memoryManager::get().getStackAllocater().alloc(sizeof(sf::RenderWindow))) sf::RenderWindow;
+        m_windowSettings = new(fe::memoryManager::get().getStackAllocater().alloc(sizeof(fe::serializerID))) fe::serializerID;
 
         m_windowSize.x = 1280;
         m_windowSize.y = 720;

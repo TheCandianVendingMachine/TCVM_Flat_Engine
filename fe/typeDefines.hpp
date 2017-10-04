@@ -17,4 +17,22 @@ namespace fe
     {
         using Handle = int;
         using guid = unsigned long;
+
+        using int8 = signed char;
+        using uInt8 = unsigned char;
+
+        using int16 = signed short;
+        using uInt16 = unsigned short;
+
+        using int32 = signed int;
+        using uInt32 = unsigned int;
+
+        #if defined(_MSC_VER)
+            using int64 = signed __int64;
+            using uInt64 = unsigned __int64;
+        #else
+            using int64 = signed long long;
+            using uInt64 = unsigned long long;
+        #endif
+
     }

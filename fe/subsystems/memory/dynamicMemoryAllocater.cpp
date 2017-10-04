@@ -68,6 +68,8 @@ void *fe::dynamicMemoryAllocater::alloc(fe::uInt64 size)
 
 void fe::dynamicMemoryAllocater::free(void *memory)
     {
+        if ((fe::uInt8*)memory < (fe::uInt8*)m_memoryBuffer || (fe::uInt8*)memory >(fe::uInt8*)m_memoryBuffer + m_totalSize) return;
+
         fe::uInt64 memoryPos = (static_cast<fe::uInt8*>(memory) - m_memoryBuffer) - sizeof(memoryHeader); // index of the memory INCLUDING the header
         fe::uInt64 sizeOfMemory = static_cast<memoryHeader*>(static_cast<void*>(m_memoryBuffer + memoryPos))->m_size;
 
