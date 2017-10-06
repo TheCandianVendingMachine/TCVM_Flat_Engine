@@ -2,15 +2,15 @@
 #include <fstream>
 #include <sstream>
 
-rapidxml::xml_document<> *fe::loadFile(const char *filepath)
+rapidxml::xml_document<> *fe::loadFile(const char *filepath, std::string &content)
     {
-        rapidxml::xml_document<> *doc = new rapidxml::xml_document<>;
+        rapidxml::xml_document<> *doc = new rapidxml::xml_document<>();
 
         std::ifstream in(filepath);
         std::stringstream buffer;
         buffer << in.rdbuf();
         in.close();
-        std::string content(buffer.str());
+        content = buffer.str();
 
         doc->parse<0>(&content[0]);
 
