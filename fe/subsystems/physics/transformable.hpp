@@ -60,6 +60,7 @@ namespace fe
                     FLAT_ENGINE_API void rotate(float radians);
 
                     FLAT_ENGINE_API const fe::matrix3d &getMatrix();
+                    FLAT_ENGINE_API void combine(fe::transformable &other);
 
             };
     }

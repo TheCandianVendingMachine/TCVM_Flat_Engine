@@ -46,7 +46,11 @@ namespace fe
                     renderJob m_jobC;
                     renderJob m_jobD;
 
+                    int m_baseNode;
+
                     const unsigned int m_maxObjectsUntilThread;
+
+                    FLAT_ENGINE_API void transformGraph(int nodeHandle);
 
                 public:
                     FLAT_ENGINE_API sceneGraph();
@@ -57,10 +61,13 @@ namespace fe
 
                     FLAT_ENGINE_API void preDraw();
                     FLAT_ENGINE_API void draw(sf::RenderTarget &window);
-                    FLAT_ENGINE_API renderObject *createRenderObject();
-                    FLAT_ENGINE_API renderText *createRenderTextObject(sf::Font *font);
-                    FLAT_ENGINE_API void deleteRenderObject(renderObject *obj);
-                    FLAT_ENGINE_API void deleteRenderTextObject(renderText *obj);
+                    FLAT_ENGINE_API renderObject *createRenderObject(int connected = -1);
+                    FLAT_ENGINE_API renderText *createRenderTextObject(sf::Font *font, int connected = -1);
+                    FLAT_ENGINE_API int deleteRenderObject(renderObject *obj); // returns the parent node of the render object
+                    FLAT_ENGINE_API int deleteRenderTextObject(renderText *obj); // returns the parent node of the render object
+
+                    FLAT_ENGINE_API void connect(int a, int b); // connects object with node A to node B
+                    FLAT_ENGINE_API void disconnect(int node); // Disconnects the node and attaches to the base scene node
 
             };
     }

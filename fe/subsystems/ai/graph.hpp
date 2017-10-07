@@ -30,6 +30,8 @@ namespace fe
 							float m_posX;
 							float m_posY;
 
+                            void *m_userData;
+
 							node() : m_parent(-1), m_gCost(-1.f), m_hCost(-1.f), m_fCost(-1.f), m_posX(0.f), m_posY(0.f) {}
 						};
 

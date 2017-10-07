@@ -103,6 +103,18 @@ void fe::matrix3d::operator*=(const float &rhs)
 
 void fe::matrix3d::operator*=(const matrix3d &rhs)
     {
+        combine(rhs);
+    }
+
+fe::matrix3d fe::matrix3d::operator*(const matrix3d &rhs) const
+    {
+        matrix3d ret;
+        ret.combine(rhs);
+        return ret;
+    }
+
+void fe::matrix3d::combine(const fe::matrix3d &rhs)
+    {
         float x = values[0] * rhs.values[0] + values[1] * rhs.values[3] + values[2] * rhs.values[6]; // 11
         float y = values[0] * rhs.values[1] + values[1] * rhs.values[4] + values[2] * rhs.values[7]; // 21
         float z = values[0] * rhs.values[2] + values[1] * rhs.values[5] + values[2] * rhs.values[8]; // 31
@@ -126,37 +138,6 @@ void fe::matrix3d::operator*=(const matrix3d &rhs)
         values[6] = x;
         values[7] = y;
         values[8] = z;
-    }
-
-fe::matrix3d fe::matrix3d::operator*(const matrix3d &rhs) const
-    {
-        matrix3d ret;
-
-        float x = values[0] * rhs.values[0] + values[1] * rhs.values[3] + values[2] * rhs.values[6]; // 11
-        float y = values[0] * rhs.values[1] + values[1] * rhs.values[4] + values[2] * rhs.values[7]; // 21
-        float z = values[0] * rhs.values[2] + values[1] * rhs.values[5] + values[2] * rhs.values[8]; // 31
-
-        ret.values[0] = x;
-        ret.values[1] = y;
-        ret.values[2] = z;
-
-        x = values[3] * rhs.values[0] + values[4] * rhs.values[3] + values[5] * rhs.values[6]; // 12
-        y = values[3] * rhs.values[1] + values[4] * rhs.values[4] + values[5] * rhs.values[7]; // 22
-        z = values[3] * rhs.values[2] + values[4] * rhs.values[5] + values[5] * rhs.values[8]; // 32
-
-        ret.values[3] = x;
-        ret.values[4] = y;
-        ret.values[5] = z;
-
-        x = values[6] * rhs.values[0] + values[7] * rhs.values[3] + values[8] * rhs.values[6]; // 13
-        y = values[6] * rhs.values[1] + values[7] * rhs.values[4] + values[8] * rhs.values[7]; // 23
-        z = values[6] * rhs.values[2] + values[7] * rhs.values[5] + values[8] * rhs.values[8]; // 33
-
-        ret.values[6] = x;
-        ret.values[7] = y;
-        ret.values[8] = z;
-
-        return ret;
     }
 
 fe::matrix3d fe::matrix3d::transpose()

@@ -11,6 +11,7 @@ namespace fe
                 int m_vertColour[4];  // r, g, b, a
                 float m_verticies[4]; // x, y, w, h
                 float m_texCoords[2];// x, y
+                int m_graphNode = -1;
                 bool m_draw = true;
                 bool m_static = false;
             };

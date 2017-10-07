@@ -112,3 +112,8 @@ const fe::matrix3d &fe::transformable::getMatrix()
 
         return m_matrix;
     }
+
+void fe::transformable::combine(fe::transformable &other)
+    {
+        m_matrix.combine(other.getMatrix());
+    }

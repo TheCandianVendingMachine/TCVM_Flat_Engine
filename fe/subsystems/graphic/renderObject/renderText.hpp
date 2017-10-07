@@ -13,5 +13,6 @@ namespace fe
         struct renderText
             {
                 sf::Text m_text;
+                int m_graphNode = -1;
             };
     }

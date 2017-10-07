@@ -6,7 +6,20 @@
 #include "../../threading/threadPool.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 
-fe::sceneGraph::sceneGraph() : 
+void fe::sceneGraph::transformGraph(int nodeHandle)
+    {
+        auto node = m_sceneRenderGraph.getNode(nodeHandle);
+        for (auto &child : node->m_connectedNodes)
+            {
+                static_cast<fe::renderObject*>(m_sceneRenderGraph.getNode(child)->m_userData)->m_transform.combine(static_cast<fe::renderObject*>(node->m_userData)->m_transform);
+            }
+        for (auto &child : node->m_connectedNodes)
+            {
+                transformGraph(child);
+            }
+    }
+
+fe::sceneGraph::sceneGraph() :
     m_jobA(m_renderObjects, m_batch),
     m_jobB(m_renderObjects, m_batch),
     m_jobC(m_renderObjects, m_batch),
@@ -19,7 +32,7 @@ void fe::sceneGraph::startUp()
     {
         m_renderObjects.startUp(FE_MAX_GAME_OBJECTS);
         m_renderTextObjects.startUp(500);
-        m_sceneRenderGraph.addNode(0.f, 0.f, 0.f);
+        m_baseNode = m_sceneRenderGraph.addNode(0.f, 0.f, 0.f);
     }
 
 void fe::sceneGraph::shutDown()
@@ -54,6 +67,8 @@ void fe::sceneGraph::preDraw()
 
 void fe::sceneGraph::draw(sf::RenderTarget &window)
     {
+        transformGraph(m_baseNode);
+
         sf::RenderStates states;
         states.texture = &fe::engine::get().getResourceManager<sf::Texture>()->get();
 
@@ -95,9 +110,13 @@ void fe::sceneGraph::draw(sf::RenderTarget &window)
         FE_END_PROFILE;
     }
 
-fe::renderObject *fe::sceneGraph::createRenderObject()
+fe::renderObject *fe::sceneGraph::createRenderObject(int connected)
     {
         fe::renderObject *allocated = m_renderObjects.alloc();
+        allocated->m_graphNode = m_sceneRenderGraph.addNode(0.f, 0.f, 0.f);
+        connect(allocated->m_graphNode, connected >= 0 ? connected : m_baseNode);
+        m_sceneRenderGraph.getNode(allocated->m_graphNode)->m_userData = allocated;
+
         unsigned int allocCount = m_renderObjects.getObjectAllocCount();
         if (allocCount < 4)
             {
@@ -147,15 +166,19 @@ fe::renderObject *fe::sceneGraph::createRenderObject()
         return allocated;
     }
 
-fe::renderText *fe::sceneGraph::createRenderTextObject(sf::Font *font)
+fe::renderText *fe::sceneGraph::createRenderTextObject(sf::Font *font, int connected)
     {
         fe::renderText *text = m_renderTextObjects.alloc();
+        text->m_graphNode = m_sceneRenderGraph.addNode(0.f, 0.f, 0.f);
+        connect(text->m_graphNode, connected >= 0 ? connected : m_baseNode);
+        m_sceneRenderGraph.getNode(text->m_graphNode)->m_userData = text;
         text->m_text.setFont(*font);
         return text;
     }
 
-void fe::sceneGraph::deleteRenderObject(renderObject *obj)
+int fe::sceneGraph::deleteRenderObject(renderObject *obj)
     {
+        int parentNode = m_sceneRenderGraph.getNode(obj->m_graphNode)->m_parent;
         m_renderObjects.free(obj);
         unsigned int allocCount = m_renderObjects.getObjectAllocCount();
         if (allocCount < 4)
@@ -203,11 +226,26 @@ void fe::sceneGraph::deleteRenderObject(renderObject *obj)
                 m_jobC.m_initialIndex = 2 * objectCountQuart; m_jobC.m_endIndex = objectCountQuart * 3;
                 m_jobD.m_initialIndex = 3 * objectCountQuart; m_jobD.m_endIndex = objectCountQuart * 4;
             }
+        return parentNode;
     }
 
-void fe::sceneGraph::deleteRenderTextObject(renderText *obj)
+int fe::sceneGraph::deleteRenderTextObject(renderText *obj)
     {
+        int parentNode = m_sceneRenderGraph.getNode(obj->m_graphNode)->m_parent;
         m_renderTextObjects.free(obj);
+        return parentNode;
+    }
+
+void fe::sceneGraph::connect(int a, int b)
+    {
+        auto node = m_sceneRenderGraph.getNode(a);
+        m_sceneRenderGraph.removeEdge(a, node->m_parent);
+        m_sceneRenderGraph.addEdge(a, b);
+    }
+
+void fe::sceneGraph::disconnect(int node)
+    {
+        connect(node, m_baseNode);
     }
 
 fe::sceneGraph::renderJob::renderJob(fe::poolAllocater<renderObject> &renderObjects, fe::spriteBatch &batch) : m_renderObjects(renderObjects), m_batch(batch)
