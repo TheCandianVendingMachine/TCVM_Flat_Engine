@@ -28,6 +28,7 @@ namespace fe
         class threadPool;
         class debugDraw;
         class profilerLogger;
+        class localizationStorage;
 
         template<typename T>
         class resourceManager;
@@ -51,6 +52,8 @@ namespace fe
 
                     fe::resourceManager<sf::Texture> *m_textureManager;
                     fe::resourceManager<sf::Font> *m_fontManager;
+
+                    fe::localizationStorage *m_localization;
 
                 private:
                     fe::clock m_fpsClock;
@@ -103,6 +106,7 @@ namespace fe
                     FLAT_ENGINE_API fe::physicsEngine &getPhysicsEngine() const;
                     FLAT_ENGINE_API fe::collisionWorld &getCollisionWorld() const;
                     FLAT_ENGINE_API fe::threadPool<8> &getThreadPool() const;
+                    FLAT_ENGINE_API fe::localizationStorage &getLocalization() const;
 
                     template<typename T>
                     fe::resourceManager<T>              *getResourceManager() const;

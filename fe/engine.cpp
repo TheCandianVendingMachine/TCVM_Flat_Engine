@@ -7,6 +7,7 @@
 #include "subsystems/physics/collision/collisionWorld.hpp"
 #include "subsystems/threading/threadPool.hpp"
 #include "subsystems/threading/threadJob.hpp"
+#include "localization/localizationStorage.hpp"
 #include "debug/logger.hpp"
 #include "debug/profiler.hpp"
 #include "debug/profilerLogger.hpp"
@@ -229,6 +230,8 @@ void fe::engine::startUp(fe::uInt64 totalMemory, fe::uInt64 stackMemory, fe::uIn
 
                 m_random.startUp();
 
+                m_localization = new(m_memoryManager.getStackAllocater().alloc(sizeof(fe::localizationStorage))) fe::localizationStorage();
+
                 m_instance = this;
             }
     }
@@ -327,6 +330,11 @@ fe::collisionWorld &fe::engine::getCollisionWorld() const
 fe::threadPool<8> &fe::engine::getThreadPool() const
     {
         return *m_threadPool;
+    }
+
+fe::localizationStorage &fe::engine::getLocalization() const
+    {
+        return *m_localization;
     }
 
 fe::engine::~engine()
