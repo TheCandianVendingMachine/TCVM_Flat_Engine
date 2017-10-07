@@ -4,6 +4,7 @@
 #include "../../physics/transformable.hpp"
 #include "../../../debug/profiler.hpp"
 #include "../../threading/threadPool.hpp"
+#include <SFML/Graphics/RenderTarget.hpp>
 
 fe::sceneGraph::sceneGraph() : 
     m_jobA(m_renderObjects, m_batch),
@@ -17,11 +18,14 @@ fe::sceneGraph::sceneGraph() :
 void fe::sceneGraph::startUp()
     {
         m_renderObjects.startUp(FE_MAX_GAME_OBJECTS);
+        m_renderTextObjects.startUp(500);
+        m_sceneRenderGraph.addNode(0.f, 0.f, 0.f);
     }
 
 void fe::sceneGraph::shutDown()
     {
         m_renderObjects.clear();
+        m_renderTextObjects.clear();
     }
 
 void fe::sceneGraph::clear()
@@ -82,6 +86,12 @@ void fe::sceneGraph::draw(sf::RenderTarget &window)
 
         FE_ENGINE_PROFILE("scene_graph", "window_draw");
         m_batch.draw(window, states, m_renderObjects.getObjectAllocCount());
+        FE_ENGINE_PROFILE("scene_graph", "text_draw");
+        for (unsigned int i = 0; i < m_renderTextObjects.getObjectAllocCount(); i++)
+            {
+                window.draw(m_renderTextObjects.at(i)->m_text);
+            }
+        FE_END_PROFILE;
         FE_END_PROFILE;
     }
 
@@ -137,6 +147,13 @@ fe::renderObject *fe::sceneGraph::createRenderObject()
         return allocated;
     }
 
+fe::renderText *fe::sceneGraph::createRenderTextObject(sf::Font *font)
+    {
+        fe::renderText *text = m_renderTextObjects.alloc();
+        text->m_text.setFont(*font);
+        return text;
+    }
+
 void fe::sceneGraph::deleteRenderObject(renderObject *obj)
     {
         m_renderObjects.free(obj);
@@ -186,6 +203,11 @@ void fe::sceneGraph::deleteRenderObject(renderObject *obj)
                 m_jobC.m_initialIndex = 2 * objectCountQuart; m_jobC.m_endIndex = objectCountQuart * 3;
                 m_jobD.m_initialIndex = 3 * objectCountQuart; m_jobD.m_endIndex = objectCountQuart * 4;
             }
+    }
+
+void fe::sceneGraph::deleteRenderTextObject(renderText *obj)
+    {
+        m_renderTextObjects.free(obj);
     }
 
 fe::sceneGraph::renderJob::renderJob(fe::poolAllocater<renderObject> &renderObjects, fe::spriteBatch &batch) : m_renderObjects(renderObjects), m_batch(batch)

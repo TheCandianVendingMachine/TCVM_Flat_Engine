@@ -7,11 +7,14 @@
 #include "../../memory/poolAllocater.hpp"
 #include "spriteBatch.hpp"
 #include "renderObject.hpp"
+#include "renderText.hpp"
 #include "../../threading/threadJob.hpp"
+#include "../../ai/graph.hpp"
 
 namespace sf
     {
         class RenderTarget;
+        class Font;
     }
 
 namespace fe
@@ -19,7 +22,11 @@ namespace fe
         class sceneGraph
             {
                 private:
+                    // not a generic graph, but it works for our purpose
+                    fe::graph m_sceneRenderGraph;
+
                     fe::poolAllocater<renderObject> m_renderObjects;
+                    fe::poolAllocater<renderText> m_renderTextObjects;
                     fe::spriteBatch m_batch;
 
                     struct renderJob : public fe::threadJob
@@ -51,7 +58,9 @@ namespace fe
                     FLAT_ENGINE_API void preDraw();
                     FLAT_ENGINE_API void draw(sf::RenderTarget &window);
                     FLAT_ENGINE_API renderObject *createRenderObject();
+                    FLAT_ENGINE_API renderText *createRenderTextObject(sf::Font *font);
                     FLAT_ENGINE_API void deleteRenderObject(renderObject *obj);
+                    FLAT_ENGINE_API void deleteRenderTextObject(renderText *obj);
 
             };
     }
