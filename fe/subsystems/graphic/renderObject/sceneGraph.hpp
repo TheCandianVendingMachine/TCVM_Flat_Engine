@@ -66,5 +66,7 @@ namespace fe
                     FLAT_ENGINE_API void connect(int a, int b); // connects object with node A to node B
                     FLAT_ENGINE_API void disconnect(int node); // Disconnects the node and attaches to the base scene node
 
+                    FLAT_ENGINE_API fe::transformable &getGlobalTransform();
+
             };
     }

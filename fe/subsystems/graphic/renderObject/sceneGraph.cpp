@@ -9,9 +9,11 @@
 void fe::sceneGraph::transformGraph(int nodeHandle)
     {
         auto node = m_sceneRenderTree.getNode(nodeHandle);
+        fe::transformable *nodeTransform = &static_cast<fe::sceneGraphObject*>(node->m_userData)->m_transform;
+
         for (auto &child : node->m_children)
             {
-                static_cast<fe::sceneGraphObject*>(m_sceneRenderTree.getNode(child)->m_userData)->m_transform.combine(static_cast<fe::sceneGraphObject*>(node->m_userData)->m_transform);
+                static_cast<fe::sceneGraphObject*>(m_sceneRenderTree.getNode(child)->m_userData)->m_transform.combine(*nodeTransform);
             }
         for (auto &child : node->m_children)
             {
@@ -241,12 +243,17 @@ void fe::sceneGraph::connect(int a, int b)
     {
         auto node = m_sceneRenderTree.getNode(a);
         m_sceneRenderTree.removeChild(a, node->m_parent);
-        m_sceneRenderTree.addChild(a, b);
+        m_sceneRenderTree.addChild(b, a);
     }
 
 void fe::sceneGraph::disconnect(int node)
     {
         connect(node, m_baseNode.m_graphNode);
+    }
+
+fe::transformable &fe::sceneGraph::getGlobalTransform()
+    {
+        return m_baseNode.m_transform;
     }
 
 fe::sceneGraph::renderJob::renderJob(fe::poolAllocater<renderObject> &renderObjects, fe::spriteBatch &batch) : m_renderObjects(renderObjects), m_batch(batch)
