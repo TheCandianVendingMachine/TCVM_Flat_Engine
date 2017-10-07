@@ -13,7 +13,7 @@
 
 namespace fe
     {
-        class inputManager : public fe::handleManager<input*, 0>
+        class inputManager : private fe::handleManager<input*, 0>
             {
                 private:
                     std::unordered_map<sf::Keyboard::Key, std::vector<fe::Handle>> m_keyboardInputs;
@@ -39,7 +39,7 @@ namespace fe
                     FLAT_ENGINE_API void setActive(sf::Mouse::Button key, bool active);
                     FLAT_ENGINE_API void setActive(fe::Handle handle, bool active);
 
-                    FLAT_ENGINE_API virtual ~inputManager() {}
+                    FLAT_ENGINE_API ~inputManager() {}
 
             };
 

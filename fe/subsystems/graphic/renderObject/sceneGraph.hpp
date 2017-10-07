@@ -7,9 +7,8 @@
 #include "../../memory/poolAllocater.hpp"
 #include "spriteBatch.hpp"
 #include "renderObject.hpp"
-#include "renderText.hpp"
 #include "../../threading/threadJob.hpp"
-#include "../../ai/graph.hpp"
+#include "../../../dataStructures/tree.hpp"
 
 namespace sf
     {
@@ -22,8 +21,8 @@ namespace fe
         class sceneGraph
             {
                 private:
-                    // not a generic graph, but it works for our purpose
-                    fe::graph m_sceneRenderGraph;
+                    fe::sceneGraphObject m_baseNode;
+                    fe::tree m_sceneRenderTree;
 
                     fe::poolAllocater<renderObject> m_renderObjects;
                     fe::poolAllocater<renderText> m_renderTextObjects;
@@ -45,8 +44,6 @@ namespace fe
                     renderJob m_jobB;
                     renderJob m_jobC;
                     renderJob m_jobD;
-
-                    int m_baseNode;
 
                     const unsigned int m_maxObjectsUntilThread;
 

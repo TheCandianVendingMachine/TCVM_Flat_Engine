@@ -11,7 +11,7 @@ namespace fe
 
 		namespace graphNav 
 			{
-				FLAT_ENGINE_API std::vector<unsigned int> aStar(graph &graph, unsigned int start, unsigned int end, float alpha = 1.f);
+				FLAT_ENGINE_API std::vector<int> aStar(graph &graph, int start, int end, float alpha = 1.f);
 
 			}
 	}
