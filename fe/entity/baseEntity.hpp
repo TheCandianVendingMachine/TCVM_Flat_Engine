@@ -6,19 +6,23 @@
 #include "../typeDefines.hpp"
 #include "../subsystems/physics/rigidBody.hpp"
 #include "../subsystems/physics/collision/collisionBody.hpp"
+#include "../subsystems/graphic/renderObject/sceneGraph.hpp"
+#include "../subsystems/physics/physicsEngine.hpp"
+#include "../subsystems/physics/collision/collisionWorld.hpp"
 #include <SFML/Graphics/Color.hpp>
 
 namespace fe
     {
-        struct renderObject;
+        struct sceneGraphObject;
         class rigidBody;
         class baseGameState;
 
         enum class entityModules : std::int16_t
             {
                 RENDER_OBJECT   = 1 << 0,
-                RIGID_BODY      = 1 << 1,
-                COLLISION_BODY  = 1 << 2,
+                RENDER_TEXT     = 1 << 1,
+                RIGID_BODY      = 1 << 2,
+                COLLISION_BODY  = 1 << 3,
             };
 
         inline entityModules operator | (entityModules lhs, entityModules rhs)
@@ -34,7 +38,7 @@ namespace fe
         class baseEntity
             {
                 protected:
-                    fe::renderObject *m_renderObject;
+                    fe::sceneGraphObject *m_renderObject;
                     fe::rigidBody *m_rigidBody;
                     fe::collider *m_collisionBody;
 
@@ -58,7 +62,8 @@ namespace fe
 
                 public:
                     FLAT_ENGINE_API baseEntity(entityModules modules, bool staticObject);
-                    FLAT_ENGINE_API void initialize();
+                    template<typename ...Args>
+                    FLAT_ENGINE_API void initialize(Args &&...args);
                     FLAT_ENGINE_API void deinitialize();
 
                     FLAT_ENGINE_API void enable(bool value);
@@ -95,11 +100,43 @@ namespace fe
                     FLAT_ENGINE_API fe::lightVector2d getSize() const;
                     FLAT_ENGINE_API sf::Color getColour() const;
 
-                    FLAT_ENGINE_API fe::renderObject *getRenderObject() const;
+                    FLAT_ENGINE_API fe::sceneGraphObject *getRenderObject() const;
                     FLAT_ENGINE_API fe::rigidBody *getRigidBody() const;
                     FLAT_ENGINE_API fe::collider *getCollider() const;
 
                     FLAT_ENGINE_API fe::Handle GUID() const;
 
             };
+
+        template<typename ...Args>
+        void fe::baseEntity::initialize(Args &&...args)
+            {
+                if (m_modulesEnabled & entityModules::RENDER_OBJECT)
+                    {
+                        m_renderObject = fe::engine::get().getStateMachine().getSceneGraph().createRenderObject(std::forward<Args>(args)...);
+                        m_renderObject->m_static = m_static;
+                    }
+                else if (m_modulesEnabled & entityModules::RENDER_TEXT)
+                    {
+                        m_renderObject = fe::engine::get().getStateMachine().getSceneGraph().createRenderTextObject(std::forward<Args>(args)...);
+                        m_renderObject->m_static = m_static;
+                    }
+
+                if (m_modulesEnabled & entityModules::RIGID_BODY && !m_static)
+                    {
+                        m_rigidBody = fe::engine::get().getPhysicsEngine().createRigidBody();
+                    }
+
+                if (m_modulesEnabled & entityModules::COLLISION_BODY)
+                    {
+                        m_collisionBody = fe::engine::get().getCollisionWorld().createCollider(0.f, 0.f);
+                        m_collisionBody->m_static = m_static;
+                    }
+
+                setPosition(m_positionX, m_positionY);
+                setSize(m_sizeX, m_sizeY);
+                setColour(m_colour);
+
+                enable(true);
+            }
     }

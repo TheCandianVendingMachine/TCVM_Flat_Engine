@@ -3,6 +3,7 @@
 #pragma once
 #include "../../debug/logger.hpp"
 #include "../../feAssert.hpp"
+#include "../../typeDefines.hpp"
 #include "memoryManager.hpp"
 
 namespace fe
@@ -11,14 +12,14 @@ namespace fe
         class poolAllocater
             {
                 private:
-                    size_t m_bufferSize;
+                    fe::uInt64 m_bufferSize;
 
                     unsigned int m_objectCount;
                     unsigned int m_lastObjectIndex;
 
                     bool m_canAllocate;
                     bool *m_freeIndicies; // if there is a block that can be allocated, the corresponding index in this array will be "true"
-                    char *m_buffer;
+                    fe::uInt8 *m_buffer;
 
                 public:
                     void startUp(const unsigned int objectCount);
@@ -39,6 +40,9 @@ namespace fe
                     // clears the allocated memory to allow for a new 
                     void clear();
 
+                    const fe::uInt8 *getBuffer();
+                    fe::uInt64 byteSize();
+
             };
 
         template<typename T>
@@ -53,7 +57,7 @@ namespace fe
                         std::memset(m_freeIndicies, true, sizeof(m_freeIndicies));
 
                         auto size = sizeof(T) * objectCount;
-                        m_buffer = static_cast<char*>(fe::memoryManager::get().getStackAllocater().alloc(size));
+                        m_buffer = static_cast<fe::uInt8*>(fe::memoryManager::get().getStackAllocater().alloc(size));
 
                         m_bufferSize = objectCount * sizeof(T);
                         m_objectCount = objectCount;
@@ -125,5 +129,17 @@ namespace fe
             {
                 std::memset(m_freeIndicies, true, m_objectCount);
                 std::memset(m_buffer, 0, m_objectCount);
+            }
+
+        template<typename T>
+        const fe::uInt8 *poolAllocater<T>::getBuffer()
+            {
+                return m_buffer;
+            }
+
+        template<typename T>
+        fe::uInt64 poolAllocater<T>::byteSize()
+            {
+                return m_bufferSize;
             }
     }

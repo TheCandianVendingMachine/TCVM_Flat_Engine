@@ -21,6 +21,66 @@ void fe::sceneGraph::transformGraph(int nodeHandle)
             }
     }
 
+int fe::sceneGraph::deleteRenderObject(renderObject *obj)
+    {
+        int parentNode = m_sceneRenderTree.getNode(obj->m_graphNode)->m_parent;
+        m_renderObjects.free(obj);
+        unsigned int allocCount = m_renderObjects.getObjectAllocCount();
+        if (allocCount < 4)
+            {
+                if (allocCount < 4)
+                    {
+                        m_jobA.m_active = true;
+                        m_jobB.m_active = true;
+                        m_jobC.m_active = true;
+                        m_jobD.m_active = false;
+                    }
+                if (allocCount < 3)
+                    {
+                        m_jobA.m_active = true;
+                        m_jobB.m_active = true;
+                        m_jobC.m_active = false;
+
+                    }
+                if (allocCount < 2)
+                    {
+                        m_jobA.m_active = true;
+                        m_jobB.m_active = false;
+                    }
+                if (allocCount < 1)
+                    {
+                        m_jobA.m_active = false;
+                    }
+
+                unsigned int objectCountQuart = allocCount;
+                m_jobA.m_initialIndex = 0 * objectCountQuart; m_jobA.m_endIndex = objectCountQuart * 1;
+                m_jobB.m_initialIndex = 1 * objectCountQuart; m_jobB.m_endIndex = objectCountQuart * 2;
+                m_jobC.m_initialIndex = 2 * objectCountQuart; m_jobC.m_endIndex = objectCountQuart * 3;
+                m_jobD.m_initialIndex = 3 * objectCountQuart; m_jobD.m_endIndex = objectCountQuart * 4;
+            }
+        else
+            {
+                m_jobA.m_active = true;
+                m_jobB.m_active = true;
+                m_jobC.m_active = true;
+                m_jobD.m_active = true;
+
+                unsigned int objectCountQuart = allocCount / 4;
+                m_jobA.m_initialIndex = 0 * objectCountQuart; m_jobA.m_endIndex = objectCountQuart * 1;
+                m_jobB.m_initialIndex = 1 * objectCountQuart; m_jobB.m_endIndex = objectCountQuart * 2;
+                m_jobC.m_initialIndex = 2 * objectCountQuart; m_jobC.m_endIndex = objectCountQuart * 3;
+                m_jobD.m_initialIndex = 3 * objectCountQuart; m_jobD.m_endIndex = objectCountQuart * 4;
+            }
+        return parentNode;
+    }
+
+int fe::sceneGraph::deleteRenderTextObject(renderText *obj)
+    {
+        int parentNode = m_sceneRenderTree.getNode(obj->m_graphNode)->m_parent;
+        m_renderTextObjects.free(obj);
+        return parentNode;
+    }
+
 fe::sceneGraph::sceneGraph() :
     m_jobA(m_renderObjects, m_batch),
     m_jobB(m_renderObjects, m_batch),
@@ -169,7 +229,7 @@ fe::renderObject *fe::sceneGraph::createRenderObject(int connected)
         return allocated;
     }
 
-fe::renderText *fe::sceneGraph::createRenderTextObject(sf::Font *font, int connected)
+fe::renderText *fe::sceneGraph::createRenderTextObject(const sf::Font *font, int connected)
     {
         fe::renderText *text = m_renderTextObjects.alloc();
         text->m_graphNode = m_sceneRenderTree.addNode();
@@ -179,64 +239,17 @@ fe::renderText *fe::sceneGraph::createRenderTextObject(sf::Font *font, int conne
         return text;
     }
 
-int fe::sceneGraph::deleteRenderObject(renderObject *obj)
+int fe::sceneGraph::deleteSceneObject(sceneGraphObject *obj)
     {
-        int parentNode = m_sceneRenderTree.getNode(obj->m_graphNode)->m_parent;
-        m_renderObjects.free(obj);
-        unsigned int allocCount = m_renderObjects.getObjectAllocCount();
-        if (allocCount < 4)
+        if ((fe::uInt8*)obj >= m_renderObjects.getBuffer() && (fe::uInt8*)obj <=m_renderObjects.getBuffer() + m_renderObjects.byteSize())
             {
-                if (allocCount < 4)
-                    {
-                        m_jobA.m_active = true;
-                        m_jobB.m_active = true;
-                        m_jobC.m_active = true;
-                        m_jobD.m_active = false;
-                    }
-                if (allocCount < 3)
-                    {
-                        m_jobA.m_active = true;
-                        m_jobB.m_active = true;
-                        m_jobC.m_active = false;
-
-                    }
-                if (allocCount < 2)
-                    {
-                        m_jobA.m_active = true;
-                        m_jobB.m_active = false;
-                    }
-                if (allocCount < 1)
-                    {
-                        m_jobA.m_active = false;
-                    }
-
-                unsigned int objectCountQuart = allocCount;
-                m_jobA.m_initialIndex = 0 * objectCountQuart; m_jobA.m_endIndex = objectCountQuart * 1;
-                m_jobB.m_initialIndex = 1 * objectCountQuart; m_jobB.m_endIndex = objectCountQuart * 2;
-                m_jobC.m_initialIndex = 2 * objectCountQuart; m_jobC.m_endIndex = objectCountQuart * 3;
-                m_jobD.m_initialIndex = 3 * objectCountQuart; m_jobD.m_endIndex = objectCountQuart * 4;
+                return deleteRenderObject(static_cast<fe::renderObject*>(obj));
             }
-        else
+        else if ((fe::uInt8*)obj >= m_renderTextObjects.getBuffer() && (fe::uInt8*)obj <= m_renderTextObjects.getBuffer() + m_renderTextObjects.byteSize())
             {
-                m_jobA.m_active = true;
-                m_jobB.m_active = true;
-                m_jobC.m_active = true;
-                m_jobD.m_active = true;
-
-                unsigned int objectCountQuart = allocCount / 4;
-                m_jobA.m_initialIndex = 0 * objectCountQuart; m_jobA.m_endIndex = objectCountQuart * 1;
-                m_jobB.m_initialIndex = 1 * objectCountQuart; m_jobB.m_endIndex = objectCountQuart * 2;
-                m_jobC.m_initialIndex = 2 * objectCountQuart; m_jobC.m_endIndex = objectCountQuart * 3;
-                m_jobD.m_initialIndex = 3 * objectCountQuart; m_jobD.m_endIndex = objectCountQuart * 4;
+                return deleteRenderTextObject(static_cast<fe::renderText*>(obj));
             }
-        return parentNode;
-    }
-
-int fe::sceneGraph::deleteRenderTextObject(renderText *obj)
-    {
-        int parentNode = m_sceneRenderTree.getNode(obj->m_graphNode)->m_parent;
-        m_renderTextObjects.free(obj);
-        return parentNode;
+        return -1;
     }
 
 void fe::sceneGraph::connect(int a, int b)

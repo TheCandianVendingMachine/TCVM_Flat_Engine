@@ -6,6 +6,7 @@
 #include <iterator>
 #include <vector>
 #include <algorithm>
+#include <tuple>
 
 namespace fe
     {
@@ -85,7 +86,7 @@ namespace fe
                     typename std::vector<T>::iterator removeHandle(Handle handle);
 
                     fe::Handle getHandle(T object);
-
+                    
                     virtual void onAdd(T object, fe::Handle objectHandle) {}
                     virtual void onRemove(T object, fe::Handle objectHandle) {}
 

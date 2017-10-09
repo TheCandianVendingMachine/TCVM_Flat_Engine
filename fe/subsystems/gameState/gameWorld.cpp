@@ -6,19 +6,7 @@
 
 void fe::gameWorld::onAdd(fe::baseEntity *object, fe::Handle objectHandle)
     {
-        object->initialize();
         object->setHandle(objectHandle);
-        if (object->m_collisionBody)
-            {
-                if (object->m_collisionBody->m_static && m_staticBroadphase)
-                    {
-                        m_staticBroadphase->add(object->m_collisionBody);
-                    }
-                else
-                    {
-                        m_dynamicBroadphase->add(object->m_collisionBody);
-                    }
-            }
     }
 
 void fe::gameWorld::onRemove(fe::baseEntity *object, fe::Handle objectHandle)
@@ -129,4 +117,14 @@ void fe::gameWorld::draw(sf::RenderTarget &app)
         m_sceneGraph.draw(app);
         if (m_dynamicBroadphase) m_dynamicBroadphase->debugDraw();
         if (m_staticBroadphase) m_staticBroadphase->debugDraw();
+    }
+
+void fe::gameWorld::removeGameObject(Handle handle)
+    {
+        removeObject(handle);
+    }
+
+fe::baseEntity *fe::gameWorld::getObject(Handle handle) const
+    {
+        return fe::handleManager<fe::baseEntity*, FE_MAX_GAME_OBJECTS>::getObject(handle);
     }

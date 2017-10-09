@@ -15,17 +15,10 @@ void fe::baseGameState::removePanel(gui::panel *panel)
         m_guiPanels.erase(std::remove(m_guiPanels.begin(), m_guiPanels.end(), panel), m_guiPanels.end());
     }
 
-fe::Handle fe::baseGameState::addObject(fe::baseEntity *ent, bool staticObject)
-    {
-        fe::Handle objhandle = m_gameWorld.addObject(ent);
-        m_gameWorld.getObject(objhandle)->onAdd(*this);
-        return objhandle;
-    }
-
 void fe::baseGameState::removeObject(fe::Handle ent)
     {
         m_gameWorld.getObject(ent)->onRemove(*this);
-        m_gameWorld.removeObject(ent);
+        m_gameWorld.removeGameObject(ent);
     }
 
 void fe::baseGameState::removeObject(fe::baseEntity *ent)

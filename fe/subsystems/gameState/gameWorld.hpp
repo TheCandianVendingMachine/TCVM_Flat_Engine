@@ -16,7 +16,7 @@ namespace fe
         class collisionWorld;
         class broadphaseAbstract;
 
-        class gameWorld : public fe::handleManager<fe::baseEntity*, FE_MAX_GAME_OBJECTS>
+        class gameWorld : protected fe::handleManager<fe::baseEntity*, FE_MAX_GAME_OBJECTS>
             {
                 private:
                     fe::sceneGraph m_sceneGraph;
@@ -46,6 +46,34 @@ namespace fe
 
                     FLAT_ENGINE_API void preDraw();
                     FLAT_ENGINE_API void draw(sf::RenderTarget &app);
+                    
+                    template<typename ...Args>
+                    FLAT_ENGINE_API fe::Handle addGameObject(fe::baseEntity *entity, Args &&...args);
+                    FLAT_ENGINE_API void removeGameObject(Handle handle);
+
+                    FLAT_ENGINE_API fe::baseEntity *getObject(Handle handle) const;
 
             };
-    }
+
+        template<typename ...Args>
+        fe::Handle gameWorld::addGameObject(fe::baseEntity *entity, Args &&...args)
+        {
+            fe::Handle objHandle = addObject(entity);
+            fe::baseEntity *object = getObject(objHandle);
+
+            object->initialize(std::forward<Args>(args)...);
+            if (object->m_collisionBody)
+                {
+                    if (object->m_collisionBody->m_static && m_staticBroadphase)
+                        {
+                            m_staticBroadphase->add(object->m_collisionBody);
+                        }
+                    else
+                        {
+                            m_dynamicBroadphase->add(object->m_collisionBody);
+                        }
+                }
+
+            return objHandle;
+        }
+}
