@@ -34,5 +34,8 @@ namespace fe
 
                     FLAT_ENGINE_API void clear();
 
+                    // Verifies that the memory block list still is the correct size
+                    FLAT_ENGINE_API bool verify() const;
+
             };
     }
