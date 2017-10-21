@@ -7,6 +7,7 @@
 #include "broadphaseAbstract.hpp"
 #include "collisionBounds.hpp"
 #include "../../memory/poolAllocater.hpp"
+#include <stack>
 
 namespace fe
     {

@@ -19,16 +19,25 @@ namespace fe
                 char m_groupStr[512];
                 char m_nameStr[512];
                 bool m_profile;
-		        profiler(const char *group, const char *name) 
+                bool m_profileToLogger;
+		        profiler(const char *group, const char *name, bool profileLogger) 
 		            {
                     #if FE_PROFILE_RELEASE || _DEBUG
                         m_profile = false;
-                        if (fe::profilerLogger::get().wantProfile(FE_STR(group)))
+                        m_profileToLogger = profileLogger;
+                        if (m_profileToLogger)
                             {
-                                strcpy(m_nameStr, name);
-                                strcpy(m_groupStr, group);
-			                    m_startTime = fe::clock::getTimeSinceEpoch();
-                                m_profile = true;
+                                if (fe::profilerLogger::get().wantProfile(FE_STR(group)))
+                                    {
+                                        strcpy(m_nameStr, name);
+                                        strcpy(m_groupStr, group);
+			                            m_startTime = fe::clock::getTimeSinceEpoch();
+                                        m_profile = true;
+                                    }
+                            }
+                        else
+                            {
+                                m_startTime = fe::clock::getTimeSinceEpoch();
                             }
                     #endif
 		            }
@@ -42,16 +51,29 @@ namespace fe
 			                    fe::time runtime = m_endTime - m_startTime;
                                 fe::profilerLogger::get().add(m_groupStr, m_nameStr, runtime);
                             }
+                        else if (!m_profileToLogger)
+                            {
+                                m_endTime = fe::clock::getTimeSinceEpoch();
+                                fe::time runtime = m_endTime - m_startTime;
+                                int i = 0;
+                                //FE_LOG_DEBUG(runtime.asMicroseconds());
+                            }
                     #endif
 		            }
 	        };
     }
 
-#define FE_PROFILE(group, name) { fe::profiler t(group, name);
+#define FE_PROFILE(group, name) { fe::profiler t(group, name, true);
 #define FE_END_PROFILE }
 
 #if FE_PROFILE_ENGINE
-    #define FE_ENGINE_PROFILE(group, name) { fe::profiler t(group, name);
+    #define FE_ENGINE_PROFILE(group, name) { fe::profiler t(group, name, true);
 #else
     #define FE_ENGINE_PROFILE(group, name) {
+#endif
+
+#if FE_PROFILE_ENGINE
+    #define FE_ENGINE_PROFILE_NO_LOG(group, name) { fe::profiler t(group, name, false);
+#else
+    #define FE_ENGINE_PROFILE_NO_LOG(group, name) {
 #endif

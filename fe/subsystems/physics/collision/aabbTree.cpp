@@ -451,14 +451,15 @@ void fe::aabbTree::colliderAABB(fe::AABB &testAABB, std::function<void(void*)> c
         void *colliderCallbacks[FE_MAX_GAME_OBJECTS];
         int colliderCallbackIndex = 0;
         FE_ENGINE_PROFILE("aabb_tree", "test_aabb_against_tree");
-        std::stack<int> nodeStack;
-        nodeStack.push(m_base);
+        int stack[(FE_MAX_GAME_OBJECTS * 2) - 1];
+        int stackTop = 0;
+        stack[stackTop++] = m_base;
         int iteration = 0;
-        while (!nodeStack.empty())
+        while (stackTop > 0)
             {
                 iteration++;
-                int currentNode = nodeStack.top();
-                nodeStack.pop();
+                int currentNode = stack[stackTop - 1];
+                stackTop--;
                 if (m_nodes[currentNode].m_fatAABB.intersects(testAABB))
                     {
                         if (m_nodes[currentNode].isLeaf())
@@ -467,8 +468,8 @@ void fe::aabbTree::colliderAABB(fe::AABB &testAABB, std::function<void(void*)> c
                             }
                         else
                             {
-                                nodeStack.push(m_nodes[currentNode].m_left);
-                                nodeStack.push(m_nodes[currentNode].m_right);
+                                stack[stackTop++] = m_nodes[currentNode].m_left;
+                                stack[stackTop++] = m_nodes[currentNode].m_right;
                             }
                     }
                 

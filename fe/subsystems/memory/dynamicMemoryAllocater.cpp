@@ -1,5 +1,6 @@
 #include "dynamicMemoryAllocater.hpp"
 #include "../../feAssert.hpp"
+#include "../../debug/profiler.hpp"
 #include <cstring>
 #include <algorithm>
 #include <cmath>
@@ -26,6 +27,7 @@ void *fe::dynamicMemoryAllocater::alloc(fe::uInt64 size)
 
         freeBlock *previousNode = nullptr;
         freeBlock *allocBlock = m_freeBlocks;
+        FE_ENGINE_PROFILE_NO_LOG("dynamicMemoryAllocater", "findFreeBlock");
         while (allocBlock)
             {
                 fe::int64 a = (fe::int64)allocBlock->m_size - (fe::int64)sizeOfFreeBlock;
@@ -36,6 +38,7 @@ void *fe::dynamicMemoryAllocater::alloc(fe::uInt64 size)
                 previousNode = allocBlock;
                 allocBlock = allocBlock->m_next;
             }
+        FE_END_PROFILE;
         FE_ASSERT(allocBlock, "Dynamic Memory Allocater out of memory 1");
         FE_ASSERT(fe::int64(allocBlock->m_size) - fe::int64(sizeOfFreeBlock) > fe::int64(size), "Dynamic Memory Allocater underflow");
         FE_ASSERT(allocBlock->m_size <= m_totalSize, "Dynamic Memory Manager out of range");
@@ -93,6 +96,7 @@ void fe::dynamicMemoryAllocater::free(void *memory)
         else
             {
                 freeBlock *previous = nullptr;
+                FE_ENGINE_PROFILE_NO_LOG("dynamicMemoryAllocater", "findSiblingBlock");
                 while (blockList)
                     {
                         if (blockList > newBlock)
@@ -107,10 +111,12 @@ void fe::dynamicMemoryAllocater::free(void *memory)
                         previous = blockList;
                         blockList = blockList->m_next;
                     }
+                FE_END_PROFILE;
             }
 
         FE_ASSERT(verify(), "Size of dynamic memory allocater not total size");
 
+        FE_ENGINE_PROFILE_NO_LOG("dynamicMemoryAllocater", "mergeFreeBlocks");
         // Clean up any neighbor blocks
         blockList = m_freeBlocks;
         while (blockList)
@@ -123,6 +129,7 @@ void fe::dynamicMemoryAllocater::free(void *memory)
                     }
                 blockList = blockList->m_next;
             }
+        FE_END_PROFILE;
         FE_ASSERT(verify(), "Size of dynamic memory allocater not total size");
     }
 
@@ -133,6 +140,7 @@ void fe::dynamicMemoryAllocater::clear()
         (m_freeBlocks + 0)->m_size = m_totalSize;
     }
 
+// Works by checking how much memory is in the free-blocks, and if there is a discrepancy between the reported size and actual size there is a problem
 bool fe::dynamicMemoryAllocater::verify() const
     {
         fe::uInt64 size = 0;
