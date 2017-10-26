@@ -5,9 +5,11 @@
 #include <vector>
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Font.hpp>
+#include "../../typeDefines.hpp"
 #include "../../objectManagement/guid.hpp"
 #include "../../debug/logger.hpp"
 #include "../graphic/texturePacker.hpp"
+#include "fontData.hpp"
 
 namespace fe 
     {
@@ -32,13 +34,17 @@ namespace fe
         class resourceManager<sf::Texture>
             {
                 private:
-                    std::vector<sf::Texture*> m_textures;
+                    std::vector<const sf::Texture*> m_textures;
                     fe::texturePacker m_packed;
 
                 public:
                     resourceManager();
 
                     const sf::Texture *load(const char* filepath, const char* id);
+                    const sf::Texture *add(const sf::Texture *texture, const char *id);
+
+                    // Creates the TTF font into a bitmap font
+                    fe::fontData addFont(const sf::Font *font, const char *id, unsigned int size);
 
                     const sf::Texture *getTexture(const char* id);
                     const sf::Texture *getTexture(fe::guid id);

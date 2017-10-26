@@ -33,7 +33,12 @@ void fe::texturePacker::createTexture()
         m_packedTexture.loadFromImage(packed);
     }
 
-fe::Vector2<unsigned int> fe::texturePacker::addTexture(sf::Texture &texture, const char *id)
+fe::Vector2<unsigned int> fe::texturePacker::addTexture(const sf::Texture &texture, const char *id)
+    {
+        return addTexture(&texture, id);
+    }
+
+fe::Vector2<unsigned int> fe::texturePacker::addTexture(const sf::Texture *texture, const char * id)
     {
         packNode *ret = m_baseNode.insert(texture);
         if (ret) 
@@ -105,7 +110,12 @@ fe::texturePacker::packNode::packNode(unsigned int x, unsigned int y, unsigned i
         m_size = fe::Vector2<unsigned int>(width, height);
     }
 
-fe::texturePacker::packNode *fe::texturePacker::packNode::insert(sf::Texture &texture)
+fe::texturePacker::packNode *fe::texturePacker::packNode::insert(const sf::Texture &texture)
+    {
+        return insert(&texture);
+    }
+
+fe::texturePacker::packNode *fe::texturePacker::packNode::insert(const sf::Texture *texture)
     {
         if (m_child[0]) // if we are a branch we will have atleast 1 child
             {
@@ -120,32 +130,32 @@ fe::texturePacker::packNode *fe::texturePacker::packNode::insert(sf::Texture &te
                 if (m_texture) return nullptr;
                 
                 // if we are too small we cant use this
-                if (texture.getSize().x > m_size.x || texture.getSize().y > m_size.y)
+                if (texture->getSize().x > m_size.x || texture->getSize().y > m_size.y)
                     {
                         return nullptr;
                     }
                 // if we are the perfect size, that means we just generated this as the node that holds the texture
-                else if (texture.getSize().x == m_size.x && texture.getSize().y == m_size.y)
+                else if (texture->getSize().x == m_size.x && texture->getSize().y == m_size.y)
                     {
-                        m_texture = &texture;
+                        m_texture = texture;
                         return this;
                     }
 
-                float dWidth = m_size.x - texture.getSize().x;
-                float dHeight = m_size.y - texture.getSize().y;
+                float dWidth = m_size.x - texture->getSize().x;
+                float dHeight = m_size.y - texture->getSize().y;
 
                 if (dWidth > dHeight)
                     {
                         // packing into columns > ||
                         m_child[0] = new packNode(m_position.x,
                                                   m_position.y,
-                                                  texture.getSize().x,
+                                                  texture->getSize().x,
                                                   m_size.y);
 
 
-                        m_child[1] = new packNode(m_position.x + texture.getSize().x,
+                        m_child[1] = new packNode(m_position.x + texture->getSize().x,
                                                   m_position.y,
-                                                  m_size.x - texture.getSize().x,
+                                                  m_size.x - texture->getSize().x,
                                                   m_size.y);
                     }
                 else
@@ -154,12 +164,12 @@ fe::texturePacker::packNode *fe::texturePacker::packNode::insert(sf::Texture &te
                         m_child[0] = new packNode(m_position.x,
                                                   m_position.y,
                                                   m_size.x,
-                                                  texture.getSize().y);
+                                                  texture->getSize().y);
 
                         m_child[1] = new packNode(m_position.x,
-                                                  m_position.y + texture.getSize().y,
+                                                  m_position.y + texture->getSize().y,
                                                   m_size.x,
-                                                  m_size.y - texture.getSize().y);
+                                                  m_size.y - texture->getSize().y);
                     }
 
                 return m_child[0]->insert(texture);

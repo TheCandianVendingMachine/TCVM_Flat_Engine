@@ -156,9 +156,9 @@ void fe::sceneGraph::draw(sf::RenderTarget &window)
         sf::RenderStates states;
         states.texture = &fe::engine::get().getResourceManager<sf::Texture>()->get();
 
+        unsigned int index = 0;
         if (m_renderObjects.getObjectAllocCount() <= m_maxObjectsUntilThread) 
             {
-                unsigned int index = 0;
                 /*for (unsigned int i = 0; i < m_renderObjects.getObjectAllocCount(); i++)
                     {
                         renderObject *render = m_renderObjects.at(i);
@@ -185,7 +185,7 @@ void fe::sceneGraph::draw(sf::RenderTarget &window)
             }
 
         FE_ENGINE_PROFILE("scene_graph", "window_draw");
-        m_batch.draw(window, states, m_renderObjects.getObjectAllocCount());
+        m_batch.draw(window, states, index);
         FE_ENGINE_PROFILE("scene_graph", "text_draw");
         for (unsigned int i = 0; i < m_renderTextObjects.getObjectAllocCount(); i++)
             {
@@ -198,9 +198,11 @@ void fe::sceneGraph::draw(sf::RenderTarget &window)
         FE_END_PROFILE;
     }
 
-fe::renderObject *fe::sceneGraph::createRenderObject(int connected)
+fe::renderObject *fe::sceneGraph::createRenderObject(fe::lightVector2<unsigned int> texturePos, int connected)
     {
         fe::renderObject *allocated = m_renderObjects.alloc();
+        allocated->m_texCoords[0] = texturePos.x;
+        allocated->m_texCoords[1] = texturePos.y;
         allocated->m_graphNode = m_sceneRenderTree.addNode();
         connect(allocated->m_graphNode, connected >= 0 ? connected : m_baseNode.m_graphNode);
         m_sceneRenderTree.getNode(allocated->m_graphNode)->m_userData = allocated;
@@ -254,13 +256,15 @@ fe::renderObject *fe::sceneGraph::createRenderObject(int connected)
         return allocated;
     }
 
-fe::renderText *fe::sceneGraph::createRenderTextObject(const sf::Font *font, int connected)
+fe::renderText *fe::sceneGraph::createRenderTextObject(const fe::fontData &font, fe::lightVector2<unsigned int> texturePos, int connected)
     {
         fe::renderText *text = m_renderTextObjects.alloc();
+        text->m_texCoords[0] = texturePos.x;
+        text->m_texCoords[1] = texturePos.y;
         text->m_graphNode = m_sceneRenderTree.addNode();
         connect(text->m_graphNode, connected >= 0 ? connected : m_baseNode.m_graphNode);
         m_sceneRenderTree.getNode(text->m_graphNode)->m_userData = text;
-        text->m_font = font;
+        text->m_fontData = font;
         return text;
     }
 

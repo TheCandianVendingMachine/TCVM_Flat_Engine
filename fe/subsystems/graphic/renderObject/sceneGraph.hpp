@@ -9,6 +9,7 @@
 #include "renderObject.hpp"
 #include "../../threading/threadJob.hpp"
 #include "../../../dataStructures/tree.hpp"
+#include "../../resourceManager/fontData.hpp"
 
 namespace sf
     {
@@ -62,8 +63,8 @@ namespace fe
 
                     FLAT_ENGINE_API void preDraw();
                     FLAT_ENGINE_API void draw(sf::RenderTarget &window);
-                    FLAT_ENGINE_API renderObject *createRenderObject(int connected = -1);
-                    FLAT_ENGINE_API renderText *createRenderTextObject(const sf::Font *font = nullptr, int connected = -1);
+                    FLAT_ENGINE_API renderObject *createRenderObject(fe::lightVector2<unsigned int> texturePos = fe::lightVector2<unsigned int>(), int connected = -1);
+                    FLAT_ENGINE_API renderText *createRenderTextObject(const fe::fontData &font = fe::fontData(), fe::lightVector2<unsigned int> texturePos = fe::lightVector2<unsigned int>(), int connected = -1);
                     FLAT_ENGINE_API int deleteSceneObject(sceneGraphObject *obj); // returns the parent node of the render object
 
                     FLAT_ENGINE_API void connect(int a, int b); // connects object with node A to node B

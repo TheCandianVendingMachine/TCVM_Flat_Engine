@@ -6,6 +6,7 @@
 
 #include "../../physics/transformable.hpp"
 #include "../../../typeDefines.hpp"
+#include "../../resourceManager/fontData.hpp"
 #include <SFML/Graphics/VertexArray.hpp>
 #include <SFML/Graphics/Font.hpp>
 
@@ -50,11 +51,12 @@ namespace fe
             {
                 char m_string[FE_MAX_STRING_RENDER_SIZE];
                 sf::VertexArray m_verticies;
-                const sf::Font *m_font;
+                fe::fontData m_fontData;
+                float m_size[2];
                 unsigned int m_strSize;
                 unsigned int m_strPos;
 
-                float m_charSize;
+                bool m_update;
 
                 FLAT_ENGINE_API renderText();
 
@@ -62,6 +64,6 @@ namespace fe
                 FLAT_ENGINE_API void appendChar(char chr);
 
                 FLAT_ENGINE_API void computeVerticies(const fe::matrix3d &matrix);
-                FLAT_ENGINE_API void setSize(float x, float y) { }
+                FLAT_ENGINE_API void setSize(float x, float y);
             };
     }

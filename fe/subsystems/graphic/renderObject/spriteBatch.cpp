@@ -57,7 +57,7 @@ void fe::spriteBatch::add(fe::renderText *text, unsigned int &index)
 void fe::spriteBatch::clear()
     {}
 
-void fe::spriteBatch::draw(sf::RenderTarget &app, sf::RenderStates states, unsigned int objectCount)
+void fe::spriteBatch::draw(sf::RenderTarget &app, sf::RenderStates states, unsigned int vertexCount)
     {
-        app.draw(m_batch, objectCount * 4, sf::PrimitiveType::Quads, states);
+        app.draw(m_batch, vertexCount, sf::PrimitiveType::Quads, states);
     }

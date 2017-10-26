@@ -27,7 +27,7 @@ namespace fe
                     FLAT_ENGINE_API void add(fe::renderObject *entity, unsigned int &index);
                     FLAT_ENGINE_API void add(fe::renderText *text, unsigned int &index);
                     FLAT_ENGINE_API void clear();
-                    FLAT_ENGINE_API void draw(sf::RenderTarget &app, sf::RenderStates states, unsigned int objectCount);
+                    FLAT_ENGINE_API void draw(sf::RenderTarget &app, sf::RenderStates states, unsigned int vertexCount);
 
             };
     }

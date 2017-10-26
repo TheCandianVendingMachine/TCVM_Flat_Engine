@@ -16,6 +16,9 @@
 
 #define FE_MAX_STRING_RENDER_SIZE 512
 
+#define FE_CHAR_START 33 // The characters that will be generated into a bitmap font
+#define FE_CHAR_END 126
+
 namespace fe
     {
         using Handle = int;
