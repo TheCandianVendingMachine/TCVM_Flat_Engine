@@ -19,12 +19,13 @@ namespace fe
         class spriteBatch
             {
                 private:
-                    sf::Vertex m_batch[FE_MAX_GAME_OBJECTS * 4];
+                    sf::Vertex m_batch[(FE_MAX_GAME_OBJECTS * 4) + (FE_MAX_TEXT_OBJECTS * 6)];
 
                 public:
                     FLAT_ENGINE_API spriteBatch();
 
                     FLAT_ENGINE_API void add(fe::renderObject *entity, unsigned int &index);
+                    FLAT_ENGINE_API void add(fe::renderText *text, unsigned int &index);
                     FLAT_ENGINE_API void clear();
                     FLAT_ENGINE_API void draw(sf::RenderTarget &app, sf::RenderStates states, unsigned int objectCount);
 

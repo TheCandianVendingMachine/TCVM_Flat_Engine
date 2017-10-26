@@ -13,11 +13,32 @@ void fe::sceneGraph::transformGraph(int nodeHandle)
 
         for (auto &child : node->m_children)
             {
-                static_cast<fe::sceneGraphObject*>(m_sceneRenderTree.getNode(child)->m_userData)->m_transform.combine(*nodeTransform);
+                fe::transformable &realTransform = static_cast<fe::sceneGraphObject*>(m_sceneRenderTree.getNode(child)->m_userData)->m_transform;
+                fe::transformable *tempTransform = &static_cast<fe::sceneGraphObject*>(m_sceneRenderTree.getNode(child)->m_userData)->m_tempTransform;
+                *tempTransform = realTransform;
+                tempTransform->combine(*nodeTransform);
+                nodeTransform->setUpdateChildren(false);
+                transformGraph(child);
             }
+    }
+
+void fe::sceneGraph::drawGraph(int nodeHandle, unsigned int &index)
+    {
+        auto node = m_sceneRenderTree.getNode(nodeHandle);
+        fe::sceneGraphObject *obj = static_cast<fe::sceneGraphObject*>(node->m_userData);
+
+        if (obj->m_type == OBJECT)
+            {
+                m_batch.add(static_cast<fe::renderObject*>(obj), index);
+            }
+        else if (obj->m_type == TEXT)
+            {
+                m_batch.add(static_cast<fe::renderText*>(obj), index);
+            }
+
         for (auto &child : node->m_children)
             {
-                transformGraph(child);
+                drawGraph(child, index);
             }
     }
 
@@ -93,7 +114,7 @@ fe::sceneGraph::sceneGraph() :
 void fe::sceneGraph::startUp()
     {
         m_renderObjects.startUp(FE_MAX_GAME_OBJECTS);
-        m_renderTextObjects.startUp(500);
+        m_renderTextObjects.startUp(FE_MAX_TEXT_OBJECTS);
         m_baseNode.m_graphNode = m_sceneRenderTree.addNode();
         m_sceneRenderTree.getNode(m_baseNode.m_graphNode)->m_userData = &m_baseNode;
     }
@@ -138,7 +159,7 @@ void fe::sceneGraph::draw(sf::RenderTarget &window)
         if (m_renderObjects.getObjectAllocCount() <= m_maxObjectsUntilThread) 
             {
                 unsigned int index = 0;
-                for (unsigned int i = 0; i < m_renderObjects.getObjectAllocCount(); i++)
+                /*for (unsigned int i = 0; i < m_renderObjects.getObjectAllocCount(); i++)
                     {
                         renderObject *render = m_renderObjects.at(i);
                         // taking advantage of branch prediction. The CPU is assuming the statement will be false
@@ -150,7 +171,8 @@ void fe::sceneGraph::draw(sf::RenderTarget &window)
                             {
                                 m_batch.add(render, index);
                             }
-                    }
+                    }*/
+                drawGraph(m_baseNode.m_graphNode, index);
             }
         else
             {
@@ -167,7 +189,10 @@ void fe::sceneGraph::draw(sf::RenderTarget &window)
         FE_ENGINE_PROFILE("scene_graph", "text_draw");
         for (unsigned int i = 0; i < m_renderTextObjects.getObjectAllocCount(); i++)
             {
-                window.draw(m_renderTextObjects.at(i)->m_text);
+                /*fe::renderText *text = m_renderTextObjects.at(i);
+                text->m_text.setColor(sf::Color(text->m_vertColour[0], text->m_vertColour[1], text->m_vertColour[2], text->m_vertColour[3]));
+                text->m_text.setPosition(text->m_transform.getPosition().convertToSfVec2());
+                window.draw(text->m_text);*/
             }
         FE_END_PROFILE;
         FE_END_PROFILE;
@@ -235,7 +260,7 @@ fe::renderText *fe::sceneGraph::createRenderTextObject(const sf::Font *font, int
         text->m_graphNode = m_sceneRenderTree.addNode();
         connect(text->m_graphNode, connected >= 0 ? connected : m_baseNode.m_graphNode);
         m_sceneRenderTree.getNode(text->m_graphNode)->m_userData = text;
-        text->m_text.setFont(*font);
+        text->m_font = font;
         return text;
     }
 

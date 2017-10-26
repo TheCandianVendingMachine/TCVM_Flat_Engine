@@ -8,8 +8,14 @@ fe::transformable::transformable() :
     m_originX(0.f),
     m_originY(0.f),
     m_rotation(0.f), 
-    m_update(true)
+    m_update(true),
+    m_updateChildren(true)
     {}
+
+void fe::transformable::clear()
+    {
+        m_matrix = fe::matrix3d();
+    }
 
 void fe::transformable::setPosition(float x, float y)
     {
@@ -17,12 +23,14 @@ void fe::transformable::setPosition(float x, float y)
         m_positionX = x;
         m_positionY = y;
         m_update = true;
+        m_updateChildren = true;
     }
 
 void fe::transformable::setRotation(float radians)
     {
         m_rotation = radians;
         m_update = true;
+        m_updateChildren = true;
     }
 
 void fe::transformable::setOrigin(float x, float y)
@@ -30,6 +38,7 @@ void fe::transformable::setOrigin(float x, float y)
         m_originX = x;
         m_originY = y;
         m_update = true;
+        m_updateChildren = true;
     }
 
 void fe::transformable::setScale(float x, float y)
@@ -37,6 +46,7 @@ void fe::transformable::setScale(float x, float y)
         m_scaleX = x;
         m_scaleY = y;
         m_update = true;
+        m_updateChildren = true;
     }
 
 void fe::transformable::setScale(float scale)
@@ -72,7 +82,8 @@ void fe::transformable::move(float x, float y)
 void fe::transformable::rotate(float radians)
     {
         m_rotation += radians;
-        m_update |= (radians != 0.f);
+        m_update = true;
+        m_updateChildren = true;
     }
 
 void fe::transformable::scale(float x, float y)
@@ -80,6 +91,7 @@ void fe::transformable::scale(float x, float y)
         m_scaleX = x;
         m_scaleY = y;
         m_update = true;
+        m_updateChildren = true;
     }
 
 void fe::transformable::scale(float scale)
@@ -115,5 +127,30 @@ const fe::matrix3d &fe::transformable::getMatrix()
 
 void fe::transformable::combine(fe::transformable &other)
     {
+        getMatrix();
         m_matrix.combine(other.getMatrix());
+    }
+
+bool fe::transformable::updateChildren() const
+    {
+        return m_updateChildren;
+    }
+
+void fe::transformable::setUpdateChildren(bool value)
+    {
+        m_updateChildren = value;
+    }
+
+fe::transformable &fe::transformable::operator=(const fe::transformable &rhs)
+    {
+        if (&rhs != this)
+            {
+                setPosition(rhs.getPosition().x, rhs.getPosition().y);
+                setScale(rhs.getScale().x, rhs.getScale().y);
+                setRotation(rhs.getRotation());
+
+                m_matrix = rhs.m_matrix;
+            }
+
+        return *this;
     }

@@ -3,6 +3,8 @@
 #pragma once
 #include <unordered_map>
 #include <vector>
+#include <SFML/Graphics/Texture.hpp>
+#include <SFML/Graphics/Font.hpp>
 #include "../../objectManagement/guid.hpp"
 #include "../../debug/logger.hpp"
 #include "../graphic/texturePacker.hpp"
@@ -25,66 +27,6 @@ namespace fe
 
                     void shutDown();
             };
-
-        template<typename T>
-        const T *resourceManager<T>::load(const char* filepath, const char* id)
-            {
-                const T *cResource = get(id);
-                if (cResource)
-                    {
-                        return cResource;
-                    }
-
-                T *resource = new T();
-                if (resource)
-                    {
-                        resource->loadFromFile(filepath);
-
-                        m_resources[FE_STR(id)] = resource;
-                        return resource;
-                    }
-                else
-                    {
-                        FE_LOG_WARNING(id, "from filepath", filepath, "cannot be loaded into memory");
-                    }
-
-                return nullptr;
-            }
-
-        template<typename T>
-        const T *resourceManager<T>::get(const char* id)
-            {
-                return m_resources[FE_STR(id)];
-            }
-
-        template<typename T>
-        const T *resourceManager<T>::get(fe::guid id)
-            {
-                return m_resources[id];
-            }
-
-        template<typename T>
-        void resourceManager<T>::remove(const char* id)
-            {
-                m_resources[FE_STR(id)]->~T();
-                m_resources.erase(FE_STR(id));
-            }
-
-        template<typename T>
-        void resourceManager<T>::remove(fe::guid id)
-            {
-                m_resources[id]->~T();
-                m_resources.erase(id);
-            }
-
-        template<typename T>
-        void resourceManager<T>::shutDown()
-            {
-                for (auto &obj : m_resources)
-                    {
-                        obj.second->~T();
-                    }
-            }
 
         template<>
         class resourceManager<sf::Texture>
@@ -117,71 +59,7 @@ namespace fe
 
             };
 
-        inline resourceManager<sf::Texture>::resourceManager()
-            {
-                m_packed.createTexture();
-            }
-
-        inline const sf::Texture *resourceManager<sf::Texture>::load(const char* filepath, const char* id)
-            {
-                const sf::Texture *resource = getTexture(id);
-                if (resource)
-                    {
-                        return resource;
-                    }
-
-                sf::Texture *added = new sf::Texture();
-                if (added)
-                    {
-                        added->loadFromFile(filepath);
-
-                        m_textures.push_back(added);
-                        m_packed.addTexture(*added, id);
-                        return added;
-                    }
-                else
-                    {
-                        FE_LOG_WARNING("Texture\"", id, "\"from filepath\"", filepath, "\"cannot be loaded into memory");
-                    }
-
-                return nullptr;
-            }
-
-        inline const sf::Texture *resourceManager<sf::Texture>::getTexture(const char* id)
-            {
-                return m_packed.getTexture(id);
-            }
-
-        inline const sf::Texture *resourceManager<sf::Texture>::getTexture(fe::guid id)
-            {
-                return m_packed.getTexture(id);
-            }
-
-        inline fe::Vector2<unsigned int> resourceManager<sf::Texture>::getTextureOffset(const char* id)
-            {
-                return m_packed.getTexturePosition(id);
-            }
-
-        inline fe::Vector2<unsigned int> resourceManager<sf::Texture>::getTextureOffset(fe::guid id)
-            {
-                return m_packed.getTexturePosition(id);
-            }
-
-        inline const sf::Texture &resourceManager<sf::Texture>::get()
-            {
-                return m_packed.getTexture();
-            }
-
-        inline fe::Vector2<unsigned int> resourceManager<sf::Texture>::getTexturePosition(const char* id)
-            {
-                return m_packed.getTexturePosition(id);
-            }
-
-        inline fe::Vector2<unsigned int> resourceManager<sf::Texture>::getTexturePosition(fe::guid id)
-            {
-                return m_packed.getTexturePosition(id);
-            }
-
-        inline void resourceManager<sf::Texture>::shutDown()
-            {}
     }
+
+#include "resourceManagerGeneric.inl"
+#include "resourceManagerTexture.inl"

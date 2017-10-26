@@ -25,9 +25,12 @@ namespace fe
                     float m_rotation;
 
                     bool m_update;
+                    bool m_updateChildren;
 
                 public:
                     FLAT_ENGINE_API transformable();
+
+                    FLAT_ENGINE_API void clear();
 
                     // Set the position in the world
                     FLAT_ENGINE_API void setPosition(float x, float y);
@@ -61,6 +64,11 @@ namespace fe
 
                     FLAT_ENGINE_API const fe::matrix3d &getMatrix();
                     FLAT_ENGINE_API void combine(fe::transformable &other);
+
+                    FLAT_ENGINE_API bool updateChildren() const;
+                    FLAT_ENGINE_API void setUpdateChildren(bool value);
+
+                    FLAT_ENGINE_API fe::transformable &operator=(const fe::transformable &rhs);
 
             };
     }

@@ -48,6 +48,7 @@ namespace fe
                     const unsigned int m_maxObjectsUntilThread;
 
                     FLAT_ENGINE_API void transformGraph(int nodeHandle);
+                    FLAT_ENGINE_API void drawGraph(int nodeHandle, unsigned int &index);
 
                     FLAT_ENGINE_API int deleteRenderObject(renderObject *obj); // returns the parent node of the render object
                     FLAT_ENGINE_API int deleteRenderTextObject(renderText *obj); // returns the parent node of the render object

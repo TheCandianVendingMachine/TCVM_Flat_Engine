@@ -10,12 +10,12 @@ fe::spriteBatch::spriteBatch()
 
 void fe::spriteBatch::add(fe::renderObject *entity, unsigned int &index)
     {
-        const fe::matrix3d &matrix = entity->m_transform.getMatrix();
-        fe::lightVector2d transform0 = matrix.transformPoint({  entity->m_verticies[0],                         entity->m_verticies[1] });
-        fe::lightVector2d transform1 = matrix.transformPoint({  entity->m_verticies[0] + entity->m_verticies[2],entity->m_verticies[1] });
-        fe::lightVector2d transform2 = matrix.transformPoint({  entity->m_verticies[0] + entity->m_verticies[2],entity->m_verticies[1] + entity->m_verticies[3] });
-        fe::lightVector2d transform3 = matrix.transformPoint({  entity->m_verticies[0],                         entity->m_verticies[1] + entity->m_verticies[3] });
-        sf::Color entColour = sf::Color(entity->m_vertColour[0],entity->m_vertColour[1], entity->m_vertColour[2], entity->m_vertColour[3]);
+        const fe::matrix3d &matrix = entity->m_tempTransform.getMatrix();
+        fe::lightVector2d transform0 = matrix.transformPoint({  entity->m_verticies[0],                             entity->m_verticies[1] });
+        fe::lightVector2d transform1 = matrix.transformPoint({  entity->m_verticies[0] + entity->m_verticies[2],    entity->m_verticies[1] });
+        fe::lightVector2d transform2 = matrix.transformPoint({  entity->m_verticies[0] + entity->m_verticies[2],    entity->m_verticies[1] + entity->m_verticies[3] });
+        fe::lightVector2d transform3 = matrix.transformPoint({  entity->m_verticies[0],                             entity->m_verticies[1] + entity->m_verticies[3] });
+        sf::Color entColour = sf::Color(entity->m_vertColour[0],entity->m_vertColour[1], entity->m_vertColour[2],   entity->m_vertColour[3]);
         fe::lightVector2d texCoord(entity->m_texCoords[0], entity->m_texCoords[1]);
 
         m_batch[index + 0].position.x = transform0.x;
@@ -43,6 +43,15 @@ void fe::spriteBatch::add(fe::renderObject *entity, unsigned int &index)
         m_batch[index + 3].texCoords.y = texCoord.y;
 
         index += 4;
+    }
+
+void fe::spriteBatch::add(fe::renderText *text, unsigned int &index)
+    {
+        text->computeVerticies(text->m_tempTransform.getMatrix());
+        for (unsigned int i = 0; i < text->m_verticies.getVertexCount(); i++)
+            {
+                m_batch[index++] = text->m_verticies[i];
+            }
     }
 
 void fe::spriteBatch::clear()
