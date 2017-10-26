@@ -60,6 +60,20 @@ namespace fe
 
                     friend class gameWorld;
 
+                    template<typename T = void>
+                    void initRenderObject();
+                    template<typename T0, typename ...Args, typename std::enable_if<std::is_integral<typename std::remove_reference<typename std::remove_pointer<T0>::type>::type>::value, int>::type = 0>
+                    void initRenderObject(T0 &&arg0 = T0(), Args &&...args);
+                    template<typename T0, typename ...Args, typename std::enable_if<!std::is_integral<typename std::remove_reference<typename std::remove_pointer<T0>::type>::type>::value, int>::type = 0>
+                    void initRenderObject(T0 &&arg0 = T0(), Args &&...args);
+
+                    template<typename T = void>
+                    void initRenderText();
+                    template<typename T0, typename ...Args, typename std::enable_if<!std::is_integral<typename std::remove_reference<typename std::remove_pointer<T0>::type>::type>::value, int>::type = 0>
+                    void initRenderText(T0 &&arg0 = T0(), Args &&...args);
+                    template<typename T0, typename ...Args, typename std::enable_if<std::is_integral<typename std::remove_reference<typename std::remove_pointer<T0>::type>::type>::value, int>::type = 0>
+                    void initRenderText(T0 &&arg0 = T0(), Args &&...args);
+
                 public:
                     FLAT_ENGINE_API baseEntity(entityModules modules, bool staticObject);
                     template<typename ...Args>
@@ -113,12 +127,12 @@ namespace fe
             {
                 if (m_modulesEnabled & entityModules::RENDER_OBJECT)
                     {
-                        m_renderObject = fe::engine::get().getStateMachine().getSceneGraph().createRenderObject(std::forward<Args>(args)...);
+                        initRenderObject(std::forward<Args>(args)...);
                         m_renderObject->m_static = m_static;
                     }
                 else if (m_modulesEnabled & entityModules::RENDER_TEXT)
                     {
-                        m_renderObject = fe::engine::get().getStateMachine().getSceneGraph().createRenderTextObject(std::forward<Args>(args)...);
+                        initRenderText(std::forward<Args>(args)...);
                         m_renderObject->m_static = m_static;
                     }
 
@@ -139,4 +153,43 @@ namespace fe
 
                 enable(true);
             }
+
+        // Render Object
+        template<typename T>
+        void fe::baseEntity::initRenderObject()
+            {
+                m_renderObject = fe::engine::get().getStateMachine().getSceneGraph().createRenderObject();
+            }
+
+        template<typename T0, typename ...Args, typename std::enable_if<std::is_integral<typename std::remove_reference<typename std::remove_pointer<T0>::type>::type>::value, int>::type>
+        void baseEntity::initRenderObject(T0 &&arg0, Args &&...args)
+            {
+                m_renderObject = fe::engine::get().getStateMachine().getSceneGraph().createRenderObject(arg0);
+            }
+
+        template<typename T0, typename ...Args, typename std::enable_if<!std::is_integral<typename std::remove_reference<typename std::remove_pointer<T0>::type>::type>::value, int>::type>
+        void baseEntity::initRenderObject(T0 &&arg0, Args &&...args)
+            {
+                FE_ASSERT(false, "You Should Never Get Here -- InitRenderObject");
+            }
+
+        // Render Text
+        template<typename T>
+        void fe::baseEntity::initRenderText()
+            {
+                m_renderObject = fe::engine::get().getStateMachine().getSceneGraph().createRenderTextObject();
+            }
+
+        template<typename T0, typename ...Args, typename std::enable_if<!std::is_integral<typename std::remove_reference<typename std::remove_pointer<T0>::type>::type>::value, int>::type>
+        void baseEntity::initRenderText(T0 &&arg0, Args &&...args)
+            {
+                m_renderObject = fe::engine::get().getStateMachine().getSceneGraph().createRenderTextObject(arg0, std::forward<Args>(args)...);
+            }
+
+        template<typename T0, typename ...Args, typename std::enable_if<std::is_integral<typename std::remove_reference<typename std::remove_pointer<T0>::type>::type>::value, int>::type>
+        void baseEntity::initRenderText(T0 &&arg0, Args &&...args)
+            {
+                FE_ASSERT(false, "You Should Never Get Here -- InitRenderText");
+            }
+
     }

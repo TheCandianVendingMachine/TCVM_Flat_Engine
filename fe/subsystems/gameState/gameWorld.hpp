@@ -57,23 +57,23 @@ namespace fe
 
         template<typename ...Args>
         fe::Handle gameWorld::addGameObject(fe::baseEntity *entity, Args &&...args)
-        {
-            fe::Handle objHandle = addObject(entity);
-            fe::baseEntity *object = getObject(objHandle);
+            {
+                fe::Handle objHandle = addObject(entity);
+                fe::baseEntity *object = getObject(objHandle);
 
-            object->initialize(std::forward<Args>(args)...);
-            if (object->m_collisionBody)
-                {
-                    if (object->m_collisionBody->m_static && m_staticBroadphase)
-                        {
-                            m_staticBroadphase->add(object->m_collisionBody);
-                        }
-                    else
-                        {
-                            m_dynamicBroadphase->add(object->m_collisionBody);
-                        }
-                }
+                object->initialize(std::forward<Args>(args)...);
+                if (object->m_collisionBody)
+                    {
+                        if (object->m_collisionBody->m_static && m_staticBroadphase)
+                            {
+                                m_staticBroadphase->add(object->m_collisionBody);
+                            }
+                        else
+                            {
+                                m_dynamicBroadphase->add(object->m_collisionBody);
+                            }
+                    }
 
-            return objHandle;
-        }
+                return objHandle;
+            }
 }
