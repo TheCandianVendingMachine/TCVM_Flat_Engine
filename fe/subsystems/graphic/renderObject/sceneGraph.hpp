@@ -29,23 +29,6 @@ namespace fe
                     fe::poolAllocater<renderText> m_renderTextObjects;
                     fe::spriteBatch m_batch;
 
-                    struct renderJob : public fe::threadJob
-                        {
-                            fe::poolAllocater<renderObject> &m_renderObjects;
-                            fe::spriteBatch &m_batch;
-
-                            unsigned int m_initialIndex;
-                            unsigned int m_endIndex;
-
-                            FLAT_ENGINE_API renderJob(fe::poolAllocater<renderObject> &renderObjects, fe::spriteBatch &batch);
-                            FLAT_ENGINE_API bool execute();
-                        };
-
-                    renderJob m_jobA;
-                    renderJob m_jobB;
-                    renderJob m_jobC;
-                    renderJob m_jobD;
-
                     const unsigned int m_maxObjectsUntilThread;
 
                     FLAT_ENGINE_API void transformGraph(int nodeHandle);
