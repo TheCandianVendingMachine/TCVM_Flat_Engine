@@ -2,12 +2,11 @@
 #include "../subsystems/physics/rigidBody.hpp"
 #include "../subsystems/graphic/renderObject/renderObject.hpp"
 #include "../engine.hpp"
-#include "../subsystems/gameState/gameStateMachine.hpp"
 #include "../subsystems/graphic/renderObject/sceneGraph.hpp"
 #include "../subsystems/physics/physicsEngine.hpp"
 #include "../subsystems/physics/collision/collisionWorld.hpp"
 
-fe::baseEntity::baseEntity(entityModules modules, bool staticObject) :
+fe::baseEntity::baseEntity(fe::entityModules modules, bool staticObject) :
     m_killEntity(false),
     m_enabled(false),
     m_renderObject(nullptr),
@@ -20,25 +19,25 @@ fe::baseEntity::baseEntity(entityModules modules, bool staticObject) :
     m_sizeX(0.f),
     m_sizeY(0.f),
     m_colour(sf::Color::White),
-    m_modulesEnabled(modules)
-    {}
+    m_enabledModulesEnum(modules)
+{}
 
 void fe::baseEntity::deinitialize()
     {
         enable(false);
-        if (m_modulesEnabled & entityModules::RENDER_OBJECT || m_modulesEnabled & entityModules::RENDER_TEXT)
+        if (m_enabledModulesEnum & entityModules::RENDER_OBJECT || m_enabledModulesEnum & entityModules::RENDER_TEXT)
             {
                 fe::engine::get().getStateMachine().getSceneGraph().deleteSceneObject(m_renderObject);
                 m_renderObject = nullptr;
             }
 
-        if (m_modulesEnabled & entityModules::RIGID_BODY)
+        if (m_enabledModulesEnum & entityModules::RIGID_BODY)
             {
                 fe::engine::get().getPhysicsEngine().deleteRigidBody(m_rigidBody);
                 m_rigidBody = nullptr;
             }
 
-        if (m_modulesEnabled & entityModules::COLLISION_BODY)
+        if (m_enabledModulesEnum & entityModules::COLLISION_BODY)
             {
                 fe::engine::get().getCollisionWorld().deleteCollider(m_collisionBody);
                 m_collisionBody = nullptr;
@@ -48,17 +47,17 @@ void fe::baseEntity::deinitialize()
 void fe::baseEntity::enable(bool value)
     {
         m_enabled = value;
-        if (m_modulesEnabled & entityModules::RENDER_OBJECT || m_modulesEnabled & entityModules::RENDER_TEXT) 
+        if (m_enabledModulesEnum & entityModules::RENDER_OBJECT || m_enabledModulesEnum & entityModules::RENDER_TEXT)
             {
                 m_renderObject->m_draw = value;
             }
 
-        if (m_modulesEnabled & entityModules::RIGID_BODY) 
+        if (m_enabledModulesEnum & entityModules::RIGID_BODY)
             {
                 m_rigidBody->enable(value);
             }
 
-        if (m_modulesEnabled & entityModules::COLLISION_BODY)
+        if (m_enabledModulesEnum & entityModules::COLLISION_BODY)
             {
                 m_collisionBody->m_enabled = value;
             }

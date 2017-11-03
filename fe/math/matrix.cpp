@@ -113,6 +113,11 @@ fe::matrix3d fe::matrix3d::operator*(const matrix3d &rhs) const
         return ret;
     }
 
+float fe::matrix3d::operator[](unsigned int index) const
+    {
+        return values[index];
+    }
+
 void fe::matrix3d::combine(const fe::matrix3d &rhs)
     {
         float x = values[0] * rhs.values[0] + values[1] * rhs.values[3] + values[2] * rhs.values[6]; // 11
@@ -135,8 +140,8 @@ void fe::matrix3d::combine(const fe::matrix3d &rhs)
         y = values[6] * rhs.values[1] + values[7] * rhs.values[4] + values[8] * rhs.values[7]; // 23
         z = values[6] * rhs.values[2] + values[7] * rhs.values[5] + values[8] * rhs.values[8]; // 33
 
-        values[6] = x;
-        values[7] = y;
+        values[6] = x; // Position X
+        values[7] = y; // Position Y
         values[8] = z;
     }
 

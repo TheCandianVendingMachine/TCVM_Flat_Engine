@@ -1,5 +1,6 @@
 // gameStateMachine.hpp
 // the FSM for the game states
+#pragma once
 #define FLAT_ENGINE_EXPORT
 #include "../../flatEngineExport.hpp"
 #include "../memory/stackAllocater.hpp"

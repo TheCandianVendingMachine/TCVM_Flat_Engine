@@ -3,7 +3,6 @@
 #pragma once
 #define FLAT_ENGINE_EXPORT
 #include "../flatEngineExport.hpp"
-
 #include "baseEntity.hpp"
 
 namespace fe
@@ -15,5 +14,5 @@ namespace fe
                     FLAT_ENGINE_API squareEntity(fe::Vector2d size, entityModules modules = fe::entityModules::RENDER_OBJECT, bool staticObject = false);
                     FLAT_ENGINE_API squareEntity(sf::Color colour, entityModules modules = fe::entityModules::RENDER_OBJECT, bool staticObject = false);
                     FLAT_ENGINE_API squareEntity(fe::Vector2d size, sf::Color colour, entityModules modules = fe::entityModules::RENDER_OBJECT, bool staticObject = false);
-            };
+        };
     }

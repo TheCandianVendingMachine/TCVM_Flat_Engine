@@ -13,7 +13,7 @@ void fe::sceneGraph::transformGraph(int nodeHandle)
 
         for (auto &child : node->m_children)
             {
-                fe::transformable &realTransform = static_cast<fe::sceneGraphObject*>(m_sceneRenderTree.getNode(child)->m_userData)->m_transform;
+                const fe::transformable &realTransform = static_cast<fe::sceneGraphObject*>(m_sceneRenderTree.getNode(child)->m_userData)->m_transform;
                 fe::transformable *tempTransform = &static_cast<fe::sceneGraphObject*>(m_sceneRenderTree.getNode(child)->m_userData)->m_tempTransform;
                 *tempTransform = realTransform;
                 tempTransform->combine(*nodeTransform);
@@ -33,6 +33,7 @@ void fe::sceneGraph::drawGraph(int nodeHandle, unsigned int &index)
             }
         else if (obj->m_type == TEXT)
             {
+                static_cast<fe::renderText*>(obj)->m_update = true;
                 m_batch.add(static_cast<fe::renderText*>(obj), index);
             }
 
@@ -40,6 +41,11 @@ void fe::sceneGraph::drawGraph(int nodeHandle, unsigned int &index)
             {
                 drawGraph(child, index);
             }
+    }
+
+void fe::sceneGraph::createRenderTextObject(sceneGraphObject *obj, const fe::fontData &font)
+    {
+        static_cast<fe::renderText*>(obj)->m_fontData = font;
     }
 
 int fe::sceneGraph::deleteRenderObject(renderObject *obj)
@@ -114,27 +120,14 @@ void fe::sceneGraph::draw(sf::RenderTarget &window)
         FE_END_PROFILE;
     }
 
-fe::renderObject *fe::sceneGraph::createRenderObject(fe::lightVector2<unsigned int> texturePos, int connected)
+fe::sceneGraphObject *fe::sceneGraph::allocateRenderObject()
     {
-        fe::renderObject *allocated = m_renderObjects.alloc();
-        allocated->m_texCoords[0] = texturePos.x;
-        allocated->m_texCoords[1] = texturePos.y;
-        allocated->m_graphNode = m_sceneRenderTree.addNode();
-        connect(allocated->m_graphNode, connected >= 0 ? connected : m_baseNode.m_graphNode);
-        m_sceneRenderTree.getNode(allocated->m_graphNode)->m_userData = allocated;
-        return allocated;
+        return m_renderObjects.alloc();
     }
 
-fe::renderText *fe::sceneGraph::createRenderTextObject(const fe::fontData &font, fe::lightVector2<unsigned int> texturePos, int connected)
+fe::sceneGraphObject *fe::sceneGraph::allocateRenderText()
     {
-        fe::renderText *text = m_renderTextObjects.alloc();
-        text->m_texCoords[0] = texturePos.x;
-        text->m_texCoords[1] = texturePos.y;
-        text->m_graphNode = m_sceneRenderTree.addNode();
-        connect(text->m_graphNode, connected >= 0 ? connected : m_baseNode.m_graphNode);
-        m_sceneRenderTree.getNode(text->m_graphNode)->m_userData = text;
-        text->m_fontData = font;
-        return text;
+        return m_renderTextObjects.alloc();
     }
 
 int fe::sceneGraph::deleteSceneObject(sceneGraphObject *obj)

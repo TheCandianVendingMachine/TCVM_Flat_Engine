@@ -10,6 +10,7 @@
 #include "../../threading/threadJob.hpp"
 #include "../../../dataStructures/tree.hpp"
 #include "../../resourceManager/fontData.hpp"
+#include <type_traits>
 
 namespace sf
     {
@@ -34,6 +35,7 @@ namespace fe
                     FLAT_ENGINE_API void transformGraph(int nodeHandle);
                     FLAT_ENGINE_API void drawGraph(int nodeHandle, unsigned int &index);
 
+                    FLAT_ENGINE_API void createRenderTextObject(sceneGraphObject *obj, const fe::fontData &font = fe::fontData());
                     FLAT_ENGINE_API int deleteRenderObject(renderObject *obj); // returns the parent node of the render object
                     FLAT_ENGINE_API int deleteRenderTextObject(renderText *obj); // returns the parent node of the render object
 
@@ -46,8 +48,10 @@ namespace fe
 
                     FLAT_ENGINE_API void preDraw();
                     FLAT_ENGINE_API void draw(sf::RenderTarget &window);
-                    FLAT_ENGINE_API renderObject *createRenderObject(fe::lightVector2<unsigned int> texturePos = fe::lightVector2<unsigned int>(), int connected = -1);
-                    FLAT_ENGINE_API renderText *createRenderTextObject(const fe::fontData &font = fe::fontData(), fe::lightVector2<unsigned int> texturePos = fe::lightVector2<unsigned int>(), int connected = -1);
+                    FLAT_ENGINE_API sceneGraphObject *allocateRenderObject();
+                    FLAT_ENGINE_API sceneGraphObject *allocateRenderText();
+                    template<typename ...Args>
+                    void createSceneGraphObject(sceneGraphObject *obj, fe::lightVector2<unsigned int> texturePos = fe::lightVector2<unsigned int>(), int connected = -1, Args &&...args);
                     FLAT_ENGINE_API int deleteSceneObject(sceneGraphObject *obj); // returns the parent node of the render object
 
                     FLAT_ENGINE_API void connect(int a, int b); // connects object with node A to node B
@@ -56,4 +60,19 @@ namespace fe
                     FLAT_ENGINE_API fe::transformable &getGlobalTransform();
 
             };
+
+        template<typename ...Args>
+        void fe::sceneGraph::createSceneGraphObject(sceneGraphObject *obj, fe::lightVector2<unsigned int> texturePos, int connected, Args &&...args)
+            {
+                obj->m_texCoords[0] = texturePos.x;
+                obj->m_texCoords[1] = texturePos.y;
+                obj->m_graphNode = m_sceneRenderTree.addNode();
+                connect(obj->m_graphNode, connected >= 0 ? connected : m_baseNode.m_graphNode);
+                m_sceneRenderTree.getNode(obj->m_graphNode)->m_userData = obj;
+
+                if ((fe::uInt8*)obj >= m_renderTextObjects.getBuffer() && (fe::uInt8*)obj <= m_renderTextObjects.getBuffer() + m_renderTextObjects.byteSize())
+                    {
+                        createRenderTextObject(obj, std::forward<Args>(args)...);
+                    }
+            }
     }

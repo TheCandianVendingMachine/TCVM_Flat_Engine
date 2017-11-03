@@ -48,6 +48,8 @@ namespace fe
                 FLAT_ENGINE_API void operator*=(const matrix3d &rhs);
                 FLAT_ENGINE_API matrix3d operator*(const matrix3d &rhs) const;
 
+                FLAT_ENGINE_API float operator[](unsigned int index) const;
+
                 FLAT_ENGINE_API void combine(const matrix3d &rhs);
 
                 FLAT_ENGINE_API matrix3d transpose();

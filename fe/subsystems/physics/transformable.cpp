@@ -129,6 +129,8 @@ void fe::transformable::combine(fe::transformable &other)
     {
         getMatrix();
         m_matrix.combine(other.getMatrix());
+        m_positionX = m_matrix[6];
+        m_positionY = m_matrix[7];
     }
 
 bool fe::transformable::updateChildren() const
