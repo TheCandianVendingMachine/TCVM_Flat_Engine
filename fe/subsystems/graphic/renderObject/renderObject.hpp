@@ -52,6 +52,7 @@ namespace fe
                 char m_string[FE_MAX_STRING_RENDER_SIZE];
                 sf::VertexArray m_verticies;
                 fe::fontData m_fontData;
+                float m_size[2];
                 float m_fontSize;
                 unsigned int m_strSize;
                 unsigned int m_strPos;

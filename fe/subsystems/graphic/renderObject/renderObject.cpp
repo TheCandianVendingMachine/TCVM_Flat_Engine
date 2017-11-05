@@ -1,5 +1,6 @@
 #include "renderObject.hpp"
 #include "../../../debug/logger.hpp"
+#include "../../../feAssert.hpp"
 #include <cstring>
 
 fe::renderText::renderText() : 
@@ -9,6 +10,8 @@ fe::renderText::renderText() :
     m_update(true)
     {
         std::memset(m_string, 0, FE_MAX_STRING_RENDER_SIZE);
+        m_size[0] = 0.f;
+        m_size[1] = 0.f;
         m_type = TEXT;
     }
 
@@ -42,16 +45,17 @@ void fe::renderText::appendChar(char chr)
 
 void fe::renderText::computeVerticies(const fe::matrix3d &matrix)
     {
+        FE_ASSERT(m_fontData.m_font && m_fontData.m_texture, "Font Data not set");
+
         if (!m_update) return;
         m_update = false;
 
         m_verticies.clear();
 
-        float sizeX = 0;
-        float sizeY = 0;
+        m_size[1] = (m_fontData.m_charSize * 96.f) / 72.f;
 
         float x = matrix.transformPoint({ 0.f, m_fontData.m_charSize }).x;
-        float y = matrix.transformPoint({ 0.f, m_fontData.m_charSize }).y + sizeY;
+        float y = matrix.transformPoint({ 0.f, m_fontData.m_charSize }).y;
 
         sf::Color textColour(m_vertColour[0], m_vertColour[1], m_vertColour[2], m_vertColour[3]);
 
@@ -66,8 +70,8 @@ void fe::renderText::computeVerticies(const fe::matrix3d &matrix)
 
                 float left      = posGlyh.bounds.left;
                 float top       = posGlyh.bounds.top;
-                float right     = posGlyh.bounds.left + posGlyh.bounds.width + sizeX;
-                float bottom    = posGlyh.bounds.top + posGlyh.bounds.height + sizeY;
+                float right     = posGlyh.bounds.left + posGlyh.bounds.width;
+                float bottom    = posGlyh.bounds.top + posGlyh.bounds.height;
 
                 float texturePX = m_texCoords[0] + m_fontData.m_positions[curChar - FE_CHAR_START].x;
                 float texturePY = m_texCoords[1] + m_fontData.m_positions[curChar - FE_CHAR_START].y;
@@ -90,6 +94,7 @@ void fe::renderText::computeVerticies(const fe::matrix3d &matrix)
                 x += posGlyh.advance;
                 prevChar = curChar;
             }
+        m_size[0] = x;
     }
 
 void fe::renderText::setSize(float x, float y)

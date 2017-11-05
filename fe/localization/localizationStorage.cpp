@@ -82,7 +82,7 @@ void fe::localizationStorage::load(const char *textFilepath)
         fe::freeDocument(xmlDoc);
     }
 
-std::string fe::localizationStorage::get(fe::guid packageID, fe::guid textID, fe::guid language)
+const std::string &fe::localizationStorage::get(fe::guid packageID, fe::guid textID, fe::guid language)
     {
         return m_text[packageID][textID][language];
     }

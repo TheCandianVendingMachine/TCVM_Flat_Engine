@@ -29,7 +29,7 @@ namespace fe
 
                 public:
                     FLAT_ENGINE_API void load(const char *textFilepath);
-                    FLAT_ENGINE_API std::string get(fe::guid packageID, fe::guid textID, fe::guid language);
+                    FLAT_ENGINE_API const std::string &get(fe::guid packageID, fe::guid textID, fe::guid language);
 
             };
     }
