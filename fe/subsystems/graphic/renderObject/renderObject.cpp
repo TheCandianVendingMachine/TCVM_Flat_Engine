@@ -47,8 +47,11 @@ void fe::renderText::computeVerticies(const fe::matrix3d &matrix)
 
         m_verticies.clear();
 
+        float sizeX = 0;
+        float sizeY = 0;
+
         float x = matrix.transformPoint({ 0.f, m_fontData.m_charSize }).x;
-        float y = matrix.transformPoint({ 0.f, m_fontData.m_charSize }).y + m_size[1];
+        float y = matrix.transformPoint({ 0.f, m_fontData.m_charSize }).y + sizeY;
 
         sf::Color textColour(m_vertColour[0], m_vertColour[1], m_vertColour[2], m_vertColour[3]);
 
@@ -57,13 +60,14 @@ void fe::renderText::computeVerticies(const fe::matrix3d &matrix)
             {
                 char curChar = m_string[i];
                 const sf::Glyph &glyph = m_fontData.m_font->getGlyph(curChar, m_fontData.m_charSize, 0.f);
-                x += m_fontData.m_font->getKerning(prevChar, curChar, m_fontData.m_charSize);
+                const sf::Glyph &posGlyh = m_fontData.m_font->getGlyph(curChar, m_fontSize, 0.f);
+                x += m_fontData.m_font->getKerning(prevChar, curChar, m_fontSize);
                 
 
-                float left      = glyph.bounds.left;
-                float top       = glyph.bounds.top;
-                float right     = glyph.bounds.left + glyph.bounds.width + m_size[0];
-                float bottom    = glyph.bounds.top + glyph.bounds.height + m_size[1];
+                float left      = posGlyh.bounds.left;
+                float top       = posGlyh.bounds.top;
+                float right     = posGlyh.bounds.left + posGlyh.bounds.width + sizeX;
+                float bottom    = posGlyh.bounds.top + posGlyh.bounds.height + sizeY;
 
                 float texturePX = m_texCoords[0] + m_fontData.m_positions[curChar - FE_CHAR_START].x;
                 float texturePY = m_texCoords[1] + m_fontData.m_positions[curChar - FE_CHAR_START].y;
@@ -83,13 +87,12 @@ void fe::renderText::computeVerticies(const fe::matrix3d &matrix)
                 //m_verticies.append(sf::Vertex(sf::Vector2f(x + right,   y + top),       textColour, sf::Vector2f(textureW, texturePY)));
                 //m_verticies.append(sf::Vertex(sf::Vector2f(x + right,   y + bottom),    textColour, sf::Vector2f(textureW, textureH)));
 
-                x += glyph.advance + m_size[0];
+                x += posGlyh.advance;
                 prevChar = curChar;
             }
     }
 
 void fe::renderText::setSize(float x, float y)
     {
-        m_size[0] = x;
-        m_size[1] = y;
+        m_fontSize = (y * (72.f / 96.f));
     }

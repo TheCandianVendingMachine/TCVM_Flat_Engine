@@ -118,6 +118,15 @@ void fe::baseEntity::updateModules()
 
                 m_moved = abs(m_rigidBody->m_oldPositionX - m_rigidBody->m_positionX) > 0.0001f || abs(m_rigidBody->m_oldPositionY - m_rigidBody->m_positionY) > 0.0001f;
             }
+
+        if (m_renderObject)
+            {
+                if (m_collisionBody)
+                    {
+                        m_collisionBody->m_aabb.m_globalPositionX = m_renderObject->m_tempTransform.getPosition().x;
+                        m_collisionBody->m_aabb.m_globalPositionY = m_renderObject->m_tempTransform.getPosition().y;
+                    }
+            }
     }
 
 void fe::baseEntity::setPosition(float x, float y)

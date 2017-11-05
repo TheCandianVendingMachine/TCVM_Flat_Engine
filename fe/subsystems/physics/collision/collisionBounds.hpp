@@ -10,6 +10,8 @@ namespace fe
             {
                 float m_positionX = 0.f;
                 float m_positionY = 0.f;
+                float m_globalPositionX = 0.f;
+                float m_globalPositionY = 0.f;
 
                 virtual bool intersects(const collisionBounds &other) const = 0;
                 virtual bool contains(const collisionBounds &other) const = 0;
