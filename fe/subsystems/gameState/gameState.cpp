@@ -15,22 +15,6 @@ void fe::baseGameState::removePanel(gui::panel *panel)
         m_guiPanels.erase(std::remove(m_guiPanels.begin(), m_guiPanels.end(), panel), m_guiPanels.end());
     }
 
-void fe::baseGameState::removeObject(fe::Handle ent)
-    {
-        m_gameWorld.getObject(ent)->onRemove(*this);
-        m_gameWorld.removeGameObject(ent);
-    }
-
-void fe::baseGameState::removeObject(fe::baseEntity *ent)
-    {
-        removeObject(ent->GUID());
-    }
-
-fe::baseEntity *fe::baseGameState::getObject(fe::Handle handle) const
-    {
-        return m_gameWorld.getObject(handle);
-    }
-
 void fe::baseGameState::startUp()
     {
         m_gameWorld.startUp();
@@ -91,6 +75,22 @@ void fe::baseGameState::draw(sf::RenderTarget &app)
 void fe::baseGameState::shutDown()
     {
         m_gameWorld.shutDown();
+    }
+
+void fe::baseGameState::removeObject(fe::Handle ent)
+    {
+        m_gameWorld.getObject(ent)->onRemove(*this);
+        m_gameWorld.removeGameObject(ent);
+    }
+
+void fe::baseGameState::removeObject(fe::baseEntity *ent)
+    {
+        removeObject(ent->GUID());
+    }
+
+fe::baseEntity *fe::baseGameState::getObject(fe::Handle handle) const
+    {
+        return m_gameWorld.getObject(handle);
     }
 
 fe::gameWorld &fe::baseGameState::getGameWorld()

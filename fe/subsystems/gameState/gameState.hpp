@@ -35,12 +35,6 @@ namespace fe
                     FLAT_ENGINE_API void addPanel(gui::panel *panel);
                     FLAT_ENGINE_API void removePanel(gui::panel *panel);
 
-                    template<typename ...Args>
-                    FLAT_ENGINE_API fe::Handle addObject(fe::baseEntity *ent, bool staticObject, Args &&...args);
-                    FLAT_ENGINE_API void removeObject(fe::Handle ent);
-                    FLAT_ENGINE_API void removeObject(fe::baseEntity *ent);
-                    FLAT_ENGINE_API fe::baseEntity *getObject(fe::Handle handle) const;
-
                 public:
                     FLAT_ENGINE_API baseGameState() {}
 
@@ -68,6 +62,12 @@ namespace fe
 
                     FLAT_ENGINE_API virtual void deinit() {}
                     FLAT_ENGINE_API void shutDown();
+
+                    template<typename ...Args>
+                    FLAT_ENGINE_API fe::Handle addObject(fe::baseEntity *ent, bool staticObject, Args &&...args);
+                    FLAT_ENGINE_API void removeObject(fe::Handle ent);
+                    FLAT_ENGINE_API void removeObject(fe::baseEntity *ent);
+                    FLAT_ENGINE_API fe::baseEntity *getObject(fe::Handle handle) const;
 
                     FLAT_ENGINE_API fe::gameWorld &getGameWorld();
 
