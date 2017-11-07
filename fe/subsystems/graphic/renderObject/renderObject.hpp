@@ -49,8 +49,9 @@ namespace fe
 
         struct renderText : public sceneGraphObject
             {
+                float m_verticies[FE_MAX_STRING_RENDER_SIZE * 4]; // x, y, w, h
+                float m_charTexCoords[FE_MAX_STRING_RENDER_SIZE * 4]; // x, y, w, h for each text
                 char m_string[FE_MAX_STRING_RENDER_SIZE];
-                sf::VertexArray m_verticies;
                 fe::fontData m_fontData;
                 float m_size[2];
                 float m_fontSize;
@@ -64,7 +65,7 @@ namespace fe
                 FLAT_ENGINE_API void setString(const char *str);
                 FLAT_ENGINE_API void appendChar(char chr);
 
-                FLAT_ENGINE_API void computeVerticies(const fe::matrix3d &matrix);
+                FLAT_ENGINE_API void computeVerticies();
                 FLAT_ENGINE_API void setSize(float x, float y);
             };
     }

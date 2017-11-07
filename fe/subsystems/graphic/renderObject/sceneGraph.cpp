@@ -29,12 +29,15 @@ void fe::sceneGraph::drawGraph(int nodeHandle, unsigned int &index)
 
         if (obj->m_type == OBJECT)
             {
+                FE_ENGINE_PROFILE("scene_graph", "addObjectToBatch");
                 m_batch.add(static_cast<fe::renderObject*>(obj), index);
+                FE_END_PROFILE;
             }
         else if (obj->m_type == TEXT)
             {
-                static_cast<fe::renderText*>(obj)->m_update = true;
+                FE_ENGINE_PROFILE("scene_graph", "addTextToBatch");
                 m_batch.add(static_cast<fe::renderText*>(obj), index);
+                FE_END_PROFILE;
             }
 
         for (auto &child : node->m_children)
@@ -108,15 +111,6 @@ void fe::sceneGraph::draw(sf::RenderTarget &window)
 
         FE_ENGINE_PROFILE("scene_graph", "window_draw");
         m_batch.draw(window, states, index);
-        FE_ENGINE_PROFILE("scene_graph", "text_draw");
-        for (unsigned int i = 0; i < m_renderTextObjects.getObjectAllocCount(); i++)
-            {
-                /*fe::renderText *text = m_renderTextObjects.at(i);
-                text->m_text.setColor(sf::Color(text->m_vertColour[0], text->m_vertColour[1], text->m_vertColour[2], text->m_vertColour[3]));
-                text->m_text.setPosition(text->m_transform.getPosition().convertToSfVec2());
-                window.draw(text->m_text);*/
-            }
-        FE_END_PROFILE;
         FE_END_PROFILE;
     }
 
