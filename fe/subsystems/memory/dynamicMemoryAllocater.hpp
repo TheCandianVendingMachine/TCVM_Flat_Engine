@@ -13,13 +13,13 @@ namespace fe
                 private:
                     struct memoryHeader
                         {
-                            fe::uInt64 m_size; // does NOT include size of header
+                            fe::uInt64 m_size = 0; // does NOT include size of header
                         };
 
                     struct freeBlock
                         {
-                            fe::uInt64 m_size; // does NOT include size of header
-                            freeBlock *m_next;
+                            fe::uInt64 m_size = 0; // does NOT include size of header
+                            freeBlock *m_next = nullptr;
                         };
                     
                     fe::uInt64 m_totalSize;
@@ -27,6 +27,8 @@ namespace fe
                     fe::uInt8 *m_memoryBuffer;
 
                 public:
+                    FLAT_ENGINE_API dynamicMemoryAllocater();
+
                     FLAT_ENGINE_API void startUp(fe::uInt8 *buffer, fe::uInt64 size);
 
                     FLAT_ENGINE_API void *alloc(fe::uInt64 size);

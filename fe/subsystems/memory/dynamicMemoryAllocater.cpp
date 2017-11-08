@@ -5,6 +5,10 @@
 #include <algorithm>
 #include <cmath>
 
+fe::dynamicMemoryAllocater::dynamicMemoryAllocater() : m_freeBlocks(nullptr), m_memoryBuffer(nullptr)
+    {
+    }
+
 void fe::dynamicMemoryAllocater::startUp(fe::uInt8 *buffer, fe::uInt64 size)
     {
         m_totalSize = size;
@@ -45,9 +49,18 @@ void *fe::dynamicMemoryAllocater::alloc(fe::uInt64 size)
         FE_ASSERT(verify(), "Size of dynamic memory allocater not total size");
         // Allocate new free block node
         freeBlock *newBlock = nullptr;
-        newBlock = static_cast<freeBlock*>(static_cast<void*>(m_memoryBuffer + ((fe::uInt8*)allocBlock - m_memoryBuffer) + size + sizeOfFreeBlock));
-        newBlock->m_next = allocBlock->m_next;
+        newBlock = static_cast<freeBlock*>(static_cast<void*>(reinterpret_cast<fe::uInt8*>(allocBlock) + size + sizeOfFreeBlock));
+        if (allocBlock->m_next && reinterpret_cast<fe::uInt8*>(newBlock) + sizeOfFreeBlock > reinterpret_cast<fe::uInt8*>(allocBlock->m_next))
+            {
+                newBlock->m_next = allocBlock->m_next->m_next;
+                allocBlock->m_next = newBlock;
+            }
+        else
+            {
+                newBlock->m_next = allocBlock->m_next;
+            }
         newBlock->m_size = allocBlock->m_size - size - sizeOfFreeBlock;
+        FE_ASSERT(verify(), "Size of dynamic memory allocater not total size");
 
         if (previousNode)
             {
@@ -57,6 +70,7 @@ void *fe::dynamicMemoryAllocater::alloc(fe::uInt64 size)
             {
                 m_freeBlocks = newBlock;
             }
+        FE_ASSERT(verify(), "Size of dynamic memory allocater not total size");
 
         // Allocate data in memory buffer
         fe::uInt64 allocBlockOffset = ((fe::uInt8*)allocBlock - m_memoryBuffer);
@@ -75,7 +89,7 @@ void fe::dynamicMemoryAllocater::free(void *memory)
         if ((fe::uInt8*)memory < (fe::uInt8*)m_memoryBuffer || (fe::uInt8*)memory >(fe::uInt8*)m_memoryBuffer + m_totalSize) return;
         FE_ASSERT(verify(), "Size of dynamic memory allocater not total size");
 
-        fe::uInt64 memoryPos = (static_cast<fe::uInt8*>(memory) - sizeof(memoryHeader)) - m_memoryBuffer; // index of the memory INCLUDING the header
+        fe::uInt64 memoryPos = (reinterpret_cast<fe::uInt8*>(memory) - sizeof(memoryHeader)) - m_memoryBuffer; // index of the memory INCLUDING the header
         fe::uInt64 sizeOfMemory = static_cast<memoryHeader*>(static_cast<void*>(m_memoryBuffer + memoryPos))->m_size;
 
         std::memset(m_memoryBuffer + memoryPos, 0, sizeOfMemory + sizeof(memoryHeader));
@@ -149,9 +163,12 @@ bool fe::dynamicMemoryAllocater::verify() const
 
         size += (static_cast<fe::uInt8*>((void*)m_freeBlocks) - m_memoryBuffer);
 
+        FE_ASSERT(iter, "Iterator is nullptr");
+
         while (iter->m_next)
             {
                 ++iterations;
+                FE_ASSERT(static_cast<fe::int8*>((void*)iter->m_next) - static_cast<fe::int8*>((void*)iter) >= 0, "Size not Unsinged (Subtracted to negative)");
                 size += static_cast<fe::uInt8*>((void*)iter->m_next) - static_cast<fe::uInt8*>((void*)iter);
                 iter = iter->m_next;
             }
