@@ -11,7 +11,7 @@ void fe::gameWorld::onAdd(fe::baseEntity *object, fe::Handle objectHandle)
 
 void fe::gameWorld::onRemove(fe::baseEntity *object, fe::Handle objectHandle)
     {
-        object->deinitialize();
+        object->deinitialize(*this);
     }
 
 void fe::gameWorld::startUp()
@@ -50,9 +50,19 @@ fe::broadphaseAbstract *fe::gameWorld::getStaticBroadphase() const
         return m_staticBroadphase;
     }
 
+const fe::sceneGraph &fe::gameWorld::getSceneGraph() const
+    {
+        return m_sceneGraph;
+    }
+
 fe::sceneGraph &fe::gameWorld::getSceneGraph()
     {
         return m_sceneGraph;
+    }
+
+const fe::graph &fe::gameWorld::getAIGraph() const
+    {
+        return m_aiGraph;
     }
 
 fe::graph &fe::gameWorld::getAIGraph()

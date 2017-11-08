@@ -23,7 +23,7 @@ void fe::localizationStorage::load(rapidxml::xml_node<> *currentNode)
                                             for (rapidxml::xml_node<> *sibling = idNodes->first_node(); sibling; sibling = sibling->next_sibling())
                                                 {
                                                     std::string language = sibling->first_attribute()->value();
-                                                    std::string content = sibling->value();
+                                                    char *content = sibling->value(); // char because of memory allocation bug with std::string
                                                     m_text[FE_STR(nextNode->first_attribute()->value())][FE_STR(id.c_str())][FE_STR(language.c_str())] = content;
                                                 }
                                         }
@@ -47,7 +47,7 @@ void fe::localizationStorage::loadPackage(rapidxml::xml_node<> *packageBaseNode,
                             for (rapidxml::xml_node<> *sibling = idNodes->first_node(); sibling; sibling = sibling->next_sibling())
                                 {
                                     std::string language = sibling->first_attribute()->value();
-                                    std::string content = sibling->value();
+                                    char *content = sibling->value(); // char because of memory allocation bug with std::string
                                     m_text[package][FE_STR(id.c_str())][FE_STR(language.c_str())] = content;
                                 }
                         #else

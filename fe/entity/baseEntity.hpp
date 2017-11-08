@@ -7,6 +7,7 @@
 #include "../engine.hpp"
 #include "../subsystems/physics/rigidBody.hpp"
 #include "../subsystems/gameState/gameStateMachine.hpp"
+#include "../subsystems/gameState/gameWorld.hpp"
 #include "../subsystems/physics/collision/collisionBody.hpp"
 #include "../subsystems/physics/collision/collisionWorld.hpp"
 #include "../subsystems/graphic/renderObject/sceneGraph.hpp"
@@ -18,6 +19,7 @@ namespace fe
         struct sceneGraphObject;
         class rigidBody;
         class baseGameState;
+        class gameWorld;
 
         enum class entityModules : std::int16_t
             {
@@ -66,8 +68,8 @@ namespace fe
                 public:
                     FLAT_ENGINE_API baseEntity(fe::entityModules modules, bool staticObject);
                     template<typename ...Args>
-                    void initialize(Args &&...args);
-                    FLAT_ENGINE_API void deinitialize();
+                    void initialize(fe::gameWorld &world, Args &&...args);
+                    FLAT_ENGINE_API void deinitialize(fe::gameWorld &world);
 
                     FLAT_ENGINE_API void enable(bool value);
                     FLAT_ENGINE_API bool getEnabled() const;
@@ -112,15 +114,15 @@ namespace fe
             };
 
         template<typename ...Args>
-        void fe::baseEntity::initialize(Args &&...args)
+        void fe::baseEntity::initialize(fe::gameWorld &world, Args &&...args)
             {
                 if (m_enabledModulesEnum & fe::entityModules::RENDER_OBJECT)
                     {
-                        m_renderObject = fe::engine::get().getStateMachine().getSceneGraph().allocateRenderObject();
+                        m_renderObject = world.getSceneGraph().allocateRenderObject();
                     }
                 else if (m_enabledModulesEnum & fe::entityModules::RENDER_TEXT)
                     {
-                        m_renderObject = fe::engine::get().getStateMachine().getSceneGraph().allocateRenderText();
+                        m_renderObject = world.getSceneGraph().allocateRenderText();
                     }
 
                 if (m_enabledModulesEnum & fe::entityModules::RIGID_BODY)
@@ -135,7 +137,7 @@ namespace fe
 
                 if (m_renderObject)
                     {
-                        fe::engine::get().getStateMachine().getSceneGraph().createSceneGraphObject(m_renderObject, std::forward<Args>(args)...);
+                        world.getSceneGraph().createSceneGraphObject(m_renderObject, std::forward<Args>(args)...);
                         m_renderObject->m_static = m_static;
                     }
 

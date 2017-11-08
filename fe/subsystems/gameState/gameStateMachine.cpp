@@ -264,23 +264,23 @@ void fe::gameStateMachine::postDraw()
             }
     }
 
-fe::sceneGraph &fe::gameStateMachine::getSceneGraph()
+const fe::sceneGraph &fe::gameStateMachine::getSceneGraph() const
     {
         return m_endState->m_currentState->getGameWorld().getSceneGraph();
     }
 
-const fe::baseGameState &fe::gameStateMachine::getCurrentState()
+const fe::baseGameState &fe::gameStateMachine::getCurrentState() const
     {
         return *m_endState->m_currentState;
     }
 
-const fe::broadphaseAbstract *fe::gameStateMachine::getDynamicBroadphase()
+const fe::broadphaseAbstract *fe::gameStateMachine::getDynamicBroadphase() const
     {
         if (!m_endState) return nullptr;
         return m_endState->m_currentState->getGameWorld().getDynamicBroadphase();
     }
 
-const fe::broadphaseAbstract *fe::gameStateMachine::getStaticBroadphase()
+const fe::broadphaseAbstract *fe::gameStateMachine::getStaticBroadphase() const
     {
         if (!m_endState) return nullptr;
         return m_endState->m_currentState->getGameWorld().getStaticBroadphase();

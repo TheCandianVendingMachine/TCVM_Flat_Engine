@@ -437,8 +437,8 @@ void fe::aabbTree::update(fe::collider *collider)
             {
                 remove(nodeIndex);
                 treeNode *currentNode = &m_nodes[nodeIndex];
-                currentNode->m_fatAABB.m_positionX = collider->m_aabb.m_positionX - m_fatness;
-                currentNode->m_fatAABB.m_positionY = collider->m_aabb.m_positionY - m_fatness;
+                currentNode->m_fatAABB.m_globalPositionX = collider->m_aabb.m_globalPositionX - m_fatness;
+                currentNode->m_fatAABB.m_globalPositionY = collider->m_aabb.m_globalPositionY - m_fatness;
                 currentNode->m_fatAABB.m_sizeX = collider->m_aabb.m_sizeX + m_fatness + m_fatness;
                 currentNode->m_fatAABB.m_sizeY = collider->m_aabb.m_sizeY + m_fatness + m_fatness;
                 insert(nodeIndex);

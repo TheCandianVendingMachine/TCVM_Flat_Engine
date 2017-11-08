@@ -23,6 +23,7 @@ void fe::dynamicMemoryAllocater::startUp(fe::uInt8 *buffer, fe::uInt64 size)
 
 void *fe::dynamicMemoryAllocater::alloc(fe::uInt64 size)
     {
+        FE_ASSERT(size > 0, "Allocating zero sized memory");
         FE_ASSERT(verify(), "Size of dynamic memory allocater not total size");
         void *data = nullptr;
         const fe::uInt64 sizeOfHeader =     sizeof(dynamicMemoryAllocater::memoryHeader);
@@ -47,6 +48,7 @@ void *fe::dynamicMemoryAllocater::alloc(fe::uInt64 size)
         FE_ASSERT(fe::int64(allocBlock->m_size) - fe::int64(sizeOfFreeBlock) > fe::int64(size), "Dynamic Memory Allocater underflow");
         FE_ASSERT(allocBlock->m_size <= m_totalSize, "Dynamic Memory Manager out of range");
         FE_ASSERT(verify(), "Size of dynamic memory allocater not total size");
+        FE_ASSERT(allocBlock->m_size > 0, "Memory Header Size == 0");
         // Allocate new free block node
         freeBlock *newBlock = nullptr;
         newBlock = static_cast<freeBlock*>(static_cast<void*>(reinterpret_cast<fe::uInt8*>(allocBlock) + size + sizeOfFreeBlock));
@@ -73,31 +75,37 @@ void *fe::dynamicMemoryAllocater::alloc(fe::uInt64 size)
         FE_ASSERT(verify(), "Size of dynamic memory allocater not total size");
 
         // Allocate data in memory buffer
-        fe::uInt64 allocBlockOffset = ((fe::uInt8*)allocBlock - m_memoryBuffer);
-        memoryHeader *header = static_cast<memoryHeader*>(static_cast<void*>(m_memoryBuffer + allocBlockOffset));
-        header->m_size = size;
-        data = static_cast<void*>(m_memoryBuffer + allocBlockOffset + sizeOfHeader);
+        reinterpret_cast<memoryHeader*>(allocBlock)->m_size = size;
+        data = static_cast<void*>(reinterpret_cast<fe::uInt8*>(allocBlock) + sizeOfHeader);
 
         std::memset(data, 0, size);
 
         FE_ASSERT(verify(), "Size of dynamic memory allocater not total size");
+        FE_ASSERT(verifyMemoryHeader(data), "Memory Header Size == 0");
         return data;
     }
 
 void fe::dynamicMemoryAllocater::free(void *memory)
     {
-        if ((fe::uInt8*)memory < (fe::uInt8*)m_memoryBuffer || (fe::uInt8*)memory >(fe::uInt8*)m_memoryBuffer + m_totalSize) return;
+        if((fe::uInt8*)memory < (fe::uInt8*)m_memoryBuffer || (fe::uInt8*)memory >(fe::uInt8*)m_memoryBuffer + m_totalSize) return;
         FE_ASSERT(verify(), "Size of dynamic memory allocater not total size");
+        FE_ASSERT(verifyMemoryHeader(memory), "Memory Header Size == 0");
 
-        fe::uInt64 memoryPos = (reinterpret_cast<fe::uInt8*>(memory) - sizeof(memoryHeader)) - m_memoryBuffer; // index of the memory INCLUDING the header
-        fe::uInt64 sizeOfMemory = static_cast<memoryHeader*>(static_cast<void*>(m_memoryBuffer + memoryPos))->m_size;
+        auto size = sizeof(memoryHeader);
+        fe::uInt8 *memoryLoc = reinterpret_cast<fe::uInt8*>(memory) - sizeof(memoryHeader); // index of the memory INCLUDING the header
+        auto mem = reinterpret_cast<memoryHeader*>(memoryLoc);
+        fe::uInt64 sizeOfMemory = reinterpret_cast<memoryHeader*>(memoryLoc)->m_size;
 
-        std::memset(m_memoryBuffer + memoryPos, 0, sizeOfMemory + sizeof(memoryHeader));
+        FE_ASSERT(sizeOfMemory > 0, "Size of memory has to be > 0");
 
-        freeBlock *newBlock = static_cast<freeBlock*>(static_cast<void*>(m_memoryBuffer + memoryPos));
+        std::memset(memoryLoc, 0, sizeOfMemory + sizeof(memoryHeader));
+
+        freeBlock *newBlock = reinterpret_cast<freeBlock*>(memoryLoc);
         static_assert(sizeof(freeBlock) >= sizeof(memoryHeader), "Freeblock size smaller than memory header - math error");
         newBlock->m_size = sizeOfMemory + sizeof(freeBlock) - sizeof(memoryHeader);
         newBlock->m_next = nullptr;
+
+        FE_ASSERT(newBlock->m_size > 0, "Header Size == 0");
 
         freeBlock *blockList = m_freeBlocks;
         if (blockList > newBlock)
@@ -178,4 +186,10 @@ bool fe::dynamicMemoryAllocater::verify() const
 
         int dif = m_totalSize - size;
         return size == m_totalSize;
+    }
+
+bool fe::dynamicMemoryAllocater::verifyMemoryHeader(void *memory) const
+    {
+        fe::uInt64 size = *static_cast<fe::uInt64*>(reinterpret_cast<void*>(reinterpret_cast<fe::uInt8*>(memory) - sizeof(fe::uInt64)));
+        return size > 0;
     }

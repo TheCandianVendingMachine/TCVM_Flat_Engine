@@ -37,9 +37,9 @@ namespace fe
                     // Returns the collider that is at the point
                     virtual void *colliderAtPoint(float x, float y) const = 0;
                     // Returns the collider that is at the point
-                    inline void *colliderAtPoint(fe::Vector2d &point) const { return colliderAtPoint(point.x, point.y); }
+                    inline void *colliderAtPoint(const fe::Vector2d &point) const { return colliderAtPoint(point.x, point.y); }
                     // Returns the collider that is at the point
-                    inline void *colliderAtPoint(fe::lightVector2d &point) const { return colliderAtPoint(point.x, point.y); }
+                    inline void *colliderAtPoint(const fe::lightVector2d &point) const { return colliderAtPoint(point.x, point.y); }
 
                     // Casts a ray and tests against the broadphase algorithm
                     virtual raycastResult raycast(float x, float y, float dirX, float dirY) const = 0;

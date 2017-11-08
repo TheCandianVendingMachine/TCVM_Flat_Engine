@@ -32,6 +32,7 @@ namespace fe
                 int m_vertColour[4];  // r, g, b, a
                 float m_texCoords[2]; // x, y
                 int m_graphNode = -1;
+                int m_zPosition;
                 bool m_draw = true;
                 bool m_static = false;
 

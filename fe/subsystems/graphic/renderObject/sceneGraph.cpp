@@ -65,6 +65,19 @@ int fe::sceneGraph::deleteRenderTextObject(renderText *obj)
         return parentNode;
     }
 
+void fe::sceneGraph::addZ(int z)
+    {
+        int newNode = m_sceneRenderTree.addNode();
+        m_sceneRenderTree.addChild(m_baseNode.m_graphNode, newNode);
+        m_sceneRenderTree.getNode(newNode)->m_userData = m_sceneGraphObjects.alloc();
+        m_zOrderMap[z] = newNode;
+    }
+
+int fe::sceneGraph::getZ(int z)
+    {
+        return m_zOrderMap[z];
+    }
+
 fe::sceneGraph::sceneGraph() :
     m_maxObjectsUntilThread(2500) // 2500 = ~when threading and not threading reaches an intersection in FPS
     {
@@ -74,8 +87,11 @@ void fe::sceneGraph::startUp()
     {
         m_renderObjects.startUp(FE_MAX_GAME_OBJECTS);
         m_renderTextObjects.startUp(FE_MAX_TEXT_OBJECTS);
+        m_sceneGraphObjects.startUp(FE_MAX_Z_ORDER);
         m_baseNode.m_graphNode = m_sceneRenderTree.addNode();
         m_sceneRenderTree.getNode(m_baseNode.m_graphNode)->m_userData = &m_baseNode;
+
+        addZ(0);
     }
 
 void fe::sceneGraph::shutDown()
@@ -135,6 +151,32 @@ int fe::sceneGraph::deleteSceneObject(sceneGraphObject *obj)
                 return deleteRenderTextObject(static_cast<fe::renderText*>(obj));
             }
         return -1;
+    }
+
+void fe::sceneGraph::setZOrder(sceneGraphObject *object, int z)
+    {
+        object->m_zPosition = z;
+        setZOrder(object->m_graphNode, z);
+    }
+
+void fe::sceneGraph::connect(sceneGraphObject *objectA, sceneGraphObject *objectB)
+    {
+        connect(objectA->m_graphNode, objectB->m_graphNode);
+    }
+
+void fe::sceneGraph::disconnect(sceneGraphObject *object)
+    {
+        disconnect(object->m_graphNode);
+    }
+
+void fe::sceneGraph::setZOrder(int node, int z)
+    {
+        if (!m_sceneRenderTree.nodeExists(m_baseNode.m_graphNode, getZ(z)))
+            {
+                addZ(z);
+            }
+        connect(node, getZ(z));
+        m_sceneRenderTree.sort(m_baseNode.m_graphNode);
     }
 
 void fe::sceneGraph::connect(int a, int b)

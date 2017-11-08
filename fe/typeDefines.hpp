@@ -13,6 +13,7 @@
 
 #define FE_MAX_GAME_OBJECTS 1024 // Max = 2^16
 #define FE_MAX_TEXT_OBJECTS 512
+#define FE_MAX_Z_ORDER 64 // Maximum amount of Z-Order
 
 #define FE_MAX_STRING_RENDER_SIZE 512
 

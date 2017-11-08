@@ -93,6 +93,11 @@ fe::baseEntity *fe::baseGameState::getObject(fe::Handle handle) const
         return m_gameWorld.getObject(handle);
     }
 
+const fe::gameWorld &fe::baseGameState::getGameWorld() const
+    {
+        return m_gameWorld;
+    }
+
 fe::gameWorld &fe::baseGameState::getGameWorld()
     {
         return m_gameWorld;

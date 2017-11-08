@@ -106,10 +106,10 @@ namespace fe
                     FLAT_ENGINE_API void draw(sf::RenderTarget &app);
                     FLAT_ENGINE_API void postDraw();
 
-                    FLAT_ENGINE_API fe::sceneGraph &getSceneGraph();
-                    FLAT_ENGINE_API const fe::baseGameState &getCurrentState();
-                    FLAT_ENGINE_API const fe::broadphaseAbstract *getDynamicBroadphase();
-                    FLAT_ENGINE_API const fe::broadphaseAbstract *getStaticBroadphase();
+                    FLAT_ENGINE_API const fe::sceneGraph &getSceneGraph() const;
+                    FLAT_ENGINE_API const fe::baseGameState &getCurrentState() const;
+                    FLAT_ENGINE_API const fe::broadphaseAbstract *getDynamicBroadphase() const;
+                    FLAT_ENGINE_API const fe::broadphaseAbstract *getStaticBroadphase() const;
 
 
                     FLAT_ENGINE_API virtual ~gameStateMachine() {}

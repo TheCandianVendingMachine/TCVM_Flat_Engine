@@ -18,8 +18,8 @@ namespace fe
 
                     struct freeBlock
                         {
-                            fe::uInt64 m_size = 0; // does NOT include size of header
                             freeBlock *m_next = nullptr;
+                            fe::uInt64 m_size = 0; // does NOT include size of header
                         };
                     
                     fe::uInt64 m_totalSize;
@@ -38,6 +38,7 @@ namespace fe
 
                     // Verifies that the memory block list still is the correct size
                     FLAT_ENGINE_API bool verify() const;
+                    FLAT_ENGINE_API bool verifyMemoryHeader(void *memory) const;
 
             };
     }

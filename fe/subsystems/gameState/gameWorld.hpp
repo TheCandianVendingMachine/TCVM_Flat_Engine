@@ -36,8 +36,10 @@ namespace fe
                     FLAT_ENGINE_API fe::broadphaseAbstract *getDynamicBroadphase() const;
                     FLAT_ENGINE_API fe::broadphaseAbstract *getStaticBroadphase() const;
 
+                    FLAT_ENGINE_API const fe::sceneGraph &getSceneGraph() const;
                     FLAT_ENGINE_API fe::sceneGraph &getSceneGraph();
 
+                    FLAT_ENGINE_API const fe::graph &getAIGraph() const;
                     FLAT_ENGINE_API fe::graph &getAIGraph();
 
                     FLAT_ENGINE_API void preUpdate();
@@ -61,7 +63,7 @@ namespace fe
                 fe::Handle objHandle = addObject(entity);
                 fe::baseEntity *object = getObject(objHandle);
 
-                object->initialize(std::forward<Args>(args)...);
+                object->initialize(*this, std::forward<Args>(args)...);
                 if (object->m_collisionBody)
                     {
                         if (object->m_collisionBody->m_static && m_staticBroadphase)

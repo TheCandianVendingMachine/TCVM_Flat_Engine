@@ -1,6 +1,7 @@
 #include "baseEntity.hpp"
 #include "../subsystems/physics/rigidBody.hpp"
 #include "../subsystems/graphic/renderObject/renderObject.hpp"
+#include "../subsystems/gameState/gameState.hpp"
 #include "../engine.hpp"
 #include "../subsystems/graphic/renderObject/sceneGraph.hpp"
 #include "../subsystems/physics/physicsEngine.hpp"
@@ -22,12 +23,12 @@ fe::baseEntity::baseEntity(fe::entityModules modules, bool staticObject) :
     m_enabledModulesEnum(modules)
 {}
 
-void fe::baseEntity::deinitialize()
+void fe::baseEntity::deinitialize(fe::gameWorld &world)
     {
         enable(false);
         if (m_enabledModulesEnum & entityModules::RENDER_OBJECT || m_enabledModulesEnum & entityModules::RENDER_TEXT)
             {
-                fe::engine::get().getStateMachine().getSceneGraph().deleteSceneObject(m_renderObject);
+                world.getSceneGraph().deleteSceneObject(m_renderObject);
                 m_renderObject = nullptr;
             }
 

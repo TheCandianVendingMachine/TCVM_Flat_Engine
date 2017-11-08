@@ -69,6 +69,7 @@ namespace fe
                     FLAT_ENGINE_API void removeObject(fe::baseEntity *ent);
                     FLAT_ENGINE_API fe::baseEntity *getObject(fe::Handle handle) const;
 
+                    FLAT_ENGINE_API const fe::gameWorld &getGameWorld() const;
                     FLAT_ENGINE_API fe::gameWorld &getGameWorld();
 
                     FLAT_ENGINE_API virtual ~baseGameState();
