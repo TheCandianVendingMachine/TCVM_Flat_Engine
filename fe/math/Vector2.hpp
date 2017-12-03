@@ -42,6 +42,12 @@ namespace fe
                 Vector2<dataType> operator/(const dataType &rhs) const          { return Vector2<dataType>(x / rhs, y / rhs); }
                 Vector2<dataType> operator-() const                             { return Vector2<dataType>(-rhs.x, -rhs.y); }
                 
+                
+                template<typename T> Vector2<dataType> operator+(const Vector2<T> &rhs) const   { return Vector2<dataType>(rhs.x + x, rhs.y + y); }
+                template<typename T> Vector2<dataType> operator-(const Vector2<T> &rhs) const   { return Vector2<dataType>(x - rhs.x, y - rhs.y); }
+                template<typename T> Vector2<dataType> operator*(const T &rhs) const            { return Vector2<dataType>(rhs * x, rhs * y); }
+                template<typename T> Vector2<dataType> operator/(const T &rhs) const            { return Vector2<dataType>(x / rhs, y / rhs); }
+
                 // A way to get the x/y coordinate based on the index provided. Useful in incrementing loops
                 dataType operator[](const size_t &index) const  { if (index == 0) return x; if (index == 1) return y; return 0.f; }
                 // A way to get the x/y coordinate based on the index provided. Useful in incrementing loops

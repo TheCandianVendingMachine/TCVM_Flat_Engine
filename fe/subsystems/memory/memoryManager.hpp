@@ -3,6 +3,7 @@
 #pragma once
 #define FLAT_ENGINE_EXPORT
 #include "../../flatEngineExport.hpp"
+#include "../../typeDefines.hpp"
 #include "stackAllocater.hpp"
 #include "dynamicMemoryAllocater.hpp"
 
@@ -35,16 +36,16 @@ namespace fe
                     stackAllocater m_stackAllocater;
                     dynamicMemoryAllocater m_dynamicAllocater;
 
-                    size_t m_bufferSize;
-                    size_t m_currentOffset;
+                    fe::uInt64 m_bufferSize;
+                    fe::uInt64 m_currentOffset;
 
-                    char *m_allocatedBuffer;
+                    fe::uInt8 *m_allocatedBuffer;
                     static memoryManager *m_instance;
 
                     bool m_shutDown;
 
                 public:
-                    FLAT_ENGINE_API void startUp(size_t bufferSize, size_t stackSize, size_t dynamicSize);
+                    FLAT_ENGINE_API void startUp(fe::uInt64 bufferSize, fe::uInt64 stackSize, fe::uInt64 dynamicSize);
                     FLAT_ENGINE_API void shutDown();
                     FLAT_ENGINE_API static memoryManager &get();
 
@@ -53,13 +54,13 @@ namespace fe
 
                     // allocate memory from the "heap" of specific size
                     // IF YOU CALL THIS YOU MUST LOG IT MANUALLY.
-                    FLAT_ENGINE_API void *alloc(size_t size);
+                    FLAT_ENGINE_API void *alloc(fe::uInt64 size);
 
                     // not to be used
                     FLAT_ENGINE_API stackAllocater &getStackAllocater();
                     FLAT_ENGINE_API dynamicMemoryAllocater &getDynamicAllocater();
 
-                    FLAT_ENGINE_API char *getBuffer() const;
+                    FLAT_ENGINE_API fe::uInt8 *getBuffer() const;
 
                     FLAT_ENGINE_API ~memoryManager();
 

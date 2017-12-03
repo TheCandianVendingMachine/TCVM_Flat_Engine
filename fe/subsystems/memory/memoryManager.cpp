@@ -4,16 +4,16 @@
 
 fe::memoryManager *fe::memoryManager::m_instance = nullptr;
 
-void fe::memoryManager::startUp(size_t bufferSize, size_t stackSize, size_t dynamicSize)
+void fe::memoryManager::startUp(fe::uInt64 bufferSize, fe::uInt64 stackSize, fe::uInt64 dynamicSize)
     {
         if (!m_instance)
             {
                 m_instance = this;
                 m_bufferSize = bufferSize;
-                m_allocatedBuffer = static_cast<char*>(malloc(m_bufferSize));
+                m_allocatedBuffer = static_cast<fe::uInt8*>(malloc(m_bufferSize));
 
                 // start up the different types of memory allocaters
-                m_stackAllocater.startUp(static_cast<char*>(alloc(stackSize)), stackSize);
+                m_stackAllocater.startUp(static_cast<fe::uInt8*>(alloc(stackSize)), stackSize);
                 m_dynamicAllocater.startUp(static_cast<fe::uInt8*>(alloc(dynamicSize)), dynamicSize);
             }
 
@@ -51,7 +51,7 @@ bool fe::memoryManager::exists()
         return m_instance != nullptr;
     }
 
-void *fe::memoryManager::alloc(size_t size)
+void *fe::memoryManager::alloc(fe::uInt64 size)
     {
         if (m_currentOffset + size <= m_bufferSize)
             {
@@ -75,7 +75,7 @@ fe::dynamicMemoryAllocater &fe::memoryManager::getDynamicAllocater()
         return m_dynamicAllocater;
     }
 
-char *fe::memoryManager::getBuffer() const
+fe::uInt8 *fe::memoryManager::getBuffer() const
     {
         return m_allocatedBuffer;
     }

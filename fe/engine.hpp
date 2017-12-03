@@ -99,7 +99,7 @@ namespace fe
                     FLAT_ENGINE_API const fe::Vector2d getMousePos() const;
 
                     FLAT_ENGINE_API fe::gameStateMachine &getStateMachine() const;
-                    FLAT_ENGINE_API const fe::baseGameState &getCurrentState() const;
+                    FLAT_ENGINE_API fe::baseGameState &getCurrentState() const;
                     FLAT_ENGINE_API fe::inputManager &getInputManager() const;
                     FLAT_ENGINE_API const fe::renderer &getRenderer() const;
                     FLAT_ENGINE_API fe::eventSender &getEventSender() const;

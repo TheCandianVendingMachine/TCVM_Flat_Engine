@@ -14,7 +14,7 @@ void fe::gameStateMachine::startUp()
 
                 auto size = 4_MiB;
                 auto memBuf = FE_ALLOC_DIRECT_CAPTURED("StateBuffer", size);
-                m_stateAllocater.startUp(static_cast<char*>(memBuf), size);
+                m_stateAllocater.startUp(static_cast<fe::uInt8*>(memBuf), size);
 
                 m_instance = this;
 
@@ -281,6 +281,28 @@ const fe::broadphaseAbstract *fe::gameStateMachine::getDynamicBroadphase() const
     }
 
 const fe::broadphaseAbstract *fe::gameStateMachine::getStaticBroadphase() const
+    {
+        if (!m_endState) return nullptr;
+        return m_endState->m_currentState->getGameWorld().getStaticBroadphase();
+    }
+
+fe::sceneGraph &fe::gameStateMachine::getSceneGraph()
+    {
+        return m_endState->m_currentState->getGameWorld().getSceneGraph();
+    }
+
+fe::baseGameState &fe::gameStateMachine::getCurrentState()
+    {
+        return *m_endState->m_currentState;
+    }
+
+fe::broadphaseAbstract *fe::gameStateMachine::getDynamicBroadphase()
+    {
+        if (!m_endState) return nullptr;
+        return m_endState->m_currentState->getGameWorld().getDynamicBroadphase();
+    }
+
+fe::broadphaseAbstract *fe::gameStateMachine::getStaticBroadphase()
     {
         if (!m_endState) return nullptr;
         return m_endState->m_currentState->getGameWorld().getStaticBroadphase();

@@ -297,7 +297,7 @@ fe::gameStateMachine &fe::engine::getStateMachine() const
         return *m_gameStateMachine;
     }
 
-const fe::baseGameState &fe::engine::getCurrentState() const
+fe::baseGameState &fe::engine::getCurrentState() const
     {
         return m_gameStateMachine->getCurrentState();
     }

@@ -5,7 +5,7 @@ void *operator new(size_t bytes)
     {
         if (fe::memoryManager::exists())
             {
-                return fe::memoryManager::get().getDynamicAllocater().alloc(bytes);
+                return fe::memoryManager::get().getDynamicAllocater().alloc(bytes, 2);
             }
 
         return malloc(bytes);

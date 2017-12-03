@@ -12,30 +12,38 @@ void fe::tileMap::rebuildTilemap()
         int index = 0;
         for (auto &tile : getObjects())
             {
-                auto size = fe::engine::get().getResourceManager<sf::Texture>()->getTexture(tile->textureId)->getSize();
+                auto size = fe::Vector2d(tile->xSize, tile->ySize);
+                auto texturePos = fe::Vector2d(tile->xTexturePosition, tile->yTexturePosition) + m_textureOffset;
                 auto pos = fe::Vector2d(tile->xPosition, tile->yPosition);
-                auto offset = fe::engine::get().getResourceManager<sf::Texture>()->getTexturePosition(tile->textureId);
 
                 m_verticies[index + 0].position = fe::Vector2d(pos.x,               pos.y).convertToSfVec2();
                 m_verticies[index + 1].position = fe::Vector2d(pos.x + size.x,      pos.y).convertToSfVec2();
                 m_verticies[index + 2].position = fe::Vector2d(pos.x + size.x,      pos.y + size.y).convertToSfVec2();
                 m_verticies[index + 3].position = fe::Vector2d(pos.x,               pos.y + size.y).convertToSfVec2();
 
-                m_verticies[index + 0].texCoords = fe::Vector2d(offset.x,           offset.y).convertToSfVec2();
-                m_verticies[index + 1].texCoords = fe::Vector2d(offset.x + size.x,  offset.y).convertToSfVec2();
-                m_verticies[index + 2].texCoords = fe::Vector2d(offset.x + size.x,  offset.y + size.y).convertToSfVec2();
-                m_verticies[index + 3].texCoords = fe::Vector2d(offset.x,           offset.y + size.y).convertToSfVec2();
+                m_verticies[index + 0].texCoords = fe::Vector2d(texturePos.x,           texturePos.y).convertToSfVec2();
+                m_verticies[index + 1].texCoords = fe::Vector2d(texturePos.x + size.x,  texturePos.y).convertToSfVec2();
+                m_verticies[index + 2].texCoords = fe::Vector2d(texturePos.x + size.x,  texturePos.y + size.y).convertToSfVec2();
+                m_verticies[index + 3].texCoords = fe::Vector2d(texturePos.x,           texturePos.y + size.y).convertToSfVec2();
 
                 index += 4;
             }
     }
 
-void fe::tileMap::create(fe::guid name, fe::guid textureID)
+void fe::tileMap::addGlobalTexture(fe::Vector2<unsigned int> offset)
+    {
+        m_textureOffset = offset;
+    }
+
+void fe::tileMap::create(fe::guid name, fe::Vector2<unsigned int> size, fe::Vector2<unsigned int> offset)
     {
         imp::tile fab;
 
         fab.id = name;
-        fab.textureId = textureID;
+        fab.xTexturePosition = offset.x;
+        fab.yTexturePosition = offset.y;
+        fab.xSize = size.x;
+        fab.ySize = size.y;
 
         m_fabrications.push_back(fab);
     }
@@ -71,7 +79,7 @@ fe::Handle fe::tileMap::get(fe::Vector2d position)
         for (auto &tile : getObjects())
             {
                 fe::Vector2d tPosition(tile->xPosition, tile->yPosition);
-                fe::Vector2<unsigned int> tSize = fe::engine::get().getResourceManager<sf::Texture>()->getTexture(tile->textureId)->getSize();
+                fe::Vector2<unsigned int> tSize = fe::Vector2<unsigned int>(tile->xSize, tile->ySize);
                 if (position.x > tPosition.x && position.x < tPosition.x + tSize.x &&
                     position.y > tPosition.y && position.y < tPosition.y + tSize.y)
                     {

@@ -19,7 +19,8 @@ namespace fe
         class spriteBatch
             {
                 private:
-                    sf::Vertex m_batch[(FE_MAX_GAME_OBJECTS * 4) + (FE_MAX_TEXT_OBJECTS * 6)];
+                    static constexpr fe::uInt64 m_BATCH_SIZE = (FE_MAX_GAME_OBJECTS * 4) + ((FE_MAX_STRING_RENDER_SIZE * 4) * FE_MAX_TEXT_OBJECTS);
+                    sf::Vertex m_batch[m_BATCH_SIZE];
 
                 public:
                     FLAT_ENGINE_API spriteBatch();

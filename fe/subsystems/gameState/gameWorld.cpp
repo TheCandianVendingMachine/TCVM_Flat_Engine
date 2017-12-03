@@ -3,6 +3,8 @@
 #include "../physics/collision/collisionWorld.hpp"
 #include "../physics/collision/broadphaseAbstract.hpp"
 #include "../../debug/profiler.hpp"
+#include "../resourceManager/resourceManager.hpp"
+#include "../../engine.hpp"
 
 void fe::gameWorld::onAdd(fe::baseEntity *object, fe::Handle objectHandle)
     {
@@ -17,6 +19,7 @@ void fe::gameWorld::onRemove(fe::baseEntity *object, fe::Handle objectHandle)
 void fe::gameWorld::startUp()
     {
         m_sceneGraph.startUp();
+        m_staticRenderStates.texture = &fe::engine::get().getResourceManager<sf::Texture>()->get();
         m_dynamicBroadphase = nullptr;
         m_staticBroadphase = nullptr;
     }
@@ -58,6 +61,16 @@ const fe::sceneGraph &fe::gameWorld::getSceneGraph() const
 fe::sceneGraph &fe::gameWorld::getSceneGraph()
     {
         return m_sceneGraph;
+    }
+
+const fe::tileMap &fe::gameWorld::getTileMap() const
+    {
+        return m_tileMap;
+    }
+
+fe::tileMap &fe::gameWorld::getTileMap()
+    {
+        return m_tileMap;
     }
 
 const fe::graph &fe::gameWorld::getAIGraph() const
@@ -124,6 +137,7 @@ void fe::gameWorld::preDraw()
 
 void fe::gameWorld::draw(sf::RenderTarget &app)
     {
+        m_tileMap.draw(app, m_staticRenderStates);
         m_sceneGraph.draw(app);
         if (m_dynamicBroadphase) m_dynamicBroadphase->debugDraw();
         if (m_staticBroadphase) m_staticBroadphase->debugDraw();

@@ -2,6 +2,7 @@
 #include "../../physics/transformable.hpp"
 #include "../../../math/matrix.hpp"
 #include "../../../debug/profiler.hpp"
+#include "../../../feAssert.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 
 fe::spriteBatch::spriteBatch()
@@ -97,6 +98,7 @@ void fe::spriteBatch::add(fe::renderText *text, unsigned int &index)
 
                 index += 4;
             }
+        FE_ASSERT(index <= m_BATCH_SIZE, "Index Overflows Vertex Buffer");
     }
 
 void fe::spriteBatch::clear()

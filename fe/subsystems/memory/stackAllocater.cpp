@@ -1,7 +1,7 @@
 #include "stackAllocater.hpp"
 #include "../../feAssert.hpp"
 
-void fe::stackAllocater::startUp(char *buffer, size_t bufferSize)
+void fe::stackAllocater::startUp(fe::uInt8 *buffer, fe::uInt64 bufferSize)
     {
         m_topOfBuffer = reinterpret_cast<Marker>((void*)buffer);
 
@@ -11,7 +11,7 @@ void fe::stackAllocater::startUp(char *buffer, size_t bufferSize)
         m_offset = 0;
     }
 
-void *fe::stackAllocater::alloc(size_t size)
+void *fe::stackAllocater::alloc(fe::uInt64 size)
     {
         if (m_offset + size <= m_bufferSize)
             {

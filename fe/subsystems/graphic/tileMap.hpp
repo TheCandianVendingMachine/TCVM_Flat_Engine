@@ -22,12 +22,16 @@ namespace fe
                 struct tile
                     {
                         fe::guid id;
-                        fe::guid textureId;
 
                         float xPosition;
                         float yPosition;
 
-                        SERIALIZE_ID("tile", "x", xPosition, "y", yPosition, "id", id, "textureId", textureId);
+                        unsigned int xTexturePosition;
+                        unsigned int yTexturePosition;
+                        unsigned int xSize;
+                        unsigned int ySize;
+
+                        SERIALIZE_ID("tile", "x", xPosition, "y", yPosition, "xSize", xSize, "ySize", ySize, "xTexturePosition", xTexturePosition, "yTexturePosition", yTexturePosition, "id", id);
                     };
             }
 
@@ -36,12 +40,15 @@ namespace fe
                 private:
                     std::vector<fe::imp::tile> m_fabrications; // tiles already defined
                     sf::VertexArray m_verticies;
+                    fe::Vector2<unsigned int> m_textureOffset; // offset of texture in texture packer
 
                     FLAT_ENGINE_API void rebuildTilemap();
 
                 public:
+                    FLAT_ENGINE_API void addGlobalTexture(fe::Vector2<unsigned int> offset);
+
                     // Create a tile and put it into the fabrications
-                    FLAT_ENGINE_API void create(fe::guid name, fe::guid textureID);
+                    FLAT_ENGINE_API void create(fe::guid name, fe::Vector2<unsigned int> size, fe::Vector2<unsigned int> offset);
 
                     FLAT_ENGINE_API fe::Handle add(fe::Vector2d position, fe::guid tileId);
                     FLAT_ENGINE_API void remove(fe::Handle handle);

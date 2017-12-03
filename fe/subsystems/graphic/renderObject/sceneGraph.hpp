@@ -79,17 +79,16 @@ namespace fe
                 obj->m_texCoords[1] = texturePos.y;
                 obj->m_graphNode = m_sceneRenderTree.addNode();
                 obj->m_zPosition = z;
+                m_sceneRenderTree.getNode(obj->m_graphNode)->m_userData = obj;
 
                 if (connected < 0)
                     {
-                        setZOrder(obj, getZ(z));
+                        setZOrder(obj, z);
                     }
                 else 
                     {
                         connect(obj->m_graphNode, connected);
                     }
-
-                m_sceneRenderTree.getNode(obj->m_graphNode)->m_userData = obj;
 
                 if ((fe::uInt8*)obj >= m_renderTextObjects.getBuffer() && (fe::uInt8*)obj <= m_renderTextObjects.getBuffer() + m_renderTextObjects.byteSize())
                     {

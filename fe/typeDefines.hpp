@@ -5,17 +5,17 @@
 #define FE_OUTPUT_PROFILE_RESULTS true
 #define FE_PROFILE_RELEASE true
 #define FE_PROFILE_PRINT_ZEROS false
-#define FE_MAX_PROFILER_PROFILES 5000 // How many different profiler profiles can be created
+#define FE_MAX_PROFILER_PROFILES 250 // How many different profiler profiles can be created
 #define FE_PROFILER_AVERAGE_MAX 500 // how much data needs to be recorded before an average is computed
 
 #define FE_DEBUG_NO_SEED true
 #define FE_DEFAULT_RANDOM_SEED 555
 
 #define FE_MAX_GAME_OBJECTS 1024 // Max = 2^16
-#define FE_MAX_TEXT_OBJECTS 512
+#define FE_MAX_TEXT_OBJECTS 64
 #define FE_MAX_Z_ORDER 64 // Maximum amount of Z-Order
 
-#define FE_MAX_STRING_RENDER_SIZE 512
+#define FE_MAX_STRING_RENDER_SIZE 128
 
 #define FE_CHAR_START 33 // The characters that will be generated into a bitmap font
 #define FE_CHAR_END 126
@@ -40,6 +40,12 @@ namespace fe
         #else
             using int64 = signed long long;
             using uInt64 = unsigned long long;
+        #endif
+
+        #if defined(_WIN64)
+            using uIntPtr = uInt64;
+        #else
+            using uIntPtr = uInt32;
         #endif
 
     }

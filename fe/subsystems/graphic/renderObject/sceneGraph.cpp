@@ -68,7 +68,7 @@ int fe::sceneGraph::deleteRenderTextObject(renderText *obj)
 void fe::sceneGraph::addZ(int z)
     {
         int newNode = m_sceneRenderTree.addNode();
-        m_sceneRenderTree.addChild(m_baseNode.m_graphNode, newNode);
+        connect(newNode, m_baseNode.m_graphNode);
         m_sceneRenderTree.getNode(newNode)->m_userData = m_sceneGraphObjects.alloc();
         m_zOrderMap[z] = newNode;
     }
@@ -142,7 +142,7 @@ fe::sceneGraphObject *fe::sceneGraph::allocateRenderText()
 
 int fe::sceneGraph::deleteSceneObject(sceneGraphObject *obj)
     {
-        if ((fe::uInt8*)obj >= m_renderObjects.getBuffer() && (fe::uInt8*)obj <=m_renderObjects.getBuffer() + m_renderObjects.byteSize())
+        if ((fe::uInt8*)obj >= m_renderObjects.getBuffer() && (fe::uInt8*)obj <= m_renderObjects.getBuffer() + m_renderObjects.byteSize())
             {
                 return deleteRenderObject(static_cast<fe::renderObject*>(obj));
             }
@@ -175,14 +175,18 @@ void fe::sceneGraph::setZOrder(int node, int z)
             {
                 addZ(z);
             }
-        connect(node, getZ(z));
+        disconnect(node);
+        if (!m_sceneRenderTree.nodeExists(getZ(z), node)) 
+            {
+                connect(node, getZ(z));
+            }
         m_sceneRenderTree.sort(m_baseNode.m_graphNode);
     }
 
 void fe::sceneGraph::connect(int a, int b)
     {
         auto node = m_sceneRenderTree.getNode(a);
-        m_sceneRenderTree.removeChild(a, node->m_parent);
+        m_sceneRenderTree.removeChild(node->m_parent, a);
         m_sceneRenderTree.addChild(b, a);
     }
 

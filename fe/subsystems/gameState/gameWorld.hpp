@@ -2,6 +2,7 @@
 // The game world. Contains all relavent classes that are required for a world to function. Pathfinding graph, scene graph, etc
 #pragma once
 #include "../graphic/renderObject/sceneGraph.hpp"
+#include "../graphic/tileMap.hpp"
 #include "../../objectManagement/handleManager.hpp"
 #include "../ai/graph.hpp"
 
@@ -20,9 +21,12 @@ namespace fe
             {
                 private:
                     fe::sceneGraph m_sceneGraph;
+                    fe::tileMap m_tileMap;
                     fe::graph m_aiGraph;
                     fe::broadphaseAbstract *m_dynamicBroadphase;
                     fe::broadphaseAbstract *m_staticBroadphase;
+
+                    sf::RenderStates m_staticRenderStates;
 
                     FLAT_ENGINE_API void onAdd(fe::baseEntity *object, fe::Handle objectHandle);
                     FLAT_ENGINE_API void onRemove(fe::baseEntity *object, fe::Handle objectHandle);
@@ -38,6 +42,9 @@ namespace fe
 
                     FLAT_ENGINE_API const fe::sceneGraph &getSceneGraph() const;
                     FLAT_ENGINE_API fe::sceneGraph &getSceneGraph();
+
+                    FLAT_ENGINE_API const fe::tileMap &getTileMap() const;
+                    FLAT_ENGINE_API fe::tileMap &getTileMap();
 
                     FLAT_ENGINE_API const fe::graph &getAIGraph() const;
                     FLAT_ENGINE_API fe::graph &getAIGraph();
