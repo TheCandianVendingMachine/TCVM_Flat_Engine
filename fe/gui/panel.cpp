@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <cstring>
 
-fe::gui::panel::panel(fe::Vector2d size, int modifiers, const char *title, sf::Font *font) :
+fe::gui::panel::panel(fe::Vector2d size, int modifiers, const char *title, const sf::Font *font) :
     m_mousePressed(false),
     m_size(size),
     m_panelColour(12, 175, 232, 75),
@@ -70,7 +70,7 @@ void fe::gui::panel::setModifiers(int modifiers)
             }
     }
 
-void fe::gui::panel::setTitle(const char *title, sf::Font &font)
+void fe::gui::panel::setTitle(const char *title, const sf::Font &font)
     {
         char croppedTitle[31];
         std::strncpy(croppedTitle, title, 30);

@@ -53,7 +53,7 @@ namespace fe
                 auto *memManager = &memoryManager::get();
                 if (memManager)
                     {
-                        m_freeIndicies = static_cast<bool*>(memManager->alloc(objectCount * sizeof(T)));
+                        m_freeIndicies = static_cast<bool*>(memManager->getStackAllocater().alloc(objectCount * sizeof(T)));
                         std::memset(m_freeIndicies, true, sizeof(m_freeIndicies));
 
                         auto size = sizeof(T) * objectCount;

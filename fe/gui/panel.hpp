@@ -77,11 +77,11 @@ namespace fe
                             bool m_isFolded;
 
                         public:
-                            FLAT_ENGINE_API panel(fe::Vector2d size = {50, 50}, int modifiers = 0, const char *title = "\0", sf::Font *font = nullptr);
+                            FLAT_ENGINE_API panel(fe::Vector2d size = {50, 50}, int modifiers = 0, const char *title = "\0", const sf::Font *font = nullptr);
 
                             FLAT_ENGINE_API void setModifiers(int modifiers);
 
-                            FLAT_ENGINE_API void setTitle(const char *title, sf::Font &font);
+                            FLAT_ENGINE_API void setTitle(const char *title, const sf::Font &font);
                             FLAT_ENGINE_API std::string getTitle() const;
 
                             FLAT_ENGINE_API void setPanelBarColour(sf::Color colour);
