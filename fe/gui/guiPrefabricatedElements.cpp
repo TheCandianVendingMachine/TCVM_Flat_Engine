@@ -29,6 +29,7 @@ void fe::guiPrefabricatedElements::loadElements(const char *filepath)
                                 element.load(nodeIt);
                                 nodeIt = nodeIt->next_sibling();
                             }
+                        element.m_id = FE_STR(firstNode->first_attribute()->value());
                         m_prefabElements[FE_STR(firstNode->first_attribute()->value())] = element;
                     }
                 else if (name == "panel")
@@ -116,6 +117,7 @@ fe::gui::guiElement *fe::guiPrefabricatedElements::getElement(fe::guid elementPr
                 element = new fe::gui::guiElement();
             }
         
+        element->setID(elementTemplate.m_id);
         element->setSize(size);
         element->setInactiveColour(sf::Color(   elementTemplate.m_inactiveColour.r,
                                                 elementTemplate.m_inactiveColour.g, 

@@ -154,6 +154,19 @@ fe::gui::guiElement *fe::gui::panel::getElement(unsigned int handle)
         return m_guiElements[m_guiHandles[handle]];
     }
 
+fe::gui::guiElement *fe::gui::panel::getElement(const char *id)
+    {
+        fe::guid requestedId = FE_STR(id);
+        for (auto &element : m_guiElements)
+            {
+                if (element->id() == requestedId)
+                    {
+                        return element;
+                    }
+            }
+        return nullptr;
+    }
+
 void fe::gui::panel::setElementPosition(unsigned int handle, fe::Vector2d position)
     {
         auto element = getElement(handle);

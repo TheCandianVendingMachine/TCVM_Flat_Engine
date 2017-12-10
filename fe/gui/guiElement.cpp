@@ -11,7 +11,7 @@ fe::matrix3d fe::gui::guiElement::getParentTransform()
         return getMatrix();
     }
 
-fe::gui::guiElement::guiElement() : m_parentPanel(nullptr), m_parentElement(nullptr), m_event(FE_STR("NO_EVENT"))
+fe::gui::guiElement::guiElement() : m_parentPanel(nullptr), m_parentElement(nullptr), m_event(FE_STR("NO_EVENT")), m_id(0)
     {
         m_active = false;
         m_colourUpdate = false;
@@ -113,4 +113,14 @@ void fe::gui::guiElement::draw(sf::RenderTarget &target)
                 m_colourUpdate = false;
             }
         drawElement(target, getParentTransform());
+    }
+
+void fe::gui::guiElement::setID(fe::guid id)
+    {
+        m_id = id;
+    }
+
+fe::guid fe::gui::guiElement::id()
+    {
+        return m_id;
     }

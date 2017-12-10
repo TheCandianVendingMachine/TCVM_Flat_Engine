@@ -44,6 +44,7 @@ namespace fe
                 struct elementTemplate
                     {
                         coord m_size;
+                        fe::guid m_id;
 
                         struct
                             {

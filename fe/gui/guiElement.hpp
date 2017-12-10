@@ -28,6 +28,7 @@ namespace fe
                             sf::Color m_inactiveColour;
 
                             fe::guid m_event;
+                            fe::guid m_id;
 
                             const panel *m_parentPanel; // the panel this gui element is attached to.
                             guiElement *m_parentElement;
@@ -68,6 +69,9 @@ namespace fe
                             virtual void handleEvent(const sf::Event &event) {}
                             virtual void update() {}
                             FLAT_ENGINE_API virtual void draw(sf::RenderTarget &target);
+
+                            FLAT_ENGINE_API void setID(fe::guid id);
+                            FLAT_ENGINE_API fe::guid id();
                             
                     };
             }
