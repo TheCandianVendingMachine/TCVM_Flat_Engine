@@ -1,4 +1,5 @@
 #include "square.hpp"
+#include "../subsystems/messaging/eventSender.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 
 void fe::gui::square::drawElement(sf::RenderTarget &target, const fe::matrix3d &matrix)
@@ -29,15 +30,9 @@ fe::gui::square::square(fe::Vector2d size, sf::Color colour)
         m_shape[3].position = { 0, size.y };
     }
 
-fe::gui::square::square(sf::Texture *texture, fe::Vector2d texCoords)
+fe::gui::square::square(const sf::Texture *texture, fe::Vector2d texCoords) : m_texture(texture)
     {
         m_shape = sf::VertexArray(sf::PrimitiveType::Quads, 4);
-        setTexture(texture, texCoords);
-    }
-
-void fe::gui::square::setTexture(sf::Texture *texture, fe::Vector2d texCoords)
-    {
-        m_texture = texture;
         m_shape[0].texCoords = { 0.f, 0.f };
         m_shape[1].texCoords = { texCoords.x, 0.f };
         m_shape[2].texCoords = { texCoords.x, texCoords.y };

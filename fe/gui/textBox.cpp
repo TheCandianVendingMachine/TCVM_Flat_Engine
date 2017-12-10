@@ -1,4 +1,6 @@
 #include "textBox.hpp"
+#include "../engine.hpp"
+#include "../subsystems/messaging/eventSender.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/Font.hpp>
@@ -6,7 +8,7 @@
 
 #include "panel.hpp"
 
-void fe::gui::textBox::checkAddChar(sf::Uint32 ascii, const sf::Glyph &glyph)
+bool fe::gui::textBox::checkAddChar(sf::Uint32 ascii, const sf::Glyph &glyph)
     {
         if ((m_allowAlpha && m_allowNumerics) ||
             (m_allowNumerics && (ascii >= '0' && ascii <= '9') || (ascii == '-' || ascii == '.')) ||
@@ -14,11 +16,14 @@ void fe::gui::textBox::checkAddChar(sf::Uint32 ascii, const sf::Glyph &glyph)
             {
                 m_inputText += (char)ascii;
                 m_lastCharPos.x += glyph.advance;
+                return true;
             }
+        return false;
     }
 
-void fe::gui::textBox::addChar(sf::Uint32 ascii)
+bool fe::gui::textBox::addChar(sf::Uint32 ascii)
     {
+        bool added = false;
         if (ascii == '\b')
             {
                 if (m_inputText.size() > 0)
@@ -27,7 +32,6 @@ void fe::gui::textBox::addChar(sf::Uint32 ascii)
                         m_inputText.erase(m_inputText.size() - 1, 1);
                         sf::Glyph glyph = m_drawText.getText().getFont()->getGlyph(ascii, m_drawText.getCharacterSize(), false);
                         m_lastCharPos.x -= glyph.advance;
-                        m_textSize.x -= glyph.advance;
                         if (m_lastCharPos.x < m_paddingX && !m_inputText.empty())
                             {
                                 auto lineSpace = m_drawText.getText().getFont()->getLineSpacing(m_drawText.getCharacterSize());
@@ -49,10 +53,9 @@ void fe::gui::textBox::addChar(sf::Uint32 ascii)
                 float lineSpace = m_drawText.getText().getFont()->getLineSpacing(m_drawText.getCharacterSize());
                 if (!m_wordWrap)
                     {
-                        if (m_lastCharPos.x + glyph.advance <= m_size.x - m_paddingX || m_sizeToText)
+                        if (m_lastCharPos.x + glyph.advance <= m_size.x - m_paddingX)
                             {
-                                checkAddChar(ascii, glyph);
-                                m_textSize.x += glyph.advance;
+                                added |= checkAddChar(ascii, glyph);
                             }
                     }
                 else
@@ -62,26 +65,57 @@ void fe::gui::textBox::addChar(sf::Uint32 ascii)
                                 m_lastCharPos = { m_paddingX, m_lastCharPos.y + lineSpace };
                             }
 
-                        if (m_lastCharPos.x + glyph.advance <= m_size.x - m_paddingX && m_lastCharPos.y + lineSpace <= m_size.y - m_paddingY)
+                        if (m_lastCharPos.y <= m_size.y - m_paddingY)
                             {
-                                checkAddChar(ascii, glyph);
-                            }
-                        else if (m_lastCharPos.y + lineSpace <= m_size.y - m_paddingY)
-                            {
-                                checkAddChar('\n', glyph);
-                                checkAddChar(ascii, glyph);
+                                if (!m_sizeToText)
+                                    {
+                                        if (m_lastCharPos.x + glyph.advance <= m_size.x - m_paddingX)
+                                            {
+                                                added |= checkAddChar(ascii, glyph);
+                                                if (m_inputText.size() == 1)
+                                                    {
+                                                        m_lastCharPos.y = m_lastCharPos.y + lineSpace;
+                                                    }
+                                            }
+                                        else if (m_lastCharPos.y + lineSpace <= m_size.y - m_paddingY)
+                                            {
+                                                added |= checkAddChar('\n', glyph);
+                                                added |= checkAddChar(ascii, glyph);
 
-                                m_lastCharPos = { m_paddingX + glyph.advance, m_lastCharPos.y + lineSpace };
+                                                m_lastCharPos = { m_paddingX + glyph.advance, m_lastCharPos.y + lineSpace };
+                                            }
+                                    }
+                                else
+                                    {
+                                        if (m_lastCharPos.x + glyph.advance <= m_maxSize.x - m_paddingX) // we limit in the X direction for style choice
+                                            {
+                                                added |= checkAddChar(ascii, glyph);
+                                                if (m_inputText.size() == 1)
+                                                    {
+                                                        m_lastCharPos.y = m_lastCharPos.y + lineSpace;
+                                                    }
+                                            }
+                                        else
+                                            {
+                                                added |= checkAddChar('\n', glyph);
+                                                added |= checkAddChar(ascii, glyph);
+
+                                                m_lastCharPos = { m_paddingX + glyph.advance, m_lastCharPos.y + lineSpace };
+                                            }
+                                    }
                             }
                     }
             }
         m_drawText.setString(m_inputText.c_str());
 
-        if (m_sizeToText) 
+        m_characterBoundingBox.x = std::max(m_characterBoundingBox.x, m_lastCharPos.x);
+        m_characterBoundingBox.y = m_lastCharPos.y;
+        if (m_sizeToText)
             {
-                float sizeX = (m_paddingX * 2.f) + m_textSize.x;
-                setSize({ sizeX, getSize().y });
+                setSize({ m_characterBoundingBox.x + (m_paddingX * 2.f), m_characterBoundingBox.y + (m_paddingY * 2.f) });
             }
+
+        return added;
     }
 
 void fe::gui::textBox::drawElement(sf::RenderTarget &target, const fe::matrix3d &matrix)
@@ -96,22 +130,26 @@ void fe::gui::textBox::drawElement(sf::RenderTarget &target, const fe::matrix3d 
         m_drawText.draw(target);
     }
 
-fe::gui::textBox::textBox(fe::Vector2d size, const sf::Font &font, options opt, float textStrSize, unsigned int maxChars, float padX, float padY, const char *text) : m_drawText(font, ""), m_paddingX(padX), m_paddingY(padY)
+fe::gui::textBox::textBox(fe::Vector2d size, const sf::Font &font, options opt, float textStrSize, unsigned int maxChars, float padX, float padY, const char *text) : 
+    m_drawText(font, ""),
+    m_paddingX(padX),
+    m_paddingY(padY),
+    m_allowAlpha(false),
+    m_allowNumerics(false),
+    m_input(false),
+    m_allowInput(false),
+    m_wordWrap(false),
+    m_sizeToText(false),
+    m_maxChars(maxChars),
+    m_inputText(text),
+    m_maxSize(size),
+    m_characterBoundingBox(m_paddingX * 2.f, m_paddingY * 2.f)
     {
-        m_allowAlpha = false;
-        m_allowNumerics = false;
-        m_input = false;
-        m_allowInput = true;
-        m_wordWrap = false;
-        m_sizeToText = false;
-
-        m_maxChars = maxChars;
-
+        m_size = size;
         setOptions(opt);
-
         m_drawText.setParent(this);
         m_drawText.setPosition({ m_paddingX, m_paddingY });
-        m_lastCharPos = { m_paddingX, m_paddingY + m_drawText.getText().getFont()->getLineSpacing(m_drawText.getCharacterSize()) };
+        
         if (textStrSize < 0.f) 
             {
                 m_drawText.setPixelSize(size.y - (m_paddingY * 2));
@@ -120,17 +158,19 @@ fe::gui::textBox::textBox(fe::Vector2d size, const sf::Font &font, options opt, 
             {
                 m_drawText.setPixelSize(textStrSize);
             }
-        m_inputText = text;
+        m_lastCharPos = { m_paddingX, m_paddingY + font.getLineSpacing(m_drawText.getCharacterSize()) };
         setString(text);
 
         m_shape.setPrimitiveType(sf::PrimitiveType::LinesStrip);
         m_shape.resize(5);
 
-        m_size = size;
-
         setActiveColour(sf::Color(255, 255, 255, 255));
         setInactiveColour(sf::Color(255, 255, 255, 220));
     }
+
+fe::gui::textBox::textBox(fe::Vector2d size, const sf::Font &font, options opt, float textStrSize, unsigned int maxChars, float padX, float padY, const std::string &text) : 
+    textBox(size, font, opt, textStrSize, maxChars, padX, padY, text.c_str())
+    {}
 
 void fe::gui::textBox::setOptions(options opt)
     {
@@ -167,10 +207,28 @@ void fe::gui::textBox::handleEvent(const sf::Event &event)
             {
                 addChar(event.text.unicode);
             }
+        else if (m_input && event.type == sf::Event::KeyReleased)
+            {
+                if (event.key.code == sf::Keyboard::Return)
+                    {
+                        fe::gameEvent event(m_event, 1);
+                        event.eventType = m_event;
+                        event.args[0].arg.TYPE_VOIDP = &m_inputText;
+                        event.args[0].argType = gameEventArgument::type::TYPE_VOIDP;
+                        fe::engine::get().getEventSender().sendEngineEvent(event, m_event);
+                        m_input = false;
+                    }
+            }
     }
 
 void fe::gui::textBox::update()
     {
+        if (m_updateSize)
+            {
+                setSize({ m_characterBoundingBox.x + (m_paddingX * 2.f), m_characterBoundingBox.y + (m_paddingY * 2.f) });
+                m_updateSize = false;
+            }
+
         if (m_allowInput && ((m_parentElement && m_parentPanel->mouseHover(m_parentElement->getParentTransform().transformPoint(getPosition()), m_size)) || m_parentPanel->mouseHover(getPosition(), m_size) || m_input))
             {
                 setActive(true);
@@ -183,17 +241,28 @@ void fe::gui::textBox::update()
 
 void fe::gui::textBox::setString(const char *str)
     {
-        m_textSize = fe::Vector2d(0, 0);
         m_inputText = "";
         for (unsigned int i = 0; i < std::strlen(str); i++)
             {
-                addChar(str[i]);
+                if (!addChar(str[i]))
+                    {
+                        break;
+                    }
             }
     }
 
 std::string fe::gui::textBox::getString() const
     {
         return m_drawText.getString();
+    }
+
+void fe::gui::textBox::setSize(const fe::Vector2d &size)
+    {
+        if (m_sizeToText)
+            {
+                m_updateSize = true;
+            }
+        fe::gui::guiElement::setSize(size);
     }
 
 bool fe::gui::textBox::active()

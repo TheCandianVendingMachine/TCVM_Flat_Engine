@@ -8,6 +8,7 @@
 #include "subsystems/threading/threadPool.hpp"
 #include "subsystems/threading/threadJob.hpp"
 #include "localization/localizationStorage.hpp"
+#include "gui/guiPrefabricatedElements.hpp"
 #include "debug/logger.hpp"
 #include "debug/profiler.hpp"
 #include "debug/profilerLogger.hpp"
@@ -231,6 +232,7 @@ void fe::engine::startUp(fe::uInt64 totalMemory, fe::uInt64 stackMemory, fe::uIn
                 m_random.startUp();
 
                 m_localization = new(m_memoryManager.getStackAllocater().alloc(sizeof(fe::localizationStorage))) fe::localizationStorage();
+                m_prefabGuiElements = new(m_memoryManager.getStackAllocater().alloc(sizeof(fe::guiPrefabricatedElements))) fe::guiPrefabricatedElements();
 
                 m_instance = this;
             }
@@ -335,6 +337,11 @@ fe::threadPool<8> &fe::engine::getThreadPool() const
 fe::localizationStorage &fe::engine::getLocalization() const
     {
         return *m_localization;
+    }
+
+fe::guiPrefabricatedElements &fe::engine::getPrefabGui() const
+    {
+        return *m_prefabGuiElements;
     }
 
 fe::engine::~engine()

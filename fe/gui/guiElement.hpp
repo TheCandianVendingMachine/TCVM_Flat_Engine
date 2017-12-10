@@ -5,6 +5,7 @@
 #include "../flatEngineExport.hpp"
 #include "../subsystems/physics/transformable.hpp"
 #include <SFML/Graphics/VertexArray.hpp>
+#include "../typeDefines.hpp"
 
 namespace sf
     {
@@ -26,6 +27,8 @@ namespace fe
                             sf::Color m_activeColour;
                             sf::Color m_inactiveColour;
 
+                            fe::guid m_event;
+
                             const panel *m_parentPanel; // the panel this gui element is attached to.
                             guiElement *m_parentElement;
                             fe::Vector2d m_size;
@@ -33,12 +36,16 @@ namespace fe
                             bool m_active;
                             bool m_colourUpdate;
 
-                            virtual void drawElement(sf::RenderTarget &target, const fe::matrix3d &matrix) = 0;
+                            virtual void drawElement(sf::RenderTarget &target, const fe::matrix3d &matrix) {}
 
                         public:
                             FLAT_ENGINE_API guiElement();
 
                             FLAT_ENGINE_API fe::matrix3d getParentTransform();
+
+                            FLAT_ENGINE_API void setEvent(const char *event);
+                            FLAT_ENGINE_API void setEvent(fe::guid event);
+                            FLAT_ENGINE_API fe::guid getEvent() const;
 
                             FLAT_ENGINE_API void setParent(const panel *attached);
                             FLAT_ENGINE_API void setParent(guiElement *attached);
@@ -46,7 +53,7 @@ namespace fe
                             FLAT_ENGINE_API const panel *getParentPanel() const;
                             FLAT_ENGINE_API guiElement *getParentElement() const;
 
-                            FLAT_ENGINE_API void setSize(const fe::Vector2d &size);
+                            FLAT_ENGINE_API virtual void setSize(const fe::Vector2d &size);
                             FLAT_ENGINE_API const fe::Vector2d &getSize();
 
                             FLAT_ENGINE_API void setActive(bool value);

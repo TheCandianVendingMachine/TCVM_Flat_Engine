@@ -1,5 +1,6 @@
 #include "guiElement.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
+#include "../objectManagement/guid.hpp"
 
 fe::matrix3d fe::gui::guiElement::getParentTransform()
     {
@@ -10,11 +11,26 @@ fe::matrix3d fe::gui::guiElement::getParentTransform()
         return getMatrix();
     }
 
-fe::gui::guiElement::guiElement() : m_parentPanel(nullptr), m_parentElement(nullptr)
+fe::gui::guiElement::guiElement() : m_parentPanel(nullptr), m_parentElement(nullptr), m_event(FE_STR("NO_EVENT"))
     {
         m_active = false;
         m_colourUpdate = false;
         setActive(false);
+    }
+
+void fe::gui::guiElement::setEvent(const char *event)
+    {
+        setEvent(FE_STR(event));
+    }
+
+void fe::gui::guiElement::setEvent(fe::guid event)
+    {
+        m_event = event;
+    }
+
+fe::guid fe::gui::guiElement::getEvent() const
+    {
+        return m_event;
     }
 
 void fe::gui::guiElement::setParent(const panel *attached)

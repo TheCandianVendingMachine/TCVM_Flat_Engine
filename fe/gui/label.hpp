@@ -5,6 +5,7 @@
 #include "../flatEngineExport.hpp"
 #include "guiElement.hpp"
 #include <SFML/Graphics/Text.hpp>
+#include <string>
 
 namespace sf
     {
@@ -25,6 +26,7 @@ namespace fe
 
                         public:
                             FLAT_ENGINE_API label(const sf::Font &font, const char *text);
+                            FLAT_ENGINE_API label(const sf::Font &font, const std::string &text);
                             
                             FLAT_ENGINE_API void setPosition(fe::Vector2d pos);
                             FLAT_ENGINE_API fe::Vector2d getPosition() const;

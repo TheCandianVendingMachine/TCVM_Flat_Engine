@@ -1,5 +1,7 @@
 #include "button.hpp"
 #include "panel.hpp"
+#include "../engine.hpp"
+#include "../subsystems/messaging/eventSender.hpp"
 
 void fe::gui::button::drawElement(sf::RenderTarget &target, const fe::matrix3d &matrix)
     {
@@ -32,6 +34,8 @@ void fe::gui::button::update()
             {
                 m_pressed = true;
                 m_callback();
+                fe::gameEvent event(m_event, 0);
+                fe::engine::get().getEventSender().sendEngineEvent(event, m_event);
             }
         else if (!m_parentPanel->getMousePressed() && m_pressed)
             {

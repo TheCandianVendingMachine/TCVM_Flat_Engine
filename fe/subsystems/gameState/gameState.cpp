@@ -47,9 +47,18 @@ void fe::baseGameState::updateDefined(collisionWorld *collisionWorld)
 void fe::baseGameState::postUpdateDefined()
     {
         m_gameWorld.postUpdate();
-        for (auto &panel : m_guiPanels)
+        for (auto it = m_guiPanels.begin(); it != m_guiPanels.end();)
             {
-                panel->update();
+                if ((*it)->isKilled())
+                    {
+                        delete *it;
+                        it = m_guiPanels.erase(it);
+                    }
+                else 
+                    {
+                        (*it)->update();
+                        it++;
+                    }
             }
     }
 

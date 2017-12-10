@@ -1,4 +1,6 @@
 #include "label.hpp"
+#include "../engine.hpp"
+#include "../subsystems/messaging/eventSender.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 
 void fe::gui::label::drawElement(sf::RenderTarget &target, const fe::matrix3d &matrix)
@@ -8,6 +10,14 @@ void fe::gui::label::drawElement(sf::RenderTarget &target, const fe::matrix3d &m
     }
 
 fe::gui::label::label(const sf::Font &font, const char *text)
+    {
+        m_text.setFont(font);
+        m_text.setString(text);
+
+        setCharacterSize(m_text.getCharacterSize());
+    }
+
+fe::gui::label::label(const sf::Font &font, const std::string &text)
     {
         m_text.setFont(font);
         m_text.setString(text);

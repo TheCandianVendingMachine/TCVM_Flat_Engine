@@ -3,6 +3,7 @@
 #pragma once
 #define FLAT_ENGINE_EXPORT
 #include "../../flatEngineExport.hpp"
+#include "../../typeDefines.hpp"
 
 namespace fe
     {
@@ -21,6 +22,8 @@ namespace fe
                         TYPE_UINT,
                         TYPE_FLOAT,
                         TYPE_VOIDP,  
+                        TYPE_BOOL,
+                        TYPE_STRING,
                     };
 
                 union argument
@@ -29,6 +32,7 @@ namespace fe
                         unsigned int    TYPE_UINTEGER;
                         float           TYPE_FLOAT;
                         void*           TYPE_VOIDP;
+                        bool            TYPE_BOOL;
                     };
                 argument arg;
                 type argType;
@@ -46,14 +50,14 @@ namespace fe
 
                 sendType sendType;      // the type which this event is initialized under
 
-                int eventType;          // the event which will be used
+                fe::int64 eventType;          // the event which will be used
                 unsigned int argNumber; // how many arguments in array
                 unsigned int target;    // target ID of the reciever
                 unsigned int eventSent; // time when the event was sent in milliseconds
                 gameEventArgument args[ARGUMENT_COUNT];
 
                 gameEvent() = default;
-                gameEvent(int event, unsigned int args) : eventType(event), argNumber(args) {}
+                gameEvent(fe::int64 event, unsigned int args) : eventType(event), argNumber(args) {}
 
                 FLAT_ENGINE_API bool operator<=(const gameEvent &rhs) const; // used in eventMessanger. Used to check if this frametime is lower than the next message's
                 FLAT_ENGINE_API bool operator<(const gameEvent &rhs) const;  // used in eventMessanger. Used to check if this time is lower than the next message's

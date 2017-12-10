@@ -11,10 +11,10 @@ namespace fe
         
         constexpr fe::guid hash(const char *input, unsigned int hash)
             {
-                unsigned int index = 0;
+                fe::uInt64 index = 0;
                 while (input[index] != '\0')
                     {
-                        hash *= 33 ^ (fe::guid)(input[index++]);
+                        hash *= (33 ^ (fe::guid)(input[index++])) + 1;
                     }
 
                 return hash;

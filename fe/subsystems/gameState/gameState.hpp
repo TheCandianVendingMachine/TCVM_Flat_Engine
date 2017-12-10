@@ -33,6 +33,7 @@ namespace fe
 
                 protected:
                     FLAT_ENGINE_API void addPanel(gui::panel *panel);
+                    FLAT_ENGINE_API void removePanel(fe::guid panel);
                     FLAT_ENGINE_API void removePanel(gui::panel *panel);
 
                 public:

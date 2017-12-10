@@ -11,6 +11,7 @@
 
 #include "gameEvent.hpp"
 #include "../../time/clock.hpp"
+#include "../../typeDefines.hpp"
 
 namespace fe
     {
@@ -20,7 +21,7 @@ namespace fe
             {
                 private:
                     std::unordered_map<unsigned int, eventHandler*> m_handlers;
-                    std::unordered_map<int, std::vector<eventHandler*>> m_observers;
+                    std::unordered_map<fe::int64, std::vector<eventHandler*>> m_observers;
 
                     std::priority_queue<gameEvent, std::vector<gameEvent>, std::less_equal<gameEvent&>>   m_eventQueueFrame;
                     std::priority_queue<gameEvent, std::vector<gameEvent>, std::less<gameEvent&>>         m_eventQueueTimed;
@@ -34,10 +35,10 @@ namespace fe
                     FLAT_ENGINE_API eventSender();
 
                     FLAT_ENGINE_API void subscribe(eventHandler *handler);
-                    FLAT_ENGINE_API void subscribe(eventHandler *handler, int messageType);
+                    FLAT_ENGINE_API void subscribe(eventHandler *handler, fe::int64 messageType);
 
                     FLAT_ENGINE_API void unsubscribe(eventHandler *handler);
-                    FLAT_ENGINE_API void unsubscribe(eventHandler *handler, int messageType);
+                    FLAT_ENGINE_API void unsubscribe(eventHandler *handler, fe::int64  messageType);
 
                     FLAT_ENGINE_API void unsubscribeAll(eventHandler *handler);
 
@@ -49,14 +50,19 @@ namespace fe
                     FLAT_ENGINE_API void send(gameEvent event, unsigned int to, int frame);
 
                     /* This block of functions sends the event to a specific event subscriber. Allows arguments for time */
-                    FLAT_ENGINE_API void send(gameEvent event, int eventType);
-                    FLAT_ENGINE_API void send(gameEvent event, int eventType, float time);
-                    FLAT_ENGINE_API void send(gameEvent event, int eventType, int frame);
+                    FLAT_ENGINE_API void send(gameEvent event, fe::int64 eventType);
+                    FLAT_ENGINE_API void send(gameEvent event, fe::int64 eventType, float time);
+                    FLAT_ENGINE_API void send(gameEvent event, fe::int64 eventType, int frame);
 
                     /* This block of functions sends the event to a everyone. Allows arguments for time */
                     FLAT_ENGINE_API void sendGlobal(gameEvent event);
                     FLAT_ENGINE_API void sendGlobal(gameEvent event, float time);
                     FLAT_ENGINE_API void sendGlobal(gameEvent event, int frame);
+
+                    /* Thiese functions sends a game engine event. This event does not have an offset applied to it */
+                    FLAT_ENGINE_API void sendEngineEvent(gameEvent event, fe::int64 eventType);
+                    FLAT_ENGINE_API void sendEngineEvent(gameEvent event, fe::int64 eventType, float time);
+                    FLAT_ENGINE_API void sendEngineEvent(gameEvent event, fe::int64 eventType, int frame);
 
                     FLAT_ENGINE_API void sendEvents();
 

@@ -29,6 +29,7 @@ namespace fe
         class debugDraw;
         class profilerLogger;
         class localizationStorage;
+        class guiPrefabricatedElements;
 
         template<typename T>
         class resourceManager;
@@ -54,6 +55,7 @@ namespace fe
                     fe::resourceManager<sf::Font> *m_fontManager;
 
                     fe::localizationStorage *m_localization;
+                    fe::guiPrefabricatedElements *m_prefabGuiElements;
 
                 private:
                     fe::clock m_fpsClock;
@@ -107,6 +109,7 @@ namespace fe
                     FLAT_ENGINE_API fe::collisionWorld &getCollisionWorld() const;
                     FLAT_ENGINE_API fe::threadPool<8> &getThreadPool() const;
                     FLAT_ENGINE_API fe::localizationStorage &getLocalization() const;
+                    FLAT_ENGINE_API fe::guiPrefabricatedElements &getPrefabGui() const;
 
                     template<typename T>
                     fe::resourceManager<T>              *getResourceManager() const;

@@ -1,11 +1,14 @@
 #include "panel.hpp"
 #include "guiElement.hpp"
+#include "../subsystems/messaging/eventSender.hpp"
+#include "../engineEvents.hpp"
+#include "../engine.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Window/Event.hpp>
 #include <algorithm>
 #include <cstring>
 
-fe::gui::panel::panel(fe::Vector2d size, int modifiers, const char *title, const sf::Font *font) :
+fe::gui::panel::panel(fe::guid id, fe::Vector2d size, int modifiers, const char *title, const sf::Font *font) :
     m_mousePressed(false),
     m_size(size),
     m_panelColour(12, 175, 232, 75),
@@ -16,11 +19,13 @@ fe::gui::panel::panel(fe::Vector2d size, int modifiers, const char *title, const
     m_canMinimize(false),
     m_dragging(false),
     m_isFolded(false),
+    m_kill(false),
     m_windowOffset(0.f),
     m_minSize(30.f * (((modifiers & panelModifiers::CAN_MINIMIZE) > 0) + ((modifiers & panelModifiers::CAN_CLOSE) > 0)), 5.f), // if both modifiers are true, then we will multiply the amount by 2
     m_buttonSize(20.f),
     m_distanceFromEnd(5.f),
-    m_distanceFromTop(5.f) 
+    m_distanceFromTop(5.f),
+    m_panelID(id)
     {
         m_window.setPrimitiveType(sf::PrimitiveType::Quads);
         m_window.resize(4);
@@ -32,6 +37,21 @@ fe::gui::panel::panel(fe::Vector2d size, int modifiers, const char *title, const
             {
                 setTitle(title, *font);
             }
+    }
+
+fe::gui::panel::panel(fe::guid id, fe::Vector2d size, int modifiers, const std::string &title, const sf::Font *font) :
+    panel(id, size, modifiers, title.c_str(), font)
+    {
+    }
+
+void fe::gui::panel::setEventOnClose(fe::guid event)
+    {
+        m_eventOnClose = event;
+    }
+
+void fe::gui::panel::setEventOnMinimize(fe::guid event)
+    {
+        m_eventOnMinimize = event;
     }
 
 void fe::gui::panel::setModifiers(int modifiers)
@@ -165,6 +185,19 @@ bool fe::gui::panel::mouseHover(const fe::Vector2d &position, const fe::Vector2d
 
 void fe::gui::panel::setSize(fe::Vector2d size)
     {
+        fe::gameEvent eventData(fe::engineEvent::GUI_PANEL_SIZE_CHANGE, 5);
+        eventData.args[0].argType = fe::gameEventArgument::type::TYPE_UINT;
+        eventData.args[1].argType = fe::gameEventArgument::type::TYPE_UINT;
+        eventData.args[2].argType = fe::gameEventArgument::type::TYPE_UINT;
+        eventData.args[3].argType = fe::gameEventArgument::type::TYPE_UINT;
+        eventData.args[4].argType = fe::gameEventArgument::type::TYPE_UINT;
+
+        eventData.args[0].arg.TYPE_UINTEGER = m_panelID;
+        eventData.args[1].arg.TYPE_UINTEGER = m_texture.getSize().x;
+        eventData.args[2].arg.TYPE_UINTEGER = m_texture.getSize().y;
+        eventData.args[3].arg.TYPE_UINTEGER = size.x;
+        eventData.args[4].arg.TYPE_UINTEGER = size.y;
+
         size.x = m_minSize.x < size.x ? size.x : m_minSize.x;
         size.y = m_minSize.y < size.y ? size.y : m_minSize.y;
 
@@ -176,6 +209,7 @@ void fe::gui::panel::setSize(fe::Vector2d size)
         m_window[3].texCoords = fe::Vector2d(0.f, size.y).convertToSfVec2();
 
         m_size = size;
+        fe::engine::get().getEventSender().sendEngineEvent(eventData, fe::engineEvent::GUI_PANEL_SIZE_CHANGE);
     }
 
 fe::Vector2d fe::gui::panel::getSize() const
@@ -216,6 +250,13 @@ void fe::gui::panel::handleEvent(const sf::Event &event)
                             m_mousePosition.x - getPosition().x < maxButtonPos.x && m_mousePosition.y - getPosition().y < maxButtonPos.y && m_canMinimize)
                             {
                                 m_isFolded = !m_isFolded;
+                                fe::gameEvent eventData(fe::engineEvent::GUI_PANEL_MINIMIZED, 2);
+                                eventData.args[0].arg.TYPE_UINTEGER = m_panelID;
+                                eventData.args[1].arg.TYPE_BOOL = m_isFolded;
+                                eventData.args[0].argType = fe::gameEventArgument::type::TYPE_UINT;
+                                eventData.args[1].argType = fe::gameEventArgument::type::TYPE_BOOL;
+                                fe::engine::get().getEventSender().sendEngineEvent(eventData, fe::engineEvent::GUI_PANEL_MINIMIZED);
+                                fe::engine::get().getEventSender().sendEngineEvent(eventData, m_eventOnMinimize);
                             }
                     }
                     break;
@@ -252,6 +293,14 @@ void fe::gui::panel::update()
         if (!m_mousePressed && m_dragging)
             {
                 m_dragging = false;
+                fe::gameEvent eventData(fe::engineEvent::GUI_PANEL_MOVED, 3);
+                eventData.args[0].argType = fe::gameEventArgument::type::TYPE_UINT;
+                eventData.args[1].argType = fe::gameEventArgument::type::TYPE_FLOAT;
+                eventData.args[2].argType = fe::gameEventArgument::type::TYPE_FLOAT;
+                eventData.args[0].arg.TYPE_UINTEGER = m_panelID;
+                eventData.args[1].arg.TYPE_FLOAT = getPosition().x;
+                eventData.args[2].arg.TYPE_FLOAT = getPosition().y;
+                fe::engine::get().getEventSender().sendEngineEvent(eventData, fe::engineEvent::GUI_PANEL_MOVED);
             }
 
         if (!m_isFolded)
@@ -265,6 +314,8 @@ void fe::gui::panel::update()
 
 void fe::gui::panel::draw(sf::RenderTarget &target)
     {
+        if (!m_isOpen) return;
+
         auto &matrix = getMatrix();
         if (m_canClose || m_canDrag || m_canMinimize || m_hasTitle)
             {
@@ -326,16 +377,32 @@ void fe::gui::panel::draw(sf::RenderTarget &target)
         target.draw(m_title);
     }
 
+bool fe::gui::panel::isKilled() const
+    {
+        return m_kill;
+    }
+
 void fe::gui::panel::destroy()
     {
+        fe::gameEvent eventData(fe::engineEvent::GUI_PANEL_CLOSED, 1);
+        eventData.args[0].arg.TYPE_UINTEGER = m_panelID;
+        eventData.args[0].argType = fe::gameEventArgument::type::TYPE_UINT;
+        fe::engine::get().getEventSender().sendEngineEvent(eventData, fe::engineEvent::GUI_PANEL_CLOSED);
+        fe::engine::get().getEventSender().sendEngineEvent(eventData, m_eventOnClose);
+
         while(m_guiElements.size() > 0)
             {
                 delete m_guiElements.back();
                 m_guiElements.pop_back();
             }
+
+        m_kill = true;
     }
 
 fe::gui::panel::~panel()
     {
-        destroy();
+        if (!m_kill)
+            {
+                destroy();
+            }
     }

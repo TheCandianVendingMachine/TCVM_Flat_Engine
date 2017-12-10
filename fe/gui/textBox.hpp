@@ -34,8 +34,9 @@ namespace fe
                             fe::gui::label m_drawText;
                             std::string m_inputText;
 
+                            const fe::Vector2d m_maxSize;
+                            fe::Vector2d m_characterBoundingBox;
                             fe::Vector2d m_lastCharPos;
-                            fe::Vector2d m_textSize; // the direct size of the text itself
 
                             unsigned int m_maxChars;
                             int m_maxLineHeight; // the max height of a glyph in pixels
@@ -49,15 +50,17 @@ namespace fe
                             float m_paddingX;
                             float m_paddingY;
                             bool m_input;
+                            bool m_updateSize;
 
-                            FLAT_ENGINE_API void checkAddChar(sf::Uint32 ascii, const sf::Glyph &glyph);
-                            FLAT_ENGINE_API void addChar(sf::Uint32 ascii);
+                            FLAT_ENGINE_API bool checkAddChar(sf::Uint32 ascii, const sf::Glyph &glyph);
+                            FLAT_ENGINE_API bool addChar(sf::Uint32 ascii);
 
                             FLAT_ENGINE_API void drawElement(sf::RenderTarget &target, const fe::matrix3d &matrix);
 
                         public:
                             // intentionally underflowing maxChars to allow for a max amount of characters
                             FLAT_ENGINE_API textBox(fe::Vector2d size, const sf::Font &font, options opt, float textStrSize = -1.f, unsigned int maxChars = -1, float padX = 10.f, float padY = 5.f, const char *text = "");
+                            FLAT_ENGINE_API textBox(fe::Vector2d size, const sf::Font &font, options opt, float textStrSize = -1.f, unsigned int maxChars = -1, float padX = 10.f, float padY = 5.f, const std::string &text = "");
 
                             FLAT_ENGINE_API void setOptions(options opt);
 
@@ -66,6 +69,8 @@ namespace fe
 
                             FLAT_ENGINE_API void setString(const char *str);
                             FLAT_ENGINE_API std::string getString() const;
+
+                            FLAT_ENGINE_API virtual void setSize(const fe::Vector2d &size);
 
                             FLAT_ENGINE_API bool active();
 
