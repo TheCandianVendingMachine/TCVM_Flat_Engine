@@ -15,6 +15,7 @@ bool fe::gui::textBox::checkAddChar(sf::Uint32 ascii, const sf::Glyph &glyph)
             (m_allowAlpha && !(ascii >= '0' && ascii <= '9')))
             {
                 m_inputText += (char)ascii;
+                m_inputTextShown += (char)ascii;
                 m_lastCharPos.x += glyph.advance;
                 return true;
             }
@@ -24,12 +25,20 @@ bool fe::gui::textBox::checkAddChar(sf::Uint32 ascii, const sf::Glyph &glyph)
 bool fe::gui::textBox::addChar(sf::Uint32 ascii)
     {
         bool added = false;
+        bool fitText = false;
         if (ascii == '\b')
             {
                 if (m_inputText.size() > 0)
                     {
                         sf::Uint32 ascii = m_inputText[m_inputText.size() - 1];
                         m_inputText.erase(m_inputText.size() - 1, 1);
+                        m_inputTextShown.erase(m_inputTextShown.size() - 1, 1);
+
+                        if ((int)m_inputText.size() - (int)m_inputTextShown.size() > 0)
+                            {
+                                m_inputTextShown.insert(m_inputTextShown.begin(), *(m_inputText.begin() + (m_inputText.size() - m_inputTextShown.size() - 1)));
+                            }
+                        
                         sf::Glyph glyph = m_drawText.getText().getFont()->getGlyph(ascii, m_drawText.getCharacterSize(), false);
                         m_lastCharPos.x -= glyph.advance;
                         if (m_lastCharPos.x < m_paddingX && !m_inputText.empty())
@@ -53,10 +62,11 @@ bool fe::gui::textBox::addChar(sf::Uint32 ascii)
                 float lineSpace = m_drawText.getText().getFont()->getLineSpacing(m_drawText.getCharacterSize());
                 if (!m_wordWrap)
                     {
-                        if (m_lastCharPos.x + glyph.advance <= m_size.x - m_paddingX)
+                        if (m_lastCharPos.x + glyph.advance > m_size.x - m_paddingX)
                             {
-                                added |= checkAddChar(ascii, glyph);
+                                fitText = true;
                             }
+                        added |= checkAddChar(ascii, glyph);
                     }
                 else
                     {
@@ -106,7 +116,11 @@ bool fe::gui::textBox::addChar(sf::Uint32 ascii)
                             }
                     }
             }
-        m_drawText.setString(m_inputText.c_str());
+        if (fitText)
+            {
+                m_inputTextShown.erase(m_inputTextShown.begin());
+            }
+        m_drawText.setString(m_inputTextShown.c_str());
 
         m_characterBoundingBox.x = std::max(m_characterBoundingBox.x, m_lastCharPos.x);
         m_characterBoundingBox.y = m_lastCharPos.y;

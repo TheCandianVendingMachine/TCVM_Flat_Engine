@@ -33,6 +33,7 @@ namespace fe
                         protected:
                             fe::gui::label m_drawText;
                             std::string m_inputText;
+                            std::string m_inputTextShown;
 
                             const fe::Vector2d m_maxSize;
                             fe::Vector2d m_characterBoundingBox;
