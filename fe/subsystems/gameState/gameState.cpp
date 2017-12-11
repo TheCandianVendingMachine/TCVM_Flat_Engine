@@ -10,6 +10,11 @@ void fe::baseGameState::addPanel(gui::panel *panel)
         m_guiPanels.push_back(panel);
     }
 
+void fe::baseGameState::removePanel(fe::guid panel)
+    {
+        m_guiPanels.erase(std::remove_if(m_guiPanels.begin(), m_guiPanels.end(), [&panel](fe::gui::panel *panelPtr) { return panelPtr->id() == panel; }), m_guiPanels.end());
+    }
+
 void fe::baseGameState::removePanel(gui::panel *panel)
     {
         m_guiPanels.erase(std::remove(m_guiPanels.begin(), m_guiPanels.end(), panel), m_guiPanels.end());

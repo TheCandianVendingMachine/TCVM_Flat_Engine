@@ -125,6 +125,8 @@ namespace fe
 
                             FLAT_ENGINE_API bool isKilled() const;
 
+                            FLAT_ENGINE_API fe::guid id();
+
                             FLAT_ENGINE_API void destroy();
                             FLAT_ENGINE_API ~panel();
 

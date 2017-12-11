@@ -395,6 +395,11 @@ bool fe::gui::panel::isKilled() const
         return m_kill;
     }
 
+fe::guid fe::gui::panel::id()
+    {
+        return m_panelID;
+    }
+
 void fe::gui::panel::destroy()
     {
         fe::gameEvent eventData(fe::engineEvent::GUI_PANEL_CLOSED, 1);
