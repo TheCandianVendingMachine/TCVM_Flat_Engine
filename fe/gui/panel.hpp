@@ -52,6 +52,7 @@ namespace fe
                             sf::VertexArray m_titleBar;
                             sf::Color m_titleBarColour;
                             fe::Vector2d m_size;
+                            fe::Vector2d m_currentSize; // current size adjusted for current window state (minimized)
                             const fe::Vector2d m_minSize;
 
                             fe::Vector2d m_clickOffset; // offset of the click to the title bar
@@ -114,7 +115,10 @@ namespace fe
                             FLAT_ENGINE_API void removeElement(unsigned int handle);
 
                             FLAT_ENGINE_API bool getMousePressed() const;
+                            // Returns if the mouse is hovered over the AABB
                             FLAT_ENGINE_API bool mouseHover(const fe::Vector2d &position, const fe::Vector2d &size) const;
+                            // Returns if the mouse is currently hovering over the panel
+                            FLAT_ENGINE_API bool mouseHover() const;
 
                             FLAT_ENGINE_API void setSize(fe::Vector2d size);
                             FLAT_ENGINE_API fe::Vector2d getSize() const;

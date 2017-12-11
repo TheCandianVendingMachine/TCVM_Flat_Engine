@@ -196,6 +196,13 @@ bool fe::gui::panel::mouseHover(const fe::Vector2d &position, const fe::Vector2d
                m_mousePosition.x - getPosition().x < position.x + size.x && m_mousePosition.y - getPosition().y < position.y + size.y + m_windowOffset;
     }
 
+bool fe::gui::panel::mouseHover() const
+    {
+        // since the mouse position is translated to window-space, if it is less than zero it is off the left/top and if its greater than the size it is off the right/bottom
+        // the size 
+        return mouseHover({ 0.f, -m_windowOffset }, m_currentSize);
+    }
+
 void fe::gui::panel::setSize(fe::Vector2d size)
     {
         fe::gameEvent eventData(fe::engineEvent::GUI_PANEL_SIZE_CHANGE, 5);
@@ -223,6 +230,15 @@ void fe::gui::panel::setSize(fe::Vector2d size)
 
         m_size = size;
         fe::engine::get().getEventSender().sendEngineEvent(eventData, fe::engineEvent::GUI_PANEL_SIZE_CHANGE);
+
+        if (!m_isFolded)
+            {
+                m_currentSize = m_size;
+                if (m_canClose || m_canDrag || m_canMinimize || m_hasTitle)
+                    {
+                        m_currentSize.y += m_windowOffset;
+                    }
+            }
     }
 
 fe::Vector2d fe::gui::panel::getSize() const
@@ -270,6 +286,19 @@ void fe::gui::panel::handleEvent(const sf::Event &event)
                                 eventData.args[1].argType = fe::gameEventArgument::type::TYPE_BOOL;
                                 fe::engine::get().getEventSender().sendEngineEvent(eventData, fe::engineEvent::GUI_PANEL_MINIMIZED);
                                 fe::engine::get().getEventSender().sendEngineEvent(eventData, m_eventOnMinimize);
+
+                                if (!m_isFolded)
+                                    {
+                                        m_currentSize = m_size;
+                                        if (m_canClose || m_canDrag || m_canMinimize || m_hasTitle)
+                                            {
+                                                m_currentSize.y += m_windowOffset;
+                                            }
+                                    }
+                                else
+                                    {
+                                        m_currentSize = fe::Vector2d(m_size.x, m_windowOffset);
+                                    }
                             }
                     }
                     break;

@@ -33,8 +33,12 @@ namespace fe
 
                 protected:
                     FLAT_ENGINE_API void addPanel(gui::panel *panel);
-                    FLAT_ENGINE_API void removePanel(fe::guid panel);
+                    FLAT_ENGINE_API void removePanel(fe::guid panelID);
                     FLAT_ENGINE_API void removePanel(gui::panel *panel);
+                    FLAT_ENGINE_API fe::gui::panel *getPanel(fe::guid panelID);
+                    // Run a function to check every single panel
+                    template<typename Func>
+                    bool forEachPanel(Func func);
 
                 public:
                     FLAT_ENGINE_API baseGameState() {}
@@ -75,6 +79,19 @@ namespace fe
 
                     FLAT_ENGINE_API virtual ~baseGameState();
             };
+
+        template<typename Func>
+        bool baseGameState::forEachPanel(Func func)
+            {
+                for (auto &panel : m_guiPanels)
+                    {
+                        if (!func(panel))
+                            {
+                                return false;
+                            }
+                    }
+                return true;
+            }
 
         template<typename ...Args>
         fe::Handle baseGameState::addObject(fe::baseEntity *ent, bool staticObject, Args &&...args)
