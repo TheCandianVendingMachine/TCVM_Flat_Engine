@@ -7,7 +7,7 @@
 
 void fe::baseGameState::addPanel(gui::panel *panel)
     {
-        m_guiPanels.push_back(panel);
+        m_guiPanelsToAdd.push(panel);
     }
 
 void fe::baseGameState::removePanel(fe::guid panelID)
@@ -64,6 +64,13 @@ void fe::baseGameState::updateDefined(collisionWorld *collisionWorld)
 void fe::baseGameState::postUpdateDefined()
     {
         m_gameWorld.postUpdate();
+
+        while (!m_guiPanelsToAdd.empty())
+            {
+                m_guiPanels.push_back(m_guiPanelsToAdd.front());
+                m_guiPanelsToAdd.pop();
+            }
+
         for (auto it = m_guiPanels.begin(); it != m_guiPanels.end();)
             {
                 if ((*it)->isKilled())

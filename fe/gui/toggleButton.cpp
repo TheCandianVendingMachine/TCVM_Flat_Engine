@@ -19,11 +19,13 @@ void fe::gui::toggleButton::update()
                             m_callback();
                             fe::gameEvent event(m_event, 0);
                             fe::engine::get().getEventSender().sendEngineEvent(event, m_event);
+                            setActive(true);
                         }
                     else
                         {
                             fe::gameEvent event(m_extraEvent, 0);
                             fe::engine::get().getEventSender().sendEngineEvent(event, m_extraEvent);
+                            setActive(false);
                         }
                 }
             else if (!m_parentPanel->getMousePressed() && m_pressed)
@@ -31,7 +33,7 @@ void fe::gui::toggleButton::update()
                     m_pressed = false;
                 }
 
-            if (m_parentPanel->mouseHover(getPosition(), m_size))
+            if (m_parentPanel->mouseHover(getPosition(), m_size) || m_toggle)
                 {
                     setActive(true);
                 }
@@ -39,4 +41,14 @@ void fe::gui::toggleButton::update()
                 {
                     setActive(false);
                 }
+    }
+
+void fe::gui::toggleButton::setToggle(bool value)
+    {
+        m_toggle = value;
+        setActive(m_toggle);
+        if (m_toggle)
+            {
+                m_callback();
+            }
     }

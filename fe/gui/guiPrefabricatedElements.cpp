@@ -182,7 +182,7 @@ fe::gui::panel *fe::guiPrefabricatedElements::getGUI(fe::guid guiPrefabId)
                 fe::Handle elementId = panel->addElement(getElement(element.id));
                 panel->setElementPosition(elementId, { element.position.x, element.position.y });
                 panel->getElement(elementId)->setEvent(element.event);
-                panel->getElement(elementId)->setExtraEvent(element.event);
+                panel->getElement(elementId)->setExtraEvent(element.extraEvent);
             }
 
         return panel;

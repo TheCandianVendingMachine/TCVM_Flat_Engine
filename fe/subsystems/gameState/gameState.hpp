@@ -8,6 +8,7 @@
 #include "gameWorld.hpp"
 
 #include <vector>
+#include <queue>
 
 namespace sf
     {
@@ -29,6 +30,7 @@ namespace fe
             {
                 private:
                     std::vector<gui::panel*> m_guiPanels;
+                    std::queue<gui::panel*> m_guiPanelsToAdd;
                     fe::gameWorld m_gameWorld;
 
                 protected:
