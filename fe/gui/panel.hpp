@@ -53,7 +53,7 @@ namespace fe
                             sf::Color m_titleBarColour;
                             fe::Vector2d m_size;
                             fe::Vector2d m_currentSize; // current size adjusted for current window state (minimized)
-                            const fe::Vector2d m_minSize;
+                            fe::Vector2d m_minSize;
 
                             fe::Vector2d m_clickOffset; // offset of the click to the title bar
                             bool m_dragging; // true if we are currently dragging the window
@@ -122,6 +122,8 @@ namespace fe
 
                             FLAT_ENGINE_API void setSize(fe::Vector2d size);
                             FLAT_ENGINE_API fe::Vector2d getSize() const;
+
+                            FLAT_ENGINE_API fe::Vector2d getMinSize() const;
 
                             FLAT_ENGINE_API void handleEvent(const sf::Event &event);
                             FLAT_ENGINE_API void update();

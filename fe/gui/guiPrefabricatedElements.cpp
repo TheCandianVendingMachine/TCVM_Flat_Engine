@@ -6,6 +6,7 @@
 #include "label.hpp"
 #include "button.hpp"
 #include "square.hpp"
+#include "toggleButton.hpp"
 #include "../engine.hpp"
 #include "../subsystems/resourceManager/resourceManager.hpp"
 #include <SFML/Graphics/Font.hpp>
@@ -90,13 +91,17 @@ fe::gui::guiElement *fe::guiPrefabricatedElements::getElement(fe::guid elementPr
             {
                 element = new fe::gui::button(size, [](){});
             }
+        else if (elementTemplate.m_elementType == priv::elementTemplate::TOGGLE_BUTTON)
+            {
+                element = new fe::gui::toggleButton(size, [](){});
+            }
         else if (elementTemplate.m_elementType == priv::elementTemplate::LABEL)
             {
                 element = new fe::gui::label(*fe::engine::get().getResourceManager<sf::Font>()->get(elementTemplate.m_label.fontID), elementTemplate.m_label.defaultText);
             }
         else if (elementTemplate.m_elementType == priv::elementTemplate::SQUARE)
             {
-                const sf::Texture *texture = fe::engine::get().getResourceManager<sf::Texture>()->getTexture(elementTemplate.m_texture.textureID);
+                sf::Texture *texture = fe::engine::get().getResourceManager<sf::Texture>()->getTexture(elementTemplate.m_texture.textureID);
                 const fe::Vector2<unsigned int> offset = fe::engine::get().getResourceManager<sf::Texture>()->getTexturePosition(elementTemplate.m_texture.textureID);
                 element = new fe::gui::square(texture, fe::Vector2d(offset.x, offset.y));
             }
@@ -177,6 +182,7 @@ fe::gui::panel *fe::guiPrefabricatedElements::getGUI(fe::guid guiPrefabId)
                 fe::Handle elementId = panel->addElement(getElement(element.id));
                 panel->setElementPosition(elementId, { element.position.x, element.position.y });
                 panel->getElement(elementId)->setEvent(element.event);
+                panel->getElement(elementId)->setExtraEvent(element.event);
             }
 
         return panel;
@@ -191,6 +197,10 @@ void fe::priv::elementTemplate::load(rapidxml::xml_node<> *node)
                 if (type == "BUTTON")
                     {
                         m_elementType = BUTTON;
+                    }
+                else if (type == "TOGGLE_BUTTON")
+                    {
+                        m_elementType = TOGGLE_BUTTON;
                     }
                 else if (type == "LABEL")
                     {

@@ -15,7 +15,7 @@ namespace fe
                 class panel;
                 class button : public guiElement
                     {
-                        private:
+                        protected:
                             std::function<void()> m_callback;
                             bool m_pressed;
 
@@ -26,6 +26,7 @@ namespace fe
 
                             FLAT_ENGINE_API virtual void handleEvent(const sf::Event &event);
                             FLAT_ENGINE_API virtual void update();
+                            FLAT_ENGINE_API void setCallback(std::function<void()> callback);
 
                     };
             }

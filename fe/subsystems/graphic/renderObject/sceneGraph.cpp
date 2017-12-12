@@ -9,6 +9,7 @@
 void fe::sceneGraph::transformGraph(int nodeHandle)
     {
         auto node = m_sceneRenderTree.getNode(nodeHandle);
+        if (!static_cast<fe::sceneGraphObject*>(node->m_userData)->m_draw) return;
         fe::transformable *nodeTransform = &static_cast<fe::sceneGraphObject*>(node->m_userData)->m_transform;
 
         for (auto &child : node->m_children)
@@ -25,6 +26,7 @@ void fe::sceneGraph::transformGraph(int nodeHandle)
 void fe::sceneGraph::drawGraph(int nodeHandle, unsigned int &index)
     {
         auto node = m_sceneRenderTree.getNode(nodeHandle);
+        if (!static_cast<fe::sceneGraphObject*>(node->m_userData)->m_draw) return;
         fe::sceneGraphObject *obj = static_cast<fe::sceneGraphObject*>(node->m_userData);
 
         if (obj->m_type == OBJECT)

@@ -6,7 +6,7 @@
 void fe::gui::label::drawElement(sf::RenderTarget &target, const fe::matrix3d &matrix)
     {
         m_text.setPosition(matrix.transformPoint(getPosition()).convertToSfVec2());
-        target.draw(m_text);
+        target.draw(m_text, m_texture);
     }
 
 fe::gui::label::label(const sf::Font &font, const char *text)

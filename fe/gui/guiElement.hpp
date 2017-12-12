@@ -28,11 +28,14 @@ namespace fe
                             sf::Color m_inactiveColour;
 
                             fe::guid m_event;
+                            fe::guid m_extraEvent;
                             fe::guid m_id;
 
                             const panel *m_parentPanel; // the panel this gui element is attached to.
                             guiElement *m_parentElement;
                             fe::Vector2d m_size;
+
+                            sf::Texture *m_texture;
 
                             bool m_active;
                             bool m_colourUpdate;
@@ -47,6 +50,10 @@ namespace fe
                             FLAT_ENGINE_API void setEvent(const char *event);
                             FLAT_ENGINE_API void setEvent(fe::guid event);
                             FLAT_ENGINE_API fe::guid getEvent() const;
+
+                            FLAT_ENGINE_API void setExtraEvent(const char *event);
+                            FLAT_ENGINE_API void setExtraEvent(fe::guid event);
+                            FLAT_ENGINE_API fe::guid getExtraEvent() const;
 
                             FLAT_ENGINE_API void setParent(const panel *attached);
                             FLAT_ENGINE_API void setParent(guiElement *attached);
@@ -65,6 +72,8 @@ namespace fe
 
                             FLAT_ENGINE_API sf::Color getActiveColour() const;
                             FLAT_ENGINE_API sf::Color getInactiveColour() const;
+
+                            FLAT_ENGINE_API virtual void setTexture(sf::Texture *texture, fe::Vector2<unsigned int> texCoords = fe::Vector2<unsigned int>(0, 0), fe::Vector2<unsigned int> size = fe::Vector2<unsigned int>(0, 0));
 
                             virtual void handleEvent(const sf::Event &event) {}
                             virtual void update() {}

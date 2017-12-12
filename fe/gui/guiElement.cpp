@@ -1,6 +1,7 @@
 #include "guiElement.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 #include "../objectManagement/guid.hpp"
+#include <SFML/Graphics/Texture.hpp>
 
 fe::matrix3d fe::gui::guiElement::getParentTransform()
     {
@@ -11,7 +12,7 @@ fe::matrix3d fe::gui::guiElement::getParentTransform()
         return getMatrix();
     }
 
-fe::gui::guiElement::guiElement() : m_parentPanel(nullptr), m_parentElement(nullptr), m_event(FE_STR("NO_EVENT")), m_id(0)
+fe::gui::guiElement::guiElement() : m_parentPanel(nullptr), m_parentElement(nullptr), m_event(FE_STR("NO_EVENT")), m_id(0), m_extraEvent(FE_STR("NO_EVENT"))
     {
         m_active = false;
         m_colourUpdate = false;
@@ -31,6 +32,21 @@ void fe::gui::guiElement::setEvent(fe::guid event)
 fe::guid fe::gui::guiElement::getEvent() const
     {
         return m_event;
+    }
+
+void fe::gui::guiElement::setExtraEvent(const char *event)
+    {
+        setExtraEvent(FE_STR(event));
+    }
+
+void fe::gui::guiElement::setExtraEvent(fe::guid event)
+    {
+        m_extraEvent = event;
+    }
+
+fe::guid fe::gui::guiElement::getExtraEvent() const
+    {
+        return m_extraEvent;
     }
 
 void fe::gui::guiElement::setParent(const panel *attached)
@@ -92,6 +108,27 @@ sf::Color fe::gui::guiElement::getActiveColour() const
 sf::Color fe::gui::guiElement::getInactiveColour() const
     {
         return m_inactiveColour;
+    }
+
+void fe::gui::guiElement::setTexture(sf::Texture *texture, fe::Vector2<unsigned int> texCoords, fe::Vector2<unsigned int> size)
+    {
+        m_texture = texture;
+
+        if (size.x == 0)
+            {
+                size.x = texture->getSize().x;
+            }
+        if (size.y == 0)
+            {
+                size.y = texture->getSize().y;
+            }
+
+        m_shape[0].texCoords = sf::Vector2f(texCoords.convertToSfVec2()) + sf::Vector2f(0,      0);
+        m_shape[1].texCoords = sf::Vector2f(texCoords.convertToSfVec2()) + sf::Vector2f(size.x, 0);
+        m_shape[2].texCoords = sf::Vector2f(texCoords.convertToSfVec2()) + sf::Vector2f(size.x, size.y);
+        m_shape[3].texCoords = sf::Vector2f(texCoords.convertToSfVec2()) + sf::Vector2f(0,      size.y);
+
+        m_size = size;
     }
 
 void fe::gui::guiElement::draw(sf::RenderTarget &target)

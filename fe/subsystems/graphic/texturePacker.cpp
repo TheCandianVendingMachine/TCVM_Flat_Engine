@@ -33,12 +33,12 @@ void fe::texturePacker::createTexture()
         m_packedTexture.loadFromImage(packed);
     }
 
-fe::Vector2<unsigned int> fe::texturePacker::addTexture(const sf::Texture &texture, const char *id)
+fe::Vector2<unsigned int> fe::texturePacker::addTexture(sf::Texture &texture, const char *id)
     {
         return addTexture(&texture, id);
     }
 
-fe::Vector2<unsigned int> fe::texturePacker::addTexture(const sf::Texture *texture, const char * id)
+fe::Vector2<unsigned int> fe::texturePacker::addTexture(sf::Texture *texture, const char * id)
     {
         packNode *ret = m_baseNode.insert(texture);
         if (ret) 
@@ -53,7 +53,7 @@ fe::Vector2<unsigned int> fe::texturePacker::addTexture(const sf::Texture *textu
             }
     }
 
-const sf::Texture &fe::texturePacker::getTexture()
+sf::Texture &fe::texturePacker::getTexture()
     {
         if (m_needsUpdate)
             {
@@ -64,12 +64,12 @@ const sf::Texture &fe::texturePacker::getTexture()
         return m_packedTexture;
     }
 
-const sf::Texture *fe::texturePacker::getTexture(const char *id)
+sf::Texture *fe::texturePacker::getTexture(const char *id)
     {
         return getTexture(FE_STR(id));
     }
 
-const sf::Texture *fe::texturePacker::getTexture(fe::guid id)
+sf::Texture *fe::texturePacker::getTexture(fe::guid id)
     {
         auto node = m_baseNode.get(id);
         if (node)
@@ -110,12 +110,12 @@ fe::texturePacker::packNode::packNode(unsigned int x, unsigned int y, unsigned i
         m_size = fe::Vector2<unsigned int>(width, height);
     }
 
-fe::texturePacker::packNode *fe::texturePacker::packNode::insert(const sf::Texture &texture)
+fe::texturePacker::packNode *fe::texturePacker::packNode::insert(sf::Texture &texture)
     {
         return insert(&texture);
     }
 
-fe::texturePacker::packNode *fe::texturePacker::packNode::insert(const sf::Texture *texture)
+fe::texturePacker::packNode *fe::texturePacker::packNode::insert(sf::Texture *texture)
     {
         if (m_child[0]) // if we are a branch we will have atleast 1 child
             {

@@ -46,6 +46,9 @@ namespace fe
 
                 public:
                     FLAT_ENGINE_API void addGlobalTexture(fe::Vector2<unsigned int> offset);
+                    FLAT_ENGINE_API fe::Vector2<unsigned int> getTextureOffset() const;
+                    FLAT_ENGINE_API fe::Vector2<unsigned int> getTileTextureOffset(fe::guid tileID) const;
+                    FLAT_ENGINE_API const imp::tile *getTile(fe::guid tileID) const;
 
                     // Create a tile and put it into the fabrications
                     FLAT_ENGINE_API void create(fe::guid name, fe::Vector2<unsigned int> size, fe::Vector2<unsigned int> offset);

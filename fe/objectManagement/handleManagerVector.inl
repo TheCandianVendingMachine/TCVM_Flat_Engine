@@ -57,6 +57,7 @@ fe::Handle fe::handleManager<T, 0>::addObject(T object)
 template<typename T>
 void fe::handleManager<T, 0>::removeObject(Handle handle)
     {
+        if (handle < 0) return;
         onRemove(m_objects[m_handles[handle].handle], m_handles[handle].handle);
         if (m_handles.begin() + handle < m_handles.end())
             {

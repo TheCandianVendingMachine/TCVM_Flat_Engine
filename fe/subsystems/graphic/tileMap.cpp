@@ -35,6 +35,35 @@ void fe::tileMap::addGlobalTexture(fe::Vector2<unsigned int> offset)
         m_textureOffset = offset;
     }
 
+fe::Vector2<unsigned int> fe::tileMap::getTextureOffset() const
+    {
+        return m_textureOffset;
+    }
+
+const fe::imp::tile *fe::tileMap::getTile(fe::guid tileID) const
+    {
+        for (auto &tile : m_fabrications)
+            {
+                if (tile.id == tileID)
+                    {
+                        return &tile;
+                    }
+            }
+        return nullptr;
+    }
+
+fe::Vector2<unsigned int> fe::tileMap::getTileTextureOffset(fe::guid tileID) const
+    {
+        for (auto &tile : m_fabrications)
+            {
+                if (tile.id == tileID)
+                    {
+                        return fe::Vector2<unsigned int>(tile.xTexturePosition, tile.yTexturePosition);
+                    }
+            }
+        return fe::Vector2<unsigned int>(0, 0);
+    }
+
 void fe::tileMap::create(fe::guid name, fe::Vector2<unsigned int> size, fe::Vector2<unsigned int> offset)
     {
         imp::tile fab;
@@ -80,8 +109,8 @@ fe::Handle fe::tileMap::get(fe::Vector2d position)
             {
                 fe::Vector2d tPosition(tile->xPosition, tile->yPosition);
                 fe::Vector2<unsigned int> tSize = fe::Vector2<unsigned int>(tile->xSize, tile->ySize);
-                if (position.x > tPosition.x && position.x < tPosition.x + tSize.x &&
-                    position.y > tPosition.y && position.y < tPosition.y + tSize.y)
+                if (position.x >= tPosition.x && position.x < tPosition.x + tSize.x &&
+                    position.y >= tPosition.y && position.y < tPosition.y + tSize.y)
                     {
                         return getHandle(tile);
                     }

@@ -140,7 +140,7 @@ void fe::gui::textBox::drawElement(sf::RenderTarget &target, const fe::matrix3d 
         m_shape[3].position = matrix.transformPoint({ 0.f, m_size.y }).convertToSfVec2();
         m_shape[4].position = matrix.transformPoint({ 0.f, 0.f }).convertToSfVec2();
 
-        target.draw(m_shape);
+        target.draw(m_shape, m_texture);
         m_drawText.draw(target);
     }
 

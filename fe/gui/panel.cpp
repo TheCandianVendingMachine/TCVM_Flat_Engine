@@ -103,6 +103,9 @@ void fe::gui::panel::setTitle(const char *title, const sf::Font &font)
         m_title.setCharacterSize((m_windowOffset - 5.f) * (72.f / 96.f));
         m_title.setPosition(5, 5);
 
+        m_minSize = fe::Vector2d(30.f * (m_canMinimize + m_canClose), 5.f);
+        m_minSize.x += m_title.getGlobalBounds().width;
+
         m_titlePosition = m_title.getPosition();
     }
 
@@ -244,6 +247,11 @@ void fe::gui::panel::setSize(fe::Vector2d size)
 fe::Vector2d fe::gui::panel::getSize() const
     {
         return m_size;
+    }
+
+fe::Vector2d fe::gui::panel::getMinSize() const
+    {
+        return m_minSize;
     }
 
 void fe::gui::panel::handleEvent(const sf::Event &event)

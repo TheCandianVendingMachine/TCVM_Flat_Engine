@@ -3,9 +3,9 @@ inline fe::resourceManager<sf::Texture>::resourceManager()
         m_packed.createTexture();
     }
 
-inline const sf::Texture *fe::resourceManager<sf::Texture>::load(const char* filepath, const char* id)
+inline sf::Texture *fe::resourceManager<sf::Texture>::load(const char* filepath, const char* id)
     {
-        const sf::Texture *resource = getTexture(id);
+        sf::Texture *resource = getTexture(id);
         if (resource)
             {
                 return resource;
@@ -28,7 +28,7 @@ inline const sf::Texture *fe::resourceManager<sf::Texture>::load(const char* fil
         return nullptr;
     }
 
-inline const sf::Texture *fe::resourceManager<sf::Texture>::add(const sf::Texture *texture, const char *id)
+inline sf::Texture *fe::resourceManager<sf::Texture>::add(sf::Texture *texture, const char *id)
     {
         m_textures.push_back(texture);
         m_packed.addTexture(*texture, id);
@@ -64,12 +64,12 @@ inline fe::fontData fe::resourceManager<sf::Texture>::addFont(const sf::Font *fo
         return positions;
     }
 
-inline const sf::Texture *fe::resourceManager<sf::Texture>::getTexture(const char* id)
+inline sf::Texture *fe::resourceManager<sf::Texture>::getTexture(const char* id)
     {
         return m_packed.getTexture(id);
     }
 
-inline const sf::Texture *fe::resourceManager<sf::Texture>::getTexture(fe::guid id)
+inline sf::Texture *fe::resourceManager<sf::Texture>::getTexture(fe::guid id)
     {
         return m_packed.getTexture(id);
     }
@@ -84,7 +84,7 @@ inline fe::Vector2<unsigned int> fe::resourceManager<sf::Texture>::getTextureOff
         return m_packed.getTexturePosition(id);
     }
 
-inline const sf::Texture &fe::resourceManager<sf::Texture>::get()
+inline sf::Texture &fe::resourceManager<sf::Texture>::get()
     {
         return m_packed.getTexture();
     }

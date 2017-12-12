@@ -1,0 +1,42 @@
+#include "toggleButton.hpp"
+#include "panel.hpp"
+#include "../subsystems/messaging/gameEvent.hpp"
+#include "../subsystems/messaging/eventSender.hpp"
+#include "../engine.hpp"
+
+fe::gui::toggleButton::toggleButton(const fe::Vector2d &size, const std::function<void()> &callback) : fe::gui::button(size, callback), m_toggle(false)
+    {
+    }
+
+void fe::gui::toggleButton::update()
+    {
+        if (m_parentPanel->mouseHover(getPosition(), m_size) && m_parentPanel->getMousePressed() && !m_pressed)
+                {
+                    m_pressed = true;
+                    m_toggle = !m_toggle;
+                    if (m_toggle)
+                        {
+                            m_callback();
+                            fe::gameEvent event(m_event, 0);
+                            fe::engine::get().getEventSender().sendEngineEvent(event, m_event);
+                        }
+                    else
+                        {
+                            fe::gameEvent event(m_extraEvent, 0);
+                            fe::engine::get().getEventSender().sendEngineEvent(event, m_extraEvent);
+                        }
+                }
+            else if (!m_parentPanel->getMousePressed() && m_pressed)
+                {
+                    m_pressed = false;
+                }
+
+            if (m_parentPanel->mouseHover(getPosition(), m_size))
+                {
+                    setActive(true);
+                }
+            else
+                {
+                    setActive(false);
+                }
+    }

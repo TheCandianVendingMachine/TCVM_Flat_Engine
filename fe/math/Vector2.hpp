@@ -33,6 +33,13 @@ namespace fe
                 Vector2(const lightVector2<dataType> &copy) : x(copy.x), y(copy.y) {}
 				Vector2(const sf::Vector2<dataType> &copy) : x(copy.x), y(copy.y) {}
 
+                template <typename otherDataType>
+                Vector2(const Vector2<otherDataType> &copy) : x(copy.x), y(copy.y) {}
+                template <typename otherDataType>
+                Vector2(const lightVector2<otherDataType> &copy) : x(copy.x), y(copy.y) {}
+                template <typename otherDataType>
+                Vector2(const sf::Vector2<otherDataType> &copy) : x(copy.x), y(copy.y) {}
+
                 Vector2 &operator=(const Vector2<dataType> &copy) { if (&copy != this) { x = copy.x; y = copy.y; } return *this; }
                 bool operator==(const Vector2<dataType> &rhs) const { return rhs.x == x && rhs.y == y; }
 

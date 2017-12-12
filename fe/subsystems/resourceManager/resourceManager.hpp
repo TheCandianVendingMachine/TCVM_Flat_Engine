@@ -40,14 +40,14 @@ namespace fe
                 public:
                     resourceManager();
 
-                    const sf::Texture *load(const char* filepath, const char* id);
-                    const sf::Texture *add(const sf::Texture *texture, const char *id);
+                    sf::Texture *load(const char* filepath, const char* id);
+                    sf::Texture *add(sf::Texture *texture, const char *id);
 
                     // Creates the TTF font into a bitmap font
                     fe::fontData addFont(const sf::Font *font, const char *id, unsigned int size);
 
-                    const sf::Texture *getTexture(const char* id);
-                    const sf::Texture *getTexture(fe::guid id);
+                    sf::Texture *getTexture(const char* id);
+                    sf::Texture *getTexture(fe::guid id);
 
                     [[deprecated("Deprecated. Use \"getTexturePosition(const char*)\" instead")]] fe::Vector2<unsigned int> getTextureOffset(const char* id);
                     [[deprecated("Deprecated. Use \"getTexturePosition(fe::guid)\" instead")]] fe::Vector2<unsigned int> getTextureOffset(fe::guid id);
@@ -59,7 +59,7 @@ namespace fe
                     void remove(fe::guid id);
 
                     // Get the packed texture
-                    const sf::Texture &get();
+                    sf::Texture &get();
 
                     void shutDown();
 

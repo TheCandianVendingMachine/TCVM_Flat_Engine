@@ -10,7 +10,7 @@ void fe::gui::button::drawElement(sf::RenderTarget &target, const fe::matrix3d &
         m_shape[2].position = matrix.transformPoint({m_size.x, m_size.y}).convertToSfVec2();
         m_shape[3].position = matrix.transformPoint({0.f, m_size.y}).convertToSfVec2();
 
-        target.draw(m_shape);
+        target.draw(m_shape, m_texture);
     }
 
 fe::gui::button::button(const fe::Vector2d &size, const std::function<void()> &callback) : m_callback(callback)
@@ -50,4 +50,9 @@ void fe::gui::button::update()
             {
                 setActive(false);
             }
+    }
+
+void fe::gui::button::setCallback(std::function<void()> callback)
+    {
+        m_callback = callback;
     }
