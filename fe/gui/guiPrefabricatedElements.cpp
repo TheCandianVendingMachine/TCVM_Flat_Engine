@@ -182,8 +182,8 @@ fe::gui::panel *fe::guiPrefabricatedElements::getGUI(fe::guid guiPrefabId)
                 auto newElement = getElement(element.id);
                 fe::Handle elementId = panel->addElement(newElement);
                 panel->setElementPosition(elementId, { element.position.x, element.position.y });
-                panel->getElement(elementId)->setEvent(element.event);
-                panel->getElement(elementId)->setExtraEvent(element.extraEvent);
+                newElement->setEvent(element.event);
+                newElement->setExtraEvent(element.extraEvent);
                 for (auto &attached : element.attachedElements)
                     {
                         auto attachedElement = getElement(attached.id);

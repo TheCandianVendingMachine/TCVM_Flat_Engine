@@ -217,7 +217,7 @@ void fe::gui::textBox::handleEvent(const sf::Event &event)
                             }
                     }
             }
-        else if (m_input && event.type == sf::Event::TextEntered)
+        else if (m_input && event.type == sf::Event::TextEntered && event.text.unicode != '\r')
             {
                 addChar(event.text.unicode);
             }
@@ -225,10 +225,12 @@ void fe::gui::textBox::handleEvent(const sf::Event &event)
             {
                 if (event.key.code == sf::Keyboard::Return)
                     {
-                        fe::gameEvent event(m_event, 1);
+                        fe::gameEvent event(m_event, 2);
                         event.eventType = m_event;
-                        event.args[0].arg.TYPE_VOIDP = &m_inputText;
+                        event.args[0].arg.TYPE_VOIDP = this;
                         event.args[0].argType = gameEventArgument::type::TYPE_VOIDP;
+                        event.args[1].arg.TYPE_VOIDP = &m_inputText;
+                        event.args[1].argType = gameEventArgument::type::TYPE_VOIDP;
                         fe::engine::get().getEventSender().sendEngineEvent(event, m_event);
                         m_input = false;
                     }

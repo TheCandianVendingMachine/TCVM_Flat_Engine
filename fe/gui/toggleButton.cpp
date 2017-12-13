@@ -17,13 +17,17 @@ void fe::gui::toggleButton::update()
                     if (m_toggle)
                         {
                             m_callback();
-                            fe::gameEvent event(m_event, 0);
+                            fe::gameEvent event(m_event, 1);
+                            event.args[0].arg.TYPE_VOIDP = this;
+                            event.args[0].argType = gameEventArgument::type::TYPE_VOIDP;
                             fe::engine::get().getEventSender().sendEngineEvent(event, m_event);
                             setActive(true);
                         }
                     else
                         {
-                            fe::gameEvent event(m_extraEvent, 0);
+                            fe::gameEvent event(m_extraEvent, 1);
+                            event.args[0].arg.TYPE_VOIDP = this;
+                            event.args[0].argType = gameEventArgument::type::TYPE_VOIDP;
                             fe::engine::get().getEventSender().sendEngineEvent(event, m_extraEvent);
                             setActive(false);
                         }

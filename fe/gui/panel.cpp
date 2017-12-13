@@ -226,18 +226,20 @@ bool fe::gui::panel::mouseHover() const
 
 void fe::gui::panel::setSize(fe::Vector2d size)
     {
-        fe::gameEvent eventData(fe::engineEvent::GUI_PANEL_SIZE_CHANGE, 5);
-        eventData.args[0].argType = fe::gameEventArgument::type::TYPE_UINT;
+        fe::gameEvent eventData(fe::engineEvent::GUI_PANEL_SIZE_CHANGE, 6);
+        eventData.args[0].argType = fe::gameEventArgument::type::TYPE_VOIDP;
         eventData.args[1].argType = fe::gameEventArgument::type::TYPE_UINT;
         eventData.args[2].argType = fe::gameEventArgument::type::TYPE_UINT;
         eventData.args[3].argType = fe::gameEventArgument::type::TYPE_UINT;
         eventData.args[4].argType = fe::gameEventArgument::type::TYPE_UINT;
+        eventData.args[5].argType = fe::gameEventArgument::type::TYPE_UINT;
 
-        eventData.args[0].arg.TYPE_UINTEGER = m_panelID;
-        eventData.args[1].arg.TYPE_UINTEGER = m_texture.getSize().x;
-        eventData.args[2].arg.TYPE_UINTEGER = m_texture.getSize().y;
-        eventData.args[3].arg.TYPE_UINTEGER = size.x;
-        eventData.args[4].arg.TYPE_UINTEGER = size.y;
+        eventData.args[0].arg.TYPE_VOIDP = this;
+        eventData.args[1].arg.TYPE_UINTEGER = m_panelID;
+        eventData.args[2].arg.TYPE_UINTEGER = m_texture.getSize().x;
+        eventData.args[3].arg.TYPE_UINTEGER = m_texture.getSize().y;
+        eventData.args[4].arg.TYPE_UINTEGER = size.x;
+        eventData.args[5].arg.TYPE_UINTEGER = size.y;
 
         size.x = m_minSize.x < size.x ? size.x : m_minSize.x;
         size.y = m_minSize.y < size.y ? size.y : m_minSize.y;
@@ -305,11 +307,13 @@ void fe::gui::panel::handleEvent(const sf::Event &event)
                             m_mousePosition.x - getPosition().x < maxButtonPos.x && m_mousePosition.y - getPosition().y < maxButtonPos.y && m_canMinimize)
                             {
                                 m_isFolded = !m_isFolded;
-                                fe::gameEvent eventData(fe::engineEvent::GUI_PANEL_MINIMIZED, 2);
-                                eventData.args[0].arg.TYPE_UINTEGER = m_panelID;
-                                eventData.args[1].arg.TYPE_BOOL = m_isFolded;
-                                eventData.args[0].argType = fe::gameEventArgument::type::TYPE_UINT;
-                                eventData.args[1].argType = fe::gameEventArgument::type::TYPE_BOOL;
+                                fe::gameEvent eventData(fe::engineEvent::GUI_PANEL_MINIMIZED, 3);
+                                eventData.args[0].arg.TYPE_VOIDP = this;
+                                eventData.args[1].arg.TYPE_UINTEGER = m_panelID;
+                                eventData.args[2].arg.TYPE_BOOL = m_isFolded;
+                                eventData.args[0].argType = fe::gameEventArgument::type::TYPE_VOIDP;
+                                eventData.args[1].argType = fe::gameEventArgument::type::TYPE_UINT;
+                                eventData.args[2].argType = fe::gameEventArgument::type::TYPE_BOOL;
                                 fe::engine::get().getEventSender().sendEngineEvent(eventData, fe::engineEvent::GUI_PANEL_MINIMIZED);
                                 fe::engine::get().getEventSender().sendEngineEvent(eventData, m_eventOnMinimize);
 
@@ -361,13 +365,15 @@ void fe::gui::panel::update()
         if (!m_mousePressed && m_dragging)
             {
                 m_dragging = false;
-                fe::gameEvent eventData(fe::engineEvent::GUI_PANEL_MOVED, 3);
-                eventData.args[0].argType = fe::gameEventArgument::type::TYPE_UINT;
-                eventData.args[1].argType = fe::gameEventArgument::type::TYPE_FLOAT;
+                fe::gameEvent eventData(fe::engineEvent::GUI_PANEL_MOVED, 4);
+                eventData.args[0].argType = fe::gameEventArgument::type::TYPE_VOIDP;
+                eventData.args[1].argType = fe::gameEventArgument::type::TYPE_UINT;
                 eventData.args[2].argType = fe::gameEventArgument::type::TYPE_FLOAT;
-                eventData.args[0].arg.TYPE_UINTEGER = m_panelID;
-                eventData.args[1].arg.TYPE_FLOAT = getPosition().x;
-                eventData.args[2].arg.TYPE_FLOAT = getPosition().y;
+                eventData.args[3].argType = fe::gameEventArgument::type::TYPE_FLOAT;
+                eventData.args[0].arg.TYPE_VOIDP = this;
+                eventData.args[1].arg.TYPE_UINTEGER = m_panelID;
+                eventData.args[2].arg.TYPE_FLOAT = getPosition().x;
+                eventData.args[3].arg.TYPE_FLOAT = getPosition().y;
                 fe::engine::get().getEventSender().sendEngineEvent(eventData, fe::engineEvent::GUI_PANEL_MOVED);
             }
 
@@ -457,9 +463,11 @@ fe::guid fe::gui::panel::id()
 
 void fe::gui::panel::destroy()
     {
-        fe::gameEvent eventData(fe::engineEvent::GUI_PANEL_CLOSED, 1);
-        eventData.args[0].arg.TYPE_UINTEGER = m_panelID;
-        eventData.args[0].argType = fe::gameEventArgument::type::TYPE_UINT;
+        fe::gameEvent eventData(fe::engineEvent::GUI_PANEL_CLOSED, 2);
+        eventData.args[0].arg.TYPE_VOIDP = this;
+        eventData.args[0].argType = fe::gameEventArgument::type::TYPE_VOIDP;
+        eventData.args[1].arg.TYPE_UINTEGER = m_panelID;
+        eventData.args[1].argType = fe::gameEventArgument::type::TYPE_UINT;
         fe::engine::get().getEventSender().sendEngineEvent(eventData, fe::engineEvent::GUI_PANEL_CLOSED);
         fe::engine::get().getEventSender().sendEngineEvent(eventData, m_eventOnClose);
 

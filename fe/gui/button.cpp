@@ -34,7 +34,9 @@ void fe::gui::button::update()
             {
                 m_pressed = true;
                 m_callback();
-                fe::gameEvent event(m_event, 0);
+                fe::gameEvent event(m_event, 1);
+                event.args[0].arg.TYPE_VOIDP = this;
+                event.args[0].argType = gameEventArgument::type::TYPE_VOIDP;
                 fe::engine::get().getEventSender().sendEngineEvent(event, m_event);
             }
         else if (!m_parentPanel->getMousePressed() && m_pressed)
