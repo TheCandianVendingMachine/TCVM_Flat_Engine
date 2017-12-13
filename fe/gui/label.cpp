@@ -25,9 +25,42 @@ fe::gui::label::label(const sf::Font &font, const std::string &text)
         setCharacterSize(m_text.getCharacterSize());
     }
 
+void fe::gui::label::fitToParent()
+    {
+        float positionRelative = (m_textPosition.x / m_parentElement->getSize().x) - 0.5f;
+        int sign = (0 <= positionRelative) - (positionRelative < 0); // 0 is considered positive
+
+        for (unsigned int i = m_text.getCharacterSize(); i > 0; i--)
+            {
+                setCharacterSize(i);
+                float dx = (m_textPosition.x + (m_text.getLocalBounds().width / 2.f)) - m_parentElement->getSize().x;
+                dx *= sign;
+                if (dx <= 0.f)
+                    {
+                        break;
+                    }
+            }
+    }
+
+void fe::gui::label::setPositionRelative(fe::Vector2d pos)
+    {
+        setPositionRelative(pos.x, pos.y);
+    }
+
+void fe::gui::label::setPositionRelative(float x, float y)
+    {
+        setPosition(m_parentElement->getSize().x * x, m_parentElement->getSize().y * y);
+    }
+
 void fe::gui::label::setPosition(fe::Vector2d pos)
     {
-        m_textPosition = pos;
+        setPosition(pos.x, pos.y);
+    }
+
+void fe::gui::label::setPosition(float x, float y)
+    {
+        m_textPosition.x = x;
+        m_textPosition.y = y;
     }
 
 fe::Vector2d fe::gui::label::getPosition() const

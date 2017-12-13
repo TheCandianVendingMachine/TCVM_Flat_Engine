@@ -45,7 +45,12 @@ namespace fe
                         public:
                             FLAT_ENGINE_API guiElement();
 
+                            FLAT_ENGINE_API virtual void fitToParent();
                             FLAT_ENGINE_API fe::matrix3d getParentTransform();
+
+                            // set the position relative to the parent element
+                            FLAT_ENGINE_API virtual void setPositionRelative(fe::Vector2d position);
+                            FLAT_ENGINE_API virtual void setPositionRelative(float x, float y);
 
                             FLAT_ENGINE_API void setEvent(const char *event);
                             FLAT_ENGINE_API void setEvent(fe::guid event);
@@ -62,7 +67,7 @@ namespace fe
                             FLAT_ENGINE_API guiElement *getParentElement() const;
 
                             FLAT_ENGINE_API virtual void setSize(const fe::Vector2d &size);
-                            FLAT_ENGINE_API const fe::Vector2d &getSize();
+                            FLAT_ENGINE_API const fe::Vector2d &getSize() const;
 
                             FLAT_ENGINE_API void setActive(bool value);
                             FLAT_ENGINE_API bool getActive() const;

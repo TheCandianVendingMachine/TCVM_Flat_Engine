@@ -179,10 +179,26 @@ fe::gui::panel *fe::guiPrefabricatedElements::getGUI(fe::guid guiPrefabId)
 
         for (auto &element : guiTemplate.m_elements)
             {
-                fe::Handle elementId = panel->addElement(getElement(element.id));
+                auto newElement = getElement(element.id);
+                fe::Handle elementId = panel->addElement(newElement);
                 panel->setElementPosition(elementId, { element.position.x, element.position.y });
                 panel->getElement(elementId)->setEvent(element.event);
                 panel->getElement(elementId)->setExtraEvent(element.extraEvent);
+                for (auto &attached : element.attachedElements)
+                    {
+                        auto attachedElement = getElement(attached.id);
+                        panel->addElement(attachedElement);
+                        attachedElement->setParent(newElement);
+
+                        attachedElement->setPositionRelative(attached.position.x, attached.position.y);
+                        attachedElement->setEvent(attached.event);
+                        attachedElement->setExtraEvent(attached.extraEvent);
+
+                        if (attached.fitToParent)
+                            {
+                                attachedElement->fitToParent();
+                            }
+                    }
             }
 
         return panel;

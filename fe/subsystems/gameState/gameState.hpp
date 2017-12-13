@@ -33,7 +33,9 @@ namespace fe
                     std::queue<gui::panel*> m_guiPanelsToAdd;
                     fe::gameWorld m_gameWorld;
 
-                protected:
+                public:
+                    FLAT_ENGINE_API baseGameState() {}
+
                     FLAT_ENGINE_API void addPanel(gui::panel *panel);
                     FLAT_ENGINE_API void removePanel(fe::guid panelID);
                     FLAT_ENGINE_API void removePanel(gui::panel *panel);
@@ -41,9 +43,6 @@ namespace fe
                     // Run a function to check every single panel
                     template<typename Func>
                     bool forEachPanel(Func func);
-
-                public:
-                    FLAT_ENGINE_API baseGameState() {}
 
                     FLAT_ENGINE_API void startUp();
                     FLAT_ENGINE_API virtual void init() {}

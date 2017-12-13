@@ -197,10 +197,12 @@ namespace fe
 
                         struct element
                             {
+                                std::vector<element> attachedElements;
                                 coord position;
                                 fe::guid id; // id of the element that this pulls from
                                 fe::guid event = -1;
                                 fe::guid extraEvent = -1;
+                                bool fitToParent = false;
                                 void load(rapidxml::xml_node<> *node)
                                     {
                                         rapidxml::xml_node<> *nodeIt = node;
@@ -221,6 +223,20 @@ namespace fe
                                                 else if (std::string(nodeIt->name()) == "extra_event")
                                                     {
                                                         extraEvent = FE_STR(nodeIt->value());
+                                                    }
+                                                else if (std::string(nodeIt->name()) == "fit_to_parent")
+                                                    {
+                                                        fitToParent = (bool)interpretConstant(nodeIt->value());
+                                                    }
+                                                else if (std::string(nodeIt->name()) == "attached_elements")
+                                                    {
+                                                        rapidxml::xml_node<> *attachedNodeIt = nodeIt->first_node();
+                                                        while (attachedNodeIt)
+                                                            {
+                                                                attachedElements.emplace_back();
+                                                                attachedElements.back().load(attachedNodeIt->first_node());
+                                                                attachedNodeIt = attachedNodeIt->next_sibling();
+                                                            }
                                                     }
                                                 nodeIt = nodeIt->next_sibling();
                                             }

@@ -28,7 +28,13 @@ namespace fe
                             FLAT_ENGINE_API label(const sf::Font &font, const char *text);
                             FLAT_ENGINE_API label(const sf::Font &font, const std::string &text);
                             
+                            FLAT_ENGINE_API void fitToParent();
+
+                            FLAT_ENGINE_API void setPositionRelative(fe::Vector2d pos);
+                            FLAT_ENGINE_API void setPositionRelative(float x, float y);
+
                             FLAT_ENGINE_API void setPosition(fe::Vector2d pos);
+                            FLAT_ENGINE_API void setPosition(float x, float y);
                             FLAT_ENGINE_API fe::Vector2d getPosition() const;
 
                             FLAT_ENGINE_API void setCharacterSize(float point);

@@ -3,6 +3,21 @@
 #include "../objectManagement/guid.hpp"
 #include <SFML/Graphics/Texture.hpp>
 
+void fe::gui::guiElement::fitToParent()
+    {
+        float x = getSize().x;
+        float y = getSize().y;
+        if (getSize().x > m_parentElement->getSize().x)
+            {
+                x = m_parentElement->getSize().x;
+            }
+        if (getSize().y > m_parentElement->getSize().y)
+            {
+                y = m_parentElement->getSize().x;
+            }
+        setSize({ x, y });
+    }
+
 fe::matrix3d fe::gui::guiElement::getParentTransform()
     {
         if (m_parentElement)
@@ -17,6 +32,16 @@ fe::gui::guiElement::guiElement() : m_parentPanel(nullptr), m_parentElement(null
         m_active = false;
         m_colourUpdate = false;
         setActive(false);
+    }
+
+void fe::gui::guiElement::setPositionRelative(fe::Vector2d position)
+    {
+        setPositionRelative(position.x, position.y);
+    }
+
+void fe::gui::guiElement::setPositionRelative(float x, float y)
+    {
+        setPosition((m_parentElement->getSize().x * x) - (m_size.x / 2.f), (m_parentElement->getSize().y * y) - (m_size.y / 2.f));
     }
 
 void fe::gui::guiElement::setEvent(const char *event)
@@ -74,7 +99,7 @@ void fe::gui::guiElement::setSize(const fe::Vector2d &size)
         m_size = size;
     }
 
-const fe::Vector2d &fe::gui::guiElement::getSize()
+const fe::Vector2d &fe::gui::guiElement::getSize() const
     {
         return m_size;
     }
