@@ -109,6 +109,24 @@ void fe::gui::panel::setTitle(const char *title, const sf::Font &font)
         m_titlePosition = m_title.getPosition();
     }
 
+void fe::gui::panel::setTitle(const char *title)
+    {
+        char croppedTitle[31];
+        std::strncpy(croppedTitle, title, 30);
+        croppedTitle[30] = '\0';
+
+        m_title.setString(croppedTitle);
+        m_title.setFillColor(sf::Color::Black);
+
+        m_title.setCharacterSize((m_windowOffset - 5.f) * (72.f / 96.f));
+        m_title.setPosition(5, 5);
+
+        m_minSize = fe::Vector2d(30.f * (m_canMinimize + m_canClose), 5.f);
+        m_minSize.x += m_title.getGlobalBounds().width;
+
+        m_titlePosition = m_title.getPosition();
+    }
+
 std::string fe::gui::panel::getTitle() const
     {
     return std::string();

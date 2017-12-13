@@ -94,6 +94,7 @@ namespace fe
                             FLAT_ENGINE_API void setModifiers(int modifiers);
 
                             FLAT_ENGINE_API void setTitle(const char *title, const sf::Font &font);
+                            FLAT_ENGINE_API void setTitle(const char *title);
                             FLAT_ENGINE_API std::string getTitle() const;
 
                             FLAT_ENGINE_API void setPanelBarColour(sf::Color colour);

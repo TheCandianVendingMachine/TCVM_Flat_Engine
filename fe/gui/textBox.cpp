@@ -256,6 +256,7 @@ void fe::gui::textBox::update()
 void fe::gui::textBox::setString(const char *str)
     {
         m_inputText = "";
+        m_inputTextShown = "";
         for (unsigned int i = 0; i < std::strlen(str); i++)
             {
                 if (!addChar(str[i]))
@@ -263,6 +264,11 @@ void fe::gui::textBox::setString(const char *str)
                         break;
                     }
             }
+    }
+
+void fe::gui::textBox::setString(const std::string &str)
+    {
+        setString(str.c_str());
     }
 
 std::string fe::gui::textBox::getString() const

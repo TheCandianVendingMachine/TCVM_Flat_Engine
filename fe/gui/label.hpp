@@ -44,6 +44,7 @@ namespace fe
                             FLAT_ENGINE_API float getPixelSize() const;
 
                             FLAT_ENGINE_API void setString(const char *str);
+                            FLAT_ENGINE_API void setString(const std::string &str);
                             FLAT_ENGINE_API std::string getString() const;
 
                             FLAT_ENGINE_API void setColour(sf::Color colour);

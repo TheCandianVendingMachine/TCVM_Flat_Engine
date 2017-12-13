@@ -104,6 +104,11 @@ void fe::gui::label::setString(const char *str)
         //setSize({ m_text.getLocalBounds().width, m_text.getLocalBounds().height });
     }
 
+void fe::gui::label::setString(const std::string &str)
+    {
+        m_text.setString(sf::String(str));
+    }
+
 std::string fe::gui::label::getString() const
     {
         return m_text.getString();
