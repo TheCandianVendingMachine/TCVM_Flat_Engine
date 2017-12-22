@@ -12,6 +12,7 @@
 #include "../subsystems/physics/collision/collisionWorld.hpp"
 #include "../subsystems/graphic/renderObject/sceneGraph.hpp"
 #include "../subsystems/physics/physicsEngine.hpp"
+#include "../objectManagement/guid.hpp"
 #include <SFML/Graphics/Color.hpp>
 
 namespace fe
@@ -40,7 +41,7 @@ namespace fe
                 return static_cast<std::int16_t>(lhs) & static_cast<std::int16_t>(rhs);
             }
 
-        class baseEntity
+        class baseEntity : public fe::guid
             {
                 protected:
                     fe::sceneGraphObject *m_renderObject;
@@ -108,8 +109,6 @@ namespace fe
                     FLAT_ENGINE_API fe::sceneGraphObject *getRenderObject() const;
                     FLAT_ENGINE_API fe::rigidBody *getRigidBody() const;
                     FLAT_ENGINE_API fe::collider *getCollider() const;
-
-                    FLAT_ENGINE_API fe::Handle GUID() const;
 
             };
 

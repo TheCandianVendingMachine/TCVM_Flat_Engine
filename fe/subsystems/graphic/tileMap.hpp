@@ -7,6 +7,7 @@
 #include "../../objectManagement/handleManager.hpp"
 #include "../../math/Vector2.hpp"
 #include "../serializer/serializerID.hpp"
+#include "../../objectManagement/guid.hpp"
 #include <SFML/Graphics/VertexArray.hpp>
 #include <vector>
 
@@ -31,18 +32,12 @@ namespace fe
                         SERIALIZE_ID("tile", "xSize", xSize, "ySize", ySize, "xTexturePosition", xTexturePosition, "yTexturePosition", yTexturePosition, "id", id);
                     };
 
-                struct tileWorld
+                struct tileWorld : public fe::guid
                     {
                         fe::str id;
-                        fe::str str;
                         unsigned int handle;
                         float xPosition;
                         float yPosition;
-
-                        bool operator==(const tileWorld &rhs)
-                            {
-                                return str == rhs.str;
-                            }
 
                         SERIALIZE_ID("tile", "id", id, "x", xPosition, "y", yPosition);
                     };

@@ -91,7 +91,6 @@ fe::Handle fe::tileMap::add(fe::Vector2d position, fe::str tileId)
                         tileWorld.yPosition = position.y;
                         tileWorld.id = FE_STR(tile.id);
                         tileWorld.handle = iteration;
-                        tileWorld.str = fe::clock::getTimeSinceEpoch().asMicroseconds();
                         fe::Handle retHandle = addObject(tileWorld);
                         rebuildTilemap();
                         return retHandle;

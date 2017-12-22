@@ -118,7 +118,7 @@ void fe::baseGameState::removeObject(fe::Handle ent)
 
 void fe::baseGameState::removeObject(fe::baseEntity *ent)
     {
-        removeObject(ent->GUID());
+        removeObject(ent->getHandle());
     }
 
 fe::baseEntity *fe::baseGameState::getObject(fe::Handle handle) const
