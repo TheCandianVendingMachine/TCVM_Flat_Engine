@@ -15,7 +15,7 @@
 #include <cstdint>
 
 #include "../subsystems/physics/transformable.hpp"
-#include "../objectManagement/guid.hpp"
+#include "../objectManagement/str.hpp"
 
 namespace sf
     {
@@ -67,12 +67,12 @@ namespace fe
 
                             float m_windowOffset; // the offset of the window from the title bar
 
-                            fe::guid m_panelID;
+                            fe::str m_panelID;
                             sf::Text m_title;
                             fe::Vector2d m_titlePosition;
 
-                            fe::guid m_eventOnClose;
-                            fe::guid m_eventOnMinimize;
+                            fe::str m_eventOnClose;
+                            fe::str m_eventOnMinimize;
 
                             bool m_canDrag;     // If we are able to drag the window
                             bool m_canClose;    // If we are able to close and destroy the window
@@ -85,11 +85,11 @@ namespace fe
                             bool m_kill;
 
                         public:
-                            FLAT_ENGINE_API panel(fe::guid id, fe::Vector2d size = { 50, 50 }, int modifiers = 0, const char *title = "\0", const sf::Font *font = nullptr);
-                            FLAT_ENGINE_API panel(fe::guid id, fe::Vector2d size = { 50, 50 }, int modifiers = 0, const std::string &title = "\0", const sf::Font *font = nullptr);
+                            FLAT_ENGINE_API panel(fe::str id, fe::Vector2d size = { 50, 50 }, int modifiers = 0, const char *title = "\0", const sf::Font *font = nullptr);
+                            FLAT_ENGINE_API panel(fe::str id, fe::Vector2d size = { 50, 50 }, int modifiers = 0, const std::string &title = "\0", const sf::Font *font = nullptr);
 
-                            FLAT_ENGINE_API void setEventOnClose(fe::guid event);
-                            FLAT_ENGINE_API void setEventOnMinimize(fe::guid event);
+                            FLAT_ENGINE_API void setEventOnClose(fe::str event);
+                            FLAT_ENGINE_API void setEventOnMinimize(fe::str event);
 
                             FLAT_ENGINE_API void setModifiers(int modifiers);
 
@@ -132,7 +132,7 @@ namespace fe
 
                             FLAT_ENGINE_API bool isKilled() const;
 
-                            FLAT_ENGINE_API fe::guid id();
+                            FLAT_ENGINE_API fe::str id();
 
                             FLAT_ENGINE_API void destroy();
                             FLAT_ENGINE_API ~panel();

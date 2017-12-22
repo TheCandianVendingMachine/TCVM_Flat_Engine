@@ -69,7 +69,7 @@ sf::Texture *fe::texturePacker::getTexture(const char *id)
         return getTexture(FE_STR(id));
     }
 
-sf::Texture *fe::texturePacker::getTexture(fe::guid id)
+sf::Texture *fe::texturePacker::getTexture(fe::str id)
     {
         auto node = m_baseNode.get(id);
         if (node)
@@ -84,7 +84,7 @@ fe::Vector2<unsigned int> fe::texturePacker::getTexturePosition(const char *id)
         return getTexturePosition(FE_STR(id));
     }
 
-fe::Vector2<unsigned int> fe::texturePacker::getTexturePosition(fe::guid id)
+fe::Vector2<unsigned int> fe::texturePacker::getTexturePosition(fe::str id)
     {
         auto node = m_baseNode.get(id);
         if (node)
@@ -176,7 +176,7 @@ fe::texturePacker::packNode *fe::texturePacker::packNode::insert(sf::Texture *te
             }
     }
 
-fe::texturePacker::packNode *fe::texturePacker::packNode::get(fe::guid guid)
+fe::texturePacker::packNode *fe::texturePacker::packNode::get(fe::str guid)
     {
         if (m_id == guid)
             {

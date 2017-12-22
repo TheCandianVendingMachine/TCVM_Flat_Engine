@@ -1,6 +1,6 @@
 #include "localizationStorage.hpp"
 #include "../subsystems/parsing/xmlParsing.hpp"
-#include "../objectManagement/guid.hpp"
+#include "../objectManagement/str.hpp"
 #include <rapidxml_print.hpp>
 #include <iostream>
 
@@ -35,7 +35,7 @@ void fe::localizationStorage::load(rapidxml::xml_node<> *currentNode)
             }
     }
 
-void fe::localizationStorage::loadPackage(rapidxml::xml_node<> *packageBaseNode, fe::guid package)
+void fe::localizationStorage::loadPackage(rapidxml::xml_node<> *packageBaseNode, fe::str package)
     {
         for (rapidxml::xml_node<> *idNodes = packageBaseNode->first_node(); idNodes; idNodes = idNodes->next_sibling())
             {
@@ -57,7 +57,7 @@ void fe::localizationStorage::loadPackage(rapidxml::xml_node<> *packageBaseNode,
             }
     }
 
-void fe::localizationStorage::loadID(rapidxml::xml_node<> *idNode, fe::guid package)
+void fe::localizationStorage::loadID(rapidxml::xml_node<> *idNode, fe::str package)
     {
         std::string id = idNode->first_attribute()->value();
         for (rapidxml::xml_node<> *sibling = idNode->first_node(); sibling; sibling = sibling->next_sibling())
@@ -82,7 +82,7 @@ void fe::localizationStorage::load(const char *textFilepath)
         fe::freeDocument(xmlDoc);
     }
 
-const std::string &fe::localizationStorage::get(fe::guid packageID, fe::guid textID, fe::guid language)
+const std::string &fe::localizationStorage::get(fe::str packageID, fe::str textID, fe::str language)
     {
         return m_text[packageID][textID][language];
     }

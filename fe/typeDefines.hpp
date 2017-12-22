@@ -23,7 +23,7 @@
 namespace fe
     {
         using Handle = int;
-        using guid = unsigned long;
+        using str = unsigned long;
 
         using int8 = signed char;
         using uInt8 = unsigned char;

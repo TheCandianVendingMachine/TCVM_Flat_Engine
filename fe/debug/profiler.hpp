@@ -5,7 +5,7 @@
 #include "../time/time.hpp"
 #include "../time/clock.hpp"
 #include "../subsystems/memory/memoryManager.hpp"
-#include "../objectManagement/guid.hpp"
+#include "../objectManagement/str.hpp"
 #include <iostream>
 #include <cstring>
 

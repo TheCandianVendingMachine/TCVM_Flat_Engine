@@ -1,5 +1,5 @@
 #include "profilerLogger.hpp"
-#include "../objectManagement/guid.hpp"
+#include "../objectManagement/str.hpp"
 #include <algorithm>
 
 fe::profilerLogger *fe::profilerLogger::m_instance = nullptr;
@@ -93,7 +93,7 @@ void fe::profilerLogger::printToStream(std::ostream &out)
             }
     }
 
-void fe::profilerLogger::printToStream(fe::guid group, std::ostream &out)
+void fe::profilerLogger::printToStream(fe::str group, std::ostream &out)
     {
         auto profiles = m_profileGroups[group];
         for (unsigned int i = 0; i < profiles.second; i++)
@@ -129,12 +129,12 @@ void fe::profilerLogger::printToStream(fe::guid group, std::ostream &out)
             }
     }
 
-void fe::profilerLogger::profileGroup(fe::guid group, bool profile)
+void fe::profilerLogger::profileGroup(fe::str group, bool profile)
     {
         m_nonProfileGroups[group] = profile;
     }
 
-bool fe::profilerLogger::wantProfile(fe::guid group)
+bool fe::profilerLogger::wantProfile(fe::str group)
     {
         return !(m_nonProfileGroups.find(group) != m_nonProfileGroups.end()) || (m_nonProfileGroups.find(group) != m_nonProfileGroups.end() && m_nonProfileGroups[group]);
     }

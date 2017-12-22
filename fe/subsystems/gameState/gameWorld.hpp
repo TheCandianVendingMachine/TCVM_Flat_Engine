@@ -16,6 +16,7 @@ namespace fe
         class baseEntity;
         class collisionWorld;
         class broadphaseAbstract;
+        class serializerID;
 
         class gameWorld : protected fe::handleManager<fe::baseEntity*, FE_MAX_GAME_OBJECTS>
             {
@@ -25,6 +26,7 @@ namespace fe
                     fe::graph m_aiGraph;
                     fe::broadphaseAbstract *m_dynamicBroadphase;
                     fe::broadphaseAbstract *m_staticBroadphase;
+                    fe::serializerID *m_serializer;
 
                     sf::RenderStates m_staticRenderStates;
 
@@ -55,6 +57,13 @@ namespace fe
 
                     FLAT_ENGINE_API void preDraw();
                     FLAT_ENGINE_API void draw(sf::RenderTarget &app);
+
+                    FLAT_ENGINE_API void save(std::ofstream &out);
+                    FLAT_ENGINE_API void save();
+                    FLAT_ENGINE_API void load(std::ifstream &in);
+                    FLAT_ENGINE_API void load();
+
+                    FLAT_ENGINE_API void loadTilePrefabs(const char *filepath);
                     
                     template<typename ...Args>
                     FLAT_ENGINE_API fe::Handle addGameObject(fe::baseEntity *entity, Args &&...args);

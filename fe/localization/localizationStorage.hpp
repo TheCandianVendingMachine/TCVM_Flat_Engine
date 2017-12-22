@@ -21,15 +21,15 @@ namespace fe
             {
                 private:
                     // m_text[package][id][language] = text
-                    std::unordered_map<fe::guid, std::unordered_map<fe::guid, std::unordered_map<fe::guid, std::string>>> m_text;
+                    std::unordered_map<fe::str, std::unordered_map<fe::str, std::unordered_map<fe::str, std::string>>> m_text;
 
                     FLAT_ENGINE_API void load(rapidxml::xml_node<> *currentNode);
-                    FLAT_ENGINE_API void loadPackage(rapidxml::xml_node<> *packageBaseNode, fe::guid package); // Not used if COMPILE_FULL_STACK is false
-                    FLAT_ENGINE_API void loadID(rapidxml::xml_node<> *idNode, fe::guid package); // Not used if COMPILE_FULL_STACK is false
+                    FLAT_ENGINE_API void loadPackage(rapidxml::xml_node<> *packageBaseNode, fe::str package); // Not used if COMPILE_FULL_STACK is false
+                    FLAT_ENGINE_API void loadID(rapidxml::xml_node<> *idNode, fe::str package); // Not used if COMPILE_FULL_STACK is false
 
                 public:
                     FLAT_ENGINE_API void load(const char *textFilepath);
-                    FLAT_ENGINE_API const std::string &get(fe::guid packageID, fe::guid textID, fe::guid language);
+                    FLAT_ENGINE_API const std::string &get(fe::str packageID, fe::str textID, fe::str language);
 
             };
     }

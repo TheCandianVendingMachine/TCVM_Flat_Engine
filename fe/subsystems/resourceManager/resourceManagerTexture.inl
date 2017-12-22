@@ -69,7 +69,7 @@ inline sf::Texture *fe::resourceManager<sf::Texture>::getTexture(const char* id)
         return m_packed.getTexture(id);
     }
 
-inline sf::Texture *fe::resourceManager<sf::Texture>::getTexture(fe::guid id)
+inline sf::Texture *fe::resourceManager<sf::Texture>::getTexture(fe::str id)
     {
         return m_packed.getTexture(id);
     }
@@ -79,7 +79,7 @@ inline fe::Vector2<unsigned int> fe::resourceManager<sf::Texture>::getTextureOff
         return m_packed.getTexturePosition(id);
     }
 
-inline fe::Vector2<unsigned int> fe::resourceManager<sf::Texture>::getTextureOffset(fe::guid id)
+inline fe::Vector2<unsigned int> fe::resourceManager<sf::Texture>::getTextureOffset(fe::str id)
     {
         return m_packed.getTexturePosition(id);
     }
@@ -94,7 +94,7 @@ inline fe::Vector2<unsigned int> fe::resourceManager<sf::Texture>::getTexturePos
         return m_packed.getTexturePosition(id);
     }
 
-inline fe::Vector2<unsigned int> fe::resourceManager<sf::Texture>::getTexturePosition(fe::guid id)
+inline fe::Vector2<unsigned int> fe::resourceManager<sf::Texture>::getTexturePosition(fe::str id)
     {
         return m_packed.getTexturePosition(id);
     }

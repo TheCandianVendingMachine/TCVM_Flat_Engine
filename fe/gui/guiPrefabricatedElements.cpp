@@ -81,7 +81,7 @@ fe::gui::guiElement *fe::guiPrefabricatedElements::getElement(const char *elemen
         return getElement(FE_STR(elementPrefabId));
     }
 
-fe::gui::guiElement *fe::guiPrefabricatedElements::getElement(fe::guid elementPrefabId)
+fe::gui::guiElement *fe::guiPrefabricatedElements::getElement(fe::str elementPrefabId)
     {
         fe::priv::elementTemplate &elementTemplate = m_prefabElements[elementPrefabId];
         fe::gui::guiElement *element = nullptr;
@@ -141,7 +141,7 @@ fe::gui::panel *fe::guiPrefabricatedElements::getPanel(const char *panelPrefabId
         return getPanel(FE_STR(panelPrefabId));
     }
 
-fe::gui::panel *fe::guiPrefabricatedElements::getPanel(fe::guid panelPrefabId)
+fe::gui::panel *fe::guiPrefabricatedElements::getPanel(fe::str panelPrefabId)
     {
         fe::priv::panelTemplate &panelTemplate = m_prefabPanels[panelPrefabId];
         fe::gui::panel *panel = new fe::gui::panel( panelPrefabId,
@@ -168,7 +168,7 @@ fe::gui::panel *fe::guiPrefabricatedElements::getGUI(const char *guiPrefabId)
         return getGUI(FE_STR(guiPrefabId));
     }
 
-fe::gui::panel *fe::guiPrefabricatedElements::getGUI(fe::guid guiPrefabId)
+fe::gui::panel *fe::guiPrefabricatedElements::getGUI(fe::str guiPrefabId)
     {
         fe::priv::guiTemplate &guiTemplate = m_prefabGUI[guiPrefabId];
         fe::gui::panel *panel = getPanel(guiTemplate.m_panel.id);

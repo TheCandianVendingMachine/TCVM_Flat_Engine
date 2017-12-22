@@ -1,6 +1,6 @@
 #include "guiElement.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
-#include "../objectManagement/guid.hpp"
+#include "../objectManagement/str.hpp"
 #include <SFML/Graphics/Texture.hpp>
 
 void fe::gui::guiElement::fitToParent()
@@ -49,12 +49,12 @@ void fe::gui::guiElement::setEvent(const char *event)
         setEvent(FE_STR(event));
     }
 
-void fe::gui::guiElement::setEvent(fe::guid event)
+void fe::gui::guiElement::setEvent(fe::str event)
     {
         m_event = event;
     }
 
-fe::guid fe::gui::guiElement::getEvent() const
+fe::str fe::gui::guiElement::getEvent() const
     {
         return m_event;
     }
@@ -64,12 +64,12 @@ void fe::gui::guiElement::setExtraEvent(const char *event)
         setExtraEvent(FE_STR(event));
     }
 
-void fe::gui::guiElement::setExtraEvent(fe::guid event)
+void fe::gui::guiElement::setExtraEvent(fe::str event)
     {
         m_extraEvent = event;
     }
 
-fe::guid fe::gui::guiElement::getExtraEvent() const
+fe::str fe::gui::guiElement::getExtraEvent() const
     {
         return m_extraEvent;
     }
@@ -177,12 +177,12 @@ void fe::gui::guiElement::draw(sf::RenderTarget &target)
         drawElement(target, getParentTransform());
     }
 
-void fe::gui::guiElement::setID(fe::guid id)
+void fe::gui::guiElement::setID(fe::str id)
     {
         m_id = id;
     }
 
-fe::guid fe::gui::guiElement::id()
+fe::str fe::gui::guiElement::id()
     {
         return m_id;
     }

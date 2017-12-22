@@ -27,9 +27,9 @@ namespace fe
                             sf::Color m_activeColour;
                             sf::Color m_inactiveColour;
 
-                            fe::guid m_event;
-                            fe::guid m_extraEvent;
-                            fe::guid m_id;
+                            fe::str m_event;
+                            fe::str m_extraEvent;
+                            fe::str m_id;
 
                             const panel *m_parentPanel; // the panel this gui element is attached to.
                             guiElement *m_parentElement;
@@ -53,12 +53,12 @@ namespace fe
                             FLAT_ENGINE_API virtual void setPositionRelative(float x, float y);
 
                             FLAT_ENGINE_API void setEvent(const char *event);
-                            FLAT_ENGINE_API void setEvent(fe::guid event);
-                            FLAT_ENGINE_API fe::guid getEvent() const;
+                            FLAT_ENGINE_API void setEvent(fe::str event);
+                            FLAT_ENGINE_API fe::str getEvent() const;
 
                             FLAT_ENGINE_API void setExtraEvent(const char *event);
-                            FLAT_ENGINE_API void setExtraEvent(fe::guid event);
-                            FLAT_ENGINE_API fe::guid getExtraEvent() const;
+                            FLAT_ENGINE_API void setExtraEvent(fe::str event);
+                            FLAT_ENGINE_API fe::str getExtraEvent() const;
 
                             FLAT_ENGINE_API void setParent(const panel *attached);
                             FLAT_ENGINE_API void setParent(guiElement *attached);
@@ -84,8 +84,8 @@ namespace fe
                             virtual void update() {}
                             FLAT_ENGINE_API virtual void draw(sf::RenderTarget &target);
 
-                            FLAT_ENGINE_API void setID(fe::guid id);
-                            FLAT_ENGINE_API fe::guid id();
+                            FLAT_ENGINE_API void setID(fe::str id);
+                            FLAT_ENGINE_API fe::str id();
                             
                     };
             }

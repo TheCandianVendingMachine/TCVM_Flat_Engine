@@ -10,11 +10,12 @@ void fe::tileMap::rebuildTilemap()
         m_verticies.setPrimitiveType(sf::PrimitiveType::Quads);
 
         int index = 0;
-        for (auto &tile : getObjects())
+        for (auto &tileHandle : getObjects())
             {
+                fe::imp::tile *tile = &m_fabrications[tileHandle.handle];
                 auto size = fe::Vector2d(tile->xSize, tile->ySize);
                 auto texturePos = fe::Vector2d(tile->xTexturePosition, tile->yTexturePosition) + m_textureOffset;
-                auto pos = fe::Vector2d(tile->xPosition, tile->yPosition);
+                auto pos = fe::Vector2d(tileHandle.xPosition, tileHandle.yPosition);
 
                 m_verticies[index + 0].position = fe::Vector2d(pos.x,               pos.y).convertToSfVec2();
                 m_verticies[index + 1].position = fe::Vector2d(pos.x + size.x,      pos.y).convertToSfVec2();
@@ -40,11 +41,11 @@ fe::Vector2<unsigned int> fe::tileMap::getTextureOffset() const
         return m_textureOffset;
     }
 
-const fe::imp::tile *fe::tileMap::getTile(fe::guid tileID) const
+const fe::imp::tile *fe::tileMap::getTile(fe::str tileID) const
     {
         for (auto &tile : m_fabrications)
             {
-                if (tile.id == tileID)
+                if (FE_STR(tile.id) == tileID)
                     {
                         return &tile;
                     }
@@ -52,11 +53,11 @@ const fe::imp::tile *fe::tileMap::getTile(fe::guid tileID) const
         return nullptr;
     }
 
-fe::Vector2<unsigned int> fe::tileMap::getTileTextureOffset(fe::guid tileID) const
+fe::Vector2<unsigned int> fe::tileMap::getTileTextureOffset(fe::str tileID) const
     {
         for (auto &tile : m_fabrications)
             {
-                if (tile.id == tileID)
+                if (FE_STR(tile.id) == tileID)
                     {
                         return fe::Vector2<unsigned int>(tile.xTexturePosition, tile.yTexturePosition);
                     }
@@ -64,11 +65,11 @@ fe::Vector2<unsigned int> fe::tileMap::getTileTextureOffset(fe::guid tileID) con
         return fe::Vector2<unsigned int>(0, 0);
     }
 
-void fe::tileMap::create(fe::guid name, fe::Vector2<unsigned int> size, fe::Vector2<unsigned int> offset)
+void fe::tileMap::create(const char *name, fe::Vector2<unsigned int> size, fe::Vector2<unsigned int> offset)
     {
         imp::tile fab;
 
-        fab.id = name;
+        std::strcpy(fab.id, name);
         fab.xTexturePosition = offset.x;
         fab.yTexturePosition = offset.y;
         fab.xSize = size.x;
@@ -77,21 +78,26 @@ void fe::tileMap::create(fe::guid name, fe::Vector2<unsigned int> size, fe::Vect
         m_fabrications.push_back(fab);
     }
 
-fe::Handle fe::tileMap::add(fe::Vector2d position, fe::guid tileId)
+fe::Handle fe::tileMap::add(fe::Vector2d position, fe::str tileId)
     {
+        int iteration = 0;
         for (auto &tile : m_fabrications)
             {
-                if (tile.id == tileId)
+                if (FE_STR(tile.id) == tileId)
                     {
                         // Im adding the position to the prefab since this will be copied to the new element, and this will be overwritten and not used
-                        tile.xPosition = position.x;
-                        tile.yPosition = position.y;
-
-                        fe::Handle retHandle = addObject(new fe::imp::tile(tile));
+                        fe::imp::tileWorld tileWorld;
+                        tileWorld.xPosition = position.x;
+                        tileWorld.yPosition = position.y;
+                        tileWorld.id = FE_STR(tile.id);
+                        tileWorld.handle = iteration;
+                        tileWorld.str = fe::clock::getTimeSinceEpoch().asMicroseconds();
+                        fe::Handle retHandle = addObject(tileWorld);
                         rebuildTilemap();
                         return retHandle;
                         break;
                     }
+                ++iteration;
             }
 
         return -1;
@@ -107,8 +113,8 @@ fe::Handle fe::tileMap::get(fe::Vector2d position)
     {
         for (auto &tile : getObjects())
             {
-                fe::Vector2d tPosition(tile->xPosition, tile->yPosition);
-                fe::Vector2<unsigned int> tSize = fe::Vector2<unsigned int>(tile->xSize, tile->ySize);
+                fe::Vector2d tPosition(tile.xPosition, tile.yPosition);
+                fe::Vector2<unsigned int> tSize = fe::Vector2<unsigned int>(m_fabrications[tile.handle].xSize, m_fabrications[tile.handle].ySize);
                 if (position.x >= tPosition.x && position.x < tPosition.x + tSize.x &&
                     position.y >= tPosition.y && position.y < tPosition.y + tSize.y)
                     {
@@ -124,20 +130,21 @@ void fe::tileMap::draw(sf::RenderTarget &target, sf::RenderStates states)
         target.draw(m_verticies, states);
     }
 
-void fe::tileMap::serialize(fe::serializerID &serial)
+void fe::tileMap::serializeFabrications(fe::serializerID &serial)
     {
-        for (auto &tile : getObjects())
+        for (auto &fab : m_fabrications)
             {
-                tile->serialize(serial);
+                fab.serialize(serial);
             }
     }
 
-void fe::tileMap::deserialize(fe::serializerID &serial)
+void fe::tileMap::deserializeFabrications(fe::serializerID &serial)
     {
+        clearFabs();
         imp::tile temp;
         while (temp.deserialize(serial))
             {
-                add({temp.xPosition, temp.yPosition}, temp.id);
+                m_fabrications.push_back(temp);
             }
     }
 

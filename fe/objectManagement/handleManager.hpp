@@ -35,13 +35,13 @@ namespace fe
                             handleObjectList *m_tail = nullptr;
                         } m_baseHandleList;
 
-                    T m_objects[TObjectCount];
                     handleObject m_handles[TObjectCount];
 
                     unsigned int m_objectCount = TObjectCount;
                     unsigned int m_maxIndex;
 
                 protected:
+                    T m_objects[TObjectCount];
                     T *getObjects();
                     fe::Handle getHandle(T object);
 
@@ -78,10 +78,10 @@ namespace fe
                             handleObject(Handle handle) : handle(handle), active(true) {}
                         };
 
-                    std::vector<T> m_objects;
                     std::vector<handleObject> m_handles;
 
                 protected:
+                    std::vector<T> m_objects;
                     std::vector<T> &getObjects();
                     typename std::vector<T>::iterator removeHandle(Handle handle);
 

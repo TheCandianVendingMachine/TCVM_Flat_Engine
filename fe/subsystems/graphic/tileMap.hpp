@@ -3,7 +3,7 @@
 #pragma once
 #define FLAT_ENGINE_EXPORT
 #include "../../flatEngineExport.hpp"
-#include "../../objectManagement/guid.hpp"
+#include "../../objectManagement/str.hpp"
 #include "../../objectManagement/handleManager.hpp"
 #include "../../math/Vector2.hpp"
 #include "../serializer/serializerID.hpp"
@@ -21,21 +21,34 @@ namespace fe
             {
                 struct tile
                     {
-                        fe::guid id;
-
-                        float xPosition;
-                        float yPosition;
+                        char id[64];
 
                         unsigned int xTexturePosition;
                         unsigned int yTexturePosition;
                         unsigned int xSize;
                         unsigned int ySize;
 
-                        SERIALIZE_ID("tile", "x", xPosition, "y", yPosition, "xSize", xSize, "ySize", ySize, "xTexturePosition", xTexturePosition, "yTexturePosition", yTexturePosition, "id", id);
+                        SERIALIZE_ID("tile", "xSize", xSize, "ySize", ySize, "xTexturePosition", xTexturePosition, "yTexturePosition", yTexturePosition, "id", id);
+                    };
+
+                struct tileWorld
+                    {
+                        fe::str id;
+                        fe::str str;
+                        unsigned int handle;
+                        float xPosition;
+                        float yPosition;
+
+                        bool operator==(const tileWorld &rhs)
+                            {
+                                return str == rhs.str;
+                            }
+
+                        SERIALIZE_ID("tile", "id", id, "x", xPosition, "y", yPosition);
                     };
             }
 
-        class tileMap : private fe::handleManager<fe::imp::tile*, 0>
+        class tileMap : private fe::handleManager<fe::imp::tileWorld, 0>
             {
                 private:
                     std::vector<fe::imp::tile> m_fabrications; // tiles already defined
@@ -47,22 +60,22 @@ namespace fe
                 public:
                     FLAT_ENGINE_API void addGlobalTexture(fe::Vector2<unsigned int> offset);
                     FLAT_ENGINE_API fe::Vector2<unsigned int> getTextureOffset() const;
-                    FLAT_ENGINE_API fe::Vector2<unsigned int> getTileTextureOffset(fe::guid tileID) const;
-                    FLAT_ENGINE_API const imp::tile *getTile(fe::guid tileID) const;
+                    FLAT_ENGINE_API fe::Vector2<unsigned int> getTileTextureOffset(fe::str tileID) const;
+                    FLAT_ENGINE_API const imp::tile *getTile(fe::str tileID) const;
 
                     // Create a tile and put it into the fabrications
-                    FLAT_ENGINE_API void create(fe::guid name, fe::Vector2<unsigned int> size, fe::Vector2<unsigned int> offset);
+                    FLAT_ENGINE_API void create(const char *name, fe::Vector2<unsigned int> size, fe::Vector2<unsigned int> offset);
 
-                    FLAT_ENGINE_API fe::Handle add(fe::Vector2d position, fe::guid tileId);
+                    FLAT_ENGINE_API fe::Handle add(fe::Vector2d position, fe::str tileId);
                     FLAT_ENGINE_API void remove(fe::Handle handle);
                     FLAT_ENGINE_API fe::Handle get(fe::Vector2d position);
 
                     FLAT_ENGINE_API void draw(sf::RenderTarget &target, sf::RenderStates states);
 
-                    // Serializes all tiles to a file. Does not serialize fabrications
-                    FLAT_ENGINE_API void serialize(fe::serializerID &serial);
-                    // Deserializes all tiles. Does not deserialize fabrications
-                    FLAT_ENGINE_API void deserialize(fe::serializerID &serial);
+                    SERIALIZE_ID("tilemap", "tiles", m_objects, "fabrications", m_fabrications);
+
+                    FLAT_ENGINE_API void serializeFabrications(fe::serializerID &serial);
+                    FLAT_ENGINE_API void deserializeFabrications(fe::serializerID &serial);
 
                     // Returns a vector of all fabricated tiles
                     FLAT_ENGINE_API const std::vector<fe::imp::tile> &getFabrications();

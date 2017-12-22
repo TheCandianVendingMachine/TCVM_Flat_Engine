@@ -9,18 +9,18 @@
 namespace fe
     {
         
-        constexpr fe::guid hash(const char *input, unsigned int hash)
+        constexpr fe::str hash(const char *input, unsigned int hash)
             {
                 fe::uInt64 index = 0;
                 while (input[index] != '\0')
                     {
-                        hash *= (33 ^ (fe::guid)(input[index++])) + 1;
+                        hash *= (33 ^ (fe::str)(input[index++])) + 1;
                     }
 
                 return hash;
             }
         // implicitely calls the hash with the magic number "5381"
-        constexpr fe::guid hashImpl(const char *input)
+        constexpr fe::str hashImpl(const char *input)
             {
                 return hash(input, 5381);
             }

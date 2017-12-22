@@ -30,7 +30,7 @@ const T *fe::resourceManager<T>::get(const char* id)
     }
 
 template<typename T>
-const T *fe::resourceManager<T>::get(fe::guid id)
+const T *fe::resourceManager<T>::get(fe::str id)
     {
         return m_resources[id];
     }
@@ -43,7 +43,7 @@ void fe::resourceManager<T>::remove(const char* id)
     }
 
 template<typename T>
-void fe::resourceManager<T>::remove(fe::guid id)
+void fe::resourceManager<T>::remove(fe::str id)
     {
         m_resources[id]->~T();
         m_resources.erase(id);

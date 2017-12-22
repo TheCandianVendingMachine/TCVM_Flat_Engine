@@ -8,7 +8,7 @@
 #include <algorithm>
 #include <cstring>
 
-fe::gui::panel::panel(fe::guid id, fe::Vector2d size, int modifiers, const char *title, const sf::Font *font) :
+fe::gui::panel::panel(fe::str id, fe::Vector2d size, int modifiers, const char *title, const sf::Font *font) :
     m_mousePressed(false),
     m_size(size),
     m_panelColour(12, 175, 232, 75),
@@ -39,17 +39,17 @@ fe::gui::panel::panel(fe::guid id, fe::Vector2d size, int modifiers, const char 
             }
     }
 
-fe::gui::panel::panel(fe::guid id, fe::Vector2d size, int modifiers, const std::string &title, const sf::Font *font) :
+fe::gui::panel::panel(fe::str id, fe::Vector2d size, int modifiers, const std::string &title, const sf::Font *font) :
     panel(id, size, modifiers, title.c_str(), font)
     {
     }
 
-void fe::gui::panel::setEventOnClose(fe::guid event)
+void fe::gui::panel::setEventOnClose(fe::str event)
     {
         m_eventOnClose = event;
     }
 
-void fe::gui::panel::setEventOnMinimize(fe::guid event)
+void fe::gui::panel::setEventOnMinimize(fe::str event)
     {
         m_eventOnMinimize = event;
     }
@@ -177,7 +177,7 @@ fe::gui::guiElement *fe::gui::panel::getElement(unsigned int handle)
 
 fe::gui::guiElement *fe::gui::panel::getElement(const char *id)
     {
-        fe::guid requestedId = FE_STR(id);
+        fe::str requestedId = FE_STR(id);
         for (auto &element : m_guiElements)
             {
                 if (element->id() == requestedId)
@@ -456,7 +456,7 @@ bool fe::gui::panel::isKilled() const
         return m_kill;
     }
 
-fe::guid fe::gui::panel::id()
+fe::str fe::gui::panel::id()
     {
         return m_panelID;
     }

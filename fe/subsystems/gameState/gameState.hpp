@@ -37,9 +37,9 @@ namespace fe
                     FLAT_ENGINE_API baseGameState() {}
 
                     FLAT_ENGINE_API void addPanel(gui::panel *panel);
-                    FLAT_ENGINE_API void removePanel(fe::guid panelID);
+                    FLAT_ENGINE_API void removePanel(fe::str panelID);
                     FLAT_ENGINE_API void removePanel(gui::panel *panel);
-                    FLAT_ENGINE_API fe::gui::panel *getPanel(fe::guid panelID);
+                    FLAT_ENGINE_API fe::gui::panel *getPanel(fe::str panelID);
                     // Run a function to check every single panel
                     template<typename Func>
                     bool forEachPanel(Func func);

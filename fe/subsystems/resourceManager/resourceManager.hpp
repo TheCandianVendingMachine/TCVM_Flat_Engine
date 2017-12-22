@@ -6,7 +6,7 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Font.hpp>
 #include "../../typeDefines.hpp"
-#include "../../objectManagement/guid.hpp"
+#include "../../objectManagement/str.hpp"
 #include "../../debug/logger.hpp"
 #include "../graphic/texturePacker.hpp"
 #include "fontData.hpp"
@@ -17,15 +17,15 @@ namespace fe
         class resourceManager
             {
                 private:
-                    std::unordered_map<fe::guid, T*> m_resources;
+                    std::unordered_map<fe::str, T*> m_resources;
 
                 public:
                     const T *load(const char* filepath, const char* id);
                     const T *get(const char* id);
-                    const T *get(fe::guid id);
+                    const T *get(fe::str id);
 
                     void remove(const char* id);
-                    void remove(fe::guid id);
+                    void remove(fe::str id);
 
                     void shutDown();
             };
@@ -47,16 +47,16 @@ namespace fe
                     fe::fontData addFont(const sf::Font *font, const char *id, unsigned int size);
 
                     sf::Texture *getTexture(const char* id);
-                    sf::Texture *getTexture(fe::guid id);
+                    sf::Texture *getTexture(fe::str id);
 
                     [[deprecated("Deprecated. Use \"getTexturePosition(const char*)\" instead")]] fe::Vector2<unsigned int> getTextureOffset(const char* id);
-                    [[deprecated("Deprecated. Use \"getTexturePosition(fe::guid)\" instead")]] fe::Vector2<unsigned int> getTextureOffset(fe::guid id);
+                    [[deprecated("Deprecated. Use \"getTexturePosition(fe::str)\" instead")]] fe::Vector2<unsigned int> getTextureOffset(fe::str id);
 
                     fe::Vector2<unsigned int> getTexturePosition(const char* id);
-                    fe::Vector2<unsigned int> getTexturePosition(fe::guid id);
+                    fe::Vector2<unsigned int> getTexturePosition(fe::str id);
 
                     void remove(const char* id);
-                    void remove(fe::guid id);
+                    void remove(fe::str id);
 
                     // Get the packed texture
                     sf::Texture &get();

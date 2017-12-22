@@ -22,11 +22,14 @@ void fe::gameWorld::startUp()
         m_staticRenderStates.texture = &fe::engine::get().getResourceManager<sf::Texture>()->get();
         m_dynamicBroadphase = nullptr;
         m_staticBroadphase = nullptr;
+        m_serializer = new fe::serializerID();
     }
 
 void fe::gameWorld::shutDown()
     {
         m_sceneGraph.shutDown();
+        delete m_serializer;
+        m_serializer = nullptr;
     }
 
 void fe::gameWorld::setDynamicBroadphase(fe::broadphaseAbstract *broadphase)
@@ -141,6 +144,46 @@ void fe::gameWorld::draw(sf::RenderTarget &app)
         m_sceneGraph.draw(app);
         if (m_dynamicBroadphase) m_dynamicBroadphase->debugDraw();
         if (m_staticBroadphase) m_staticBroadphase->debugDraw();
+    }
+
+void fe::gameWorld::save(std::ofstream &out)
+    {
+        save();
+        m_serializer->outData(out);
+    }
+
+void fe::gameWorld::save()
+    {
+        m_serializer->clearData();
+        FE_LOG("Saving Game World");
+        FE_LOG("Saving Tilemap");
+        m_tileMap.serialize(*m_serializer);
+    }
+
+void fe::gameWorld::load(std::ifstream &in)
+    {
+        FE_LOG("Loading Game World");
+        FE_LOG("Reading File");
+        m_serializer->clearData();
+        m_serializer->readData(in);
+        load();
+    }
+
+void fe::gameWorld::load()
+    {
+        FE_LOG("Loading Tilemap");
+        m_tileMap.clearMap();
+        m_tileMap.deserialize(*m_serializer);
+    }
+
+void fe::gameWorld::loadTilePrefabs(const char *filepath)
+    {
+        fe::serializerID prefabSerial;
+        std::ifstream in(filepath);
+        prefabSerial.readData(in);
+        in.close();
+
+        m_tileMap.deserializeFabrications(prefabSerial);
     }
 
 void fe::gameWorld::removeGameObject(Handle handle)

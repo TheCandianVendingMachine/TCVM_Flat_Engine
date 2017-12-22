@@ -3,7 +3,7 @@
 #pragma once
 #define FLAT_ENGINE_EXPORT
 #include "../flatEngineExport.hpp"
-#include "../objectManagement/guid.hpp"
+#include "../objectManagement/str.hpp"
 #include "textBox.hpp"
 #include <unordered_map>
 #include <string>
@@ -37,18 +37,18 @@ namespace fe
                 struct text
                     {
                         std::string defaultText;
-                        fe::guid fontID;
+                        fe::str fontID;
                         FLAT_ENGINE_API void load(rapidxml::xml_node<> *node);
                     };
 
                 struct elementTemplate
                     {
                         coord m_size;
-                        fe::guid m_id;
+                        fe::str m_id;
 
                         struct
                             {
-                                fe::guid textureID;
+                                fe::str textureID;
                                 coord m_size;
                                 void load(rapidxml::xml_node<> *node)
                                     {
@@ -166,9 +166,9 @@ namespace fe
                         struct 
                             {
                                 coord position;
-                                fe::guid id; // id of the panel that this pulls from
-                                fe::guid eventOnClose = -1;
-                                fe::guid eventOnMinimize = -1;
+                                fe::str id; // id of the panel that this pulls from
+                                fe::str eventOnClose = -1;
+                                fe::str eventOnMinimize = -1;
                                 void load(rapidxml::xml_node<> *node)
                                     {
                                         rapidxml::xml_node<> *nodeIt = node;
@@ -199,9 +199,9 @@ namespace fe
                             {
                                 std::vector<element> attachedElements;
                                 coord position;
-                                fe::guid id; // id of the element that this pulls from
-                                fe::guid event = -1;
-                                fe::guid extraEvent = -1;
+                                fe::str id; // id of the element that this pulls from
+                                fe::str event = -1;
+                                fe::str extraEvent = -1;
                                 bool fitToParent = false;
                                 void load(rapidxml::xml_node<> *node)
                                     {
@@ -257,22 +257,22 @@ namespace fe
         class guiPrefabricatedElements
             {
                 private:
-                    std::unordered_map<fe::guid, priv::elementTemplate> m_prefabElements;
-                    std::unordered_map<fe::guid, priv::panelTemplate> m_prefabPanels;
-                    std::unordered_map<fe::guid, priv::guiTemplate> m_prefabGUI;
+                    std::unordered_map<fe::str, priv::elementTemplate> m_prefabElements;
+                    std::unordered_map<fe::str, priv::panelTemplate> m_prefabPanels;
+                    std::unordered_map<fe::str, priv::guiTemplate> m_prefabGUI;
 
                 public:
                     FLAT_ENGINE_API void loadElements(const char *filepath);
                     FLAT_ENGINE_API void loadGUI(const char *filepath);
 
                     FLAT_ENGINE_API gui::guiElement *getElement(const char *elementPrefabId);
-                    FLAT_ENGINE_API gui::guiElement *getElement(fe::guid elementPrefabId);
+                    FLAT_ENGINE_API gui::guiElement *getElement(fe::str elementPrefabId);
 
                     FLAT_ENGINE_API gui::panel *getPanel(const char *panelPrefabId);
-                    FLAT_ENGINE_API gui::panel *getPanel(fe::guid panelPrefabId);
+                    FLAT_ENGINE_API gui::panel *getPanel(fe::str panelPrefabId);
 
                     FLAT_ENGINE_API gui::panel *getGUI(const char *guiPrefabId);
-                    FLAT_ENGINE_API gui::panel *getGUI(fe::guid guiPrefabId);
+                    FLAT_ENGINE_API gui::panel *getGUI(fe::str guiPrefabId);
 
             };
     }

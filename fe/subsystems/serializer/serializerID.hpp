@@ -45,18 +45,14 @@ namespace fe
 
                     template<typename T>
                     T convertValue(const std::string &in, T val = T()) { return T(); }
-                    template<>
                     int convertValue(const std::string &in, int val);
-                    template<>
                     unsigned int convertValue(const std::string &in, unsigned int val);
-                    template<>
                     unsigned long convertValue(const std::string &in, unsigned long val);
-                    template<>
                     float convertValue(const std::string &in, float val);
-                    template<>
                     double convertValue(const std::string &in, double val);
-                    template<>
                     bool convertValue(const std::string &in, bool val);
+                    std::string convertValue(const std::string &in, const char *val);
+                    std::string convertValue(const std::string &in, char *val);
 
                     void serialize() {}
                     void serialize(dataBlock&) {}
@@ -72,6 +68,9 @@ namespace fe
 
                     template<typename T, typename std::enable_if<!std::is_class<typename std::remove_reference<T>::type>::value, int>::type = 0>
                     void serializeData(dataBlock &block, const char *id, T &&data);
+
+                    void serializeData(dataBlock &block, const char *id, const char *data);
+                    void serializeData(dataBlock &block, const char *id, char *data);
 
                     template<typename T, typename std::enable_if<std::is_class<typename std::remove_reference<T>::type>::value, int>::type = 0>
                     void serializeData(dataBlock &block, const char *id, T &&data);
@@ -89,6 +88,8 @@ namespace fe
                     template<typename T, typename std::enable_if<!fe::is_vector<typename std::remove_reference<T>::type>::value, int>::type = 0>
                     void deserializeData(dataBlock &dataBlock, const char *id, T &newValue);
 
+                    void deserializeData(dataBlock &dataBlock, const char *id, const char *newValue);
+                    void deserializeData(dataBlock &dataBlock, const char *id, char *newValue);
 
                     template<typename T, typename ...Args>
                     void deserialize(dataBlock &dataBlock, const char *id, T &newValue, Args &&...args);
@@ -126,42 +127,36 @@ namespace fe
                     FLAT_ENGINE_API ~serializerID();
             };
 
-        template<>
         inline int serializerID::convertValue(const std::string &in, int val)
             {
                 if (in.empty()) return int();
                 return std::stoi(in);
             }
 
-        template<>
         inline unsigned int serializerID::convertValue(const std::string &in, unsigned int val)
             {
                 if (in.empty()) return unsigned int();
                 return std::stoul(in);
             }
 
-        template<>
         inline unsigned long serializerID::convertValue(const std::string &in, unsigned long val)
             {
                 if (in.empty()) return unsigned int();
                 return std::stoul(in);
             }
 
-        template<>
         inline float serializerID::convertValue(const std::string &in, float val)
             {
                 if (in.empty()) return float();
                 return std::stof(in);
             }
 
-        template<>
         inline double serializerID::convertValue(const std::string &in, double val)
             {
                 if (in.empty()) return double();
                 return std::stod(in);
             }
 
-        template<>
         inline bool serializerID::convertValue(const std::string &in, bool val)
             {
                 if (in.empty()) return bool();
@@ -178,6 +173,18 @@ namespace fe
                     }
 
                 return std::stoi(in);
+            }
+
+        inline std::string serializerID::convertValue(const std::string &in, const char *val)
+            {
+                if (in.empty()) return "";
+                return val;
+            }
+
+        inline std::string serializerID::convertValue(const std::string &in, char *val)
+            {
+                if (in.empty()) return "";
+                return val;
             }
 
         template<typename T, typename std::enable_if<!std::is_class<typename std::remove_reference<T>::type>::value, int>::type>
@@ -198,6 +205,16 @@ namespace fe
         void serializerID::serializeData(dataBlock &block, const char *id, T &&data)
             {
                 block.m_mappedData[id] = std::to_string(data);
+            }
+
+        inline void serializerID::serializeData(dataBlock &block, const char *id, const char *data)
+            {
+                block.m_mappedData[id] = data;
+            }
+
+        inline void serializerID::serializeData(dataBlock &block, const char *id, char *data)
+            {
+                block.m_mappedData[id] = data;
             }
 
         template<typename T, typename std::enable_if<std::is_class<typename std::remove_reference<T>::type>::value, int>::type>
@@ -266,6 +283,19 @@ namespace fe
                                 newValue.emplace_back();
                                 newValue.back().deserialize(*this, dataBlock.m_mappedListObjectData[id]);
                             }
+                    }
+            }
+
+        inline void fe::serializerID::deserializeData(dataBlock &dataBlock, const char *id, const char *newValue)
+            {
+                #pragma message("Can't use const char* in serializer");
+            }
+
+        inline void fe::serializerID::deserializeData(dataBlock &dataBlock, const char *id, char *newValue)
+            {
+                if (dataBlock.m_mappedData.find(id) != dataBlock.m_mappedData.end())
+                    {
+                        std::strcpy(newValue, convertValue(dataBlock.m_mappedData[id], newValue).c_str());
                     }
             }
 
