@@ -105,6 +105,8 @@ namespace fe
         template<typename T>
         void poolAllocater<T>::free(T *address)
             {
+                if (!address) return;
+
                 size_t offset = address - static_cast<void*>(&m_buffer[0]);
                 std::memset(m_buffer + (offset * sizeof(T)), 0, sizeof(T));
                 m_freeIndicies[offset] = true;
@@ -113,6 +115,8 @@ namespace fe
         template<typename T>
         void poolAllocater<T>::free(const T *address)
             {
+                if (!address) return;
+
                 size_t offset = address - static_cast<void*>(&m_buffer[0]);
                 std::memset(m_buffer + (offset * sizeof(T)), 0, sizeof(T));
                 m_freeIndicies[offset] = true;

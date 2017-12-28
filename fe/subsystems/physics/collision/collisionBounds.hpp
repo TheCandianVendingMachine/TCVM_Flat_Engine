@@ -3,6 +3,7 @@
 #pragma once
 #define FLAT_ENGINE_EXPORT
 #include "../../../flatEngineExport.hpp"
+#include "../../serializer/serializerID.hpp"
 
 namespace fe
     {
@@ -32,5 +33,7 @@ namespace fe
                 FLAT_ENGINE_API fe::AABB merge(const fe::AABB &other);
                 FLAT_ENGINE_API float volume() const;
                 FLAT_ENGINE_API float perimeter() const;
+
+                SERIALIZE_ID("aabb", "sizeX", m_sizeX, "sizeY", m_sizeY, "posX", m_positionX, "posY", m_positionY, "globalPosX", m_globalPositionX, "globalPosY", m_globalPositionY);
             };
     }

@@ -2,6 +2,8 @@
 #include "../../../debug/profiler.hpp"
 #include "../../../engine.hpp"
 #include "../../threading/threadPool.hpp"
+#include "../../messaging/gameEvent.hpp"
+#include "../../messaging/eventSender.hpp"
 #include "aabbTree.hpp"
 #include <functional>
 
@@ -47,6 +49,33 @@ void fe::collisionWorld::handleCollision(fe::collider *a, fe::collider *b)
 
                 a->m_collisionCallback(dataFirst);
                 b->m_collisionCallback(dataSecond);
+
+                if (a->m_eventOnCollision == b->m_eventOnCollision)
+                    {
+                        fe::gameEvent collisionEvent(a->m_eventOnCollision, 2);
+                        collisionEvent.args[0].argType = fe::gameEventArgument::type::TYPE_VOIDP;
+                        collisionEvent.args[1].argType = fe::gameEventArgument::type::TYPE_VOIDP;
+                        collisionEvent.args[0].arg.TYPE_VOIDP = a;
+                        collisionEvent.args[1].arg.TYPE_VOIDP = b;
+                        fe::engine::get().getEventSender().sendEngineEvent(collisionEvent, a->m_eventOnCollision);
+                    }
+                else
+                    {
+                        fe::gameEvent collisionEventLeft(a->m_eventOnCollision, 2);
+                        collisionEventLeft.args[0].argType = fe::gameEventArgument::type::TYPE_VOIDP;
+                        collisionEventLeft.args[1].argType = fe::gameEventArgument::type::TYPE_VOIDP;
+                        collisionEventLeft.args[0].arg.TYPE_VOIDP = a;
+                        collisionEventLeft.args[1].arg.TYPE_VOIDP = b;
+
+                        fe::gameEvent collisionEventRight(b->m_eventOnCollision, 2);
+                        collisionEventRight.args[0].argType = fe::gameEventArgument::type::TYPE_VOIDP;
+                        collisionEventRight.args[1].argType = fe::gameEventArgument::type::TYPE_VOIDP;
+                        collisionEventRight.args[0].arg.TYPE_VOIDP = b;
+                        collisionEventRight.args[1].arg.TYPE_VOIDP = a;
+
+                        fe::engine::get().getEventSender().sendEngineEvent(collisionEventLeft, a->m_eventOnCollision);
+                        fe::engine::get().getEventSender().sendEngineEvent(collisionEventRight, b->m_eventOnCollision);
+                    }
             }
         FE_END_PROFILE;
     }
@@ -54,11 +83,7 @@ void fe::collisionWorld::handleCollision(fe::collider *a, fe::collider *b)
 void fe::collisionWorld::handleCollision(void *leftCollider, void *rightCollider)
     {
         if (leftCollider == rightCollider) return;
-        fe::collider *left = static_cast<fe::collider*>(leftCollider);
-        fe::collider *right = static_cast<fe::collider*>(rightCollider);
-
-        handleCollision(static_cast<fe::collider*>(left), static_cast<fe::collider*>(right));
-
+        handleCollision(static_cast<fe::collider*>(leftCollider), static_cast<fe::collider*>(rightCollider));
     }
 
 void fe::collisionWorld::handleCollision(void *collider)

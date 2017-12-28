@@ -88,7 +88,6 @@ namespace fe
                     template<typename T, typename std::enable_if<!fe::is_vector<typename std::remove_reference<T>::type>::value, int>::type = 0>
                     void deserializeData(dataBlock &dataBlock, const char *id, T &newValue);
 
-                    void deserializeData(dataBlock &dataBlock, const char *id, const char *newValue);
                     void deserializeData(dataBlock &dataBlock, const char *id, char *newValue);
 
                     template<typename T, typename ...Args>
@@ -284,11 +283,6 @@ namespace fe
                                 newValue.back().deserialize(*this, dataBlock.m_mappedListObjectData[id]);
                             }
                     }
-            }
-
-        inline void fe::serializerID::deserializeData(dataBlock &dataBlock, const char *id, const char *newValue)
-            {
-                #pragma message("Can't use const char* in serializer");
             }
 
         inline void fe::serializerID::deserializeData(dataBlock &dataBlock, const char *id, char *newValue)

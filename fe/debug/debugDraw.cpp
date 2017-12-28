@@ -88,27 +88,27 @@ void fe::debugDraw::addCircle(int radius, int xPos, int yPos, sf::Color colour)
 
         while (x >= y)
             {
-            sf::Vertex appVert({ (float)xPos + x, (float)yPos + y }, colour); m_drawVerticies.append(appVert);
-            appVert.position.x = xPos + y; appVert.position.y = yPos + x; m_drawVerticies.append(appVert);
-            appVert.position.x = xPos - y; appVert.position.y = yPos + x; m_drawVerticies.append(appVert);
-            appVert.position.x = xPos - x; appVert.position.y = yPos + y; m_drawVerticies.append(appVert);
-            appVert.position.x = xPos - x; appVert.position.y = yPos - y; m_drawVerticies.append(appVert);
-            appVert.position.x = xPos - y; appVert.position.y = yPos - x; m_drawVerticies.append(appVert);
-            appVert.position.x = xPos + y; appVert.position.y = yPos - x; m_drawVerticies.append(appVert);
-            appVert.position.x = xPos + x; appVert.position.y = yPos - y; m_drawVerticies.append(appVert);
+                sf::Vertex appVert({ (float)xPos + x, (float)yPos + y }, colour); m_drawVerticies.append(appVert);
+                appVert.position.x = xPos + y; appVert.position.y = yPos + x; m_drawVerticies.append(appVert);
+                appVert.position.x = xPos - y; appVert.position.y = yPos + x; m_drawVerticies.append(appVert);
+                appVert.position.x = xPos - x; appVert.position.y = yPos + y; m_drawVerticies.append(appVert);
+                appVert.position.x = xPos - x; appVert.position.y = yPos - y; m_drawVerticies.append(appVert);
+                appVert.position.x = xPos - y; appVert.position.y = yPos - x; m_drawVerticies.append(appVert);
+                appVert.position.x = xPos + y; appVert.position.y = yPos - x; m_drawVerticies.append(appVert);
+                appVert.position.x = xPos + x; appVert.position.y = yPos - y; m_drawVerticies.append(appVert);
 
                 if (err <= 0)
-                {
-                    y++;
-                    err += dy;
-                    dy += 2;
-                }
+                    {
+                        y++;
+                        err += dy;
+                        dy += 2;
+                    }
                 else
-                {
-                    x--;
-                    dx += 2;
-                    err += (-radius << 1) + dx;
-                }
+                    {
+                        x--;
+                        dx += 2;
+                        err += (-radius << 1) + dx;
+                    }
             }
         FE_END_PROFILE;
     }

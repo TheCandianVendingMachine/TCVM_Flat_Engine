@@ -6,14 +6,14 @@
 #include "../resourceManager/resourceManager.hpp"
 #include "../../engine.hpp"
 
-void fe::gameWorld::onAdd(fe::baseEntity *object, fe::Handle objectHandle)
+void fe::gameWorld::onAdd(fe::baseEntity **object, fe::Handle objectHandle)
     {
-        object->setHandle(objectHandle);
+        (*object)->setHandle(objectHandle);
     }
 
-void fe::gameWorld::onRemove(fe::baseEntity *object, fe::Handle objectHandle)
+void fe::gameWorld::onRemove(fe::baseEntity **object, fe::Handle objectHandle)
     {
-        object->deinitialize(*this);
+        (*object)->deinitialize(*this);
     }
 
 void fe::gameWorld::startUp()
@@ -174,6 +174,8 @@ void fe::gameWorld::load()
         FE_LOG("Loading Tilemap");
         m_tileMap.clearMap();
         m_tileMap.deserialize(*m_serializer);
+
+        m_tileMap.rebuildTilemap();
     }
 
 void fe::gameWorld::loadTilePrefabs(const char *filepath)

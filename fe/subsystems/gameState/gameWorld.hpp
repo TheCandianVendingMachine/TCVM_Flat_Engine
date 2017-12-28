@@ -30,8 +30,8 @@ namespace fe
 
                     sf::RenderStates m_staticRenderStates;
 
-                    FLAT_ENGINE_API void onAdd(fe::baseEntity *object, fe::Handle objectHandle);
-                    FLAT_ENGINE_API void onRemove(fe::baseEntity *object, fe::Handle objectHandle);
+                    FLAT_ENGINE_API void onAdd(fe::baseEntity **object, fe::Handle objectHandle);
+                    FLAT_ENGINE_API void onRemove(fe::baseEntity **object, fe::Handle objectHandle);
 
                 public:
                     FLAT_ENGINE_API void startUp();

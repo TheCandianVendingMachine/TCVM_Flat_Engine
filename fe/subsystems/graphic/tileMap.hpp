@@ -8,6 +8,7 @@
 #include "../../math/Vector2.hpp"
 #include "../serializer/serializerID.hpp"
 #include "../../objectManagement/guid.hpp"
+#include "../physics/collision/collisionBody.hpp"
 #include <SFML/Graphics/VertexArray.hpp>
 #include <vector>
 
@@ -29,17 +30,24 @@ namespace fe
                         unsigned int xSize;
                         unsigned int ySize;
 
-                        SERIALIZE_ID("tile", "xSize", xSize, "ySize", ySize, "xTexturePosition", xTexturePosition, "yTexturePosition", yTexturePosition, "id", id);
+                        fe::collider collider;
+
+                        SERIALIZE_ID("tile", "xSize", xSize, "ySize", ySize, "xTexturePosition", xTexturePosition, "yTexturePosition", yTexturePosition, "id", id, "collider", collider);
                     };
 
                 struct tileWorld : public fe::guid
                     {
                         fe::str id;
-                        unsigned int handle;
+                        int handle = -1;
                         float xPosition;
                         float yPosition;
 
-                        SERIALIZE_ID("tile", "id", id, "x", xPosition, "y", yPosition);
+                        float m_colliderSizeX;
+                        float m_colliderSizeY;
+
+                        fe::collider *colliderPtr = nullptr;
+
+                        SERIALIZE_ID("tile", "id", id, "handle", handle, "x", xPosition, "y", yPosition);
                     };
             }
 
@@ -50,18 +58,25 @@ namespace fe
                     sf::VertexArray m_verticies;
                     fe::Vector2<unsigned int> m_textureOffset; // offset of texture in texture packer
 
-                    FLAT_ENGINE_API void rebuildTilemap();
+                    void onAdd(fe::imp::tileWorld *object, fe::Handle objectHandle);
+                    void onRemove(fe::imp::tileWorld *object, fe::Handle objectHandle);
 
                 public:
+                    FLAT_ENGINE_API tileMap();
+
+                    FLAT_ENGINE_API void rebuildTilemap();
+
                     FLAT_ENGINE_API void addGlobalTexture(fe::Vector2<unsigned int> offset);
                     FLAT_ENGINE_API fe::Vector2<unsigned int> getTextureOffset() const;
                     FLAT_ENGINE_API fe::Vector2<unsigned int> getTileTextureOffset(fe::str tileID) const;
-                    FLAT_ENGINE_API const imp::tile *getTile(fe::str tileID) const;
+                    FLAT_ENGINE_API const imp::tile *getPrefabTile(fe::str tileID) const;
+                    FLAT_ENGINE_API const fe::imp::tileWorld &getPlacedTile(fe::Handle handle) const;
 
                     // Create a tile and put it into the fabrications
                     FLAT_ENGINE_API void create(const char *name, fe::Vector2<unsigned int> size, fe::Vector2<unsigned int> offset);
 
                     FLAT_ENGINE_API fe::Handle add(fe::Vector2d position, fe::str tileId);
+                    FLAT_ENGINE_API imp::tileWorld &get(fe::Handle handle);
                     FLAT_ENGINE_API void remove(fe::Handle handle);
                     FLAT_ENGINE_API fe::Handle get(fe::Vector2d position);
 

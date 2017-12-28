@@ -18,7 +18,7 @@ void fe::aabbTree::debugDrawAABB(int node)
             }
 
         fe::AABB &currentNodeAABB = m_nodes[node].m_fatAABB;
-        FE_DEBUG_DRAW_SQUARE(currentNodeAABB.m_sizeX, currentNodeAABB.m_sizeY, currentNodeAABB.m_positionX, currentNodeAABB.m_positionY, sf::Color::Red);
+        FE_DEBUG_DRAW_SQUARE(currentNodeAABB.m_sizeX, currentNodeAABB.m_sizeY, currentNodeAABB.m_globalPositionX, currentNodeAABB.m_globalPositionY, sf::Color::Red);
     }
 
 void fe::aabbTree::freeNode(int node)
@@ -414,6 +414,12 @@ void fe::aabbTree::add(fe::collider *collider)
         m_nodes[colliderId].m_userData = collider;
         collider->m_userData = (void*)colliderId;
         m_nodes[colliderId].m_height = 0;
+        
+        treeNode *currentNode = &m_nodes[colliderId];
+        currentNode->m_fatAABB.m_globalPositionX = collider->m_aabb.m_globalPositionX - m_fatness;
+        currentNode->m_fatAABB.m_globalPositionY = collider->m_aabb.m_globalPositionY - m_fatness;
+        currentNode->m_fatAABB.m_sizeX = collider->m_aabb.m_sizeX + m_fatness + m_fatness;
+        currentNode->m_fatAABB.m_sizeY = collider->m_aabb.m_sizeY + m_fatness + m_fatness;
 
         insert(colliderId);
         FE_END_PROFILE;

@@ -46,14 +46,14 @@ fe::Handle fe::handleManager<T, objectCount>::addObject(T object)
         testHandle->m_handle->active = true;
         m_objects[testHandle->m_handle->handle] = object;
         m_maxIndex = testHandle->m_handle->handle + 1;
-        onAdd(object, testHandle->m_handle->handle);
+        onAdd(&object, testHandle->m_handle->handle);
         return testHandle->m_handle->handle;
     }
 
 template<typename T, unsigned int objectCount>
 void fe::handleManager<T, objectCount>::removeObject(Handle handle)
     {
-        onRemove(m_objects[m_handles[handle].handle], m_handles[handle].handle);
+        onRemove(&m_objects[m_handles[handle].handle], m_handles[handle].handle);
         m_handles[handle].active = false;
         m_objects[m_handles[handle].handle] = T();
     }

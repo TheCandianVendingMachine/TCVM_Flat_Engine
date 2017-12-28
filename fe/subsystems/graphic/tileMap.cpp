@@ -1,7 +1,26 @@
 #include "tileMap.hpp"
 #include "../../engine.hpp"
 #include "../resourceManager/resourceManager.hpp"
+#include "../physics/collision/collisionWorld.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
+
+void fe::tileMap::onAdd(fe::imp::tileWorld *object, fe::Handle objectHandle)
+    {
+        object->colliderPtr = fe::engine::get().getCollisionWorld().createCollider(object->m_colliderSizeX, object->m_colliderSizeY);
+        object->colliderPtr->m_aabb.m_positionX = object->xPosition;
+        object->colliderPtr->m_aabb.m_positionY = object->yPosition;
+        object->colliderPtr->m_aabb.m_globalPositionX = object->xPosition;
+        object->colliderPtr->m_aabb.m_globalPositionY = object->yPosition;
+    }
+
+void fe::tileMap::onRemove(fe::imp::tileWorld *object, fe::Handle objectHandle)
+    {
+        fe::engine::get().getCollisionWorld().deleteCollider(object->colliderPtr);
+    }
+
+fe::tileMap::tileMap()
+    {
+    }
 
 void fe::tileMap::rebuildTilemap()
     {
@@ -12,6 +31,19 @@ void fe::tileMap::rebuildTilemap()
         int index = 0;
         for (auto &tileHandle : getObjects())
             {
+                if (tileHandle.handle < 0)
+                    {
+                        // slow to do, but will get the right handle if not loaded
+                        for (unsigned int i = 0; i < m_fabrications.size(); i++)
+                            {
+                                if (FE_STR(m_fabrications[i].id) == tileHandle.id)
+                                    {
+                                        tileHandle.handle = i;
+                                        break;
+                                    }
+                            }
+                    }
+
                 fe::imp::tile *tile = &m_fabrications[tileHandle.handle];
                 auto size = fe::Vector2d(tile->xSize, tile->ySize);
                 auto texturePos = fe::Vector2d(tile->xTexturePosition, tile->yTexturePosition) + m_textureOffset;
@@ -41,7 +73,7 @@ fe::Vector2<unsigned int> fe::tileMap::getTextureOffset() const
         return m_textureOffset;
     }
 
-const fe::imp::tile *fe::tileMap::getTile(fe::str tileID) const
+const fe::imp::tile *fe::tileMap::getPrefabTile(fe::str tileID) const
     {
         for (auto &tile : m_fabrications)
             {
@@ -51,6 +83,11 @@ const fe::imp::tile *fe::tileMap::getTile(fe::str tileID) const
                     }
             }
         return nullptr;
+    }
+
+const fe::imp::tileWorld &fe::tileMap::getPlacedTile(fe::Handle handle) const
+    {
+        return getObject(handle);
     }
 
 fe::Vector2<unsigned int> fe::tileMap::getTileTextureOffset(fe::str tileID) const
@@ -80,7 +117,6 @@ void fe::tileMap::create(const char *name, fe::Vector2<unsigned int> size, fe::V
 
 fe::Handle fe::tileMap::add(fe::Vector2d position, fe::str tileId)
     {
-        int iteration = 0;
         for (auto &tile : m_fabrications)
             {
                 if (FE_STR(tile.id) == tileId)
@@ -90,13 +126,13 @@ fe::Handle fe::tileMap::add(fe::Vector2d position, fe::str tileId)
                         tileWorld.xPosition = position.x;
                         tileWorld.yPosition = position.y;
                         tileWorld.id = FE_STR(tile.id);
-                        tileWorld.handle = iteration;
+                        tileWorld.m_colliderSizeX = 64.f;
+                        tileWorld.m_colliderSizeY = 64.f;
                         fe::Handle retHandle = addObject(tileWorld);
                         rebuildTilemap();
                         return retHandle;
                         break;
                     }
-                ++iteration;
             }
 
         return -1;

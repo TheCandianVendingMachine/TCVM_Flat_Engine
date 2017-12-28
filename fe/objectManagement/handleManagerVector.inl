@@ -50,7 +50,7 @@ fe::Handle fe::handleManager<T, 0>::addObject(T object)
     {
         m_objects.push_back(object);
         m_handles.push_back(handleObject(m_objects.size() - 1));
-        onAdd(m_objects.back(), m_handles.size() - 1);
+        onAdd(&m_objects.back(), m_handles.size() - 1);
         return m_handles.size() - 1;
     }
 
@@ -58,7 +58,7 @@ template<typename T>
 void fe::handleManager<T, 0>::removeObject(Handle handle)
     {
         if (handle < 0) return;
-        onRemove(m_objects[m_handles[handle].handle], m_handles[handle].handle);
+        onRemove(&m_objects[m_handles[handle].handle], m_handles[handle].handle);
         if (m_handles.begin() + handle < m_handles.end())
             {
                 removeHandle(handle);

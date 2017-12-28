@@ -45,8 +45,8 @@ namespace fe
                     T *getObjects();
                     fe::Handle getHandle(T object);
 
-                    virtual void onAdd(T object, fe::Handle objectHandle) {}
-                    virtual void onRemove(T object, fe::Handle objectHandle) {}
+                    virtual void onAdd(T *object, fe::Handle objectHandle) {}
+                    virtual void onRemove(T *object, fe::Handle objectHandle) {}
 
                 public:
                     handleManager();
@@ -87,8 +87,8 @@ namespace fe
 
                     fe::Handle getHandle(T object);
                     
-                    virtual void onAdd(T object, fe::Handle objectHandle) {}
-                    virtual void onRemove(T object, fe::Handle objectHandle) {}
+                    virtual void onAdd(T *object, fe::Handle objectHandle) {}
+                    virtual void onRemove(T *object, fe::Handle objectHandle) {}
 
                 public:
                     Handle addObject(T object);
