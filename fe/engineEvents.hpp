@@ -6,10 +6,12 @@ namespace fe
     {
         enum engineEvent
             {
-                GUI_PANEL_MOVED = 0,
-                GUI_PANEL_MINIMIZED = 1 << 0,
-                GUI_PANEL_CLOSED = 1 << 1,
-                GUI_PANEL_SIZE_CHANGE = 1 << 2,
-                COUNT = 5
+                GUI_PANEL_MOVED = 1,
+                GUI_PANEL_MINIMIZED,
+                GUI_PANEL_CLOSED,
+                GUI_PANEL_SIZE_CHANGE,
+                TILE_PLACED,
+                TILE_REMOVED,
+                COUNT
         };
     }

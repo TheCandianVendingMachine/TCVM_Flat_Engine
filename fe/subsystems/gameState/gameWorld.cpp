@@ -174,8 +174,8 @@ void fe::gameWorld::load()
         FE_LOG("Loading Tilemap");
         m_tileMap.clearMap();
         m_tileMap.deserialize(*m_serializer);
-
         m_tileMap.rebuildTilemap();
+        
     }
 
 void fe::gameWorld::loadTilePrefabs(const char *filepath)

@@ -2,7 +2,10 @@
 #include "../../engine.hpp"
 #include "../resourceManager/resourceManager.hpp"
 #include "../physics/collision/collisionWorld.hpp"
+#include "../../engineEvents.hpp"
+#include "../messaging/eventSender.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
+#include <algorithm>
 
 void fe::tileMap::onAdd(fe::imp::tileWorld *object, fe::Handle objectHandle)
     {
@@ -11,11 +14,37 @@ void fe::tileMap::onAdd(fe::imp::tileWorld *object, fe::Handle objectHandle)
         object->colliderPtr->m_aabb.m_positionY = object->yPosition;
         object->colliderPtr->m_aabb.m_globalPositionX = object->xPosition;
         object->colliderPtr->m_aabb.m_globalPositionY = object->yPosition;
+
+        fe::gameEvent event(fe::engineEvent::TILE_PLACED, 1);
+        event.args[0].arg.TYPE_VOIDP = object;
+        event.args[0].argType = fe::gameEventArgument::type::TYPE_VOIDP;
+        fe::engine::get().getEventSender().sendEngineEvent(event, fe::engineEvent::TILE_PLACED);
     }
 
 void fe::tileMap::onRemove(fe::imp::tileWorld *object, fe::Handle objectHandle)
     {
+        fe::gameEvent event(fe::engineEvent::TILE_REMOVED, 1);
+        event.args[0].arg.TYPE_VOIDP = object;
+        event.args[0].argType = fe::gameEventArgument::type::TYPE_VOIDP;
+        fe::engine::get().getEventSender().sendEngineEvent(event, fe::engineEvent::TILE_REMOVED);
         fe::engine::get().getCollisionWorld().deleteCollider(object->colliderPtr);
+    }
+
+void fe::tileMap::onSave() const
+    {}
+
+void fe::tileMap::onLoad()
+    {
+        std::vector<fe::imp::tileWorld> objCopy;
+        std::copy(m_objects.begin(), m_objects.end(), std::back_inserter(objCopy));
+        m_objects.clear();
+
+        for (auto &obj : objCopy)
+            {
+                add({ obj.xPosition, obj.yPosition }, obj.id);
+            }
+
+        rebuildTilemap();
     }
 
 fe::tileMap::tileMap()
@@ -126,8 +155,8 @@ fe::Handle fe::tileMap::add(fe::Vector2d position, fe::str tileId)
                         tileWorld.xPosition = position.x;
                         tileWorld.yPosition = position.y;
                         tileWorld.id = FE_STR(tile.id);
-                        tileWorld.m_colliderSizeX = 64.f;
-                        tileWorld.m_colliderSizeY = 64.f;
+                        tileWorld.m_colliderSizeX = tile.xSize;
+                        tileWorld.m_colliderSizeY = tile.ySize;
                         fe::Handle retHandle = addObject(tileWorld);
                         rebuildTilemap();
                         return retHandle;
@@ -136,6 +165,11 @@ fe::Handle fe::tileMap::add(fe::Vector2d position, fe::str tileId)
             }
 
         return -1;
+    }
+
+fe::imp::tileWorld &fe::tileMap::get(fe::Handle handle)
+    {
+        return getObject(handle);
     }
 
 void fe::tileMap::remove(fe::Handle handle)
@@ -163,24 +197,6 @@ fe::Handle fe::tileMap::get(fe::Vector2d position)
 void fe::tileMap::draw(sf::RenderTarget &target, sf::RenderStates states)
     {
         target.draw(m_verticies, states);
-    }
-
-void fe::tileMap::serializeFabrications(fe::serializerID &serial)
-    {
-        for (auto &fab : m_fabrications)
-            {
-                fab.serialize(serial);
-            }
-    }
-
-void fe::tileMap::deserializeFabrications(fe::serializerID &serial)
-    {
-        clearFabs();
-        imp::tile temp;
-        while (temp.deserialize(serial))
-            {
-                m_fabrications.push_back(temp);
-            }
     }
 
 const std::vector<fe::imp::tile> &fe::tileMap::getFabrications()

@@ -344,3 +344,21 @@ void serialize(fe::serializerID &serial) const { serial.serializeBlock(__VA_ARGS
 bool deserialize(fe::serializerID &serial) { return serial.deserializeBlock(__VA_ARGS__); }\
 void serialize(fe::serializerID &serial, fe::serializerID::dataBlock &block) const { serial.serializeBlock(block, __VA_ARGS__); }\
 bool deserialize(fe::serializerID &serial, std::vector<std::unique_ptr<fe::serializerID::dataBlock>> &blocks) { return serial.deserializeBlock(blocks, __VA_ARGS__); }
+
+#define SERIALIZE_CALLBACK_ID(onSave, onLoad, ...) \
+void serialize(fe::serializerID &serial) const { serial.serializeBlock(__VA_ARGS__); onSave; }\
+bool deserialize(fe::serializerID &serial) { bool ret = serial.deserializeBlock(__VA_ARGS__); onLoad; return ret; }\
+void serialize(fe::serializerID &serial, fe::serializerID::dataBlock &block) const { serial.serializeBlock(block, __VA_ARGS__); onSave; }\
+bool deserialize(fe::serializerID &serial, std::vector<std::unique_ptr<fe::serializerID::dataBlock>> &blocks) { bool ret = serial.deserializeBlock(blocks, __VA_ARGS__); onLoad; return ret;  }
+
+#define SERIALIZE_NAME_ID(name, ...) \
+void serialize##name(fe::serializerID &serial) const { serial.serializeBlock(__VA_ARGS__); }\
+bool deserialize##name(fe::serializerID &serial) { return serial.deserializeBlock(__VA_ARGS__); }\
+void serialize##name(fe::serializerID &serial, fe::serializerID::dataBlock &block) const { serial.serializeBlock(block, __VA_ARGS__); }\
+bool deserialize##name(fe::serializerID &serial, std::vector<std::unique_ptr<fe::serializerID::dataBlock>> &blocks) { return serial.deserializeBlock(blocks, __VA_ARGS__); }
+
+#define SERIALIZE_NAME_CALLBACK_ID(onSave, onLoad,name, ...) \
+void serialize##name(fe::serializerID &serial) const { serial.serializeBlock(__VA_ARGS__); onSave; }\
+bool deserialize##name(fe::serializerID &serial) { bool ret = serial.deserializeBlock(__VA_ARGS__); onLoad; return ret; }\
+void serialize##name(fe::serializerID &serial, fe::serializerID::dataBlock &block) const { serial.serializeBlock(block, __VA_ARGS__); onSave; }\
+bool deserialize##name(fe::serializerID &serial, std::vector<std::unique_ptr<fe::serializerID::dataBlock>> &blocks) { bool ret = serial.deserializeBlock(blocks, __VA_ARGS__); onLoad; return ret;  }
