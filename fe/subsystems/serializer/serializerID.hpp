@@ -176,14 +176,12 @@ namespace fe
 
         inline std::string serializerID::convertValue(const std::string &in, const char *val)
             {
-                if (in.empty()) return "";
-                return val;
+                return in;
             }
 
         inline std::string serializerID::convertValue(const std::string &in, char *val)
             {
-                if (in.empty()) return "";
-                return val;
+                return in;
             }
 
         template<typename T, typename std::enable_if<!std::is_class<typename std::remove_reference<T>::type>::value, int>::type>
