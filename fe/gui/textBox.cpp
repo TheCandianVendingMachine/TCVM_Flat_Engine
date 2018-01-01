@@ -275,7 +275,12 @@ void fe::gui::textBox::setString(const std::string &str)
 
 std::string fe::gui::textBox::getString() const
     {
-        return m_drawText.getString();
+        return m_inputText;
+    }
+
+std::string fe::gui::textBox::getVisibleString() const
+    {
+        return m_inputTextShown;
     }
 
 void fe::gui::textBox::setSize(const fe::Vector2d &size)

@@ -71,6 +71,7 @@ namespace fe
                             FLAT_ENGINE_API void setString(const char *str);
                             FLAT_ENGINE_API void setString(const std::string &str);
                             FLAT_ENGINE_API std::string getString() const;
+                            FLAT_ENGINE_API std::string getVisibleString() const;
 
                             FLAT_ENGINE_API virtual void setSize(const fe::Vector2d &size);
 

@@ -71,6 +71,7 @@ namespace fe
 
                     FLAT_ENGINE_API void rebuildTilemap();
 
+                    FLAT_ENGINE_API void addGlobalTexture(const std::string &textureName);
                     FLAT_ENGINE_API void addGlobalTexture(const char *textureName);
                     FLAT_ENGINE_API fe::Vector2<unsigned int> getTextureOffset() const;
                     FLAT_ENGINE_API fe::Vector2<unsigned int> getTileTextureOffset(fe::str tileID) const;

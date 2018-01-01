@@ -93,6 +93,11 @@ void fe::tileMap::rebuildTilemap()
             }
     }
 
+void fe::tileMap::addGlobalTexture(const std::string &textureName)
+    {
+        addGlobalTexture(textureName.c_str());
+    }
+
 void fe::tileMap::addGlobalTexture(const char *textureName)
     {
         std::strcpy(m_textureName, textureName);
