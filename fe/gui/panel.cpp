@@ -188,6 +188,18 @@ fe::gui::guiElement *fe::gui::panel::getElement(const char *id)
         return nullptr;
     }
 
+void fe::gui::panel::clearAllElements()
+    {
+        for (unsigned int i = 0; i < m_guiElements.size(); i++)
+            {
+                delete m_guiElements[i];
+                m_guiElements[i] = nullptr;
+            }
+
+        m_guiElements.clear();
+        m_guiHandles.clear();
+    }
+
 void fe::gui::panel::setElementPosition(unsigned int handle, fe::Vector2d position)
     {
         auto element = getElement(handle);

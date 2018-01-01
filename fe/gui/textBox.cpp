@@ -273,12 +273,12 @@ void fe::gui::textBox::setString(const std::string &str)
         setString(str.c_str());
     }
 
-std::string fe::gui::textBox::getString() const
+const std::string &fe::gui::textBox::getString() const
     {
         return m_inputText;
     }
 
-std::string fe::gui::textBox::getVisibleString() const
+const std::string &fe::gui::textBox::getVisibleString() const
     {
         return m_inputTextShown;
     }

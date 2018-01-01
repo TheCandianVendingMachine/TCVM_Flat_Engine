@@ -12,6 +12,7 @@ namespace fe
                 GUI_PANEL_SIZE_CHANGE,
                 TILE_PLACED,
                 TILE_REMOVED,
+                TILE_MAP_TEXTURE_CHANGED,
                 COUNT
         };
     }

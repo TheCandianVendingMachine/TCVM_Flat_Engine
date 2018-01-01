@@ -91,6 +91,8 @@ void fe::tileMap::rebuildTilemap()
 
                 index += 4;
             }
+
+        fe::engine::get().getEventSender().sendEngineEvent(fe::gameEvent(fe::engineEvent::TILE_MAP_TEXTURE_CHANGED, 0), fe::engineEvent::TILE_MAP_TEXTURE_CHANGED);
     }
 
 void fe::tileMap::addGlobalTexture(const std::string &textureName)
@@ -102,6 +104,7 @@ void fe::tileMap::addGlobalTexture(const char *textureName)
     {
         std::strcpy(m_textureName, textureName);
         m_textureOffset = fe::engine::get().getResourceManager<sf::Texture>()->getTexturePosition(m_textureName);
+        rebuildTilemap();
     }
 
 fe::Vector2<unsigned int> fe::tileMap::getTextureOffset() const
