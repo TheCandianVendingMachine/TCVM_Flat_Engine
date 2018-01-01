@@ -35,6 +35,7 @@ void fe::tileMap::onSave() const
 
 void fe::tileMap::onLoad()
     {
+        addGlobalTexture(m_textureName);
         std::vector<fe::imp::tileWorld> objCopy;
         std::copy(m_objects.begin(), m_objects.end(), std::back_inserter(objCopy));
         m_objects.clear();
@@ -92,9 +93,10 @@ void fe::tileMap::rebuildTilemap()
             }
     }
 
-void fe::tileMap::addGlobalTexture(fe::Vector2<unsigned int> offset)
+void fe::tileMap::addGlobalTexture(const char *textureName)
     {
-        m_textureOffset = offset;
+        std::strcpy(m_textureName, textureName);
+        m_textureOffset = fe::engine::get().getResourceManager<sf::Texture>()->getTexturePosition(m_textureName);
     }
 
 fe::Vector2<unsigned int> fe::tileMap::getTextureOffset() const

@@ -111,6 +111,8 @@ namespace fe
                     FLAT_ENGINE_API fe::localizationStorage &getLocalization() const;
                     FLAT_ENGINE_API fe::guiPrefabricatedElements &getPrefabGui() const;
 
+                    FLAT_ENGINE_API void loadResources(const char *resourcesFile);
+
                     template<typename T>
                     fe::resourceManager<T>              *getResourceManager() const;
                     template<>

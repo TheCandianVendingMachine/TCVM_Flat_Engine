@@ -13,6 +13,7 @@
 #include "debug/profiler.hpp"
 #include "debug/profilerLogger.hpp"
 #include "debug/debugDraw.hpp"
+#include "subsystems/filesystem/fileUtilities.hpp"
 
 #include "feAssert.hpp"
 
@@ -22,6 +23,11 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Font.hpp>
 #include <fstream>
+#include <vector>
+#include <string>
+#include <map>
+#include <utility>
+#include <filesystem>
 
 fe::engine *fe::engine::m_instance = nullptr;
 
@@ -342,6 +348,254 @@ fe::localizationStorage &fe::engine::getLocalization() const
 fe::guiPrefabricatedElements &fe::engine::getPrefabGui() const
     {
         return *m_prefabGuiElements;
+    }
+
+void fe::engine::loadResources(const char *resourcesFile)
+    {
+        enum resourceTypes
+            {
+                ERROR_TYPE,
+                TEXTURE,
+                AUDIO,
+                FONT
+            };
+
+        std::ifstream in(resourcesFile);
+        std::string line;
+        std::unordered_map<std::string, std::string> resources;
+
+        std::vector<std::string> resourceFilePaths;
+        std::vector<std::string> resourceSynonymPaths;
+        {
+            enum
+                {
+                    READING,
+                    RESOURCE_FILE_PATH,
+                    RESOURCE_SYNONYM,
+                    RESOURCE,
+                    RESOURCE_NAME,
+                } currentState;
+        
+            currentState = READING;
+
+            while (std::getline(in, line))
+                {
+                    std::string data0 = "";
+                    std::string data1 = "";
+                    for (unsigned int i = 0; i < line.size(); i++)
+                        {
+                            char c = line[i];
+                            if (c >= '!')
+                                {
+                                    switch (currentState)
+                                        {
+                                            case READING:
+                                                data0 = "";
+                                                data1 = "";
+                                                if (c == '[')
+                                                    {
+                                                        currentState = RESOURCE_FILE_PATH;
+                                                    }
+                                                else if (c == '{')
+                                                    {
+                                                        currentState = RESOURCE_SYNONYM;
+                                                    }
+                                                else
+                                                    {
+                                                        currentState = RESOURCE;
+                                                        data0 += c;
+                                                    }
+                                                break;
+                                            case RESOURCE_FILE_PATH:
+                                                if (c == ']')
+                                                    {
+                                                        resourceFilePaths.push_back(data0);
+                                                        currentState = READING;
+                                                    }
+                                                else
+                                                    {
+                                                        data0 += c;
+                                                    }
+                                                break;
+                                            case RESOURCE_SYNONYM:
+                                                if (c == '}')
+                                                    {
+                                                        resourceSynonymPaths.push_back(data0);
+                                                        currentState = READING;
+                                                    }
+                                                else
+                                                    {
+                                                        data0 += c;
+                                                    }
+                                                break;
+                                            case RESOURCE:
+                                                if (c == '=')
+                                                    {
+                                                        currentState = RESOURCE_NAME;
+                                                    }
+                                                else
+                                                    {
+                                                        data0 += c;
+                                                    }
+                                                break;
+                                            case RESOURCE_NAME:
+                                                if (c == ';' || i == line.size() - 1)
+                                                    {
+                                                        if (i == line.size() - 1)
+                                                            {
+                                                                data1 += c;
+                                                            }
+                                                        resources[data0] = data1;
+                                                        currentState = READING;
+                                                    }
+                                                else
+                                                    {
+                                                        data1 += c;
+                                                    }
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                }
+                        }
+                }
+            in.close();
+        }
+
+        std::unordered_map<std::string, resourceTypes> synonymTypes;
+        std::vector<std::string> extensions;
+        {
+            enum
+                {
+                    READING_TYPE,
+                    READING_TYPE_NAME,
+                    READING_EXTENSION,
+                } currentState;
+            currentState = READING_TYPE;
+
+            for (auto &synonymFile : resourceSynonymPaths) 
+                {
+                    in.open(synonymFile);
+                    std::string extension;
+                    std::string type;
+                    while (std::getline(in, line))
+                        {
+                            int index = 0;
+                            bool readingName = false;
+                            for (unsigned int i = 0; i < line.size(); i++)
+                                {
+                                    char c = line[i];
+                                    switch (currentState)
+                                        {
+                                            case READING_TYPE:
+                                                if (std::tolower(c) == "start"[index++])
+                                                    {
+                                                        if (index == std::strlen("start"))
+                                                            {
+                                                                currentState = READING_TYPE_NAME;
+                                                                index = 0;
+                                                                break;
+                                                            }
+                                                    }
+                                                else
+                                                    {
+                                                        index = 0;
+                                                    }
+                                                break;
+                                            case READING_TYPE_NAME:
+                                                if (c == '\n' || i == line.size() - 1)
+                                                    {
+                                                        currentState = READING_EXTENSION;
+                                                        index = 0;
+                                                    }
+                                                
+                                                if (c >= '!')
+                                                    {
+                                                        type += std::tolower(c);
+                                                    }
+                                                break;
+                                            case READING_EXTENSION:
+                                                if (std::tolower(c) == "end"[index++])
+                                                    {
+                                                        if (index == std::strlen("end"))
+                                                            {
+                                                                currentState = READING_TYPE;
+                                                                index = 0;
+                                                                type = "";
+                                                                extension = "";
+                                                                break;
+                                                            }
+                                                    }
+                                                else
+                                                    {
+                                                        index = 0;
+                                                    }
+
+                                                if (c >= '!')
+                                                    {
+                                                        extension += c;
+                                                    }
+
+                                                if (c == '\n' || i == line.size() - 1)
+                                                    {
+                                                        resourceTypes typeEnum = ERROR_TYPE;
+                                                        if (type == "texture")
+                                                            {
+                                                                typeEnum = TEXTURE;
+                                                            }
+                                                        else if (type == "audio")
+                                                            {
+                                                                typeEnum = AUDIO;
+                                                            }
+                                                        else if (type == "font")
+                                                            {
+                                                                typeEnum = FONT;
+                                                            }
+
+                                                        synonymTypes[extension] = typeEnum;
+                                                        extensions.push_back(extension);
+                                                        extension = "";
+                                                    }
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                }
+                        }
+                    in.close();
+                }
+        }
+
+        std::string currentPath = std::experimental::filesystem::current_path().string();
+        std::vector<std::string> allFiles;
+        for (auto &file : resourceFilePaths)
+            {
+                fe::getAllFilesInDirectory((currentPath + file), std::move(extensions), allFiles);
+            }
+
+        for (auto &possibleResource : allFiles)
+            {
+                std::string file = fe::getFileFromDirectory(possibleResource);
+                if (resources.find(file) != resources.end())
+                    {
+                        switch (synonymTypes[fe::getFileExtension(possibleResource)])
+                            {
+                                case ERROR_TYPE:
+                                    FE_LOG_WARNING("\\" + file + "\"is not an acceptable file type");
+                                    break;
+                                case TEXTURE:
+                                    getResourceManager<sf::Texture>()->load(possibleResource.c_str(), resources[file].c_str());
+                                    break;
+                                case AUDIO:
+                                    break;
+                                case FONT:
+                                    getResourceManager<sf::Font>()->load(possibleResource.c_str(), resources[file].c_str());
+                                    break;
+                                default:
+                                    break;
+                            }
+                    }
+            }
     }
 
 fe::engine::~engine()

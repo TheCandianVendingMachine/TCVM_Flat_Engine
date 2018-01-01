@@ -58,6 +58,8 @@ namespace fe
                     sf::VertexArray m_verticies;
                     fe::Vector2<unsigned int> m_textureOffset; // offset of texture in texture packer
 
+                    char m_textureName[64];
+
                     FLAT_ENGINE_API void onAdd(fe::imp::tileWorld *object, fe::Handle objectHandle);
                     FLAT_ENGINE_API void onRemove(fe::imp::tileWorld *object, fe::Handle objectHandle);
 
@@ -69,7 +71,7 @@ namespace fe
 
                     FLAT_ENGINE_API void rebuildTilemap();
 
-                    FLAT_ENGINE_API void addGlobalTexture(fe::Vector2<unsigned int> offset);
+                    FLAT_ENGINE_API void addGlobalTexture(const char *textureName);
                     FLAT_ENGINE_API fe::Vector2<unsigned int> getTextureOffset() const;
                     FLAT_ENGINE_API fe::Vector2<unsigned int> getTileTextureOffset(fe::str tileID) const;
                     FLAT_ENGINE_API const imp::tile *getPrefabTile(fe::str tileID) const;
@@ -85,7 +87,7 @@ namespace fe
 
                     FLAT_ENGINE_API void draw(sf::RenderTarget &target, sf::RenderStates states);
 
-                    SERIALIZE_CALLBACK_ID(onSave(), onLoad(), "tilemap", "tiles", m_objects);
+                    SERIALIZE_CALLBACK_ID(onSave(), onLoad(), "tilemap", "tiles", m_objects, "textureName", m_textureName);
                     SERIALIZE_NAME_ID(Fabrications, "tilemap", "fabrications", m_fabrications);
 
                     // Returns a vector of all fabricated tiles

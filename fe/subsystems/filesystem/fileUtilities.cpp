@@ -21,9 +21,13 @@ __time64_t fe::lastTimeModified(const char *filename)
         return -1;
     }
 
-std::vector<std::string> fe::getAllFilesInDirectory(const char *directory)
+void fe::getAllFilesInDirectory(const std::string &directory, std::vector<std::string> &fileReturn)
     {
-        std::vector<std::string> returnVector;
+        fe::getAllFilesInDirectory(directory.c_str(), fileReturn);
+    }
+
+void fe::getAllFilesInDirectory(const char *directory, std::vector<std::string> &fileReturn)
+    {
         for (auto &file : std::experimental::filesystem::directory_iterator(directory))
             {
                 auto path = file.path().filename().string();
@@ -34,21 +38,22 @@ std::vector<std::string> fe::getAllFilesInDirectory(const char *directory)
                 auto extension = (int)path.find_last_of('.');
                 if (extension < 0)
                     {   
-                        auto ret = getAllFilesInDirectory((directory + path + "/").c_str());
-                        returnVector.insert(returnVector.end(), ret.begin(), ret.end());
+                        getAllFilesInDirectory((directory + ("//" + path) + "/").c_str(), fileReturn);
                     }
                 else
                     {
-                        returnVector.push_back(directory + path);
+                        fileReturn.push_back(directory + ("/" + path));
                     }
             }
-
-        return returnVector;
     }
 
-std::vector<std::string> fe::getAllFilesInDirectory(const char *directory, const char *extension)
+void fe::getAllFilesInDirectory(const std::string &directory, const std::vector<std::string> &&extension, std::vector<std::string> &fileReturn)
     {
-        std::vector<std::string> returnVector;
+        fe::getAllFilesInDirectory(directory.c_str(), std::move(extension), fileReturn);
+    }
+
+void fe::getAllFilesInDirectory(const char *directory, const std::vector<std::string> &&extensions, std::vector<std::string> &fileReturn)
+    {
         for (auto &file : std::experimental::filesystem::directory_iterator(directory))
             {
                 auto path = file.path().filename().string();
@@ -56,24 +61,34 @@ std::vector<std::string> fe::getAllFilesInDirectory(const char *directory, const
                 // if there is a dot in the name, then we can assume that it isnt a folder
                 // if it is a folder, well that sucks for the user
                 // dont be a jackass
-                auto fileExtension = (int)path.find(extension);
+                int fileExtension = -1;
+                for (auto &possibleExtension : extensions)
+                    {
+                        fileExtension = (int)path.find(possibleExtension);
+                        if (fileExtension >= 0)
+                            {
+                                break;
+                            }
+                    }
+
                 if (fileExtension < 0)
                     {   
-                        auto ret = getAllFilesInDirectory((directory + path + "/").c_str(), extension);
-                        returnVector.insert(returnVector.end(), ret.begin(), ret.end());
+                        getAllFilesInDirectory((directory + ("/" + path) + "/"), std::move(extensions), fileReturn);
                     }
                 else
                     {
-                        returnVector.push_back(directory + path);
+                        fileReturn.push_back(directory + ("/" + path));
                     }
             }
-
-        return returnVector;
     }
 
-std::vector<std::string> fe::getFilesInDirectory(const char *directory)
+void fe::getFilesInDirectory(const std::string &directory, std::vector<std::string> &fileReturn)
     {
-        std::vector<std::string> returnVector;
+        fe::getFilesInDirectory(directory.c_str(), fileReturn);
+    }
+
+void fe::getFilesInDirectory(const char *directory, std::vector<std::string> &fileReturn)
+    {
         for (auto &file : std::experimental::filesystem::directory_iterator(directory))
             {
                 auto path = file.path().filename().string();
@@ -84,16 +99,18 @@ std::vector<std::string> fe::getFilesInDirectory(const char *directory)
                 auto fileExtension = (int)path.find('.');
                 if (fileExtension > 0)
                     {   
-                        returnVector.push_back(directory + path);
+                        fileReturn.push_back(directory + ("/" + path));
                     }
             }
-
-        return returnVector;
     }
 
-std::vector<std::string> fe::getFilesInDirectory(const char *directory, const char *extension)
+void fe::getFilesInDirectory(const std::string &directory, const std::vector<std::string> &&extension, std::vector<std::string> &fileReturn)
     {
-        std::vector<std::string> returnVector;
+        fe::getFilesInDirectory(directory.c_str(), std::move(extension), fileReturn);
+    }
+
+void fe::getFilesInDirectory(const char *directory, const std::vector<std::string> &&extensions, std::vector<std::string> &fileReturn)
+    {
         for (auto &file : std::experimental::filesystem::directory_iterator(directory))
             {
                 auto path = file.path().filename().string();
@@ -101,12 +118,65 @@ std::vector<std::string> fe::getFilesInDirectory(const char *directory, const ch
                 // if there is a dot in the name, then we can assume that it isnt a folder
                 // if it is a folder, well that sucks for the user
                 // dont be a jackass
-                auto fileExtension = (int)path.find(extension);
+                int fileExtension = -1;
+                for (auto &possibleExtension : extensions)
+                    {
+                        fileExtension = (int)path.find(possibleExtension);
+                        if (fileExtension >= 0)
+                            {
+                                break;
+                            }
+                    }
                 if (fileExtension > 0)
                     {   
-                        returnVector.push_back(directory + path);
+                        fileReturn.push_back(directory + ("/" + path));
                     }
             }
+    }
 
-        return returnVector;
+std::string fe::getFileFromDirectory(const std::string &directory)
+    {
+        return fe::getFileFromDirectory(directory.c_str());
+    }
+
+std::string fe::getFileFromDirectory(const char *directory)
+    {
+        std::string file = "";
+        for (unsigned int i = std::strlen(directory) - 1; i > 0; i--)
+            {
+                if (directory[i] == '\\' || directory[i] == '/')
+                    {
+                        break;
+                    }
+                else
+                    {
+                        file += directory[i];
+                    }
+            }
+        std::reverse(file.begin(), file.end());
+        return file;
+    }
+
+std::string fe::getFileExtension(const std::string &directory)
+    {
+        return fe::getFileExtension(directory.c_str());
+    }
+
+std::string fe::getFileExtension(const char *directory)
+    {
+        std::string extension = "";
+        for (unsigned int i = std::strlen(directory) - 1; i > 0; i--)
+            {
+                if (directory[i] == '.')
+                    {
+                        extension += directory[i];
+                        break;
+                    }
+                else
+                    {
+                        extension += directory[i];
+                    }
+            }
+        std::reverse(extension.begin(), extension.end());
+        return extension;
     }
