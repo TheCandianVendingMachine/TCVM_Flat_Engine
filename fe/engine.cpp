@@ -570,7 +570,7 @@ void fe::engine::loadResources(const char *resourcesFile)
         std::vector<std::string> allFiles;
         for (auto &file : resourceFilePaths)
             {
-                fe::getAllFilesInDirectory((currentPath + file), std::move(extensions), allFiles);
+                fe::getAllFilesInDirectory((currentPath + "/" + file), std::move(extensions), allFiles);
             }
 
         for (auto &possibleResource : allFiles)

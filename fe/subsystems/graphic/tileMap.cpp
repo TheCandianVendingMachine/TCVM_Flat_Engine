@@ -209,6 +209,26 @@ void fe::tileMap::draw(sf::RenderTarget &target, sf::RenderStates states)
         target.draw(m_verticies, states);
     }
 
+void fe::tileMap::loadFabrications(const char *filepath)
+    {
+        std::ifstream load(filepath);
+        fe::serializerID serial;
+        serial.readData(load);
+        load.close();
+
+        deserializeFabrications(serial);
+    }
+
+void fe::tileMap::saveFabrications(const char *filepath)
+    {
+        fe::serializerID serial;
+        serializeFabrications(serial);
+
+        std::ofstream save(filepath);
+        serial.outData(save);
+        save.close();
+    }
+
 const std::vector<fe::imp::tile> &fe::tileMap::getFabrications()
     {
         return m_fabrications;

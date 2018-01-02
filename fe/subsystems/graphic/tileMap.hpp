@@ -91,6 +91,9 @@ namespace fe
                     SERIALIZE_CALLBACK_ID(onSave(), onLoad(), "tilemap", "tiles", m_objects, "textureName", m_textureName);
                     SERIALIZE_NAME_ID(Fabrications, "tilemap", "fabrications", m_fabrications);
 
+                    FLAT_ENGINE_API void loadFabrications(const char *filepath);
+                    FLAT_ENGINE_API void saveFabrications(const char *filepath);
+
                     // Returns a vector of all fabricated tiles
                     FLAT_ENGINE_API const std::vector<fe::imp::tile> &getFabrications();
 
