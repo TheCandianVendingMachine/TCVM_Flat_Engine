@@ -35,6 +35,7 @@ void fe::tileMap::onSave() const
 
 void fe::tileMap::onLoad()
     {
+        loadFabrications(m_fabricationFilepath);
         addGlobalTexture(m_textureName);
         std::vector<fe::imp::tileWorld> objCopy;
         std::copy(m_objects.begin(), m_objects.end(), std::back_inserter(objCopy));
@@ -48,7 +49,9 @@ void fe::tileMap::onLoad()
         rebuildTilemap();
     }
 
-fe::tileMap::tileMap()
+fe::tileMap::tileMap() :
+    m_fabricationFilepath{"\0"},
+    m_textureName{"\0"}
     {
     }
 
@@ -211,12 +214,15 @@ void fe::tileMap::draw(sf::RenderTarget &target, sf::RenderStates states)
 
 void fe::tileMap::loadFabrications(const char *filepath)
     {
+        std::strcpy(m_fabricationFilepath, filepath);
+
         std::ifstream load(filepath);
         fe::serializerID serial;
         serial.readData(load);
         load.close();
 
         deserializeFabrications(serial);
+        rebuildTilemap();
     }
 
 void fe::tileMap::saveFabrications(const char *filepath)

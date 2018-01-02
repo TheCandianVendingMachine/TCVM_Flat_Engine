@@ -59,6 +59,7 @@ namespace fe
                     fe::Vector2<unsigned int> m_textureOffset; // offset of texture in texture packer
 
                     char m_textureName[64];
+                    char m_fabricationFilepath[128];
 
                     FLAT_ENGINE_API void onAdd(fe::imp::tileWorld *object, fe::Handle objectHandle);
                     FLAT_ENGINE_API void onRemove(fe::imp::tileWorld *object, fe::Handle objectHandle);
@@ -88,7 +89,7 @@ namespace fe
 
                     FLAT_ENGINE_API void draw(sf::RenderTarget &target, sf::RenderStates states);
 
-                    SERIALIZE_CALLBACK_ID(onSave(), onLoad(), "tilemap", "tiles", m_objects, "textureName", m_textureName);
+                    SERIALIZE_CALLBACK_ID(onSave(), onLoad(), "tilemap", "tiles", m_objects, "textureName", m_textureName, "fabricationsPath", m_fabricationFilepath);
                     SERIALIZE_NAME_ID(Fabrications, "tilemap", "fabrications", m_fabrications);
 
                     FLAT_ENGINE_API void loadFabrications(const char *filepath);
