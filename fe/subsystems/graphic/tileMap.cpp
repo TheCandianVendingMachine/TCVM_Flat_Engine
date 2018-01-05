@@ -9,11 +9,11 @@
 
 void fe::tileMap::onAdd(fe::imp::tileWorld *object, fe::Handle objectHandle)
     {
-        object->colliderPtr = fe::engine::get().getCollisionWorld().createCollider(object->m_colliderSizeX, object->m_colliderSizeY);
-        object->colliderPtr->m_aabb.m_positionX = object->xPosition;
-        object->colliderPtr->m_aabb.m_positionY = object->yPosition;
-        object->colliderPtr->m_aabb.m_globalPositionX = object->xPosition;
-        object->colliderPtr->m_aabb.m_globalPositionY = object->yPosition;
+        object->colliderPtr = fe::engine::get().getCollisionWorld().createCollider(object->colliderSizeX, object->colliderSizeY);
+        object->colliderPtr->m_aabb.m_positionX = object->colliderOffsetX;
+        object->colliderPtr->m_aabb.m_positionY = object->colliderOffsetY;
+        object->colliderPtr->m_aabb.m_globalPositionX = object->xPosition + object->colliderPtr->m_aabb.m_positionX;
+        object->colliderPtr->m_aabb.m_globalPositionY = object->yPosition + object->colliderPtr->m_aabb.m_positionY;
 
         fe::gameEvent event(fe::engineEvent::TILE_PLACED, 1);
         event.args[0].arg.TYPE_VOIDP = object;
@@ -168,8 +168,10 @@ fe::Handle fe::tileMap::add(fe::Vector2d position, fe::str tileId)
                         tileWorld.xPosition = position.x;
                         tileWorld.yPosition = position.y;
                         tileWorld.id = FE_STR(tile.id);
-                        tileWorld.m_colliderSizeX = tile.collider.m_aabb.m_sizeX;
-                        tileWorld.m_colliderSizeY = tile.collider.m_aabb.m_sizeY;
+                        tileWorld.colliderSizeX = tile.collider.m_aabb.m_sizeX;
+                        tileWorld.colliderSizeY = tile.collider.m_aabb.m_sizeY;
+                        tileWorld.colliderOffsetX = tile.collider.m_aabb.m_positionX;
+                        tileWorld.colliderOffsetY = tile.collider.m_aabb.m_positionY;
                         fe::Handle retHandle = addObject(tileWorld);
                         rebuildTilemap();
                         return retHandle;

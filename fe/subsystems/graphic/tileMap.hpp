@@ -42,8 +42,10 @@ namespace fe
                         float xPosition;
                         float yPosition;
 
-                        float m_colliderSizeX;
-                        float m_colliderSizeY;
+                        float colliderOffsetX;
+                        float colliderOffsetY;
+                        float colliderSizeX;
+                        float colliderSizeY;
 
                         fe::collider *colliderPtr = nullptr;
 
