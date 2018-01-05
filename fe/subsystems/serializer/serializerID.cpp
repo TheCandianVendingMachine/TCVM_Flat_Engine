@@ -25,7 +25,7 @@ void fe::serializerID::dataBlock::outData(std::ostream &out, const char *preData
                 out << preDataText << "\t]\n";
             }
 
-        for (auto &memberDat : m_childDataBlocks)
+        for (auto &memberDat : m_mappedObjectData)
             {
                 memberDat.second->outData(out, preDataTextApp);
             }
@@ -71,7 +71,7 @@ bool fe::serializerID::dataBlock::hasData(const char *dataId)
     {
         if (m_read) return false;
         if (m_id == dataId) return true;
-        for (auto &childObject : m_childDataBlocks)
+        for (auto &childObject : m_mappedObjectData)
             {
                 if (childObject.second->hasData(dataId)) return true;
             }
@@ -89,7 +89,7 @@ fe::serializerID::dataBlock::~dataBlock()
                     }
             }
 
-        for (auto &pair : m_childDataBlocks)
+        for (auto &pair : m_mappedObjectData)
             {
                 delete pair.second.release();
             }
@@ -99,7 +99,7 @@ fe::serializerID::dataBlock *fe::serializerID::getDataBlock(dataBlock *initial, 
     {
         if (initial->m_id == id && !initial->m_read) return initial;
         dataBlock *ret = nullptr;
-        for (auto &child : initial->m_childDataBlocks)
+        for (auto &child : initial->m_mappedObjectData)
             {
                 ret = getDataBlock(child.second.get(), id);
                 if (ret) break;
@@ -111,7 +111,7 @@ fe::serializerID::dataBlock *fe::serializerID::getDataBlock(dataBlock *initial)
     {
         if (!initial->m_read) return initial;
         dataBlock *ret = nullptr;
-        for (auto &child : initial->m_childDataBlocks)
+        for (auto &child : initial->m_mappedObjectData)
             {
                 ret = getDataBlock(child.second.get());
                 if (ret) break;
@@ -227,9 +227,11 @@ void fe::serializerID::interpretData(const char *block)
                     {
                         case OBJ_START:
                             currentBlock.emplace(new dataBlock);
+                            currentStorageRead.push(NONE);
                             break;
                         case OBJ_END:
                             {
+                                currentStorageRead.pop();
                                 dataBlock *top = currentBlock.top().release();
                                 currentBlock.pop();
                                 if (!currentBlock.empty())
@@ -237,7 +239,7 @@ void fe::serializerID::interpretData(const char *block)
                                         switch(currentStorageRead.top())
                                             {
                                                 case NONE:
-                                                    currentBlock.top()->m_childDataBlocks.emplace_back(top->m_id, top);
+                                                    currentBlock.top()->m_mappedObjectData[top->m_id].reset(top);
                                                     break;
                                                 case LIST:
                                                     currentBlock.top()->m_mappedListObjectData[currentListID.top()].emplace_back(top);
@@ -259,9 +261,20 @@ void fe::serializerID::interpretData(const char *block)
                                 reverseReadingStack.pop();
                                 unsigned int endIndex = reverseReadingStack.top().second;
 
-                                char data[512] = "\0";
-                                std::memcpy(data, block + startIndex, endIndex - startIndex);
-                                currentBlock.top()->m_id = data;
+                                bool hasAlias = false;
+                                char idName[512] = "\0";
+                                for (unsigned int i = startIndex; i < endIndex; i++)
+                                    {
+                                        if (block[i] == ':')
+                                            {
+                                                hasAlias = true;
+                                                startIndex = i + 1;
+                                                break;
+                                            }
+                                        idName[i - startIndex] = block[i];
+                                    }
+
+                                currentBlock.top()->m_id = idName;
                             }
                             break;
                         case OBJ_NAME_END:

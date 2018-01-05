@@ -168,8 +168,8 @@ fe::Handle fe::tileMap::add(fe::Vector2d position, fe::str tileId)
                         tileWorld.xPosition = position.x;
                         tileWorld.yPosition = position.y;
                         tileWorld.id = FE_STR(tile.id);
-                        tileWorld.m_colliderSizeX = tile.xSize;
-                        tileWorld.m_colliderSizeY = tile.ySize;
+                        tileWorld.m_colliderSizeX = tile.collider.m_aabb.m_sizeX;
+                        tileWorld.m_colliderSizeY = tile.collider.m_aabb.m_sizeY;
                         fe::Handle retHandle = addObject(tileWorld);
                         rebuildTilemap();
                         return retHandle;
@@ -214,6 +214,7 @@ void fe::tileMap::draw(sf::RenderTarget &target, sf::RenderStates states)
 
 void fe::tileMap::loadFabrications(const char *filepath)
     {
+        clearFabs();
         std::strcpy(m_fabricationFilepath, filepath);
 
         std::ifstream load(filepath);

@@ -19,18 +19,18 @@ namespace fe
 
                 struct coord
                     {
-                        float x;
-                        float y;
+                        float x = 0;
+                        float y = 0;
 
                         FLAT_ENGINE_API void load(rapidxml::xml_node<> *node);
                     };
 
                 struct colour
                     {
-                        float r;
-                        float g;
-                        float b;
-                        float a;
+                        float r = 200;   // default panel colour
+                        float g = 150;
+                        float b = 255;
+                        float a = 240;
                         FLAT_ENGINE_API void load(rapidxml::xml_node<> *node);
                     };
 
@@ -38,6 +38,7 @@ namespace fe
                     {
                         std::string defaultText;
                         fe::str fontID;
+                        unsigned int size = 32;
                         FLAT_ENGINE_API void load(rapidxml::xml_node<> *node);
                     };
 

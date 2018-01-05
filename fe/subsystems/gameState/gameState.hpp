@@ -33,6 +33,9 @@ namespace fe
                     std::queue<gui::panel*> m_guiPanelsToAdd;
                     fe::gameWorld m_gameWorld;
 
+                protected:
+                    virtual void drawExtra(sf::RenderTarget &app) {}
+
                 public:
                     FLAT_ENGINE_API baseGameState() {}
 

@@ -97,6 +97,10 @@ void fe::baseGameState::draw(sf::RenderTarget &app)
         m_gameWorld.draw(app);
         FE_END_PROFILE
 
+        FE_ENGINE_PROFILE("state_scene", "extra_draw")
+        drawExtra(app);
+        FE_END_PROFILE
+
         FE_ENGINE_PROFILE("state_gui", "buf1_draw")
         for (auto &panel : m_guiPanels)
             {

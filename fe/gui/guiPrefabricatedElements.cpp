@@ -98,6 +98,7 @@ fe::gui::guiElement *fe::guiPrefabricatedElements::getElement(fe::str elementPre
         else if (elementTemplate.m_elementType == priv::elementTemplate::LABEL)
             {
                 element = new fe::gui::label(*fe::engine::get().getResourceManager<sf::Font>()->get(elementTemplate.m_label.fontID), elementTemplate.m_label.defaultText);
+                static_cast<fe::gui::label*>(element)->setCharacterSize(elementTemplate.m_label.size);
             }
         else if (elementTemplate.m_elementType == priv::elementTemplate::SQUARE)
             {
@@ -281,6 +282,10 @@ void fe::priv::text::load(rapidxml::xml_node<>* node)
                 else if (std::string(nodeIt->name()) == "default_text")
                     {
                         defaultText = std::string(nodeIt->value());
+                    }
+                else if (std::string(nodeIt->name()) == "size")
+                    {
+                        size = interpretConstant(nodeIt->value());
                     }
                 nodeIt = nodeIt->next_sibling();
             }

@@ -129,7 +129,7 @@ void fe::gui::panel::setTitle(const char *title)
 
 std::string fe::gui::panel::getTitle() const
     {
-    return std::string();
+        return std::string();
     }
 
 void fe::gui::panel::setPanelBarColour(sf::Color colour)
