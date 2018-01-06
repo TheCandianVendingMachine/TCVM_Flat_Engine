@@ -56,6 +56,7 @@ namespace fe
                     Handle addObject(T object);
                     void removeObject(Handle handle);
                     bool handleActive(Handle handle);
+                    void clearAllObjects();
 
                     T getObject(Handle handle) const;
 
@@ -94,6 +95,7 @@ namespace fe
                     Handle addObject(T object);
                     void removeObject(Handle handle);
                     bool handleActive(Handle handle);
+                    void clearAllObjects();
 
                     T getObject(Handle handle) const;
 

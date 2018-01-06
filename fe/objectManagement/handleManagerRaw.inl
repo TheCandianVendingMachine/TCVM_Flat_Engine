@@ -27,6 +27,7 @@ inline T *fe::handleManager<T, objectCount>::getObjects()
 template<typename T, unsigned int objectCount>
 fe::Handle fe::handleManager<T, objectCount>::getHandle(T object)
     {
+        FE_LOG_WARNING("Not Implemented");
         return -1;
     }
 
@@ -62,6 +63,24 @@ template<typename T, unsigned int objectCount>
 bool fe::handleManager<T, objectCount>::handleActive(Handle handle)
     {
         return m_handles[handle]->active;
+    }
+
+template<typename T, unsigned int objectCount>
+inline void fe::handleManager<T, objectCount>::clearAllObjects()
+    {
+        for (unsigned int i = 0; i < m_maxIndex; i++)
+            {
+                onRemove(m_objects[i], -1);
+            }
+
+        handleObjectList *handle = &m_baseHandleList;
+        while (handle)
+            {
+                handle->m_handle->active = false;
+                handle->m_handle->handle = -1;
+                handle = handle->m_tail;
+            }
+        m_maxIndex = 0;
     }
 
 template<typename T, unsigned int objectCount>

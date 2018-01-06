@@ -427,6 +427,7 @@ void fe::aabbTree::add(fe::collider *collider)
 
 void fe::aabbTree::remove(fe::collider *collider)
     {
+        if (!collider) return;
         FE_PROFILE("aabb_tree", "remove_collider");
         remove((int)collider->m_userData);
         collider->m_userData = nullptr;

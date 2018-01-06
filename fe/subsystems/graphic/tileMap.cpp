@@ -39,7 +39,7 @@ void fe::tileMap::onLoad()
         addGlobalTexture(m_textureName);
         std::vector<fe::imp::tileWorld> objCopy;
         std::copy(m_objects.begin(), m_objects.end(), std::back_inserter(objCopy));
-        m_objects.clear();
+        clearAllObjects();
 
         for (auto &obj : objCopy)
             {
@@ -246,7 +246,7 @@ const std::vector<fe::imp::tile> &fe::tileMap::getFabrications()
 void fe::tileMap::clearMap()
     {
         m_verticies.clear();
-        getObjects().clear();
+        clearAllObjects();
     }
 
 void fe::tileMap::clearFabs()

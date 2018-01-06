@@ -1,3 +1,4 @@
+#include "handleManager.hpp"
 // handleManagerVector.inl
 // defines for the vector version of the handle manager
 template<typename T>
@@ -83,6 +84,17 @@ bool fe::handleManager<T, 0>::handleActive(Handle handle)
             }
 
         return m_handles[handle].active;
+    }
+
+template<typename T>
+inline void fe::handleManager<T, 0>::clearAllObjects()
+    {
+        for (auto &obj : m_objects)
+            {
+                onRemove(&obj, -1);
+            }
+        m_objects.clear();
+        m_handles.clear();
     }
 
 template<typename T>
