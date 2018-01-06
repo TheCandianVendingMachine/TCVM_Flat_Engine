@@ -81,6 +81,10 @@ void fe::engine::run()
 
                 m_profileLogger->clearTotalCalls();
                 calcFPS();
+
+                m_logger->swapConsoleBuffer();
+                m_logger->swapFileBuffer();
+
                 m_elapsedTime = currentTime;
             }
     }
@@ -199,9 +203,14 @@ void fe::engine::startUp(fe::uInt64 totalMemory, fe::uInt64 stackMemory, fe::uIn
 
         if (!m_instance)
             {
+                m_instance = this;
+
                 m_memoryManager.startUp(totalMemory, stackMemory, dynamicMemory);
 
-                m_logger = new(m_memoryManager.alloc(sizeof(fe::logger))) logger;
+                m_threadPool = new(m_memoryManager.getStackAllocater().alloc(sizeof(fe::threadPool<8>))) fe::threadPool<8>();
+                m_threadPool->startUp();
+
+                m_logger = new(m_memoryManager.alloc(sizeof(fe::logger))) fe::logger;
                 m_logger->startUp("log.log");
 
                 m_profileLogger = new(m_memoryManager.getStackAllocater().alloc(sizeof(fe::profilerLogger))) fe::profilerLogger();
@@ -232,23 +241,16 @@ void fe::engine::startUp(fe::uInt64 totalMemory, fe::uInt64 stackMemory, fe::uIn
 
                 m_screenSize = m_renderer.getWindowSize();
 
-                m_threadPool = new(m_memoryManager.getStackAllocater().alloc(sizeof(fe::threadPool<8>))) fe::threadPool<8>();
-                m_threadPool->startUp();
-
                 m_random.startUp();
 
                 m_localization = new(m_memoryManager.getStackAllocater().alloc(sizeof(fe::localizationStorage))) fe::localizationStorage();
                 m_prefabGuiElements = new(m_memoryManager.getStackAllocater().alloc(sizeof(fe::guiPrefabricatedElements))) fe::guiPrefabricatedElements();
-
-                m_instance = this;
             }
     }
 
 void fe::engine::shutDown()
     {
         m_shutDown = true;
-
-        m_threadPool->shutDown();
 
         m_fontManager->shutDown();
         m_textureManager->shutDown();
@@ -262,6 +264,7 @@ void fe::engine::shutDown()
         m_profileLogger->shutDown();
         m_logger->shutDown();
         m_logger->~logger();
+        m_threadPool->shutDown();
         m_memoryManager.shutDown();
     }
 

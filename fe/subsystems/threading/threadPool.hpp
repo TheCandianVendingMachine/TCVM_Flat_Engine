@@ -1,7 +1,7 @@
 // threadPool.hpp
 // a group of threads that takes in jobs, and works on them
 #pragma once
-#include <queue>
+#include <deque>
 #include <thread>
 #include <utility>
 #include <chrono>
@@ -16,7 +16,7 @@ namespace fe
                     struct threadObj
                         {
                             std::thread m_thread;
-                            std::queue<threadJob*> m_jobs;
+                            std::deque<threadJob*> m_jobs;
                             unsigned int m_jobCount;
 
                             bool m_running;
@@ -91,7 +91,7 @@ namespace fe
         template<unsigned int threadCount>
         void threadPool<threadCount>::threadObj::runJob(threadJob *newJob)
             {
-                m_jobs.push(newJob);
+                m_jobs.push_back(newJob);
                 m_jobCount++;
             }
 
@@ -107,14 +107,19 @@ namespace fe
                                 std::this_thread::sleep_for(std::chrono::microseconds(1)); 
                             }
 
-                        while (!m_jobs.front()->execute()) 
+                        for (auto &it = m_jobs.begin(); it != m_jobs.end();) 
                             {
-                                if (!m_running) return;
-                            }
-
-                        m_jobs.front()->m_done = true;
-                        m_jobs.pop();
-                        m_jobCount--;
+                                auto job = (*it);
+                                if (job->execute())
+                                    {
+                                        job->m_done = true;
+                                        it = m_jobs.erase(it);
+                                    }
+                                else
+                                    {
+                                        ++it;
+                                    }
+                            }          
                     }
             }
     }

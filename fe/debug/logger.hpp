@@ -3,12 +3,14 @@
 #pragma once
 #define FLAT_ENGINE_EXPORT
 #include "../flatEngineExport.hpp"
+#include "../subsystems/threading/threadJob.hpp"
 #include "../time/clock.hpp"
 
 #include <sstream>
 #include <iostream>
 #include <utility>
 #include <fstream>
+#include <mutex>
 #include <assert.h>
 
 namespace fe
@@ -19,13 +21,40 @@ namespace fe
                     std::ofstream m_output;
                     static logger *m_instance;
 
+                    std::stringstream m_fileBuffer[2];
+                    std::stringstream m_consoleBuffer[2];
+
+                    std::stringstream *m_currentFileBuffer; // Current Buffer Being Written To
+                    std::stringstream *m_nextFileBuffer;    // Current Buffer Being Printed
+
+                    std::stringstream *m_currentConsoleBuffer; // Current Buffer Being Written To
+                    std::stringstream *m_nextConsoleBuffer;    // Current Buffer Being Printed
+
+                    fe::threadFunction m_printJob;
+
+                    std::mutex m_consoleBufferLock;
+                    std::mutex m_fileBufferLock;
+
+                    bool m_running;
+                    
+                    FLAT_ENGINE_API std::stringstream &getCurrentFileBuffer();
+                    FLAT_ENGINE_API std::stringstream &getCurrentConsoleBuffer();
+
+                    // Threaded functions that do as they say on the tin
+                    FLAT_ENGINE_API bool printLogs();
+
                 public:
+                    FLAT_ENGINE_API logger();
+
                     // start the logger at the directory
                     FLAT_ENGINE_API void startUp(const char *directory);
                     // close the ofstream and make sure everything logged
                     FLAT_ENGINE_API void shutDown();
 
                     FLAT_ENGINE_API static logger &get();
+
+                    FLAT_ENGINE_API void swapFileBuffer();
+                    FLAT_ENGINE_API void swapConsoleBuffer();
 
                     // print a log to file
                     template<typename ...Args>
@@ -42,12 +71,12 @@ namespace fe
         template<typename ...Args>
         void logger::log(Args &&...args)
             {
-                m_output << fe::clock::getFormattedTime("%b %Y %H:%M:%S %p") << " - ";
+                getCurrentFileBuffer() << fe::clock::getFormattedTime("%b %Y %H:%M:%S %p") << " - ";
 
                 using expanded = int[];
-                expanded { 0, (m_output << std::forward<Args>(args) << " ", 0)... };
+                expanded { 0, (getCurrentFileBuffer() << std::forward<Args>(args) << " ", 0)... };
 
-                m_output << std::endl;
+                getCurrentFileBuffer() << "\n";
                 logToConsole(args...);
             }
 
@@ -55,12 +84,12 @@ namespace fe
         void logger::logToConsole(Args &&...args)
             {
             #if _DEBUG
-                std::cout << "<CNSL> " << fe::clock::getFormattedTime("%b %Y %H:%M:%S %p") << " - ";
+                getCurrentConsoleBuffer() << "<CNSL> " << fe::clock::getFormattedTime("%b %Y %H:%M:%S %p") << " - ";
 
                 using expanded = int[];
-                expanded { 0, (std::cout << std::forward<Args>(args) << " ", 0)... };
+                expanded { 0, (getCurrentConsoleBuffer() << std::forward<Args>(args) << " ", 0)... };
 
-                std::cout << std::endl;
+                getCurrentConsoleBuffer() << "\n";
             #endif
             }
     }
