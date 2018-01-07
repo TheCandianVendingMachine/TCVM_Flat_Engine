@@ -5,6 +5,7 @@
 #include "../../flatEngineExport.hpp"
 #include "../memory/memoryManager.hpp"
 #include "../../debug/logger.hpp"
+#include "../graphic/camera.hpp"
 #include "gameWorld.hpp"
 
 #include <vector>
@@ -32,6 +33,7 @@ namespace fe
                     std::vector<gui::panel*> m_guiPanels;
                     std::queue<gui::panel*> m_guiPanelsToAdd;
                     fe::gameWorld m_gameWorld;
+                    fe::camera m_stateCamera;
 
                 protected:
                     virtual void drawExtra(sf::RenderTarget &app) {}
@@ -61,7 +63,7 @@ namespace fe
                     FLAT_ENGINE_API virtual void preUpdate() {}
                     FLAT_ENGINE_API virtual void update() {}
                     FLAT_ENGINE_API void updateDefined(collisionWorld *collisionWorld);
-                    FLAT_ENGINE_API void postUpdateDefined();
+                    FLAT_ENGINE_API void postUpdateDefined(float deltaTime);
                     FLAT_ENGINE_API virtual void postUpdate() {}
 
                     FLAT_ENGINE_API void preDrawDefined();
@@ -80,6 +82,10 @@ namespace fe
 
                     FLAT_ENGINE_API const fe::gameWorld &getGameWorld() const;
                     FLAT_ENGINE_API fe::gameWorld &getGameWorld();
+
+                    FLAT_ENGINE_API void setCamera(const fe::camera &camera);
+                    FLAT_ENGINE_API void setCamera(const fe::camera &&camera);
+                    FLAT_ENGINE_API fe::camera &getCamera();
 
                     FLAT_ENGINE_API virtual ~baseGameState();
             };

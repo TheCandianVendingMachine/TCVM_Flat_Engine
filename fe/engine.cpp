@@ -137,7 +137,7 @@ void fe::engine::update()
         FE_END_PROFILE;
 
         FE_ENGINE_PROFILE("engine", "state_postupdate");
-        m_gameStateMachine->postUpdate();
+        m_gameStateMachine->postUpdate(m_deltaTime);
         FE_END_PROFILE;
 
         FE_ENGINE_PROFILE("engine", "collision_world_collide");
@@ -245,6 +245,9 @@ void fe::engine::startUp(fe::uInt64 totalMemory, fe::uInt64 stackMemory, fe::uIn
 
                 m_localization = new(m_memoryManager.getStackAllocater().alloc(sizeof(fe::localizationStorage))) fe::localizationStorage();
                 m_prefabGuiElements = new(m_memoryManager.getStackAllocater().alloc(sizeof(fe::guiPrefabricatedElements))) fe::guiPrefabricatedElements();
+
+                m_defaultCamera.setSize(getWindowSize());
+                m_defaultCamera.setPosition(getWindowSize() / 2.f);
             }
     }
 
@@ -351,6 +354,11 @@ fe::localizationStorage &fe::engine::getLocalization() const
 fe::guiPrefabricatedElements &fe::engine::getPrefabGui() const
     {
         return *m_prefabGuiElements;
+    }
+
+const fe::camera &fe::engine::getDefaultCamera() const
+    {
+        return m_defaultCamera;
     }
 
 void fe::engine::loadResources(const char *resourcesFile)

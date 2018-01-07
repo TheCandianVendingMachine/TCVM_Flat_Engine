@@ -11,15 +11,15 @@ namespace fe
         template <typename T>
         struct lightVector2;
 
-        template<typename dataType>
-        Vector2<dataType> operator*(const dataType &lhs, Vector2<dataType> &rhs);
-        template<typename dataType>
-        Vector2<dataType> operator/(const dataType &lhs, Vector2<dataType> &rhs);
+        template<typename dataType, typename vectorType>
+        Vector2<dataType> operator*(const dataType &lhs, Vector2<vectorType> &rhs);
+        template<typename dataType, typename vectorType>
+        Vector2<dataType> operator/(const dataType &lhs, Vector2<vectorType> &rhs);
 
-        template<typename dataType>
-        void operator*=(const dataType &lhs, Vector2<dataType> &rhs);
-        template<typename dataType>
-        void operator/=(const dataType &lhs, Vector2<dataType> &rhs);
+        template<typename dataType, typename vectorType>
+        void operator*=(const dataType &lhs, Vector2<vectorType> &rhs);
+        template<typename dataType, typename vectorType>
+        void operator/=(const dataType &lhs, Vector2<vectorType> &rhs);
 
         template <typename dataType>
         struct Vector2
@@ -118,29 +118,29 @@ namespace fe
         template<typename dataType>
         Vector2<dataType> lerp(const Vector2<dataType> &a, const Vector2<dataType> &b, const float &percent)
             {
-                return Vector2<dataType>((1 - percent) * a + (percent * b));
+                return Vector2<dataType>((dataType(1) - percent) * a + (percent * b));
             }
 
-        template<typename dataType>
-        Vector2<dataType> fe::operator*(const dataType &lhs, Vector2<dataType> &rhs)
+        template<typename dataType, typename vectorType>
+        Vector2<dataType> fe::operator*(const dataType &lhs, Vector2<vectorType> &rhs)
             {
                 return rhs * lhs;
             }
 
-        template<typename dataType>
-        Vector2<dataType> fe::operator/(const dataType &lhs, Vector2<dataType> &rhs)
+        template<typename dataType, typename vectorType>
+        Vector2<dataType> fe::operator/(const dataType &lhs, Vector2<vectorType> &rhs)
             {
                 return rhs / lhs;
             }
 
-        template<typename dataType>
-        void fe::operator*=(const dataType &lhs, Vector2<dataType> &rhs)
+        template<typename dataType, typename vectorType>
+        void fe::operator*=(const dataType &lhs, Vector2<vectorType> &rhs)
             {
                 rhs *= lhs;
             }
 
-        template<typename dataType>
-        void fe::operator/=(const dataType &lhs, Vector2<dataType> &rhs)
+        template<typename dataType, typename vectorType>
+        void fe::operator/=(const dataType &lhs, Vector2<vectorType> &rhs)
             {
                 rhs /= lhs;
             }

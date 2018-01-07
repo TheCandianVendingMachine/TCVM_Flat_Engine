@@ -5,6 +5,7 @@
 #include "flatEngineExport.hpp"
 #include "subsystems/memory/memoryManager.hpp"
 #include "subsystems/graphic/renderer.hpp"
+#include "subsystems/graphic/camera.hpp"
 #include "math/random.hpp"
 #include "time/clock.hpp"
 #include "typeDefines.hpp"
@@ -56,6 +57,8 @@ namespace fe
 
                     fe::localizationStorage *m_localization;
                     fe::guiPrefabricatedElements *m_prefabGuiElements;
+
+                    fe::camera m_defaultCamera;
 
                 private:
                     fe::clock m_fpsClock;
@@ -110,6 +113,7 @@ namespace fe
                     FLAT_ENGINE_API fe::threadPool<8> &getThreadPool() const;
                     FLAT_ENGINE_API fe::localizationStorage &getLocalization() const;
                     FLAT_ENGINE_API fe::guiPrefabricatedElements &getPrefabGui() const;
+                    FLAT_ENGINE_API const fe::camera &getDefaultCamera() const;
 
                     FLAT_ENGINE_API void loadResources(const char *resourcesFile);
 

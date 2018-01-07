@@ -3,6 +3,7 @@
 #include "../messaging/eventSender.hpp"
 #include "../../engine.hpp"
 #include "gameState.hpp"
+#include <SFML/Graphics/RenderTarget.hpp>
 
 fe::gameStateMachine *fe::gameStateMachine::m_instance = nullptr;
 
@@ -188,18 +189,18 @@ void fe::gameStateMachine::update(collisionWorld *collisionWorld)
             }
     }
 
-void fe::gameStateMachine::postUpdate()
+void fe::gameStateMachine::postUpdate(float deltaTime)
     {
         if (m_endState && m_endState->m_currentState)
             {
                 m_endState->m_currentState->postUpdate();
-                m_endState->m_currentState->postUpdateDefined();
+                m_endState->m_currentState->postUpdateDefined(deltaTime);
 
                 stateList *tail = m_endState->m_tail;
                 while (tail && tail->m_currentState && tail->m_options & stateOptions::UPDATE_UNDERNEATH)
                     {
                         tail->m_currentState->postUpdate();
-                        tail->m_currentState->postUpdateDefined();
+                        tail->m_currentState->postUpdateDefined(deltaTime);
                         tail = tail->m_tail;
                     }
             }
@@ -242,6 +243,7 @@ void fe::gameStateMachine::draw(sf::RenderTarget &app)
     {
         if (m_endState && m_endState->m_currentState)
             {
+                app.setView(m_endState->m_currentState->getCamera().getView());
                 drawState(m_endState, app);
             }
     }

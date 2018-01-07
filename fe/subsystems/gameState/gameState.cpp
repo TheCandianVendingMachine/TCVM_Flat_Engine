@@ -4,6 +4,7 @@
 #include "../../debug/profiler.hpp"
 #include "../../entity/baseEntity.hpp"
 #include <algorithm>
+#include <SFML/Graphics/RenderWindow.hpp>
 
 void fe::baseGameState::addPanel(gui::panel *panel)
     {
@@ -35,6 +36,7 @@ fe::gui::panel *fe::baseGameState::getPanel(fe::str panelID)
 void fe::baseGameState::startUp()
     {
         m_gameWorld.startUp();
+        setCamera(std::move(fe::engine::get().getDefaultCamera()));
     }
 
 void fe::baseGameState::handleEvents(const sf::Event &event)
@@ -61,7 +63,7 @@ void fe::baseGameState::updateDefined(collisionWorld *collisionWorld)
         FE_END_PROFILE;
     }
 
-void fe::baseGameState::postUpdateDefined()
+void fe::baseGameState::postUpdateDefined(float deltaTime)
     {
         m_gameWorld.postUpdate();
 
@@ -84,6 +86,8 @@ void fe::baseGameState::postUpdateDefined()
                         it++;
                     }
             }
+
+        m_stateCamera.updateCamera(deltaTime);
     }
 
 void fe::baseGameState::preDrawDefined()
@@ -138,6 +142,21 @@ const fe::gameWorld &fe::baseGameState::getGameWorld() const
 fe::gameWorld &fe::baseGameState::getGameWorld()
     {
         return m_gameWorld;
+    }
+
+void fe::baseGameState::setCamera(const fe::camera &camera)
+    {
+        m_stateCamera = camera;
+    }
+
+void fe::baseGameState::setCamera(const fe::camera &&camera)
+    {
+        m_stateCamera = camera;
+    }
+
+fe::camera &fe::baseGameState::getCamera()
+    {
+        return m_stateCamera;
     }
 
 fe::baseGameState::~baseGameState()

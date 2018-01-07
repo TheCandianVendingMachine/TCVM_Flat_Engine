@@ -405,43 +405,43 @@ void fe::gui::panel::draw(sf::RenderTarget &target)
         auto &matrix = getMatrix();
         if (m_canClose || m_canDrag || m_canMinimize || m_hasTitle)
             {
-                m_titleBar[0].position = matrix.transformPoint({ 0.f, 0.f }).convertToSfVec2();
-                m_titleBar[1].position = matrix.transformPoint({ m_size.x, 0.f }).convertToSfVec2();
-                m_titleBar[2].position = matrix.transformPoint({ m_size.x, m_windowOffset }).convertToSfVec2();
-                m_titleBar[3].position = matrix.transformPoint({ 0.f, m_windowOffset }).convertToSfVec2();
+                m_titleBar[0].position = target.mapPixelToCoords((sf::Vector2i)matrix.transformPoint({ 0.f, 0.f }).convertToSfVec2());
+                m_titleBar[1].position = target.mapPixelToCoords((sf::Vector2i)matrix.transformPoint({ m_size.x, 0.f }).convertToSfVec2());
+                m_titleBar[2].position = target.mapPixelToCoords((sf::Vector2i)matrix.transformPoint({ m_size.x, m_windowOffset }).convertToSfVec2());
+                m_titleBar[3].position = target.mapPixelToCoords((sf::Vector2i)matrix.transformPoint({ 0.f, m_windowOffset }).convertToSfVec2());
 
                 float distanceFromEnd = m_distanceFromEnd; // distance from the far right side of panel
                 if (m_canClose)
                     {
-                        m_titleBar[8].position  = matrix.transformPoint({ m_size.x - m_distanceFromEnd - m_buttonSize, m_distanceFromTop }).convertToSfVec2();
-                        m_titleBar[9].position  = matrix.transformPoint({ m_size.x - m_distanceFromEnd, m_distanceFromTop }).convertToSfVec2();
-                        m_titleBar[10].position = matrix.transformPoint({ m_size.x - m_distanceFromEnd, m_windowOffset - m_distanceFromTop }).convertToSfVec2();
-                        m_titleBar[11].position = matrix.transformPoint({ m_size.x - m_distanceFromEnd - m_buttonSize, m_windowOffset - m_distanceFromTop }).convertToSfVec2();
+                        m_titleBar[8].position  = target.mapPixelToCoords((sf::Vector2i)matrix.transformPoint({ m_size.x - m_distanceFromEnd - m_buttonSize, m_distanceFromTop }).convertToSfVec2());
+                        m_titleBar[9].position  = target.mapPixelToCoords((sf::Vector2i)matrix.transformPoint({ m_size.x - m_distanceFromEnd, m_distanceFromTop }).convertToSfVec2());
+                        m_titleBar[10].position = target.mapPixelToCoords((sf::Vector2i)matrix.transformPoint({ m_size.x - m_distanceFromEnd, m_windowOffset - m_distanceFromTop }).convertToSfVec2());
+                        m_titleBar[11].position = target.mapPixelToCoords((sf::Vector2i)matrix.transformPoint({ m_size.x - m_distanceFromEnd - m_buttonSize, m_windowOffset - m_distanceFromTop }).convertToSfVec2());
 
                         distanceFromEnd += m_buttonSize + m_distanceFromEnd;
                     }
 
                 if (m_canMinimize) 
                     {
-                        m_titleBar[4].position = matrix.transformPoint({ m_size.x - distanceFromEnd - m_buttonSize, m_distanceFromTop }).convertToSfVec2();
-                        m_titleBar[5].position = matrix.transformPoint({ m_size.x - distanceFromEnd, m_distanceFromTop }).convertToSfVec2();
-                        m_titleBar[6].position = matrix.transformPoint({ m_size.x - distanceFromEnd, m_windowOffset - m_distanceFromTop }).convertToSfVec2();
-                        m_titleBar[7].position = matrix.transformPoint({ m_size.x - distanceFromEnd - m_buttonSize, m_windowOffset - m_distanceFromTop }).convertToSfVec2();
+                        m_titleBar[4].position = target.mapPixelToCoords((sf::Vector2i)matrix.transformPoint({ m_size.x - distanceFromEnd - m_buttonSize, m_distanceFromTop }).convertToSfVec2());
+                        m_titleBar[5].position = target.mapPixelToCoords((sf::Vector2i)matrix.transformPoint({ m_size.x - distanceFromEnd, m_distanceFromTop }).convertToSfVec2());
+                        m_titleBar[6].position = target.mapPixelToCoords((sf::Vector2i)matrix.transformPoint({ m_size.x - distanceFromEnd, m_windowOffset - m_distanceFromTop }).convertToSfVec2());
+                        m_titleBar[7].position = target.mapPixelToCoords((sf::Vector2i)matrix.transformPoint({ m_size.x - distanceFromEnd - m_buttonSize, m_windowOffset - m_distanceFromTop }).convertToSfVec2());
                     }
 
-                m_title.setPosition(matrix.transformPoint(m_titlePosition).convertToSfVec2());
+                m_title.setPosition(target.mapPixelToCoords((sf::Vector2i)matrix.transformPoint(m_titlePosition).convertToSfVec2()));
 
-                m_window[0].position = matrix.transformPoint({ 0.f, m_windowOffset }).convertToSfVec2();
-                m_window[1].position = matrix.transformPoint({ m_size.x, m_windowOffset }).convertToSfVec2();
-                m_window[2].position = matrix.transformPoint({ m_size.x, m_size.y + m_windowOffset }).convertToSfVec2();
-                m_window[3].position = matrix.transformPoint({ 0.f, m_size.y + m_windowOffset }).convertToSfVec2();
+                m_window[0].position = target.mapPixelToCoords((sf::Vector2i)matrix.transformPoint({ 0.f, m_windowOffset }).convertToSfVec2());
+                m_window[1].position = target.mapPixelToCoords((sf::Vector2i)matrix.transformPoint({ m_size.x, m_windowOffset }).convertToSfVec2());
+                m_window[2].position = target.mapPixelToCoords((sf::Vector2i)matrix.transformPoint({ m_size.x, m_size.y + m_windowOffset }).convertToSfVec2());
+                m_window[3].position = target.mapPixelToCoords((sf::Vector2i)matrix.transformPoint({ 0.f, m_size.y + m_windowOffset }).convertToSfVec2());
             }
         else
             {
-                m_window[0].position = matrix.transformPoint({ 0.f, 0.f }).convertToSfVec2();
-                m_window[1].position = matrix.transformPoint({ m_size.x, 0.f }).convertToSfVec2();
-                m_window[2].position = matrix.transformPoint({ m_size.x, m_size.y }).convertToSfVec2();
-                m_window[3].position = matrix.transformPoint({ 0.f, m_size.y }).convertToSfVec2();
+                m_window[0].position = target.mapPixelToCoords((sf::Vector2i)matrix.transformPoint({ 0.f, 0.f }).convertToSfVec2());
+                m_window[1].position = target.mapPixelToCoords((sf::Vector2i)matrix.transformPoint({ m_size.x, 0.f }).convertToSfVec2());
+                m_window[2].position = target.mapPixelToCoords((sf::Vector2i)matrix.transformPoint({ m_size.x, m_size.y }).convertToSfVec2());
+                m_window[3].position = target.mapPixelToCoords((sf::Vector2i)matrix.transformPoint({ 0.f, m_size.y }).convertToSfVec2());
             }
 
         if (!m_isFolded) 
