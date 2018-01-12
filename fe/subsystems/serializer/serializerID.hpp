@@ -106,7 +106,7 @@ namespace fe
                     template<typename ...Args>
                     void serializeChildBlock(dataBlock &block, const char *blockID, const char *oldID, Args &&...Args);
                     template<typename T, typename ...Args>
-                    bool deserializeBlock(const char *blockID, const char *id, T &newValue, Args &&...args);
+                    int deserializeBlock(const char *blockID, const char *id, T &newValue, Args &&...args);
                     template<typename T, typename ...Args>
                     bool deserializeBlock(std::vector<std::unique_ptr<dataBlock>> &blocks, const char*, const char *id, T &newValue, Args &&...args);
                     template<typename T, typename ...Args>
@@ -129,6 +129,8 @@ namespace fe
 
                     // Append data block to another
                     FLAT_ENGINE_API void appendTo(int i1, int i2);
+
+                    FLAT_ENGINE_API std::unique_ptr<fe::serializerID::dataBlock> &getDataBlock(int index);
 
                     FLAT_ENGINE_API ~serializerID();
             };
@@ -332,11 +334,13 @@ namespace fe
             }
 
         template<typename T, typename ...Args>
-        bool serializerID::deserializeBlock(const char *blockID, const char *id, T &newValue, Args &&...args)
+        int serializerID::deserializeBlock(const char *blockID, const char *id, T &newValue, Args &&...args)
             {
                 dataBlock *selectedBlock = nullptr;
+                int index = 0;
                 for (auto &datBlock : m_data)
                     {
+                        ++index;
                         selectedBlock = getDataBlock(datBlock.get(), blockID);
                         if (selectedBlock) break;
                     }
@@ -345,9 +349,8 @@ namespace fe
                     {
                         selectedBlock->m_read = true;
                         deserialize(*selectedBlock, id, newValue, args...);
-                        return true;
                     }
-                return false;
+                return index - 1;
             }
 
         template<typename T, typename ...Args>
@@ -409,9 +412,9 @@ virtual bool deserialize##name(fe::serializerID &serial, std::vector<std::unique
 virtual void serialize##name(fe::serializerID &serial, fe::serializerID::dataBlock &block, const char *blockID) const { serial.serializeChildBlock(block, blockID, __VA_ARGS__); onSave(serial); }\
 virtual bool deserialize##name(fe::serializerID &serial, std::unique_ptr<fe::serializerID::dataBlock> &block) { bool ret = serial.deserializeBlock(block, __VA_ARGS__); onLoad(serial); return ret; }
 
-#define SERIALIZE_PARENT_ID(parentSerialize, ...)\
+#define SERIALIZE_PARENT_ID(parentSerialize, parentDeserialize, ...)\
 virtual int serialize(fe::serializerID &serial) const { auto ret = serial.serializeBlock(__VA_ARGS__); auto b = parentSerialize(serial); serial.appendTo(ret, b); return ret; }\
-virtual bool deserialize(fe::serializerID &serial) { return serial.deserializeBlock(__VA_ARGS__); }\
+virtual bool deserialize(fe::serializerID &serial) { auto ret = serial.deserializeBlock(__VA_ARGS__); parentDeserialize(serial, serial.getDataBlock(ret)); return ret; }\
 virtual void serialize(fe::serializerID &serial, fe::serializerID::dataBlock &block) const { serial.serializeBlock(block, __VA_ARGS__);  }\
 virtual bool deserialize(fe::serializerID &serial, std::vector<std::unique_ptr<fe::serializerID::dataBlock>> &blocks) { return serial.deserializeBlock(blocks, __VA_ARGS__); }\
 virtual void serialize(fe::serializerID &serial, fe::serializerID::dataBlock &block, const char *blockID) const { serial.serializeChildBlock(block, blockID, __VA_ARGS__);  }\

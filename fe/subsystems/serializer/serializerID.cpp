@@ -383,6 +383,11 @@ void fe::serializerID::appendTo(int i1, int i2)
             }
     }
 
+std::unique_ptr<fe::serializerID::dataBlock> &fe::serializerID::getDataBlock(int index)
+    {
+        return m_data[index];
+    }
+
 fe::serializerID::~serializerID()
     {
         for (auto &uPtr : m_data)
