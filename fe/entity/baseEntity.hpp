@@ -13,6 +13,7 @@
 #include "../subsystems/graphic/renderObject/sceneGraph.hpp"
 #include "../subsystems/physics/physicsEngine.hpp"
 #include "../objectManagement/guid.hpp"
+#include "../subsystems/serializer/serializerID.hpp"
 #include <SFML/Graphics/Color.hpp>
 
 namespace fe
@@ -49,6 +50,7 @@ namespace fe
                     fe::collider *m_collisionBody;
 
                     fe::entityModules m_enabledModulesEnum;
+                    std::int16_t m_enabledModulesNum;
 
                     fe::Handle m_handle;
 
@@ -109,6 +111,17 @@ namespace fe
                     FLAT_ENGINE_API fe::sceneGraphObject *getRenderObject() const;
                     FLAT_ENGINE_API fe::rigidBody *getRigidBody() const;
                     FLAT_ENGINE_API fe::collider *getCollider() const;
+
+                    SERIALIZE_ID("defaultVars",
+                        "modules", m_enabledModulesNum,
+                        "handle", m_handle,
+                        "posX", m_positionX,
+                        "posY", m_positionY,
+                        "sizeX", m_sizeX,
+                        "sizeY", m_sizeY,
+                        "enabled", m_enabled,
+                        "moved", m_moved,
+                        "static", m_static);
 
             };
 

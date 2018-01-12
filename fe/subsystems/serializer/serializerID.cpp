@@ -362,6 +362,27 @@ bool fe::serializerID::objectExists(const char *id)
         return false;
     }
 
+void fe::serializerID::appendTo(int i1, int i2)
+    {
+        auto &base = m_data[i1];
+        auto &data = m_data[i2];
+
+        // Merge the two data sets. This works because of how this is called. We assume that i2 is the parent to the i1 object and thus the data is shared
+        base->m_mappedData.merge(data->m_mappedData);
+        base->m_mappedListPrimitiveData.merge(data->m_mappedListPrimitiveData);
+        base->m_mappedObjectData.merge(data->m_mappedObjectData);
+        base->m_mappedListObjectData.merge(data->m_mappedListObjectData);
+
+        for (auto &it = m_data.begin(); it != m_data.end(); ++it)
+            {
+                if (&(*it) == (&data))
+                    {
+                        m_data.erase(it);
+                        break;
+                    }
+            }
+    }
+
 fe::serializerID::~serializerID()
     {
         for (auto &uPtr : m_data)

@@ -30,10 +30,10 @@ void fe::tileMap::onRemove(fe::imp::tileWorld *object, fe::Handle objectHandle)
         fe::engine::get().getCollisionWorld().deleteCollider(object->colliderPtr);
     }
 
-void fe::tileMap::onSave() const
+void fe::tileMap::onSave(fe::serializerID &serial) const
     {}
 
-void fe::tileMap::onLoad()
+void fe::tileMap::onLoad(fe::serializerID &serial)
     {
         loadFabrications(m_fabricationFilepath);
         addGlobalTexture(m_textureName);

@@ -20,7 +20,8 @@ fe::baseEntity::baseEntity(fe::entityModules modules, bool staticObject) :
     m_sizeX(0.f),
     m_sizeY(0.f),
     m_colour(sf::Color::White),
-    m_enabledModulesEnum(modules)
+    m_enabledModulesEnum(modules),
+    m_enabledModulesNum(static_cast<std::int16_t>(modules))
 {}
 
 void fe::baseEntity::deinitialize(fe::gameWorld &world)

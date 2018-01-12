@@ -56,5 +56,4 @@ namespace fe
             {
                 static const bool value = true;
             };
-
     }

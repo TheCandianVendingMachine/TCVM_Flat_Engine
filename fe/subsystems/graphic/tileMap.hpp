@@ -66,8 +66,8 @@ namespace fe
                     FLAT_ENGINE_API void onAdd(fe::imp::tileWorld *object, fe::Handle objectHandle);
                     FLAT_ENGINE_API void onRemove(fe::imp::tileWorld *object, fe::Handle objectHandle);
 
-                    FLAT_ENGINE_API void onSave() const;
-                    FLAT_ENGINE_API void onLoad();
+                    FLAT_ENGINE_API void onSave(fe::serializerID &serial) const;
+                    FLAT_ENGINE_API void onLoad(fe::serializerID &serial);
 
                 public:
                     FLAT_ENGINE_API tileMap();
@@ -91,7 +91,7 @@ namespace fe
 
                     FLAT_ENGINE_API void draw(sf::RenderTarget &target, sf::RenderStates states);
 
-                    SERIALIZE_CALLBACK_ID(onSave(), onLoad(), "tilemap", "tiles", m_objects, "textureName", m_textureName, "fabricationsPath", m_fabricationFilepath);
+                    SERIALIZE_CALLBACK_ID(onSave, onLoad, "tilemap", "tiles", m_objects, "textureName", m_textureName, "fabricationsPath", m_fabricationFilepath);
                     SERIALIZE_NAME_ID(Fabrications, "tilemap", "fabrications", m_fabrications);
 
                     FLAT_ENGINE_API void loadFabrications(const char *filepath);
