@@ -20,10 +20,13 @@ namespace fe
 
                     fe::Vector2d m_position;
                     fe::Vector2d m_size;
+                    fe::Vector2d m_sizeBeforeZoom;
 
                     fe::Vector2d m_acceleration;
                     fe::Vector2d m_velocity;
                     float m_maxSpeed;
+
+                    int m_zoom;
 
                     float m_slowdownDistance;
                     fe::Vector2d m_targetPosition;
@@ -56,12 +59,16 @@ namespace fe
                     FLAT_ENGINE_API void move(const fe::Vector2d position);
                     FLAT_ENGINE_API void move(float x, float y);
 
+                    FLAT_ENGINE_API void setZoom(int zoom);
+                    FLAT_ENGINE_API void zoom(int zoom);
+
                     FLAT_ENGINE_API fe::Vector2d getSize() const;
                     FLAT_ENGINE_API fe::Vector2d getPosition() const;
                     FLAT_ENGINE_API fe::Vector2d getAcceleration() const;
                     FLAT_ENGINE_API fe::Vector2d getVelocity() const;
                     FLAT_ENGINE_API float getMaxSpeed() const;
                     FLAT_ENGINE_API float getSlowdownDistance() const;
+                    FLAT_ENGINE_API int getZoom() const;
 
                     FLAT_ENGINE_API void updateCamera(float dt);
                     FLAT_ENGINE_API const sf::View &getView();

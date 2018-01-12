@@ -25,12 +25,12 @@ namespace fe
                     #if FE_PROFILE_RELEASE || _DEBUG
                         m_profile = false;
                         m_profileToLogger = profileLogger;
+                        strcpy(m_nameStr, name);
+                        strcpy(m_groupStr, group);
                         if (m_profileToLogger)
                             {
                                 if (fe::profilerLogger::get().wantProfile(FE_STR(group)))
                                     {
-                                        strcpy(m_nameStr, name);
-                                        strcpy(m_groupStr, group);
 			                            m_startTime = fe::clock::getTimeSinceEpoch();
                                         m_profile = true;
                                     }
@@ -56,7 +56,7 @@ namespace fe
                                 m_endTime = fe::clock::getTimeSinceEpoch();
                                 fe::time runtime = m_endTime - m_startTime;
                                 int i = 0;
-                                //FE_LOG_DEBUG(runtime.asMicroseconds());
+                                FE_LOG_DEBUG(m_groupStr, m_nameStr, "Microseconds: ", runtime.asMicroseconds(), "Milliseconds: ", runtime.asMilliseconds(), "Seconds: ", runtime.asSeconds());
                             }
                     #endif
 		            }
@@ -64,6 +64,7 @@ namespace fe
     }
 
 #define FE_PROFILE(group, name) { fe::profiler t(group, name, true);
+#define FE_PROFILE_NO_LOG(group, name) { fe::profiler t(group, name, false);
 #define FE_END_PROFILE }
 
 #if FE_PROFILE_ENGINE

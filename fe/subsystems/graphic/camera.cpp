@@ -10,7 +10,9 @@ fe::camera::camera() :
     m_maxSpeed(std::numeric_limits<float>::max()),
     m_slowdownDistance(0.f),
     m_targetPosition(0.f, 0.f),
-    m_targeted(false)
+    m_targeted(false),
+    m_sizeBeforeZoom(0.f, 0.f),
+    m_zoom(1)
     {
     }
 
@@ -23,6 +25,9 @@ void fe::camera::setSize(float x, float y)
     {
         m_size.x = x;
         m_size.y = y;
+        m_sizeBeforeZoom.x = x;
+        m_sizeBeforeZoom.y = y;
+        m_view.setSize({ (float)m_size.x, (float)m_size.y });
     }
 
 void fe::camera::setPosition(const fe::Vector2d position)
@@ -100,6 +105,21 @@ void fe::camera::move(float x, float y)
         setPosition(m_position.x + x, m_position.y + y);
     }
 
+void fe::camera::setZoom(int zoom)
+    {
+        float zoomFactor = ((float)(zoom + 100) / 100.f);
+        if (zoomFactor <= 0) return;
+        m_view.setSize(m_sizeBeforeZoom.convertToSfVec2() * zoomFactor);
+        m_zoom = zoom;
+        m_size.x = m_size.x * zoomFactor;
+        m_size.y = m_size.y * zoomFactor;
+    }
+
+void fe::camera::zoom(int zoom)
+    {
+        setZoom(getZoom() + zoom);
+    }
+
 fe::Vector2d fe::camera::getSize() const
     {
         return m_size;
@@ -128,6 +148,11 @@ float fe::camera::getMaxSpeed() const
 float fe::camera::getSlowdownDistance() const
     {
         return m_slowdownDistance;
+    }
+
+int fe::camera::getZoom() const
+    {
+        return m_zoom;
     }
 
 void fe::camera::updateCamera(float dt)
@@ -159,11 +184,8 @@ void fe::camera::updateCamera(float dt)
         move(m_velocity * dt);
 
         fe::Vector2<int> cameraPos = m_position;
-        fe::Vector2<int> cameraSize = m_size;
-
         m_view.setCenter({ (float)cameraPos.x, (float)cameraPos.y });
-        m_view.setSize({ (float)cameraSize.x, (float)cameraSize.y });
-
+        
         m_acceleration = fe::Vector2d();
     }
 
@@ -185,6 +207,7 @@ fe::camera &fe::camera::operator=(const fe::camera &rhs)
                 m_slowdownDistance = rhs.m_slowdownDistance;
                 m_targetPosition = rhs.m_targetPosition;
                 m_targeted = rhs.m_targeted;
+                m_sizeBeforeZoom = rhs.m_sizeBeforeZoom;
             }
 
         return *this;

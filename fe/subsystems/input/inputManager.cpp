@@ -78,15 +78,17 @@ void fe::inputManager::setActive(fe::input *input, bool keyIsGood, bool active)
             Truth Table:
             ________________________________________
             | keyIsGood | active | frozen | result |
-            | 0         | 0      | 0      | 0      |
-            | 0         | 0      | 1      | 1      |
-            | 0         | 1      | 0      | 0      |
-            | 0         | 1      | 1      | 1      |
-            | 1         | 0      | 0      | 0      |
-            | 1         | 0      | 1      | 0      |
-            | 1         | 1      | 0      | 1      |
-            | 1         | 1      | 1      | 1      |
+            | 0         | 0      | 0      | 0      | -> (!keyIsGood & frozen)
+            | 0         | 0      | 1      | 1      | -> (!keyIsgood & frozen)
+            | 0         | 1      | 0      | 0      | -> (!keyIsGood & frozen)
+            | 0         | 1      | 1      | 1      | -> (!keyIsGood & frozen)
+            | 1         | 0      | 0      | 0      | -> (keyIsGood & active)
+            | 1         | 0      | 1      | 0      | -> (keyIsGood & active)
+            | 1         | 1      | 0      | 1      | -> (keyIsGood & active)
+            | 1         | 1      | 1      | 1      | -> (keyIsGood & active)
             ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
+            Therefore: (!keyIsGood & frozen) || (keyIsGood & active)
+            (!active) because of the inverse needed to determine frozen from active
         */
         input->m_frozen = (!keyIsGood & input->m_frozen) || (keyIsGood & !active);
     }
