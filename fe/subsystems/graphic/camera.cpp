@@ -80,6 +80,16 @@ void fe::camera::moveToPosition(float x, float y)
         m_targeted = true;
     }
 
+void fe::camera::accelerate(const fe::Vector2d acceleration)
+    {
+        accelerate(acceleration.x, acceleration.y);
+    }
+
+void fe::camera::accelerate(float x, float y)
+    {
+        setAcceleration(getAcceleration().x + x, getAcceleration().y + y);
+    }
+
 void fe::camera::move(const fe::Vector2d position)
     {
         move(position.x, position.y);

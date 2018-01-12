@@ -1,4 +1,4 @@
-#include "inputManager.hpp"
+﻿#include "inputManager.hpp"
 #include "../../debug/logger.hpp"
 
 #include <SFML/Window/Keyboard.hpp>
@@ -6,6 +6,90 @@
 #include <algorithm>
 
 fe::inputManager *fe::inputManager::m_instance = nullptr;
+
+bool fe::inputManager::correctInputEvent(sf::Keyboard::Key key, const sf::Event &event)
+    {
+        return event.key.code == key;
+    }
+
+bool fe::inputManager::correctInputEvent(sf::Mouse::Button button, const sf::Event &event)
+    {
+        return event.mouseButton.button == button;
+    }
+
+bool fe::inputManager::correctInputEvent(sf::Mouse::Wheel wheel, const sf::Event &event)
+    {
+        return true;
+    }
+
+bool fe::inputManager::correctInputEvent(sf::Keyboard::Key key)
+    {
+        return sf::Keyboard::isKeyPressed(key);
+    }
+
+bool fe::inputManager::correctInputEvent(sf::Mouse::Button button)
+    {
+        return sf::Mouse::isButtonPressed(button);
+    }
+
+sf::Event::EventType fe::inputManager::getEvent(input *input, sf::Keyboard::Key key)
+    {
+        if (input->m_realTime)
+            {
+                return sf::Event::EventType::Count;
+            }
+
+        if (input->m_inverse)
+            {
+                return sf::Event::EventType::KeyReleased;
+            }
+
+        return sf::Event::EventType::KeyPressed;
+    }
+
+sf::Event::EventType fe::inputManager::getEvent(input *input, sf::Mouse::Button button)
+    {
+        if (input->m_realTime)
+            {
+                return sf::Event::EventType::Count;
+            }
+
+        if (input->m_inverse)
+            {
+                return sf::Event::EventType::MouseButtonReleased;
+            }
+
+        return sf::Event::EventType::MouseButtonPressed;
+    }
+
+sf::Event::EventType fe::inputManager::getEvent(input *input, sf::Mouse::Wheel wheel)
+    {
+        if (input->m_realTime)
+            {
+                return sf::Event::EventType::Count;
+            }
+
+        return sf::Event::EventType::MouseWheelScrolled;
+    }
+
+void fe::inputManager::setActive(fe::input *input, bool keyIsGood, bool active)
+    {
+        /*
+            Truth Table:
+            ________________________________________
+            | keyIsGood | active | frozen | result |
+            | 0         | 0      | 0      | 0      |
+            | 0         | 0      | 1      | 1      |
+            | 0         | 1      | 0      | 0      |
+            | 0         | 1      | 1      | 1      |
+            | 1         | 0      | 0      | 0      |
+            | 1         | 0      | 1      | 0      |
+            | 1         | 1      | 0      | 1      |
+            | 1         | 1      | 1      | 1      |
+            ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
+        */
+        input->m_frozen = (!keyIsGood & input->m_frozen) || (keyIsGood & !active);
+    }
 
 void fe::inputManager::startUp()
     {
@@ -16,60 +100,39 @@ void fe::inputManager::startUp()
     }
 
 void fe::inputManager::shutDown()
-    {
-        m_keyboardInputs.clear();
-        m_mouseInputs.clear();
-    }
+    {}
 
 void fe::inputManager::preUpdate()
     {
-        for (auto &input : m_keyboardInputs)
-            {
-                input.second.erase(std::remove_if(input.second.begin(), input.second.end(), [this](Handle handle) { return !handleActive(handle); } ), input.second.end());
-            }
-
-        for (auto &input : m_mouseInputs)
-            {
-                input.second.erase(std::remove_if(input.second.begin(), input.second.end(), [this](Handle handle) { return !handleActive(handle); }), input.second.end());
-            }
+        
     }
 
 void fe::inputManager::handleEvents(const sf::Event &event)
     {
-        for (auto &inputData : m_keyboardInputs)
+        for (auto &inputHandle : m_eventInputs[event.type])
             {
-                if (event.key.code == inputData.first)
+                auto input = getObject(inputHandle);
+                if (!input->m_frozen)
                     {
-                        for (auto &data : inputData.second)
+                        bool correctKey = false;
+                        switch (input->m_alias.m_inputType)
                             {
-                                auto input = getObject(data);
-                                if (input && !input->m_realTime && !input->m_frozen)
-                                    {
-                                        if ((!input->m_inverse && event.type == sf::Event::KeyPressed) ||
-                                            (input->m_inverse && event.type == sf::Event::KeyReleased))
-                                            {
-                                                input->m_callback();
-                                            }
-                                    }
+                                case fe::imp::inputAlias::KEY:
+                                    correctKey = correctInputEvent(input->m_alias.m_input.m_key, event);
+                                    break;
+                                case fe::imp::inputAlias::BUTTON:
+                                    correctKey = correctInputEvent(input->m_alias.m_input.m_button, event);
+                                    break;
+                                case fe::imp::inputAlias::WHEEL:
+                                    correctKey = correctInputEvent(input->m_alias.m_input.m_wheel, event);
+                                    break;
+                                default:
+                                    break;
                             }
-                    }
-            }
 
-        for (auto &inputData : m_mouseInputs)
-            {
-                if (event.mouseButton.button == inputData.first)
-                    {
-                        for (auto &data : inputData.second)
+                        if (correctKey) 
                             {
-                                auto input = getObject(data);
-                                if (input && !input->m_realTime && !input->m_frozen)
-                                    {
-                                        if ((!input->m_inverse && event.type == sf::Event::MouseButtonPressed) || 
-                                            (input->m_inverse && event.type == sf::Event::MouseButtonReleased))
-                                            {
-                                                input->m_callback();
-                                            }
-                                    }
+                                input->m_callback(event);
                             }
                     }
             }
@@ -77,38 +140,27 @@ void fe::inputManager::handleEvents(const sf::Event &event)
 
 void fe::inputManager::handleKeyPress()
     {
-        for (auto &inputData : m_keyboardInputs)
+        for (auto &inputHandle : m_realtimeInputs)
             {
-                if (sf::Keyboard::isKeyPressed(inputData.first))
+                auto input = getObject(inputHandle);
+                if (!input->m_frozen)
                     {
-                        for (auto &data : inputData.second)
+                        bool correctKey = false;
+                        switch (input->m_alias.m_inputType)
                             {
-                                auto input = getObject(data);
-                                if (input)
-                                    {
-                                        if (input->m_realTime && !input->m_frozen)
-                                            {
-                                                input->m_callback();
-                                            }
-                                    }
+                                case fe::imp::inputAlias::KEY:
+                                    correctKey = correctInputEvent(input->m_alias.m_input.m_key);
+                                    break;
+                                case fe::imp::inputAlias::BUTTON:
+                                    correctKey = correctInputEvent(input->m_alias.m_input.m_button);
+                                    break;
+                                default:
+                                    break;
                             }
-                    }
-            }
 
-        for (auto &inputData : m_mouseInputs)
-            {
-                if (sf::Mouse::isButtonPressed(inputData.first))
-                    {
-                        for (auto &data : inputData.second)
+                        if (correctKey) 
                             {
-                                auto input = getObject(data);
-                                if (input)
-                                    {
-                                        if (input->m_realTime && !input->m_frozen)
-                                            {
-                                                input->m_callback();
-                                            }
-                                    }
+                                input->m_callback(sf::Event());
                             }
                     }
             }
@@ -122,32 +174,119 @@ fe::inputManager &fe::inputManager::get()
 fe::Handle fe::inputManager::add(sf::Keyboard::Key key, input data)
     {
         auto handle = addObject(new input(data));
-        m_keyboardInputs[key].push_back(handle);
-
+        getObject(handle)->m_alias = imp::inputAlias(key);
+        auto event = getEvent(getObject(handle), key);
+        if (event != sf::Event::Count)
+            {
+                m_eventInputs[event].push_back(handle);
+            }
+        else
+            {
+                m_realtimeInputs.push_back(handle);
+            }
         return handle;
     }
 
-fe::Handle fe::inputManager::add(sf::Mouse::Button key, input data)
+fe::Handle fe::inputManager::add(sf::Mouse::Button button, input data)
     {
         auto handle = addObject(new input(data));
-        m_mouseInputs[key].push_back(handle);
+        getObject(handle)->m_alias = imp::inputAlias(button);
+        auto event = getEvent(getObject(handle), button);
+        if (event != sf::Event::Count)
+            {
+                m_eventInputs[event].push_back(handle);
+            }
+        else
+            {
+                m_realtimeInputs.push_back(handle);
+            }
+        return handle;
+    }
 
+fe::Handle fe::inputManager::add(sf::Mouse::Wheel wheel, input data)
+    {
+        auto handle = addObject(new input(data));
+        getObject(handle)->m_alias = imp::inputAlias(wheel);
+        auto event = getEvent(getObject(handle), wheel);
+        if (event != sf::Event::Count)
+            {
+                m_eventInputs[event].push_back(handle);
+            }
+        else
+            {
+                m_realtimeInputs.push_back(handle);
+            }
         return handle;
     }
 
 void fe::inputManager::setActive(sf::Keyboard::Key key, bool active)
     {
-        for (auto &input : m_keyboardInputs[key])
+        for (auto &inputHandle : m_realtimeInputs)
             {
-                setActive(input, active);
+                auto input = getObject(inputHandle);
+                switch (input->m_alias.m_inputType)
+                    {
+                        case fe::imp::inputAlias::KEY:
+                            setActive(input, input->m_alias.m_input.m_key == key, active);
+                            break;
+                        default:
+                            break;
+                    }
+            }
+
+        for (auto &inputHandle : m_eventInputs[sf::Event::KeyPressed])
+            {
+                auto input = getObject(inputHandle);
+                setActive(input, input->m_alias.m_input.m_key == key, active);
+            }
+
+        for (auto &inputHandle : m_eventInputs[sf::Event::KeyReleased])
+            {
+                auto input = getObject(inputHandle);
+                setActive(input, input->m_alias.m_input.m_key == key, active);
             }
     }
 
-void fe::inputManager::setActive(sf::Mouse::Button key, bool active)
+void fe::inputManager::setActive(sf::Mouse::Button button, bool active)
     {
-        for (auto &input : m_mouseInputs[key])
+        for (auto &inputHandle : m_realtimeInputs)
             {
-                setActive(input, active);
+                auto input = getObject(inputHandle);
+                switch (input->m_alias.m_inputType)
+                    {
+                        case fe::imp::inputAlias::BUTTON:
+                            setActive(input, input->m_alias.m_input.m_button == button, active);
+                            break;
+                        default:
+                            break;
+                    }
+            }
+
+        for (auto &inputHandle : m_eventInputs[sf::Event::MouseButtonPressed])
+            {
+                auto input = getObject(inputHandle);
+                setActive(input, input->m_alias.m_input.m_button == button, active);
+            }
+
+        for (auto &inputHandle : m_eventInputs[sf::Event::MouseButtonReleased])
+            {
+                auto input = getObject(inputHandle);
+                setActive(input, input->m_alias.m_input.m_button == button, active);
+            }
+    }
+
+void fe::inputManager::setActive(sf::Mouse::Wheel wheel, bool active)
+    {
+        for (auto &inputHandle : m_eventInputs[sf::Event::MouseWheelMoved])
+            {
+                auto input = getObject(inputHandle);
+                setActive(input, input->m_alias.m_input.m_wheel == wheel, active);
+            }
+
+        for (auto &inputHandle : m_eventInputs[sf::Event::EventType::MouseWheelScrolled])
+            {
+                auto input = getObject(inputHandle);
+                setActive(input, input->m_alias.m_input.m_wheel == wheel, active);
             }
     }
 

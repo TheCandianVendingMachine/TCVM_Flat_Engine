@@ -50,6 +50,9 @@ namespace fe
                     FLAT_ENGINE_API void moveToPosition(const fe::Vector2d position);
                     FLAT_ENGINE_API void moveToPosition(float x, float y);
 
+                    FLAT_ENGINE_API void accelerate(const fe::Vector2d acceleration);
+                    FLAT_ENGINE_API void accelerate(float x, float y);
+
                     FLAT_ENGINE_API void move(const fe::Vector2d position);
                     FLAT_ENGINE_API void move(float x, float y);
 
