@@ -68,6 +68,17 @@ namespace fe
 
                     friend class gameWorld;
 
+                    SERIALIZE_ID("defaultVars",
+                        "modules", m_enabledModulesNum,
+                        "handle", m_handle,
+                        "posX", m_positionX,
+                        "posY", m_positionY,
+                        "sizeX", m_sizeX,
+                        "sizeY", m_sizeY,
+                        "enabled", m_enabled,
+                        "moved", m_moved,
+                        "static", m_static);
+
                 public:
                     FLAT_ENGINE_API baseEntity(fe::entityModules modules, bool staticObject);
                     template<typename ...Args>
@@ -111,17 +122,6 @@ namespace fe
                     FLAT_ENGINE_API fe::sceneGraphObject *getRenderObject() const;
                     FLAT_ENGINE_API fe::rigidBody *getRigidBody() const;
                     FLAT_ENGINE_API fe::collider *getCollider() const;
-
-                    SERIALIZE_ID("defaultVars",
-                        "modules", m_enabledModulesNum,
-                        "handle", m_handle,
-                        "posX", m_positionX,
-                        "posY", m_positionY,
-                        "sizeX", m_sizeX,
-                        "sizeY", m_sizeY,
-                        "enabled", m_enabled,
-                        "moved", m_moved,
-                        "static", m_static);
 
             };
 

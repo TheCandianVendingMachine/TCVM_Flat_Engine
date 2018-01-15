@@ -189,7 +189,7 @@ void fe::camera::updateCamera(float dt)
         m_acceleration = fe::Vector2d();
     }
 
-const sf::View &fe::camera::getView()
+const sf::View &fe::camera::getView() const
     {
         return m_view;
     }

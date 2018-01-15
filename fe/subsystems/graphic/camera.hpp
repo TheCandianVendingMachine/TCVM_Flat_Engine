@@ -71,7 +71,7 @@ namespace fe
                     FLAT_ENGINE_API int getZoom() const;
 
                     FLAT_ENGINE_API void updateCamera(float dt);
-                    FLAT_ENGINE_API const sf::View &getView();
+                    FLAT_ENGINE_API const sf::View &getView() const;
 
                     FLAT_ENGINE_API camera &operator=(const camera &rhs);
             };

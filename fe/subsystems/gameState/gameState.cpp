@@ -105,11 +105,15 @@ void fe::baseGameState::draw(sf::RenderTarget &app)
         drawExtra(app);
         FE_END_PROFILE
 
-        FE_ENGINE_PROFILE("state_gui", "buf1_draw")
+        FE_ENGINE_PROFILE("state_gui", "buf1_draw");
+        // Switch view to default engine view to allow drawing of gui in absolute terms. Near invisible for speed
+        sf::View currentView = app.getView();
+        app.setView(fe::engine::get().getDefaultCamera().getView());
         for (auto &panel : m_guiPanels)
             {
                 panel->draw(app);
             }
+        app.setView(currentView);
         FE_END_PROFILE
     }
 
