@@ -1,5 +1,5 @@
 // renderer.hpp
-// A wrapper for rendering content with sf::RenderWindow. Takes in a sf::Drawable and a fe::Transformable, modifies the position and draws it
+// A wrapper for rendering content with sf::RenderWindow. Takes in a sf::Drawable and draws
 #pragma once
 #define FLAT_ENGINE_EXPORT
 #include "../../flatEngineExport.hpp"
@@ -40,7 +40,7 @@ namespace fe
                     FLAT_ENGINE_API void draw(const sf::Drawable &draw);
 
                     FLAT_ENGINE_API sf::RenderWindow &getRenderWindow() const;
-					FLAT_ENGINE_API fe::Vector2d getWindowSize();
+					FLAT_ENGINE_API fe::Vector2<unsigned int> getWindowSize();
 
                     FLAT_ENGINE_API virtual ~renderer();
             };

@@ -18,7 +18,9 @@ void fe::aabbTree::debugDrawAABB(int node)
             }
 
         fe::AABB &currentNodeAABB = m_nodes[node].m_fatAABB;
-        FE_DEBUG_DRAW_SQUARE(currentNodeAABB.m_sizeX, currentNodeAABB.m_sizeY, currentNodeAABB.m_globalPositionX, currentNodeAABB.m_globalPositionY, sf::Color::Red);
+        FE_DEBUG_DRAW_SQUARE(   static_cast<int>(std::ceilf(currentNodeAABB.m_sizeX)), static_cast<int>(std::ceilf(currentNodeAABB.m_sizeY)),
+                                static_cast<int>(std::ceilf(currentNodeAABB.m_globalPositionX)), static_cast<int>(std::ceilf(currentNodeAABB.m_globalPositionY)),
+                                sf::Color::Red);
     }
 
 void fe::aabbTree::freeNode(int node)
@@ -412,7 +414,7 @@ void fe::aabbTree::add(fe::collider *collider)
         FE_ENGINE_PROFILE("aabb_tree", "add_collider");
         int colliderId = allocateNode();
         m_nodes[colliderId].m_userData = collider;
-        collider->m_userData = (void*)colliderId;
+        collider->m_userData = (void*)(colliderId);
         m_nodes[colliderId].m_height = 0;
         
         treeNode *currentNode = &m_nodes[colliderId];
@@ -429,7 +431,7 @@ void fe::aabbTree::remove(fe::collider *collider)
     {
         if (!collider) return;
         FE_PROFILE("aabb_tree", "remove_collider");
-        remove((int)collider->m_userData);
+        remove(int(collider->m_userData));
         collider->m_userData = nullptr;
         FE_END_PROFILE;
     }
@@ -439,7 +441,7 @@ void fe::aabbTree::update(fe::collider *collider)
         if (!collider->m_enabled) return;
 
         FE_PROFILE("aabb_tree", "update_collider");
-        int nodeIndex = (int)collider->m_userData;
+        int nodeIndex = int(collider->m_userData);
         if (!m_nodes[nodeIndex].m_fatAABB.contains(collider->m_aabb))
             {
                 remove(nodeIndex);

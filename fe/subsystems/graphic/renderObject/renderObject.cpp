@@ -51,7 +51,7 @@ void fe::renderText::computeVerticies()
         m_update = false;
 
         float x = 0.f;
-        float y = m_fontData.m_charSize;
+        float y = static_cast<float>(m_fontData.m_charSize);
 
         unsigned int index = 0;
 
@@ -63,15 +63,15 @@ void fe::renderText::computeVerticies()
                 const sf::Glyph &posGlyh = m_fontData.m_font->getGlyph(curChar, m_fontSize, 0.f);
                 x += m_fontData.m_font->getKerning(prevChar, curChar, m_fontSize);
 
-                m_verticies[index + 0] = std::ceil(x + posGlyh.bounds.left);
-                m_verticies[index + 1] = std::ceil(y + posGlyh.bounds.top);
-                m_verticies[index + 2] = std::ceil(posGlyh.bounds.width);
-                m_verticies[index + 3] = std::ceil(posGlyh.bounds.height);
+                m_verticies[index + 0] = std::ceilf(x + posGlyh.bounds.left);
+                m_verticies[index + 1] = std::ceilf(y + posGlyh.bounds.top);
+                m_verticies[index + 2] = std::ceilf(posGlyh.bounds.width);
+                m_verticies[index + 3] = std::ceilf(posGlyh.bounds.height);
 
-                m_charTexCoords[index + 0] = std::ceil(m_fontData.m_positions[curChar - FE_CHAR_START].x);
-                m_charTexCoords[index + 1] = std::ceil(m_fontData.m_positions[curChar - FE_CHAR_START].y);
-                m_charTexCoords[index + 2] = std::ceil(glyph.textureRect.width);
-                m_charTexCoords[index + 3] = std::ceil(glyph.textureRect.height);
+                m_charTexCoords[index + 0] = std::ceilf(static_cast<float>(m_fontData.m_positions[curChar - FE_CHAR_START].x));
+                m_charTexCoords[index + 1] = std::ceilf(static_cast<float>(m_fontData.m_positions[curChar - FE_CHAR_START].y));
+                m_charTexCoords[index + 2] = std::ceilf(static_cast<float>(glyph.textureRect.width));
+                m_charTexCoords[index + 3] = std::ceilf(static_cast<float>(glyph.textureRect.height));
 
                 x += posGlyh.advance;
                 prevChar = curChar;
@@ -83,6 +83,6 @@ void fe::renderText::computeVerticies()
 
 void fe::renderText::setSize(float x, float y)
     {
-        m_fontSize = (y * (72.f / 96.f));
+        m_fontSize = static_cast<unsigned int>(std::ceilf((y * (72.f / 96.f))));
         m_update = true;
     }

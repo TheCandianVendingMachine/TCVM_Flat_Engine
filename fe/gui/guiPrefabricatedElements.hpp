@@ -27,10 +27,10 @@ namespace fe
 
                 struct colour
                     {
-                        float r = 200;   // default panel colour
-                        float g = 150;
-                        float b = 255;
-                        float a = 240;
+                        fe::uInt8 r = 200;   // default panel colour
+                        fe::uInt8 g = 150;
+                        fe::uInt8 b = 255;
+                        fe::uInt8 a = 240;
                         FLAT_ENGINE_API void load(rapidxml::xml_node<> *node);
                     };
 
@@ -87,7 +87,7 @@ namespace fe
                             {
                                 text textAttr;
                                 coord padding;
-                                float textStringSize;
+                                unsigned int textStringSize;
                                 unsigned int maxCharacters;
                                 short options;
                                 void load(rapidxml::xml_node<> *node)

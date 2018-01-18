@@ -50,9 +50,9 @@ template<typename T>
 fe::Handle fe::handleManager<T, 0>::addObject(T object)
     {
         m_objects.push_back(object);
-        m_handles.push_back(handleObject(m_objects.size() - 1));
-        onAdd(&m_objects.back(), m_handles.size() - 1);
-        return m_handles.size() - 1;
+        m_handles.push_back(handleObject(static_cast<fe::Handle>(m_objects.size() - 1)));
+        onAdd(&m_objects.back(), static_cast<fe::Handle>(m_handles.size() - 1));
+        return static_cast<fe::Handle>(m_handles.size() - 1);
     }
 
 template<typename T>

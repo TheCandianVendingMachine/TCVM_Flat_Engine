@@ -144,7 +144,7 @@ void fe::gui::textBox::drawElement(sf::RenderTarget &target, const fe::matrix3d 
         m_drawText.draw(target);
     }
 
-fe::gui::textBox::textBox(fe::Vector2d size, const sf::Font &font, options opt, float textStrSize, unsigned int maxChars, float padX, float padY, const char *text) : 
+fe::gui::textBox::textBox(fe::Vector2d size, const sf::Font &font, options opt, int textStrSize, unsigned int maxChars, float padX, float padY, const char *text) :
     m_drawText(font, ""),
     m_paddingX(padX),
     m_paddingY(padY),
@@ -164,13 +164,13 @@ fe::gui::textBox::textBox(fe::Vector2d size, const sf::Font &font, options opt, 
         m_drawText.setParent(this);
         m_drawText.setPosition({ m_paddingX, m_paddingY });
         
-        if (textStrSize < 0.f) 
+        if (textStrSize < 0) 
             {
                 m_drawText.setPixelSize(size.y - (m_paddingY * 2));
             }
         else
             {
-                m_drawText.setPixelSize(textStrSize);
+                m_drawText.setPixelSize(static_cast<float>(textStrSize));
             }
         m_lastCharPos = { m_paddingX, m_paddingY + font.getLineSpacing(m_drawText.getCharacterSize()) };
         setString(text);
@@ -182,7 +182,7 @@ fe::gui::textBox::textBox(fe::Vector2d size, const sf::Font &font, options opt, 
         setInactiveColour(sf::Color(255, 255, 255, 220));
     }
 
-fe::gui::textBox::textBox(fe::Vector2d size, const sf::Font &font, options opt, float textStrSize, unsigned int maxChars, float padX, float padY, const std::string &text) : 
+fe::gui::textBox::textBox(fe::Vector2d size, const sf::Font &font, options opt, int textStrSize, unsigned int maxChars, float padX, float padY, const std::string &text) :
     textBox(size, font, opt, textStrSize, maxChars, padX, padY, text.c_str())
     {}
 

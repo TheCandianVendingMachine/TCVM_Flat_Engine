@@ -148,10 +148,10 @@ void fe::gui::guiElement::setTexture(sf::Texture *texture, fe::Vector2<unsigned 
                 size.y = texture->getSize().y;
             }
 
-        m_shape[0].texCoords = sf::Vector2f(texCoords.convertToSfVec2()) + sf::Vector2f(0,      0);
-        m_shape[1].texCoords = sf::Vector2f(texCoords.convertToSfVec2()) + sf::Vector2f(size.x, 0);
-        m_shape[2].texCoords = sf::Vector2f(texCoords.convertToSfVec2()) + sf::Vector2f(size.x, size.y);
-        m_shape[3].texCoords = sf::Vector2f(texCoords.convertToSfVec2()) + sf::Vector2f(0,      size.y);
+        m_shape[0].texCoords = sf::Vector2f(texCoords.convertToSfVec2()) + sf::Vector2f(0.f,                        0.f);
+        m_shape[1].texCoords = sf::Vector2f(texCoords.convertToSfVec2()) + sf::Vector2f(static_cast<float>(size.x), 0.f);
+        m_shape[2].texCoords = sf::Vector2f(texCoords.convertToSfVec2()) + sf::Vector2f(static_cast<float>(size.x), static_cast<float>(size.y));
+        m_shape[3].texCoords = sf::Vector2f(texCoords.convertToSfVec2()) + sf::Vector2f(0.f,                        static_cast<float>(size.y));
 
         m_size = size;
     }

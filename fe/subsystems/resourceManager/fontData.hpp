@@ -15,6 +15,6 @@ namespace fe
                 fe::Vector2<unsigned int> m_positions[FE_CHAR_END - FE_CHAR_START];
                 const sf::Texture *m_texture = nullptr;
                 const sf::Font *m_font = nullptr; // The font which corresponds to this bitmap
-                float m_charSize = 0.f;
+                unsigned int m_charSize = 0;
             };
     }

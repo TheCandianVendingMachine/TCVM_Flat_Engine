@@ -142,7 +142,7 @@ std::string fe::getFileFromDirectory(const std::string &directory)
 std::string fe::getFileFromDirectory(const char *directory)
     {
         std::string file = "";
-        for (unsigned int i = std::strlen(directory) - 1; i > 0; i--)
+        for (size_t i = std::strlen(directory) - 1; i > 0; i--)
             {
                 if (directory[i] == '\\' || directory[i] == '/')
                     {
@@ -165,7 +165,7 @@ std::string fe::getFileExtension(const std::string &directory)
 std::string fe::getFileExtension(const char *directory)
     {
         std::string extension = "";
-        for (unsigned int i = std::strlen(directory) - 1; i > 0; i--)
+        for (size_t i = std::strlen(directory) - 1; i > 0; i--)
             {
                 if (directory[i] == '.')
                     {

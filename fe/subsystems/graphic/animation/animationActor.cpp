@@ -4,7 +4,7 @@
 
 fe::animationActor::animationActor(sf::VertexArray *verticies) :
     m_verticies(verticies),
-    m_animationFrameSpeed(0.f),
+    m_animationFrameSpeed(0),
     m_currentFrame(0),
     m_endFrame(0),
     m_startFrame(0),
@@ -98,13 +98,13 @@ void fe::animationActor::iterateFrame(int amount)
 
 void fe::animationActor::updateVerticies(fe::Vector2<unsigned int> offset, fe::Vector2<unsigned int> size)
     {
-        (*m_verticies)[0].position = sf::Vector2f(0, 0);
-        (*m_verticies)[1].position = sf::Vector2f(size.x, 0);
-        (*m_verticies)[2].position = sf::Vector2f(size.x, size.y);
-        (*m_verticies)[3].position = sf::Vector2f(0, size.y);
+        (*m_verticies)[0].position = sf::Vector2f(0.f,                                      0.f);
+        (*m_verticies)[1].position = sf::Vector2f(static_cast<float>(size.x),               0.f);
+        (*m_verticies)[2].position = sf::Vector2f(static_cast<float>(size.x),               static_cast<float>(size.y));
+        (*m_verticies)[3].position = sf::Vector2f(0.f,                                      static_cast<float>(size.y));
 
-        (*m_verticies)[0].texCoords = sf::Vector2f(offset.x, offset.y);
-        (*m_verticies)[1].texCoords = sf::Vector2f(offset.x + size.x, offset.y);
-        (*m_verticies)[2].texCoords = sf::Vector2f(offset.x + size.x, offset.y + size.y);
-        (*m_verticies)[3].texCoords = sf::Vector2f(offset.x, offset.y + size.y);
+        (*m_verticies)[0].texCoords = sf::Vector2f(static_cast<float>(offset.x),            static_cast<float>(offset.y));
+        (*m_verticies)[1].texCoords = sf::Vector2f(static_cast<float>(offset.x + size.x),   static_cast<float>(offset.y));
+        (*m_verticies)[2].texCoords = sf::Vector2f(static_cast<float>(offset.x + size.x),   static_cast<float>(offset.y + size.y));
+        (*m_verticies)[3].texCoords = sf::Vector2f(static_cast<float>(offset.x),            static_cast<float>(offset.y + size.y));
     }

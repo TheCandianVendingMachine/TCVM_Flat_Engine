@@ -56,10 +56,10 @@ void fe::gui::panel::setEventOnMinimize(fe::str event)
 
 void fe::gui::panel::setModifiers(int modifiers)
     {
-        m_canMinimize |=(modifiers & panelModifiers::CAN_MINIMIZE);
-        m_canClose |=   (modifiers & panelModifiers::CAN_CLOSE);
-        m_canDrag |=    (modifiers & panelModifiers::CAN_DRAG);
-        m_hasTitle |=   (modifiers & panelModifiers::HAS_TITLE);
+        m_canMinimize |=static_cast<bool>(modifiers & panelModifiers::CAN_MINIMIZE);
+        m_canClose |=   static_cast<bool>(modifiers & panelModifiers::CAN_CLOSE);
+        m_canDrag |=    static_cast<bool>(modifiers & panelModifiers::CAN_DRAG);
+        m_hasTitle |=   static_cast<bool>(modifiers & panelModifiers::HAS_TITLE);
 
         if (m_canMinimize || m_canClose || m_canDrag || m_hasTitle)
             {
@@ -100,7 +100,7 @@ void fe::gui::panel::setTitle(const char *title, const sf::Font &font)
         m_title.setFillColor(sf::Color::Black);
         m_title.setFont(font);
 
-        m_title.setCharacterSize((m_windowOffset - 5.f) * (72.f / 96.f));
+        m_title.setCharacterSize(static_cast<unsigned int>(std::ceilf((m_windowOffset - 5.f) * (72.f / 96.f))));
         m_title.setPosition(5, 5);
 
         m_minSize = fe::Vector2d(30.f * (m_canMinimize + m_canClose), 5.f);
@@ -118,7 +118,7 @@ void fe::gui::panel::setTitle(const char *title)
         m_title.setString(croppedTitle);
         m_title.setFillColor(sf::Color::Black);
 
-        m_title.setCharacterSize((m_windowOffset - 5.f) * (72.f / 96.f));
+        m_title.setCharacterSize(static_cast<unsigned int>(std::ceilf((m_windowOffset - 5.f) * (72.f / 96.f))));
         m_title.setPosition(5, 5);
 
         m_minSize = fe::Vector2d(30.f * (m_canMinimize + m_canClose), 5.f);
@@ -160,10 +160,10 @@ bool fe::gui::panel::isOpen() const
 unsigned int fe::gui::panel::addElement(guiElement *element)
     {
         m_guiElements.emplace_back(element);
-        m_guiHandles.push_back(m_guiElements.size() - 1);
+        m_guiHandles.push_back(static_cast<fe::Handle>(m_guiElements.size() - 1));
         element->setParent(this);
 
-        return m_guiHandles.size() - 1;
+        return unsigned int(m_guiHandles.size() - 1);
     }
 
 fe::gui::guiElement *fe::gui::panel::getElement(unsigned int handle)
@@ -243,20 +243,20 @@ void fe::gui::panel::setSize(fe::Vector2d size)
         eventData.args[1].argType = fe::gameEventArgument::type::TYPE_UINT;
         eventData.args[2].argType = fe::gameEventArgument::type::TYPE_UINT;
         eventData.args[3].argType = fe::gameEventArgument::type::TYPE_UINT;
-        eventData.args[4].argType = fe::gameEventArgument::type::TYPE_UINT;
-        eventData.args[5].argType = fe::gameEventArgument::type::TYPE_UINT;
+        eventData.args[4].argType = fe::gameEventArgument::type::TYPE_FLOAT;
+        eventData.args[5].argType = fe::gameEventArgument::type::TYPE_FLOAT;
 
         eventData.args[0].arg.TYPE_VOIDP = this;
         eventData.args[1].arg.TYPE_UINTEGER = m_panelID;
         eventData.args[2].arg.TYPE_UINTEGER = m_texture.getSize().x;
         eventData.args[3].arg.TYPE_UINTEGER = m_texture.getSize().y;
-        eventData.args[4].arg.TYPE_UINTEGER = size.x;
-        eventData.args[5].arg.TYPE_UINTEGER = size.y;
+        eventData.args[4].arg.TYPE_FLOAT = size.x;
+        eventData.args[5].arg.TYPE_FLOAT = size.y;
 
         size.x = m_minSize.x < size.x ? size.x : m_minSize.x;
         size.y = m_minSize.y < size.y ? size.y : m_minSize.y;
 
-        m_texture.create(size.x, size.y);
+        m_texture.create(static_cast<unsigned int>(std::ceilf(size.x)), static_cast<unsigned int>(std::ceilf(size.y)));
 
         m_window[0].texCoords = fe::Vector2d(0.f, 0.f).convertToSfVec2();
         m_window[1].texCoords = fe::Vector2d(size.x, 0.f).convertToSfVec2();

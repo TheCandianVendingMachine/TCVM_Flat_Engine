@@ -5,7 +5,7 @@
 fe::time fe::clock::m_getCurrentTime()
     {
         auto currentTime = std::chrono::time_point_cast<std::chrono::microseconds>(std::chrono::system_clock::now());
-        return fe::microseconds(currentTime.time_since_epoch().count());
+        return fe::microseconds(static_cast<long double>(currentTime.time_since_epoch().count()));
     }
 
 fe::clock::clock()
@@ -46,7 +46,7 @@ fe::time fe::clock::getTime()
 fe::time fe::clock::getTimeSinceEpoch()
     {
         auto currentTime = std::chrono::time_point_cast<std::chrono::microseconds>(std::chrono::system_clock::now());
-        return fe::microseconds(currentTime.time_since_epoch().count());
+        return fe::microseconds(static_cast<long double>(currentTime.time_since_epoch().count()));
     }
 
 const char *fe::clock::getFormattedTime(const char *format)

@@ -1,5 +1,5 @@
 // animationActor.hpp
-// holds a sf::VertexArray and anything relavent to animation
+// Iterates through the animation. Updates a sf::VertexArray to update the current animation
 #pragma once
 #define FLAT_ENGINE_EXPORT
 #include "../../../flatEngineExport.hpp"

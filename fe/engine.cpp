@@ -40,7 +40,7 @@ void fe::engine::run()
         float frameTime = 0.f;
 
         int framesPassed = 0;
-        int inverseDeltaTime = 1 / m_deltaTime;
+        int inverseDeltaTime = static_cast<int>(1.f / m_deltaTime);
         while (m_renderer.getRenderWindow().isOpen())
             {
                 newTime = updateClock.getTime().asSeconds();
@@ -117,7 +117,7 @@ void fe::engine::update()
         m_gameStateMachine->update(m_collisionWorld);
         FE_END_PROFILE;
 
-        unsigned int iterations = m_accumulator / m_deltaTime;
+        unsigned int iterations = static_cast<unsigned int>(std::ceilf(m_accumulator / m_deltaTime));
         FE_ENGINE_PROFILE("engine", "physics_preupdate");
         m_physicsEngine->preUpdate(m_deltaTime, iterations);
         FE_END_PROFILE;
@@ -296,7 +296,7 @@ fe::time fe::engine::getElapsedTime() const
         return fe::seconds(m_elapsedTime);
     }
 
-const fe::Vector2d fe::engine::getWindowSize() const
+const fe::Vector2<unsigned int> fe::engine::getWindowSize() const
     {
         return m_screenSize;
     }

@@ -34,11 +34,11 @@ namespace fe
 				Vector2(const sf::Vector2<dataType> &copy) : x(copy.x), y(copy.y) {}
 
                 template <typename otherDataType>
-                Vector2(const Vector2<otherDataType> &copy) : x(copy.x), y(copy.y) {}
+                Vector2(const Vector2<otherDataType> &copy) : x(static_cast<dataType>(copy.x)), y(static_cast<dataType>(copy.y)) {}
                 template <typename otherDataType>
-                Vector2(const lightVector2<otherDataType> &copy) : x(copy.x), y(copy.y) {}
+                Vector2(const lightVector2<otherDataType> &copy) : x(static_cast<dataType>(copy.x)), y(static_cast<dataType>(copy.y)) {}
                 template <typename otherDataType>
-                Vector2(const sf::Vector2<otherDataType> &copy) : x(copy.x), y(copy.y) {}
+                Vector2(const sf::Vector2<otherDataType> &copy) : x(static_cast<dataType>(copy.x)), y(static_cast<dataType>(copy.y)) {}
 
                 Vector2 &operator=(const Vector2<dataType> &copy) { if (&copy != this) { x = copy.x; y = copy.y; } return *this; }
                 bool operator==(const Vector2<dataType> &rhs) const { return rhs.x == x && rhs.y == y; }
@@ -50,10 +50,10 @@ namespace fe
                 Vector2<dataType> operator-() const                             { return Vector2<dataType>(-rhs.x, -rhs.y); }
                 
                 
-                template<typename T> Vector2<dataType> operator+(const Vector2<T> &rhs) const   { return Vector2<dataType>(rhs.x + x, rhs.y + y); }
-                template<typename T> Vector2<dataType> operator-(const Vector2<T> &rhs) const   { return Vector2<dataType>(x - rhs.x, y - rhs.y); }
-                template<typename T> Vector2<dataType> operator*(const T &rhs) const            { return Vector2<dataType>(rhs * x, rhs * y); }
-                template<typename T> Vector2<dataType> operator/(const T &rhs) const            { return Vector2<dataType>(x / rhs, y / rhs); }
+                template<typename T> Vector2<dataType> operator+(const Vector2<T> &rhs) const   { return Vector2<dataType>(static_cast<dataType>(rhs.x) + x, static_cast<dataType>(rhs.y) + y); }
+                template<typename T> Vector2<dataType> operator-(const Vector2<T> &rhs) const   { return Vector2<dataType>(x - static_cast<dataType>(rhs.x), y - static_cast<dataType>(rhs.y)); }
+                template<typename T> Vector2<dataType> operator*(const T &rhs) const            { return Vector2<dataType>(static_cast<dataType>(rhs) * x, static_cast<dataType>(rhs) * y); }
+                template<typename T> Vector2<dataType> operator/(const T &rhs) const            { return Vector2<dataType>(x / static_cast<dataType>(rhs), y / static_cast<dataType>(rhs)); }
 
                 // A way to get the x/y coordinate based on the index provided. Useful in incrementing loops
                 dataType operator[](const size_t &index) const  { if (index == 0) return x; if (index == 1) return y; return 0.f; }

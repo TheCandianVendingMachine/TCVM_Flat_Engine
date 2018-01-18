@@ -141,8 +141,8 @@ fe::texturePacker::packNode *fe::texturePacker::packNode::insert(sf::Texture *te
                         return this;
                     }
 
-                float dWidth = m_size.x - texture->getSize().x;
-                float dHeight = m_size.y - texture->getSize().y;
+                int dWidth = static_cast<int>(m_size.x - texture->getSize().x);
+                int dHeight = static_cast<int>(m_size.y - texture->getSize().y);
 
                 if (dWidth > dHeight)
                     {

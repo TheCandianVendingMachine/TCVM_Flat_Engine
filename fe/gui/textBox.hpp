@@ -60,8 +60,8 @@ namespace fe
 
                         public:
                             // intentionally underflowing maxChars to allow for a max amount of characters
-                            FLAT_ENGINE_API textBox(fe::Vector2d size, const sf::Font &font, options opt, float textStrSize = -1.f, unsigned int maxChars = -1, float padX = 10.f, float padY = 5.f, const char *text = "");
-                            FLAT_ENGINE_API textBox(fe::Vector2d size, const sf::Font &font, options opt, float textStrSize = -1.f, unsigned int maxChars = -1, float padX = 10.f, float padY = 5.f, const std::string &text = "");
+                            FLAT_ENGINE_API textBox(fe::Vector2d size, const sf::Font &font, options opt, int textStrSize = -1, unsigned int maxChars = -1, float padX = 10.f, float padY = 5.f, const char *text = "");
+                            FLAT_ENGINE_API textBox(fe::Vector2d size, const sf::Font &font, options opt, int textStrSize = -1, unsigned int maxChars = -1, float padX = 10.f, float padY = 5.f, const std::string &text = "");
 
                             FLAT_ENGINE_API void setOptions(options opt);
 

@@ -6,7 +6,7 @@
 
 namespace sf
     {
-        struct Event;
+        class Event;
     }
 
 namespace fe

@@ -83,9 +83,9 @@ sf::RenderWindow &fe::renderer::getRenderWindow() const
         return *m_renderWindow;
     }
 	
-fe::Vector2d fe::renderer::getWindowSize()
+fe::Vector2<unsigned int> fe::renderer::getWindowSize()
 	{
-		return fe::Vector2d(m_renderWindow->getSize().x, m_renderWindow->getSize().y);
+		return fe::Vector2<unsigned int>(m_renderWindow->getSize());
 	}
 
 fe::renderer::~renderer()

@@ -47,12 +47,12 @@ inline fe::fontData fe::resourceManager<sf::Texture>::addFont(const sf::Font *fo
                 sf::Texture bmp = font->getTexture(size);
 
                 sf::Image bitmap;
-                bitmap.create(glyph.bounds.width, glyph.bounds.height);
+                bitmap.create(static_cast<unsigned int>(std::ceilf(glyph.bounds.width)), static_cast<unsigned int>(std::ceilf(glyph.bounds.height)));
                 bitmap.copy(bmp.copyToImage(), 0, 0, glyph.textureRect);
 
                 textures[i - FE_CHAR_START].loadFromImage(bitmap);
 
-                char id[1] = { fe::uInt8(i) };
+                char id[1] = { char(fe::uInt8(i)) };
                 positions.m_positions[i - FE_CHAR_START] = fontPacker.addTexture(textures[i - FE_CHAR_START], id);
             }
 

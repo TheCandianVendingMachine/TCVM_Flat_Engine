@@ -7,8 +7,8 @@ int fe::graph::addNode(float posX, float posY, float cost)
         m_nodes.back()->m_gCost = cost;
         m_nodes.back()->m_posX = posX;
         m_nodes.back()->m_posY = posY;
-        m_nodeHandles.push_back(m_nodes.size() - 1);
-        return m_nodeHandles.size() - 1;
+        m_nodeHandles.push_back(static_cast<int>(m_nodes.size() - 1));
+        return static_cast<int>(m_nodeHandles.size() - 1);
     }
 
 void fe::graph::addEdge(int nodeA, int nodeB)

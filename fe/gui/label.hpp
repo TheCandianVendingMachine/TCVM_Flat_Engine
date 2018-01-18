@@ -37,8 +37,8 @@ namespace fe
                             FLAT_ENGINE_API void setPosition(float x, float y);
                             FLAT_ENGINE_API fe::Vector2d getPosition() const;
 
-                            FLAT_ENGINE_API void setCharacterSize(float point);
-                            FLAT_ENGINE_API float getCharacterSize() const;
+                            FLAT_ENGINE_API void setCharacterSize(unsigned int point);
+                            FLAT_ENGINE_API unsigned int getCharacterSize() const;
 
                             FLAT_ENGINE_API void setPixelSize(float pixel);
                             FLAT_ENGINE_API float getPixelSize() const;

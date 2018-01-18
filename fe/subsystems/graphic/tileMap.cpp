@@ -78,8 +78,8 @@ void fe::tileMap::rebuildTilemap()
                     }
 
                 fe::imp::tile *tile = &m_fabrications[tileHandle.handle];
-                auto size = fe::Vector2d(tile->xSize, tile->ySize);
-                auto texturePos = fe::Vector2d(tile->xTexturePosition, tile->yTexturePosition) + m_textureOffset;
+                auto size = fe::Vector2<unsigned int>(tile->xSize, tile->ySize);
+                auto texturePos = fe::Vector2d(static_cast<float>(tile->xTexturePosition), static_cast<float>(tile->yTexturePosition)) + m_textureOffset;
                 auto pos = fe::Vector2d(tileHandle.xPosition, tileHandle.yPosition);
 
                 m_verticies[index + 0].position = fe::Vector2d(pos.x,               pos.y).convertToSfVec2();

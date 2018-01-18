@@ -104,7 +104,7 @@ fe::gui::guiElement *fe::guiPrefabricatedElements::getElement(fe::str elementPre
             {
                 sf::Texture *texture = fe::engine::get().getResourceManager<sf::Texture>()->getTexture(elementTemplate.m_texture.textureID);
                 const fe::Vector2<unsigned int> offset = fe::engine::get().getResourceManager<sf::Texture>()->getTexturePosition(elementTemplate.m_texture.textureID);
-                element = new fe::gui::square(texture, fe::Vector2d(offset.x, offset.y));
+                element = new fe::gui::square(texture, fe::Vector2d(static_cast<float>(offset.x), static_cast<float>(offset.y)));
             }
         else if (elementTemplate.m_elementType == priv::elementTemplate::TEXT_BOX)
             {
@@ -285,7 +285,7 @@ void fe::priv::text::load(rapidxml::xml_node<>* node)
                     }
                 else if (std::string(nodeIt->name()) == "size")
                     {
-                        size = interpretConstant(nodeIt->value());
+                        size = static_cast<unsigned int>(interpretConstant(nodeIt->value()));
                     }
                 nodeIt = nodeIt->next_sibling();
             }
@@ -298,19 +298,19 @@ void fe::priv::colour::load(rapidxml::xml_node<>* node)
             {
                 if (std::string(nodeIt->name()) == "r")
                     {
-                        r = std::stof(nodeIt->value());
+                        r = std::stoi(nodeIt->value());
                     }
                 else if (std::string(nodeIt->name()) == "g")
                     {
-                        g = std::stof(nodeIt->value());
+                        g = std::stoi(nodeIt->value());
                     }
                 else if (std::string(nodeIt->name()) == "b")
                     {
-                        b = std::stof(nodeIt->value());
+                        b = std::stoi(nodeIt->value());
                     }
                 else if (std::string(nodeIt->name()) == "a")
                     {
-                        a = std::stof(nodeIt->value());
+                        a = std::stoi(nodeIt->value());
                     }
                 nodeIt = nodeIt->next_sibling();
             }
@@ -408,7 +408,7 @@ float fe::priv::interpretConstant(const std::string &constant)
     {
         if (constant.empty()) return 0;
         bool isAlpha = false;
-        std::for_each(constant.begin(), constant.end(), [&isAlpha](char c) { isAlpha |= std::isalpha(c); });
+        std::for_each(constant.begin(), constant.end(), [&isAlpha](char c) { isAlpha |= static_cast<bool>(std::isalpha(c)); });
         if (!isAlpha)
             {
                 return std::stof(constant);
@@ -419,19 +419,19 @@ float fe::priv::interpretConstant(const std::string &constant)
 
         if (constantCheck == "SCREEN_SIZE_X")
             {
-                return fe::engine::get().getWindowSize().x;
+                return static_cast<float>(fe::engine::get().getWindowSize().x);
             }
         else if (constantCheck == "SCREEN_SIZE_Y")
             {
-                return fe::engine::get().getWindowSize().y;
+                return static_cast<float>(fe::engine::get().getWindowSize().y);
             }
         else if (constantCheck == "TRUE")
             {
-                return 1;
+                return static_cast<float>(true);
             }
         else if (constantCheck == "FALSE")
             {
-                return 0;
+                return static_cast<float>(false);
             }
 
         return 0;

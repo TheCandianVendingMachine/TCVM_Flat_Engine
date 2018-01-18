@@ -99,7 +99,7 @@ namespace fe
                     FLAT_ENGINE_API const float getFPS() const;
                     FLAT_ENGINE_API fe::time getElapsedTime() const;
 
-                    FLAT_ENGINE_API const fe::Vector2d getWindowSize() const;
+                    FLAT_ENGINE_API const fe::Vector2<unsigned int> getWindowSize() const;
 
                     FLAT_ENGINE_API const fe::Vector2d getMousePos() const;
 

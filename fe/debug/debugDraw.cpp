@@ -89,13 +89,13 @@ void fe::debugDraw::addCircle(int radius, int xPos, int yPos, sf::Color colour)
         while (x >= y)
             {
                 sf::Vertex appVert({ (float)xPos + x, (float)yPos + y }, colour); m_drawVerticies.append(appVert);
-                appVert.position.x = xPos + y; appVert.position.y = yPos + x; m_drawVerticies.append(appVert);
-                appVert.position.x = xPos - y; appVert.position.y = yPos + x; m_drawVerticies.append(appVert);
-                appVert.position.x = xPos - x; appVert.position.y = yPos + y; m_drawVerticies.append(appVert);
-                appVert.position.x = xPos - x; appVert.position.y = yPos - y; m_drawVerticies.append(appVert);
-                appVert.position.x = xPos - y; appVert.position.y = yPos - x; m_drawVerticies.append(appVert);
-                appVert.position.x = xPos + y; appVert.position.y = yPos - x; m_drawVerticies.append(appVert);
-                appVert.position.x = xPos + x; appVert.position.y = yPos - y; m_drawVerticies.append(appVert);
+                appVert.position.x = (float)xPos + y; appVert.position.y = (float)yPos + x; m_drawVerticies.append(appVert);
+                appVert.position.x = (float)xPos - y; appVert.position.y = (float)yPos + x; m_drawVerticies.append(appVert);
+                appVert.position.x = (float)xPos - x; appVert.position.y = (float)yPos + y; m_drawVerticies.append(appVert);
+                appVert.position.x = (float)xPos - x; appVert.position.y = (float)yPos - y; m_drawVerticies.append(appVert);
+                appVert.position.x = (float)xPos - y; appVert.position.y = (float)yPos - x; m_drawVerticies.append(appVert);
+                appVert.position.x = (float)xPos + y; appVert.position.y = (float)yPos - x; m_drawVerticies.append(appVert);
+                appVert.position.x = (float)xPos + x; appVert.position.y = (float)yPos - y; m_drawVerticies.append(appVert);
 
                 if (err <= 0)
                     {

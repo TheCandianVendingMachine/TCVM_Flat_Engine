@@ -6,54 +6,39 @@
 #include <utility>
 #include <vector>
 #include <memory>
+#include <type_traits>
 
 namespace fe
     {
         template<typename T>
-        struct is_vector
-            {
-                static const bool value = false;
-            };
+        struct is_vector : std::false_type
+            {};
 
         template<typename ...Args>
-        struct is_vector<std::vector<Args...>>
-            {
-                static const bool value = true;
-            };
+        struct is_vector<std::vector<Args...>> : std::true_type
+            {};
 
         template<typename ...Args>
-        struct is_vector<const std::vector<Args...>>
-            {
-                static const bool value = true;
-            };
+        struct is_vector<const std::vector<Args...>> : std::true_type
+            {};
 
         template<typename T>
-        struct is_smart_pointer
-            {
-                static const bool value = false;
-            };
+        struct is_smart_pointer : std::false_type
+            {};
 
         template<typename ...Args>
-        struct is_smart_pointer<std::unique_ptr<Args...>>
-            {
-                static const bool value = true;
-            };
+        struct is_smart_pointer<std::unique_ptr<Args...>> : std::true_type
+            {};
 
         template<typename ...Args>
-        struct is_smart_pointer<const std::unique_ptr<Args...>>
-            {
-                static const bool value = true;
-            };
+        struct is_smart_pointer<const std::unique_ptr<Args...>> : std::true_type
+            {};
 
         template<typename ...Args>
-        struct is_smart_pointer<std::shared_ptr<Args...>>
-            {
-                static const bool value = true;
-            };
+        struct is_smart_pointer<std::shared_ptr<Args...>> : std::true_type
+            {};
 
         template<typename ...Args>
-        struct is_smart_pointer<const std::shared_ptr<Args...>>
-            {
-                static const bool value = true;
-            };
+        struct is_smart_pointer<const std::shared_ptr<Args...>> : std::true_type
+            {};
     }

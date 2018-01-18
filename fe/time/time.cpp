@@ -42,12 +42,12 @@ int64_t fe::time::asMicroseconds()
 
 fe::time fe::time::operator+(const fe::time &rhs)
     {
-        return fe::time(fe::microseconds(m_time + rhs.m_time));
+        return fe::time(fe::microseconds(static_cast<long double>(m_time + rhs.m_time)));
     }
 
 fe::time fe::time::operator-(const fe::time &rhs)
     {
-        return fe::time(fe::microseconds(m_time - rhs.m_time));
+        return fe::time(fe::microseconds(static_cast<long double>(m_time - rhs.m_time)));
     }
 
 void fe::time::operator+=(const fe::time &rhs)
@@ -122,7 +122,7 @@ fe::time fe::milliseconds(const long double in)
 fe::time fe::microseconds(const long double in)
     {
         fe::time ret;
-        ret.m_time = in;
+        ret.m_time = static_cast<long long>(in);
         return ret;
     }
 
