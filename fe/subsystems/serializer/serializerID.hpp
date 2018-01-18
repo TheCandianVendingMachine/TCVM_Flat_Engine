@@ -76,16 +76,10 @@ namespace fe
                     void serializeData(dataBlock &block, const char *id, T &&data);
 
 
-                    template<typename T, typename ...Args, typename std::enable_if<!fe::is_vector<typename std::remove_reference<T>::type>::value, int>::type = 0>
-                    void serialize(dataBlock &block, const char *id, T &&dataVec, Args &&...args);
+                    template<typename T, typename ...Args>
+                    void serialize(dataBlock &block, const char *id, T &&dataAppend, Args &&...args);
 
-                    template<typename T, typename ...Args, typename std::enable_if<fe::is_vector<typename std::remove_reference<T>::type>::value, int>::type = 0>
-                    void serialize(dataBlock &block, const char *id, T &&data, Args &&...args);
-
-                    template<typename T, typename std::enable_if<fe::is_vector<typename std::remove_reference<T>::type>::value, int>::type = 0>
-                    void deserializeData(dataBlock &dataBlock, const char *id, T &newValue);
-
-                    template<typename T, typename std::enable_if<!fe::is_vector<typename std::remove_reference<T>::type>::value, int>::type = 0>
+                    template<typename T>
                     void deserializeData(dataBlock &dataBlock, const char *id, T &newValue);
 
                     void deserializeData(dataBlock &dataBlock, const char *id, char *newValue);
@@ -230,20 +224,24 @@ namespace fe
                 data.serialize(*this, *block.m_mappedObjectData[id].get(), id);
             }
 
-        template<typename T, typename ...Args, typename std::enable_if<fe::is_vector<typename std::remove_reference<T>::type>::value, int>::type>
-        void serializerID::serialize(dataBlock &block, const char *id, T &&dataVec, Args &&...args)
+        template<typename T, typename ...Args>
+        void serializerID::serialize(dataBlock &block, const char *id, T &&dataAppend, Args &&...args)
             {
-                for (auto &data : dataVec)
+                if constexpr(fe::is_vector<typename std::remove_reference<T>::type>::value)
                     {
-                        serializeListData(block, id, data);
+                        for (auto &data : dataAppend)
+                            {
+                                serializeListData(block, id, data);
+                            }
                     }
-                serialize(block, std::forward<Args>(args)...);
-            }
-
-        template<typename T, typename ...Args, typename std::enable_if<!fe::is_vector<typename std::remove_reference<T>::type>::value, int>::type>
-        void serializerID::serialize(dataBlock &block, const char *id, T &&data, Args &&...args)
-            {
-                serializeData(block, id, data);
+                else if constexpr(!fe::is_vector<typename std::remove_reference<T>::type>::value && !std::is_array<typename std::remove_reference<T>::type>::value)
+                    {
+                        serializeData(block, id, std::forward<T>(dataAppend));
+                    }
+                else if constexpr(std::is_array<typename std::remove_reference<T>::type>::value)
+                    {
+                        int i = 0;
+                    }
                 serialize(block, std::forward<Args>(args)...);
             }
 
@@ -273,48 +271,53 @@ namespace fe
                 dataBlock *block = m_data.back().get();
                 block->m_id = blockID;
                 serialize(*block, std::forward<Args>(args)...);
-                return m_data.size() - 1;
+                return static_cast<int>(m_data.size() - 1);
             }
 
-        template<typename T, typename std::enable_if<!fe::is_vector<typename std::remove_reference<T>::type>::value, int>::type>
+        template<typename T>
         void serializerID::deserializeData(dataBlock &dataBlock, const char *id, T &newValue)
             {
-                if (dataBlock.m_mappedData.find(id) != dataBlock.m_mappedData.end())
+                if constexpr(fe::is_vector<typename std::remove_reference<T>::type>::value)
                     {
-                        newValue = convertValue(dataBlock.m_mappedData[id], newValue);
-                    }
-                else if (dataBlock.m_mappedObjectData.find(id) != dataBlock.m_mappedObjectData.end())
-                    {
-                        if constexpr (std::is_class<T>::value && std::is_pointer<typename std::remove_reference<T>::type>::value)
+                        if (dataBlock.m_mappedListPrimitiveData.find(id) != dataBlock.m_mappedListPrimitiveData.end())
                             {
-                                newValue = new T();
-                                newValue->deserialize(*this, dataBlock.m_mappedObjectData[id]);
+                                for (auto &element : dataBlock.m_mappedListPrimitiveData[id])
+                                    {
+                                        newValue.emplace_back(convertValue<typename T::value_type>(element));
+                                    }
                             }
-                        else if constexpr (std::is_class<T>::value && !std::is_pointer<typename std::remove_reference<T>::type>::value)
+                        else if (dataBlock.m_mappedListObjectData.find(id) != dataBlock.m_mappedListObjectData.end())
                             {
-                                newValue = T();
-                                newValue.deserialize(*this, dataBlock.m_mappedObjectData[id]);
-                            }
-                    }
-            }
-
-        template<typename T, typename std::enable_if<fe::is_vector<typename std::remove_reference<T>::type>::value, int>::type>
-        void serializerID::deserializeData(dataBlock &dataBlock, const char *id, T &newValue)
-            {
-                if (dataBlock.m_mappedListPrimitiveData.find(id) != dataBlock.m_mappedListPrimitiveData.end())
-                    {
-                        for (auto &element : dataBlock.m_mappedListPrimitiveData[id])
-                            {
-                                newValue.emplace_back(convertValue<typename T::value_type>(element));
+                                for (auto &element : dataBlock.m_mappedListObjectData[id])
+                                    {
+                                        newValue.emplace_back();
+                                        newValue.back().deserialize(*this, dataBlock.m_mappedListObjectData[id]);
+                                    }
                             }
                     }
-                else if (dataBlock.m_mappedListObjectData.find(id) != dataBlock.m_mappedListObjectData.end())
+                else if constexpr (!fe::is_vector<typename std::remove_reference<T>::type>::value && !std::is_array<typename std::remove_reference<T>::type>::value)
                     {
-                        for (auto &element : dataBlock.m_mappedListObjectData[id])
+                        if (dataBlock.m_mappedData.find(id) != dataBlock.m_mappedData.end())
                             {
-                                newValue.emplace_back();
-                                newValue.back().deserialize(*this, dataBlock.m_mappedListObjectData[id]);
+                                newValue = convertValue(dataBlock.m_mappedData[id], newValue);
                             }
+                        else if (dataBlock.m_mappedObjectData.find(id) != dataBlock.m_mappedObjectData.end())
+                            {
+                                if constexpr (std::is_class<T>::value && std::is_pointer<typename std::remove_reference<T>::type>::value)
+                                    {
+                                        newValue = new T();
+                                        newValue->deserialize(*this, dataBlock.m_mappedObjectData[id]);
+                                    }
+                                else if constexpr (std::is_class<T>::value && !std::is_pointer<typename std::remove_reference<T>::type>::value)
+                                    {
+                                        newValue = T();
+                                        newValue.deserialize(*this, dataBlock.m_mappedObjectData[id]);
+                                    }
+                            }
+                    }
+                else if constexpr(std::is_array<typename std::remove_reference<T>::type>::value)
+                    {
+                        int i = 0;
                     }
             }
 
