@@ -17,7 +17,7 @@ void fe::serializerID::dataBlock::outData(std::ostream &out, const char *preData
 
         for (auto &listDat : m_mappedListPrimitiveData)
             {
-                out << preDataText << "\tils " << listDat.first << ":[\n";
+                out << preDataText << "\tils " << listDat.first << "(" << m_size << "):[\n";
                 for (auto &item : listDat.second)
                     {
                         out << preDataTextApp << "\titm " << item << ";\n";
@@ -33,7 +33,7 @@ void fe::serializerID::dataBlock::outData(std::ostream &out, const char *preData
         std::strcat(preDataTextApp, "\t");
         for (auto &listDat : m_mappedListObjectData)
             {
-                out << preDataText << "\tols " << listDat.first << ":[\n";
+                out << preDataText << "\tols " << listDat.first << "(" << m_size << "):[\n";
                 for (auto &item : listDat.second)
                     {
                         item->outData(out, preDataTextApp);
@@ -136,6 +136,7 @@ void fe::serializerID::interpretData(const char *block)
                 LIST_ITEM_START,
                 LIST_ITEM_END,
                 LIST_END,
+                LIST_SIZE_END
             };
         std::stack<std::pair<readState, unsigned int>> readingState;
         std::stack<readState> lastDataReadState;
@@ -185,9 +186,13 @@ void fe::serializerID::interpretData(const char *block)
                         readingState.push(std::make_pair(LIST_END, i));
                         lastDataReadState.pop();
                     }
-                else if (block[i] == '[')
+                else if (block[i] == '(')
                     {
-                        readingState.push(std::make_pair(LIST_NAME_END, i));
+                        readingState.push(std::make_pair(LIST_NAME_END, i + 1));
+                    }
+                else if (block[i] == ')')
+                    {
+                        readingState.push(std::make_pair(LIST_SIZE_END, i));
                     }
                 else if (block[i] == ';')
                     {
@@ -221,6 +226,7 @@ void fe::serializerID::interpretData(const char *block)
 
         std::stack<std::unique_ptr<dataBlock>> currentBlock;
         std::stack<std::string> currentListID;
+        std::stack<int> currentSize;
         while (!reverseReadingStack.empty())
             {
                 switch (reverseReadingStack.top().first)
@@ -243,6 +249,13 @@ void fe::serializerID::interpretData(const char *block)
                                                     break;
                                                 case LIST:
                                                     currentBlock.top()->m_mappedListObjectData[currentListID.top()].emplace_back(top);
+                                                    // Since "List" is a misnomer and actually could mean list-object data we have to check
+                                                    // if this is empty to avoid a access error
+                                                    if (!currentSize.empty()) 
+                                                        {
+                                                            currentBlock.top()->m_size = currentSize.top();
+                                                            currentSize.pop();
+                                                        }
                                                     break;
                                                 default:
                                                     break;
@@ -310,9 +323,15 @@ void fe::serializerID::interpretData(const char *block)
                                 char name[512] = "\0";
                                 std::memcpy(name, block + nameStart, nameEnd - nameStart);
                                 currentListID.push(name);
+
+                                // Get the list size
+                                int sizeStart = reverseReadingStack.top().second;
+                                reverseReadingStack.pop();
+                                int sizeEnd = reverseReadingStack.top().second;
+                                char size[512] = "\0";
+                                std::memcpy(size, block + sizeStart, sizeEnd - sizeStart);
+                                currentSize.push(std::stoi(size));
                             }
-                            break;
-                        case LIST_NAME_END:
                             break;
                         case LIST_ITEM_START:
                             {
