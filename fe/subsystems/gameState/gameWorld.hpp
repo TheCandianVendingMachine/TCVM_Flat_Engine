@@ -1,10 +1,14 @@
 // gameWorld.hpp
 // The game world. Contains all relavent classes that are required for a world to function. Pathfinding graph, scene graph, etc
 #pragma once
+#define FLAT_ENGINE_EXPORT
+#include "../../flatEngineExport.hpp"
+#include <SFML/Graphics/RenderStates.hpp>
+#include "entityWorld.hpp"
 #include "../graphic/renderObject/sceneGraph.hpp"
 #include "../graphic/tileMap.hpp"
-#include "../../objectManagement/handleManager.hpp"
 #include "../ai/graph.hpp"
+#include "../../entity/baseEntity.hpp"
 
 namespace sf
     {
@@ -13,27 +17,26 @@ namespace sf
 
 namespace fe
     {
-        class baseEntity;
         class collisionWorld;
         class broadphaseAbstract;
         class serializerID;
 
-        class gameWorld : protected fe::handleManager<fe::baseEntity*, FE_MAX_GAME_OBJECTS>
+        class gameWorld
             {
                 private:
                     fe::sceneGraph m_sceneGraph;
                     fe::tileMap m_tileMap;
                     fe::graph m_aiGraph;
+                    fe::entityWorld m_entityWorld;
                     fe::broadphaseAbstract *m_dynamicBroadphase;
                     fe::broadphaseAbstract *m_staticBroadphase;
                     fe::serializerID *m_serializer;
 
                     sf::RenderStates m_staticRenderStates;
 
-                    FLAT_ENGINE_API void onAdd(fe::baseEntity **object, fe::Handle objectHandle);
-                    FLAT_ENGINE_API void onRemove(fe::baseEntity **object, fe::Handle objectHandle);
-
                 public:
+                    FLAT_ENGINE_API gameWorld();
+
                     FLAT_ENGINE_API void startUp();
                     FLAT_ENGINE_API void shutDown();
 
@@ -76,22 +79,19 @@ namespace fe
         template<typename ...Args>
         fe::Handle gameWorld::addGameObject(fe::baseEntity *entity, Args &&...args)
             {
-                fe::Handle objHandle = addObject(entity);
-                fe::baseEntity *object = getObject(objHandle);
-
-                object->initialize(*this, std::forward<Args>(args)...);
-                if (object->m_collisionBody)
+                fe::baseEntity *object = m_entityWorld.addGameObject(entity, std::forward<Args>(args)...);
+                if (object->getCollider())
                     {
-                        if (object->m_collisionBody->m_static && m_staticBroadphase)
+                        if (object->getCollider()->m_static && m_staticBroadphase)
                             {
-                                m_staticBroadphase->add(object->m_collisionBody);
+                                m_staticBroadphase->add(object->getCollider());
                             }
                         else
                             {
-                                m_dynamicBroadphase->add(object->m_collisionBody);
+                                m_dynamicBroadphase->add(object->getCollider());
                             }
                     }
-
-                return objHandle;
+                object->onAdd(*this);
+                return object->getHandle();
             }
-}
+    }

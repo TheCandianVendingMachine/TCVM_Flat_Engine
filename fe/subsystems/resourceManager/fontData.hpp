@@ -1,6 +1,7 @@
 // fontData.hpp
 // Data regarding bitmap fonts
 #pragma once
+#include "../serializer/serializerID.hpp"
 
 namespace sf
     {
@@ -16,5 +17,8 @@ namespace fe
                 const sf::Texture *m_texture = nullptr;
                 const sf::Font *m_font = nullptr; // The font which corresponds to this bitmap
                 unsigned int m_charSize = 0;
+
+                SERIALIZE_ID(   "fontData",
+                                "charSize", m_charSize);
             };
     }

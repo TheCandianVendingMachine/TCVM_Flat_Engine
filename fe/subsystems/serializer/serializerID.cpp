@@ -312,7 +312,7 @@ void fe::serializerID::interpretData(const char *block)
                             break;
                         case LIST_END:
                             currentListID.pop();
-                            currentStorageRead.pop();
+                            //currentStorageRead.pop();
                             break;
                         case LIST_NAME_START:
                             {

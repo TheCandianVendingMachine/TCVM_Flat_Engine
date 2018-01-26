@@ -66,18 +66,10 @@ namespace fe
                     bool m_moved;
                     bool m_static;
 
-                    friend class gameWorld;
+                    baseEntity() : baseEntity(fe::entityModules::NONE, false) {};
 
-                    SERIALIZE_ID("defaultVars",
-                        "modules", m_enabledModulesNum,
-                        "handle", m_handle,
-                        "posX", m_positionX,
-                        "posY", m_positionY,
-                        "sizeX", m_sizeX,
-                        "sizeY", m_sizeY,
-                        "enabled", m_enabled,
-                        "moved", m_moved,
-                        "static", m_static);
+                    friend class entityWorld;
+                    friend class serializerID; // So that the serializer can deserialize this type with no constructor arguments
 
                 public:
                     FLAT_ENGINE_API baseEntity(fe::entityModules modules, bool staticObject);
@@ -98,8 +90,8 @@ namespace fe
 
                     FLAT_ENGINE_API void onDestroy(fe::baseGameState &state);
 
-                    FLAT_ENGINE_API virtual void onAdd(fe::baseGameState &state) {}
-                    FLAT_ENGINE_API virtual void onRemove(fe::baseGameState &state) {}
+                    FLAT_ENGINE_API virtual void onAdd(fe::gameWorld &world) {}
+                    FLAT_ENGINE_API virtual void onRemove(fe::gameWorld &world) {}
 
                     FLAT_ENGINE_API virtual void update() {}
                     FLAT_ENGINE_API virtual void postUpdate() {}
@@ -123,11 +115,41 @@ namespace fe
                     FLAT_ENGINE_API fe::rigidBody *getRigidBody() const;
                     FLAT_ENGINE_API fe::collider *getCollider() const;
 
+                    SERIALIZE_ID("defaultVars",
+                        "modules", m_enabledModulesNum,
+                        "handle", m_handle,
+                        "posX", m_positionX,
+                        "posY", m_positionY,
+                        "sizeX", m_sizeX,
+                        "sizeY", m_sizeY,
+                        "enabled", m_enabled,
+                        "moved", m_moved,
+                        "static", m_static,
+                        "renderObject", m_renderObject);
+
             };
 
         template<typename ...Args>
         void fe::baseEntity::initialize(fe::gameWorld &world, Args &&...args)
             {
+                if (m_renderObject)
+                    {
+                        delete m_renderObject;
+                        m_renderObject = nullptr;
+                    }
+
+                if (m_collisionBody)
+                    {
+                        delete m_collisionBody;
+                        m_collisionBody = nullptr;
+                    }
+
+                if (m_rigidBody)
+                    {
+                        delete m_rigidBody;
+                        m_rigidBody = nullptr;
+                    }
+
                 if (m_enabledModulesEnum & fe::entityModules::RENDER_OBJECT)
                     {
                         m_renderObject = world.getSceneGraph().allocateRenderObject();

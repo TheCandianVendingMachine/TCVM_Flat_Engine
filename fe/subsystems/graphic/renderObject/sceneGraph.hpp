@@ -57,7 +57,7 @@ namespace fe
                     FLAT_ENGINE_API sceneGraphObject *allocateRenderObject();
                     FLAT_ENGINE_API sceneGraphObject *allocateRenderText();
                     template<typename ...Args>
-                    void createSceneGraphObject(sceneGraphObject *obj, fe::lightVector2<unsigned int> texturePos = fe::lightVector2<unsigned int>(), int z = 0, int connected = -1, Args &&...args);
+                    void createSceneGraphObject(sceneGraphObject *obj, fe::lightVector2<unsigned int> texturePos, int z, int connected, Args &&...args);
                     FLAT_ENGINE_API int deleteSceneObject(sceneGraphObject *obj); // returns the parent node of the render object
 
                     FLAT_ENGINE_API void setZOrder(int node, int z);

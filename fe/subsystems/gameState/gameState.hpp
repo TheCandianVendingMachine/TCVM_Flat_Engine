@@ -106,9 +106,7 @@ namespace fe
         template<typename ...Args>
         fe::Handle baseGameState::addObject(fe::baseEntity *ent, bool staticObject, Args &&...args)
             {
-                fe::Handle objhandle = m_gameWorld.addGameObject(ent, std::forward<Args>(args)...);
-                m_gameWorld.getObject(objhandle)->onAdd(*this);
-                return objhandle;
+                return m_gameWorld.addGameObject(ent, std::forward<Args>(args)...);
             }
 
 }

@@ -7,6 +7,7 @@
 #include "../../physics/transformable.hpp"
 #include "../../../typeDefines.hpp"
 #include "../../resourceManager/fontData.hpp"
+#include "../../serializer/serializerID.hpp"
 #include <SFML/Graphics/VertexArray.hpp>
 #include <SFML/Graphics/Font.hpp>
 
@@ -38,6 +39,15 @@ namespace fe
 
                 sceneGraphObject() : m_type(NONE) {}
                 virtual void setSize(float x, float y) {}
+
+                SERIALIZE_ID(   "sceneGraphObject",
+                                "type", m_type,
+                                "vertColour", m_vertColour,
+                                "texCoords", m_texCoords,
+                                "graphNode", m_graphNode,
+                                "zPosition", m_zPosition,
+                                "draw", m_draw,
+                                "static", m_static);
             };
 
         struct renderObject : public sceneGraphObject
@@ -46,6 +56,16 @@ namespace fe
 
                 renderObject() { m_type = OBJECT; }
                 void setSize(float x, float y) { m_verticies[2] = x; m_verticies[3] = y; }
+
+                SERIALIZE_ID(   "renderObject",
+                                "type", m_type,
+                                "vertColour", m_vertColour,
+                                "texCoords", m_texCoords,
+                                "graphNode", m_graphNode,
+                                "zPosition", m_zPosition,
+                                "draw", m_draw,
+                                "static", m_static,
+                                "verticies", m_verticies);
             };
 
         struct renderText : public sceneGraphObject
@@ -68,5 +88,22 @@ namespace fe
 
                 FLAT_ENGINE_API void computeVerticies();
                 FLAT_ENGINE_API void setSize(float x, float y);
+
+                SERIALIZE_ID(   "renderText",
+                                "type", m_type,
+                                "vertColour", m_vertColour,
+                                "texCoords", m_texCoords,
+                                "graphNode", m_graphNode,
+                                "zPosition", m_zPosition,
+                                "draw", m_draw,
+                                "static", m_static,
+                                "verticies", m_verticies,
+                                "charTexCoords", m_charTexCoords,
+                                "string", m_string,
+                                "fontData", m_fontData,
+                                "size", m_size,
+                                "fontSize", m_fontSize,
+                                "stringSize", m_strSize,
+                                "strPos", m_strPos);
             };
     }

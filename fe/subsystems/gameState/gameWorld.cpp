@@ -6,14 +6,8 @@
 #include "../resourceManager/resourceManager.hpp"
 #include "../../engine.hpp"
 
-void fe::gameWorld::onAdd(fe::baseEntity **object, fe::Handle objectHandle)
+fe::gameWorld::gameWorld() : m_entityWorld(*this)
     {
-        (*object)->setHandle(objectHandle);
-    }
-
-void fe::gameWorld::onRemove(fe::baseEntity **object, fe::Handle objectHandle)
-    {
-        (*object)->deinitialize(*this);
     }
 
 void fe::gameWorld::startUp()
@@ -89,47 +83,21 @@ fe::graph &fe::gameWorld::getAIGraph()
 void fe::gameWorld::preUpdate()
     {
         FE_ENGINE_PROFILE("game_world", "entity_pre_update");
-        auto objects = getObjects();
-        for (unsigned int i = 0; i < objectCount(); i++)
-            {
-                if (objects[i] && objects[i]->m_enabled)
-                    {
-                        objects[i]->updateModules();
-                    }
-            }
+        m_entityWorld.preUpdate();
         FE_END_PROFILE;
     }
 
 void fe::gameWorld::update(collisionWorld *collisionWorld)
     {
         FE_ENGINE_PROFILE("game_world", "entity_update");
-        auto objects = getObjects();
-        for (unsigned int i = 0; i < objectCount(); i++)
-            {
-                if (objects[i] && objects[i]->m_enabled)
-                    {
-                        objects[i]->update();
-
-                        if (objects[i]->m_collisionBody && !objects[i]->m_collisionBody->m_static)
-                            {
-                                m_dynamicBroadphase->update(objects[i]->m_collisionBody);
-                            }
-                    }
-            }
+        m_entityWorld.update(collisionWorld, m_dynamicBroadphase);
         FE_END_PROFILE;
     }
 
 void fe::gameWorld::postUpdate()
     {
         FE_ENGINE_PROFILE("game_world", "entity_post_update");
-        auto objects = getObjects();
-        for (unsigned int i = 0; i < objectCount(); i++)
-            {
-                if (objects[i] && objects[i]->m_enabled)
-                    {
-                        objects[i]->postUpdate();
-                    }
-            }
+        m_entityWorld.postUpdate();
         FE_END_PROFILE;
     }
 
@@ -158,6 +126,8 @@ void fe::gameWorld::save()
         FE_LOG("Saving Game World");
         FE_LOG("Saving Tilemap");
         m_tileMap.serialize(*m_serializer);
+        FE_LOG("Saving Entities");
+        m_entityWorld.serialize(*m_serializer);
     }
 
 void fe::gameWorld::load(std::ifstream &in)
@@ -175,7 +145,9 @@ void fe::gameWorld::load()
         m_tileMap.clearMap();
         m_tileMap.deserialize(*m_serializer);
         m_tileMap.rebuildTilemap();
-        
+        FE_LOG("Loading Entities");
+        m_entityWorld.clearAllObjects();
+        m_entityWorld.deserialize(*m_serializer);
     }
 
 void fe::gameWorld::loadTilePrefabs(const char *filepath)
@@ -190,10 +162,11 @@ void fe::gameWorld::loadTilePrefabs(const char *filepath)
 
 void fe::gameWorld::removeGameObject(Handle handle)
     {
-        removeObject(handle);
+        getObject(handle)->onRemove(*this);
+        m_entityWorld.removeObject(handle);
     }
 
 fe::baseEntity *fe::gameWorld::getObject(Handle handle) const
     {
-        return fe::handleManager<fe::baseEntity*, FE_MAX_GAME_OBJECTS>::getObject(handle);
+        return m_entityWorld.getObject(handle);
     }

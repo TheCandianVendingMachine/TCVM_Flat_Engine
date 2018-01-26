@@ -124,7 +124,6 @@ void fe::baseGameState::shutDown()
 
 void fe::baseGameState::removeObject(fe::Handle ent)
     {
-        m_gameWorld.getObject(ent)->onRemove(*this);
         m_gameWorld.removeGameObject(ent);
     }
 

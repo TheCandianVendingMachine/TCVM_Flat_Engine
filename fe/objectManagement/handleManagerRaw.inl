@@ -74,10 +74,11 @@ inline void fe::handleManager<T, objectCount>::clearAllObjects()
             }
 
         handleObjectList *handle = &m_baseHandleList;
+        int index = 0;
         while (handle)
             {
                 handle->m_handle->active = false;
-                handle->m_handle->handle = -1;
+                handle->m_handle->handle = index++;
                 handle = handle->m_tail;
             }
         m_maxIndex = 0;
