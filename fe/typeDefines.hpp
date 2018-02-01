@@ -1,6 +1,8 @@
 // typeDefines.hpp
 // all type defines defined in engine
 #pragma once
+#define FE_IS_ENGINE true // Defined only if engine exists. Useful if writing potentially modular classes
+
 #define FE_PROFILE_ENGINE true
 #define FE_OUTPUT_PROFILE_RESULTS true
 #define FE_PROFILE_RELEASE true

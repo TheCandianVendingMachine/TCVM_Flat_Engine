@@ -37,7 +37,7 @@ void fe::renderer::shutDown()
 
 void fe::renderer::save() const
     {
-        serialize(*m_windowSettings);
+        //serialize(*m_windowSettings);
 
         std::ofstream out("window.cfg");
         m_windowSettings->outData(out);
