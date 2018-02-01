@@ -360,11 +360,11 @@ std::string fe::serializerID::toPrimitive(const std::string &data, std::string)
     }
 
 fe::serializerID::serializerID() : m_baseDataBlock(new dataBlock("serialized_items"))
-{
-    m_currentBlock.push(m_baseDataBlock.get());
-}
+    {
+        m_currentBlock.push(m_baseDataBlock.get());
+    }
 
-void fe::serializerID::writeObject(const std::string &id, serializable &&data)
+void fe::serializerID::writeObject(const std::string &id, const serializable &data)
     {
         std::unique_ptr<dataBlock> *currentBlock = nullptr;
         FE_ASSERT(m_currentBlock.empty(), "Current block is empty. Should never happen if fe::serializerID::serializerID [constructor] is called");
@@ -375,12 +375,7 @@ void fe::serializerID::writeObject(const std::string &id, serializable &&data)
         m_currentBlock.pop();
     }
 
-void fe::serializerID::writeObject(const std::string &id, serializable &data)
-    {
-        writeObject(id, std::forward<serializable>(data));
-    }
-
-void fe::serializerID::writeObjectList(const std::string &id, serializable &&data)
+void fe::serializerID::writeObjectList(const std::string &id, const serializable &data)
     {
         std::unique_ptr<dataBlock> *currentBlock = nullptr;
         FE_ASSERT(m_currentBlock.empty(), "Current block is empty. Should never happen if fe::serializerID::serializerID [constructor] is called");
@@ -389,11 +384,6 @@ void fe::serializerID::writeObjectList(const std::string &id, serializable &&dat
         m_currentBlock.push(currentBlock->get());
         data.serialize(*this);
         m_currentBlock.pop();
-    }
-
-void fe::serializerID::writeObjectList(const std::string &id, serializable &data)
-    {
-        writeObjectList(id, std::forward<serializable>(data));
     }
 
 void fe::serializerID::readObject(const std::string &id, serializable &data)

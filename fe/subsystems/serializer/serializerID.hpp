@@ -57,15 +57,10 @@ namespace fe
                 public:
                     FLAT_ENGINE_API serializerID();
 
-                    // Write a single object to serializer
-                    FLAT_ENGINE_API void writeObject(const std::string &id, serializable &&data);
                     // Write a single objet to serializer
-                    FLAT_ENGINE_API void writeObject(const std::string &id, serializable &data);
-
-                    // Write an array of objects to serializer
-                    FLAT_ENGINE_API void writeObjectList(const std::string &id, serializable &&data);
+                    FLAT_ENGINE_API void writeObject(const std::string &id, const serializable &data);
                     // Write an array objects to serializer
-                    FLAT_ENGINE_API void writeObjectList(const std::string &id, serializable &data);
+                    FLAT_ENGINE_API void writeObjectList(const std::string &id, const serializable &data);
 
                     // Read single objet to serializer
                     FLAT_ENGINE_API void readObject(const std::string &id, serializable &data);
@@ -139,6 +134,6 @@ namespace fe
             }
     }
 
-#define SERIALIZE_ID(...) void serialize(fe::serializerID&) {} void deserialize(fe::serializerID&) {}
-#define SERIALIZE_CALLBACK_ID(...) void serialize(fe::serializerID&) {} void deserialize(fe::serializerID&) {}
-#define SERIALIZE_NAME_ID(name, ...) void serialize##name(fe::serializerID&) {} void deserialize##name(fe::serializerID&) {}
+#define SERIALIZE_ID(...) [[deprecated]]void serialize(fe::serializerID&) {} [[deprecated]]void deserialize(fe::serializerID&) {}
+#define SERIALIZE_CALLBACK_ID(...) [[deprecated]]void serialize(fe::serializerID&) {} [[deprecated]]void deserialize(fe::serializerID&) {}
+#define SERIALIZE_NAME_ID(name, ...) [[deprecated]]void serialize##name(fe::serializerID&) {} [[deprecated]]void deserialize##name(fe::serializerID&) {}

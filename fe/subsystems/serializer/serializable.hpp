@@ -8,7 +8,7 @@ namespace fe
         class serializable
             {
                 public:
-                    virtual void serialize(serializerID &serializer) { }
-                    virtual void deserialize(serializerID &serializer) { }
+                    virtual void serialize(serializerID &serializer) const { }
+                    virtual void deserialize(serializerID &serializer) const { }
             };
     }
