@@ -124,6 +124,16 @@ void fe::baseGameState::shutDown()
 
 void fe::baseGameState::removeObject(fe::Handle ent)
     {
+        if (m_gameWorld.getDynamicBroadphase())
+            {
+                m_gameWorld.getDynamicBroadphase()->remove(getObject(ent)->getCollider());
+            }
+        
+        if (m_gameWorld.getStaticBroadphase())
+            {
+                m_gameWorld.getStaticBroadphase()->remove(getObject(ent)->getCollider());
+            }
+
         m_gameWorld.removeGameObject(ent);
     }
 

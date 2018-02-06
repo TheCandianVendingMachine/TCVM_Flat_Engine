@@ -86,7 +86,7 @@ void fe::collisionWorld::handleCollision(void *leftCollider, void *rightCollider
         handleCollision(static_cast<fe::collider*>(leftCollider), static_cast<fe::collider*>(rightCollider));
     }
 
-void fe::collisionWorld::handleCollision(void *collider)
+void fe::collisionWorld::handleCollision(void *collider, fe::str event)
     {
         if (collider == nullptr) return;
         fe::collisionData a;
@@ -95,6 +95,15 @@ void fe::collisionWorld::handleCollision(void *collider)
         a.m_penetrationX = 0.f;
         a.m_penetrationY = 0.f;
         static_cast<fe::collider*>(collider)->m_collisionCallback(a);
+
+        fe::gameEvent eventObj(event, 2);
+        eventObj.args[0].arg.TYPE_VOIDP = collider;
+        eventObj.args[0].argType = gameEventArgument::type::TYPE_VOIDP;
+
+        eventObj.args[1].arg.TYPE_VOIDP = &a; // we can send this without worrying about data corruption since the event is sent immediately
+        eventObj.args[1].argType = gameEventArgument::type::TYPE_VOIDP;
+
+        fe::engine::get().getEventSender().sendEngineEvent(eventObj, event);
     }
 
 fe::collisionWorld::collisionWorld() : m_maxPointIndex(0)
@@ -116,19 +125,20 @@ void fe::collisionWorld::clear()
         m_collisionBodies.clear();
     }
 
-void fe::collisionWorld::queryPoint(fe::lightVector2d point)
+void fe::collisionWorld::queryPoint(fe::lightVector2d point, fe::str event)
     {
-        m_pointCollision[m_maxPointIndex++] = point;
+        m_pointCollision[m_maxPointIndex].event = event;
+        m_pointCollision[m_maxPointIndex++].position = point;
     }
 
-void fe::collisionWorld::queryPoint(fe::Vector2d point)
+void fe::collisionWorld::queryPoint(fe::Vector2d point, fe::str event)
     {
-        queryPoint(fe::lightVector2d(point));
+        queryPoint(fe::lightVector2d(point), event);
     }
 
-void fe::collisionWorld::queryPoint(float x, float y)
+void fe::collisionWorld::queryPoint(float x, float y, fe::str event)
     {
-        queryPoint(fe::lightVector2d(x, y));
+        queryPoint(fe::lightVector2d(x, y), event);
     }
 
 void fe::collisionWorld::handleCollisions(const fe::broadphaseAbstract *broadphase)
@@ -154,7 +164,7 @@ void fe::collisionWorld::handleCollisions(const fe::broadphaseAbstract *broadpha
                 FE_ENGINE_PROFILE("collision_world", "broadphase_compute_point_collision_partial");
                 for (unsigned int i = 0; i < m_maxPointIndex; i++)
                     {
-                        handleCollision(broadphase->colliderAtPoint(m_pointCollision[i]));
+                        handleCollision(broadphase->colliderAtPoint(m_pointCollision[i].position), m_pointCollision[i].event);
                     }
                 FE_END_PROFILE;
             }
@@ -188,8 +198,8 @@ void fe::collisionWorld::handleCollisions(const fe::broadphaseAbstract *broadpha
                 FE_ENGINE_PROFILE("collision_world", "broadphase_compute_point_collision_full");
                 for (unsigned int i = 0; i < m_maxPointIndex; i++)
                     {
-                        handleCollision(broadphaseDynamic->colliderAtPoint(m_pointCollision[i]));
-                        handleCollision(broadphaseStatic->colliderAtPoint(m_pointCollision[i]));
+                        handleCollision(broadphaseDynamic->colliderAtPoint(m_pointCollision[i].position), m_pointCollision[i].event);
+                        handleCollision(broadphaseStatic->colliderAtPoint(m_pointCollision[i].position), m_pointCollision[i].event);
                     }
                 FE_END_PROFILE;
             }

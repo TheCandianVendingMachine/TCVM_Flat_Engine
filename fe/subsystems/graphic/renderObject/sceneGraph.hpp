@@ -63,10 +63,12 @@ namespace fe
                     FLAT_ENGINE_API void setZOrder(int node, int z);
                     FLAT_ENGINE_API void connect(int a, int b); // connects object with node A to node B
                     FLAT_ENGINE_API void disconnect(int node); // Disconnects the node and attaches to the base scene node
+                    FLAT_ENGINE_API int getConnected(int node); // Returns the node which the object is attached to
 
                     FLAT_ENGINE_API void setZOrder(sceneGraphObject *object, int z);
                     FLAT_ENGINE_API void connect(sceneGraphObject *objectA, sceneGraphObject *objectB); // connects object with node A to node B
                     FLAT_ENGINE_API void disconnect(sceneGraphObject *object); // Disconnects the node and attaches to the base scene node
+                    FLAT_ENGINE_API int getConnected(sceneGraphObject *object); // Returns the node which the object is attached to
 
                     FLAT_ENGINE_API fe::transformable &getGlobalTransform();
 

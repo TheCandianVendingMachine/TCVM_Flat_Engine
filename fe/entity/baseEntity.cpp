@@ -148,8 +148,8 @@ void fe::baseEntity::setPosition(float x, float y)
 
         if (m_collisionBody)
             {
-                m_collisionBody->m_aabb.m_positionX = x;
-                m_collisionBody->m_aabb.m_positionY = y;
+                m_collisionBody->m_aabb.m_globalPositionX = x;
+                m_collisionBody->m_aabb.m_globalPositionY = y;
             }
     }
 
@@ -230,6 +230,11 @@ fe::rigidBody *fe::baseEntity::getRigidBody() const
 fe::collider *fe::baseEntity::getCollider() const
     {
         return m_collisionBody;
+    }
+
+fe::entityModules fe::baseEntity::getModules() const
+    {
+        return m_enabledModulesEnum;
     }
 
 void fe::baseEntity::serialize(fe::serializerID &serializer) const

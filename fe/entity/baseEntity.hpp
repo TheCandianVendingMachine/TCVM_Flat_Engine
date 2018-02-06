@@ -65,12 +65,10 @@ namespace fe
                     bool m_moved;
                     bool m_static;
 
-                    baseEntity() : baseEntity(fe::entityModules::NONE, false) {};
-
                     friend class entityWorld;
-                    friend class serializerID; // So that the serializer can deserialize this type with no constructor arguments
 
                 public:
+                    baseEntity() : baseEntity(fe::entityModules::NONE, false) {};
                     FLAT_ENGINE_API baseEntity(fe::entityModules modules, bool staticObject);
                     template<typename ...Args>
                     void initialize(fe::gameWorld &world, Args &&...args);
@@ -113,6 +111,8 @@ namespace fe
                     FLAT_ENGINE_API fe::sceneGraphObject *getRenderObject() const;
                     FLAT_ENGINE_API fe::rigidBody *getRigidBody() const;
                     FLAT_ENGINE_API fe::collider *getCollider() const;
+
+                    FLAT_ENGINE_API fe::entityModules getModules() const;
 
                     FLAT_ENGINE_API void serialize(fe::serializerID &serializer) const;
                     FLAT_ENGINE_API void deserialize(fe::serializerID &serializer);

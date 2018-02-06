@@ -351,6 +351,10 @@ int fe::aabbTree::balance(int node)
 
 void *fe::aabbTree::pointCollideBranch(float x, float y, int branch) const
     {
+        if (branch < 0)
+            {
+                return nullptr;
+            }
         if (m_nodes[branch].m_fatAABB.contains(x, y))
             {
                 if (m_nodes[branch].isLeaf())

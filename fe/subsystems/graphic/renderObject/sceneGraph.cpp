@@ -171,6 +171,11 @@ void fe::sceneGraph::disconnect(sceneGraphObject *object)
         disconnect(object->m_graphNode);
     }
 
+int fe::sceneGraph::getConnected(sceneGraphObject *object)
+    {
+        return getConnected(object->m_graphNode);
+    }
+
 void fe::sceneGraph::setZOrder(int node, int z)
     {
         if (!m_sceneRenderTree.nodeExists(m_baseNode.m_graphNode, getZ(z)))
@@ -195,6 +200,11 @@ void fe::sceneGraph::connect(int a, int b)
 void fe::sceneGraph::disconnect(int node)
     {
         connect(node, m_baseNode.m_graphNode);
+    }
+
+int fe::sceneGraph::getConnected(int node)
+    {
+        return m_sceneRenderTree.getNode(node)->m_parent;
     }
 
 fe::transformable &fe::sceneGraph::getGlobalTransform()
