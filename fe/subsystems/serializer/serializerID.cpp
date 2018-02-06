@@ -1,18 +1,10 @@
 #include "serializerID.hpp"
-#include "../../typeDefines.hpp"
 #include "serializable.hpp"
 #include <string.h>
 
 #ifdef FE_IS_ENGINE
-    #include "../../debug/logger.hpp"
     #include "../../feAssert.hpp"
 #else
-    #define FE_LOG(...) ;
-    #define FE_LOG_ERROR(...) ;
-    #define FE_LOG_WARNING(...) ;
-    #define FE_LOG_DEBUG(...) ;
-    #define FE_CONSOLE_LOG(...) ;
-
     #define FE_ASSERT(check, message) assert(check && message)
 #endif
 
@@ -105,6 +97,22 @@ fe::serializerID::dataBlock::~dataBlock()
             {
                 delete pair.second.release();
             }
+    }
+
+fe::serializerID::dataBlock &fe::serializerID::dataBlock::operator=(fe::serializerID::dataBlock &rhs)
+    {
+        if (&rhs != this)
+            {
+                m_id = rhs.m_id;
+                m_mappedData.merge(rhs.m_mappedData);
+                m_mappedListPrimitiveData.merge(rhs.m_mappedListPrimitiveData);
+                m_mappedObjectData.merge(rhs.m_mappedObjectData);
+                m_mappedListObjectData.merge(rhs.m_mappedListObjectData);
+
+                m_size = rhs.m_size;
+            }
+
+        return *this;
     }
 
 void fe::serializerID::interpretData(const char *block)
@@ -228,24 +236,30 @@ void fe::serializerID::interpretData(const char *block)
                                 currentStorageRead.pop();
                                 dataBlock *top = currentBlock.top().release();
                                 currentBlock.pop();
-                                FE_ASSERT(currentBlock.empty(), "CurrentBlock is empty - should never happen");
-                                switch(currentStorageRead.top())
+                                if (!currentBlock.empty()) 
                                     {
-                                        case NONE:
-                                            currentBlock.top()->m_mappedObjectData[top->m_id].reset(top);
-                                            break;
-                                        case LIST:
-                                            currentBlock.top()->m_mappedListObjectData[currentListID.top()].emplace_back(top);
-                                            // Since "List" is a misnomer and actually could mean list-object data we have to check
-                                            // if this is empty to avoid a access error
-                                            if (!currentSize.empty()) 
-                                                {
-                                                    currentBlock.top()->m_size = currentSize.top();
-                                                    currentSize.pop();
-                                                }
-                                            break;
-                                        default:
-                                            break;
+                                        switch (currentStorageRead.top())
+                                            {
+                                                case NONE:
+                                                    currentBlock.top()->m_mappedObjectData[top->m_id].reset(top);
+                                                    break;
+                                                case LIST:
+                                                    currentBlock.top()->m_mappedListObjectData[currentListID.top()].emplace_back(top);
+                                                    // Since "List" is a misnomer and actually could mean list-object data we have to check
+                                                    // if this is empty to avoid a access error
+                                                    if (!currentSize.empty()) 
+                                                        {
+                                                        currentBlock.top()->m_size = currentSize.top();
+                                                            currentSize.pop();
+                                                        }
+                                                    break;
+                                                default:
+                                                    break;
+                                            }
+                                    }
+                                else
+                                    {
+                                        *m_baseDataBlock.get() = *top;
                                     }
                             }
                             break;
@@ -334,6 +348,11 @@ void fe::serializerID::interpretData(const char *block)
             }
     }
 
+unsigned long fe::serializerID::toPrimitive(const std::string &data, unsigned long)
+    {
+        return std::stoul(data);
+    }
+
 int fe::serializerID::toPrimitive(const std::string &data, int)
     {
         return std::stoi(data);
@@ -367,7 +386,7 @@ fe::serializerID::serializerID() : m_baseDataBlock(new dataBlock("serialized_ite
 void fe::serializerID::writeObject(const std::string &id, const serializable &data)
     {
         std::unique_ptr<dataBlock> *currentBlock = nullptr;
-        FE_ASSERT(m_currentBlock.empty(), "Current block is empty. Should never happen if fe::serializerID::serializerID [constructor] is called");
+        FE_ASSERT(!m_currentBlock.empty(), "Current block is empty. Should never happen if fe::serializerID::serializerID [constructor] is called");
         m_currentBlock.top()->m_mappedObjectData[id].reset(new dataBlock(id));
         currentBlock = &m_currentBlock.top()->m_mappedObjectData[id];
         m_currentBlock.push(currentBlock->get());
@@ -378,9 +397,9 @@ void fe::serializerID::writeObject(const std::string &id, const serializable &da
 void fe::serializerID::writeObjectList(const std::string &id, const serializable &data)
     {
         std::unique_ptr<dataBlock> *currentBlock = nullptr;
-        FE_ASSERT(m_currentBlock.empty(), "Current block is empty. Should never happen if fe::serializerID::serializerID [constructor] is called");
+        FE_ASSERT(!m_currentBlock.empty(), "Current block is empty. Should never happen if fe::serializerID::serializerID [constructor] is called");
         m_currentBlock.top()->m_mappedListObjectData[id].emplace_back(new dataBlock(id));
-        currentBlock = &m_currentBlock.top()->m_mappedObjectData[id];
+        currentBlock = &m_currentBlock.top()->m_mappedListObjectData[id].back();
         m_currentBlock.push(currentBlock->get());
         data.serialize(*this);
         m_currentBlock.pop();
@@ -388,18 +407,24 @@ void fe::serializerID::writeObjectList(const std::string &id, const serializable
 
 void fe::serializerID::readObject(const std::string &id, serializable &data)
     {
-        m_currentBlock.push(m_currentBlock.top()->m_mappedObjectData[id].get());
-        data.deserialize(*this);
-        m_currentBlock.pop();
+        if (m_currentBlock.top()->m_mappedObjectData.find(id) != m_currentBlock.top()->m_mappedObjectData.end())
+            {
+                m_currentBlock.push(m_currentBlock.top()->m_mappedObjectData[id].get());
+                data.deserialize(*this);
+                m_currentBlock.pop();
+            }
     }
 
 void fe::serializerID::readObjectList(const std::string &id, serializable &data)
     {
-        m_currentBlock.push(m_currentBlock.top()->m_mappedListObjectData[id].back().release());
-        data.deserialize(*this);
-        m_currentBlock.pop();
+        if (m_currentBlock.top()->m_mappedListObjectData.find(id) != m_currentBlock.top()->m_mappedListObjectData.end())
+            {
+                m_currentBlock.push(m_currentBlock.top()->m_mappedListObjectData[id].back().release());
+                data.deserialize(*this);
+                m_currentBlock.pop();
 
-        m_currentBlock.top()->m_mappedListObjectData[id].erase(m_currentBlock.top()->m_mappedListObjectData[id].end() - 1);
+                m_currentBlock.top()->m_mappedListObjectData[id].erase(m_currentBlock.top()->m_mappedListObjectData[id].end() - 1);
+            }
     }
 
 bool fe::serializerID::listHasItems(const std::string &listID)
@@ -422,7 +447,6 @@ void fe::serializerID::clearData()
         m_baseDataBlock->m_mappedListPrimitiveData.clear();
         m_baseDataBlock->m_mappedObjectData.clear();
 
-        m_baseDataBlock->m_id = "CLEARED";
         m_baseDataBlock->m_size = 0;
     }
 

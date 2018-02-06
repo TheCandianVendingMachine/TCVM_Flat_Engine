@@ -30,25 +30,6 @@ void fe::tileMap::onRemove(fe::imp::tileWorld *object, fe::Handle objectHandle)
         fe::engine::get().getCollisionWorld().deleteCollider(object->colliderPtr);
     }
 
-void fe::tileMap::onSave(fe::serializerID &serial) const
-    {}
-
-void fe::tileMap::onLoad(fe::serializerID &serial)
-    {
-        loadFabrications(m_fabricationFilepath);
-        addGlobalTexture(m_textureName);
-        std::vector<fe::imp::tileWorld> objCopy;
-        std::copy(m_objects.begin(), m_objects.end(), std::back_inserter(objCopy));
-        clearAllObjects();
-
-        for (auto &obj : objCopy)
-            {
-                add({ obj.xPosition, obj.yPosition }, obj.id);
-            }
-
-        rebuildTilemap();
-    }
-
 fe::tileMap::tileMap() :
     m_fabricationFilepath{"\0"},
     m_textureName{"\0"}
@@ -214,6 +195,49 @@ void fe::tileMap::draw(sf::RenderTarget &target, sf::RenderStates states)
         target.draw(m_verticies, states);
     }
 
+void fe::tileMap::serialize(fe::serializerID &serializer) const
+    {
+        for (auto &tile : m_objects)
+            {
+                serializer.writeObjectList("tiles", tile);
+            }
+        serializer.write("textureName", m_textureName);
+        serializer.write("fabricationPath", m_fabricationFilepath);
+    }
+
+void fe::tileMap::deserialize(fe::serializerID &serializer)
+    {
+        addGlobalTexture(serializer.read<std::string>("textureName"));
+        loadFabrications(serializer.read<std::string>("fabricationPath").c_str());
+
+        while (serializer.listHasItems("tiles"))
+            {
+                fe::imp::tileWorld obj;
+                serializer.readObjectList("tiles", obj);
+                add({ obj.xPosition, obj.yPosition }, obj.id);
+            }
+
+        rebuildTilemap();
+    }
+
+void fe::tileMap::serializeFabrications(fe::serializerID &serializer) const
+    {
+        for (auto &fab : m_fabrications)
+            {
+                serializer.writeObjectList("fabrications", fab);
+            }
+    }
+
+void fe::tileMap::deserializeFabrications(fe::serializerID &serializer)
+    {
+        while (serializer.listHasItems("fabrications"))
+            {
+                fe::imp::tile fab;
+                serializer.readObjectList("fabrications", fab);
+                create(fab.id, { fab.xSize, fab.ySize }, { fab.xTexturePosition, fab.yTexturePosition });
+            }
+    }
+
 void fe::tileMap::loadFabrications(const char *filepath)
     {
         clearFabs();
@@ -258,4 +282,40 @@ void fe::tileMap::clear()
     {
         clearMap();
         clearFabs();
+    }
+
+void fe::imp::tileWorld::serialize(fe::serializerID &serializer) const
+    {
+        serializer.write("id", id);
+        serializer.write("handle", handle);
+        serializer.write("x", xPosition);
+        serializer.write("y", yPosition);
+    }
+
+void fe::imp::tileWorld::deserialize(fe::serializerID &serializer)
+    {
+        id = serializer.read<fe::str>("id");
+        handle = serializer.read<fe::Handle>("handle");
+        xPosition = serializer.read<float>("x");
+        yPosition = serializer.read<float>("y");
+    }
+
+void fe::imp::tile::serialize(fe::serializerID &serializer) const
+    {
+        serializer.write("xSize", xSize);
+        serializer.write("ySize", ySize);
+        serializer.write("xTexturePosition", xTexturePosition);
+        serializer.write("yTexturePosition", yTexturePosition);
+        serializer.write("id", id);
+        serializer.writeObject("collider", collider);
+    }
+
+void fe::imp::tile::deserialize(fe::serializerID &serializer)
+    {
+        xSize = serializer.read<unsigned int>("xSize");
+        ySize = serializer.read<unsigned int>("ySize");
+        xTexturePosition = serializer.read<unsigned int>("xTexturePosition");
+        yTexturePosition = serializer.read<unsigned int>("yTexturePosition");
+        std::strcpy(id, serializer.read<std::string>("id").c_str());
+        serializer.readObject("collider", collider);
     }

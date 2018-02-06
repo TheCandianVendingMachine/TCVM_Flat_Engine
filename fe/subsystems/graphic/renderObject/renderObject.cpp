@@ -1,6 +1,7 @@
 #include "renderObject.hpp"
 #include "../../../debug/logger.hpp"
 #include "../../../feAssert.hpp"
+#include "../../serializer/serializerID.hpp"
 #include <cstring>
 
 fe::renderText::renderText() : 
@@ -85,4 +86,54 @@ void fe::renderText::setSize(float x, float y)
     {
         m_fontSize = static_cast<unsigned int>(std::ceilf((y * (72.f / 96.f))));
         m_update = true;
+    }
+
+void fe::renderObject::serialize(fe::serializerID &serializer) const
+    {
+        sceneGraphObject::serialize(serializer);
+        serializer.writeList("verticies", m_verticies[0]);
+        serializer.writeList("verticies", m_verticies[1]);
+        serializer.writeList("verticies", m_verticies[2]);
+        serializer.writeList("verticies", m_verticies[3]);
+    }
+
+void fe::renderObject::deserialize(fe::serializerID &serializer)
+    {
+        sceneGraphObject::deserialize(serializer);
+        int index = 0;
+        while (serializer.listHasItems("verticies"))
+            {
+                m_verticies[index++] = serializer.readList<float>("verticies");
+            }
+        std::reverse(std::begin(m_verticies), std::end(m_verticies));
+    }
+
+void fe::sceneGraphObject::serialize(fe::serializerID &serializer) const
+    {
+        serializer.write("type", m_type);
+        serializer.write("r", m_vertColour[0]);
+        serializer.write("g", m_vertColour[1]);
+        serializer.write("b", m_vertColour[2]);
+        serializer.write("a", m_vertColour[3]);
+        serializer.write("texCoordX", m_texCoords[0]);
+        serializer.write("texCoordY", m_texCoords[1]);
+        serializer.write("graphNode", m_graphNode);
+        serializer.write("zPosition", m_zPosition);
+        serializer.write("draw", m_draw);
+        serializer.write("static", m_static);
+    }
+
+void fe::sceneGraphObject::deserialize(fe::serializerID & serializer)
+    {
+        m_type = RENDER_OBJECT_TYPE(serializer.read<int>("type"));
+        m_vertColour[0] = serializer.read<int>("r");
+        m_vertColour[1] = serializer.read<int>("g");
+        m_vertColour[2] = serializer.read<int>("b");
+        m_vertColour[3] = serializer.read<int>("a");
+        m_texCoords[0] = serializer.read<float>("texCoordX");
+        m_texCoords[1] = serializer.read<float>("texCoordY");
+        m_graphNode = serializer.read<int>("graphNode");
+        m_zPosition = serializer.read<int>("zPosition");
+        m_draw = serializer.read<bool>("draw");
+        m_static = serializer.read<bool>("static");
     }

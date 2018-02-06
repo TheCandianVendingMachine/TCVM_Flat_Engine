@@ -4,7 +4,7 @@
 #define FLAT_ENGINE_EXPORT
 #include "../../flatEngineExport.hpp"
 #include "../../objectManagement/handleManager.hpp"
-#include "../serializer/serializerID.hpp"
+#include "../serializer/serializable.hpp"
 
 namespace fe
     {
@@ -13,16 +13,13 @@ namespace fe
         class gameWorld;
         class baseEntity;
 
-        class entityWorld : protected fe::handleManager<fe::baseEntity*, FE_MAX_GAME_OBJECTS>
+        class entityWorld : protected fe::handleManager<fe::baseEntity*, FE_MAX_GAME_OBJECTS>, public fe::serializable
             {
                 private:
                     fe::gameWorld &m_gameWorld;
 
                     FLAT_ENGINE_API void onAdd(fe::baseEntity **object, fe::Handle objectHandle);
                     FLAT_ENGINE_API void onRemove(fe::baseEntity **object, fe::Handle objectHandle);
-
-                    FLAT_ENGINE_API void onSave(fe::serializerID &serial) const;
-                    FLAT_ENGINE_API void onLoad(fe::serializerID &serial);
 
                 public:
                     FLAT_ENGINE_API entityWorld(fe::gameWorld &gameWorld);
@@ -38,7 +35,8 @@ namespace fe
                     FLAT_ENGINE_API void removeObject(fe::Handle handle);
                     FLAT_ENGINE_API fe::baseEntity *getObject(fe::Handle handle) const;
 
-                    SERIALIZE_CALLBACK_ID(onSave, onLoad, "gameObjects", "entities", m_objects);
+                    FLAT_ENGINE_API void serialize(fe::serializerID &serializer);
+                    FLAT_ENGINE_API void deserialize(fe::serializerID &serializer);
 
             };
 

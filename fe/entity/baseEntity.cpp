@@ -6,6 +6,7 @@
 #include "../subsystems/graphic/renderObject/sceneGraph.hpp"
 #include "../subsystems/physics/physicsEngine.hpp"
 #include "../subsystems/physics/collision/collisionWorld.hpp"
+#include "../subsystems/serializer/serializerID.hpp"
 
 fe::baseEntity::baseEntity(fe::entityModules modules, bool staticObject) :
     m_killEntity(false),
@@ -20,8 +21,7 @@ fe::baseEntity::baseEntity(fe::entityModules modules, bool staticObject) :
     m_sizeX(0.f),
     m_sizeY(0.f),
     m_colour(sf::Color::White),
-    m_enabledModulesEnum(modules),
-    m_enabledModulesNum(static_cast<std::int16_t>(modules))
+    m_enabledModulesEnum(modules)
 {}
 
 void fe::baseEntity::deinitialize(fe::gameWorld &world)
@@ -230,4 +230,86 @@ fe::rigidBody *fe::baseEntity::getRigidBody() const
 fe::collider *fe::baseEntity::getCollider() const
     {
         return m_collisionBody;
+    }
+
+void fe::baseEntity::serialize(fe::serializerID &serializer) const
+    {
+        serializer.write("modules", static_cast<std::uint16_t>(m_enabledModulesEnum));
+        serializer.write("handle", m_handle);
+
+        serializer.write("positionX", m_positionX);
+        serializer.write("positionY", m_positionY);
+
+        serializer.write("sizeX", m_sizeX);
+        serializer.write("sizeY", m_sizeY);
+
+        serializer.write("r", m_colour.r);
+        serializer.write("g", m_colour.g);
+        serializer.write("b", m_colour.b);
+        serializer.write("a", m_colour.a);
+
+        serializer.write("enabled", m_enabled);
+        serializer.write("static", m_static);
+
+        if (m_collisionBody) { serializer.writeObject("collider", *m_collisionBody); }
+        if (m_renderObject) { serializer.writeObject("renderObject", *m_renderObject); }
+        if (m_rigidBody) { serializer.writeObject("rigidBody", *m_rigidBody); }
+    }
+
+void fe::baseEntity::deserialize(fe::serializerID &serializer)
+    {
+        m_enabledModulesEnum = fe::entityModules(serializer.read<int>("modules"));
+
+        if (m_renderObject)
+            {
+                FE_LOG_WARNING("fe::baseEntity::m_renderObject already allocated. Possible Memory Leak");
+            }
+
+        if (m_rigidBody)
+            {
+                FE_LOG_WARNING("fe::baseEntity::m_rigidBody already allocated. Possible memory leak");
+            }
+
+        if (m_collisionBody)
+            {
+                FE_LOG_WARNING("fe::baseEntity::m_collisionBody already allocated. Possible memory leak");
+            }
+
+        if (m_enabledModulesEnum & fe::entityModules::RENDER_OBJECT)
+            {
+                m_renderObject = fe::engine::get().getCurrentState().getGameWorld().getSceneGraph().allocateRenderObject();
+            }
+        else if (m_enabledModulesEnum & fe::entityModules::RENDER_TEXT)
+            {
+                m_renderObject = fe::engine::get().getCurrentState().getGameWorld().getSceneGraph().allocateRenderText();
+            }
+
+        if (m_enabledModulesEnum & fe::entityModules::RIGID_BODY)
+            {
+                m_rigidBody = fe::engine::get().getPhysicsEngine().createRigidBody();
+            }
+
+        if (m_enabledModulesEnum & fe::entityModules::COLLISION_BODY)
+            {
+                m_collisionBody = fe::engine::get().getCollisionWorld().createCollider(0.f, 0.f);
+            }
+
+        m_handle = serializer.read<fe::Handle>("handle");
+        
+        m_positionX = serializer.read<float>("positionX");
+        m_positionY = serializer.read<float>("positionY");
+        m_sizeX = serializer.read<float>("sizeX");
+        m_sizeY = serializer.read<float>("sizeY");
+
+        m_colour.r = serializer.read<int>("r");
+        m_colour.g = serializer.read<int>("g");
+        m_colour.b = serializer.read<int>("b");
+        m_colour.a = serializer.read<int>("a");
+
+        m_enabled = serializer.read<bool>("enabled");
+        m_static = serializer.read<bool>("static");
+
+        if (m_collisionBody)  { serializer.readObject("collider", *m_collisionBody); }
+        if (m_renderObject) { serializer.readObject("renderObject", *m_renderObject); }
+        if (m_rigidBody) { serializer.readObject("rigidBody", *m_rigidBody); }
     }

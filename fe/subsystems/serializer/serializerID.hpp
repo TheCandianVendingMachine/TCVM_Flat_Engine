@@ -18,6 +18,17 @@
 #include <sstream>
 #include <memory>
 
+#include "../../typeDefines.hpp"
+#ifdef FE_IS_ENGINE
+    #include "../../debug/logger.hpp"
+#else
+    #define FE_LOG(...) ;
+    #define FE_LOG_ERROR(...) ;
+    #define FE_LOG_WARNING(...) ;
+    #define FE_LOG_DEBUG(...) ;
+    #define FE_CONSOLE_LOG(...) ;
+#endif
+
 namespace fe
     {
         class serializable;
@@ -41,6 +52,8 @@ namespace fe
                             FLAT_ENGINE_API void readData(const char *block);
                             FLAT_ENGINE_API bool hasData(const char *dataId);
                             FLAT_ENGINE_API ~dataBlock();
+
+                            FLAT_ENGINE_API dataBlock &operator=(dataBlock &rhs);
                         };
                 private:
                     const std::unique_ptr<dataBlock> m_baseDataBlock;
@@ -48,6 +61,9 @@ namespace fe
 
                     FLAT_ENGINE_API void interpretData(const char *dataBlock);
 
+                    template<typename T>
+                    T toPrimitive(const std::string &data, T) { FE_LOG_WARNING("Data type unsupported to deserialize. fe::serializerID::toPrimitive"); return T(); }
+                    FLAT_ENGINE_API unsigned long toPrimitive(const std::string &data, unsigned long);
                     FLAT_ENGINE_API int toPrimitive(const std::string &data, int);
                     FLAT_ENGINE_API unsigned int toPrimitive(const std::string &data, unsigned int);
                     FLAT_ENGINE_API float toPrimitive(const std::string &data, float);
@@ -98,25 +114,46 @@ namespace fe
         template<typename T>
         void serializerID::write(const std::string &id, T &&data)
             {
-                m_currentBlock.top()->m_mappedData[id] = std::to_string(data);
+                if constexpr (fe::is_c_str<T>::value)
+                    {
+                        m_currentBlock.top()->m_mappedData[id] = data;
+                    }
+                else
+                    {
+                        m_currentBlock.top()->m_mappedData[id] = std::to_string(data);
+                    }
             }
 
         template<typename T>
         void serializerID::write(const std::string &id, T &data)
             {
-                write(id, std::forward<T>(data));
+                if constexpr (fe::is_c_str<T>::value)
+                    {
+                        m_currentBlock.top()->m_mappedData[id] = data;
+                    }
+                else
+                    {
+                        write(id, std::forward<T>(data));
+                    }
             }
 
         template<typename T>
         void serializerID::writeList(const std::string &id, T &&data)
             {
-                m_currentBlock.top()->m_mappedListPrimitiveData[id] = std::to_string(data);
+                if constexpr (fe::is_c_str<T>::value)
+                    {
+                        m_currentBlock.top()->m_mappedListPrimitiveData[id].emplace_back(data);
+                    }
+                else
+                    {
+                        m_currentBlock.top()->m_mappedListPrimitiveData[id].push_back(std::to_string(data));
+                    }
             }
 
         template<typename T>
         void serializerID::writeList(const std::string &id, T &data)
             {
-                write(id, std::forward<T>(data));
+                writeList(id, std::forward<T>(data));
             }
 
         template<typename T>
@@ -134,6 +171,6 @@ namespace fe
             }
     }
 
-#define SERIALIZE_ID(...) [[deprecated]]void serialize(fe::serializerID&) {} [[deprecated]]void deserialize(fe::serializerID&) {}
-#define SERIALIZE_CALLBACK_ID(...) [[deprecated]]void serialize(fe::serializerID&) {} [[deprecated]]void deserialize(fe::serializerID&) {}
-#define SERIALIZE_NAME_ID(name, ...) [[deprecated]]void serialize##name(fe::serializerID&) {} [[deprecated]]void deserialize##name(fe::serializerID&) {}
+#define SERIALIZE_ID(...) [[deprecated]]void serialize(fe::serializerID&) { assert(false && "Deprecated"); } [[deprecated]]void deserialize(fe::serializerID&) { assert(false && "Deprecated"); }
+#define SERIALIZE_CALLBACK_ID(...) [[deprecated]]void serialize(fe::serializerID&) { assert(false && "Deprecated"); } [[deprecated]]void deserialize(fe::serializerID&) { assert(false && "Deprecated"); }
+#define SERIALIZE_NAME_ID(name, ...) [[deprecated]]void serialize##name(fe::serializerID&) { assert(false && "Deprecated"); } [[deprecated]]void deserialize##name(fe::serializerID&) { assert(false && "Deprecated"); }

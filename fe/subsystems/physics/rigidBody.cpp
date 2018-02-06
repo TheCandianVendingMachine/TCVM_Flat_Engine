@@ -1,4 +1,41 @@
 #include "rigidBody.hpp"
+#include "../serializer/serializerID.hpp"
+
+void fe::rigidBody::serialize(fe::serializerID &serializer) const
+    {
+        serializer.write("positionX", m_positionX);
+        serializer.write("positionY", m_positionY);
+        serializer.write("oldPosX", m_oldPositionX);
+        serializer.write("oldPosY", m_oldPositionY);
+        serializer.write("velocityX", m_velocityX);
+        serializer.write("velocityY", m_velocityY);
+        serializer.write("forceX", m_forceX);
+        serializer.write("forceY", m_forceY);
+        serializer.write("impulseX", m_impulseX);
+        serializer.write("impulseY", m_impulseY);
+        serializer.write("maxSpeed", m_maxSpeed);
+        serializer.write("mass", m_mass);
+        serializer.write("friction", m_frictionCoeff);
+        serializer.write("enabled", m_enabled);
+    }
+
+void fe::rigidBody::deserialize(fe::serializerID &serializer)
+    {
+        m_positionX = serializer.read<float>("positionX");
+        m_positionY = serializer.read<float>("positionY");
+        m_oldPositionX = serializer.read<float>("oldPosX");
+        m_oldPositionY = serializer.read<float>("oldPosY");
+        m_velocityX = serializer.read<float>("velocityX");
+        m_velocityY = serializer.read<float>("velocityY");
+        m_forceX = serializer.read<float>("forceX");
+        m_forceY = serializer.read<float>("forceY");
+        m_impulseX = serializer.read<float>("impulseX");
+        m_impulseY = serializer.read<float>("impulseY");
+        m_maxSpeed = serializer.read<float>("maxSpeed");
+        m_mass = serializer.read<float>("mass");
+        m_frictionCoeff = serializer.read<float>("friction");
+        m_enabled = serializer.read<bool>("enabled");
+    }
 
 float fe::rigidBody::getVelocityX() const
     {

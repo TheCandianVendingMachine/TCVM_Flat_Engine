@@ -5,12 +5,13 @@
 #include "collisionBounds.hpp"
 #include "../../../math/Vector2.hpp"
 #include "../../../typeDefines.hpp"
+#include "../../serializer/serializable.hpp"
 #include "../../serializer/serializerID.hpp"
 #include <functional>
 
 namespace fe
     {
-        struct collider 
+        struct collider : public fe::serializable
             {
                 std::function<void(fe::collisionData&)> m_collisionCallback = [](fe::collisionData&) {};
                 fe::str m_eventOnCollision;
@@ -21,6 +22,21 @@ namespace fe
                 bool m_enabled = true;
                 bool m_static;
 
-                SERIALIZE_ID("collider", "eventOnCollision", m_eventOnCollision, "static", m_static, "enabled", m_enabled, "bound", m_aabb);
+                void serialize(fe::serializerID &serializer) const
+                    {
+                        serializer.write("eventOnCollision", m_eventOnCollision);
+                        serializer.write("static", m_static);
+                        serializer.write("enabled", m_enabled);
+                        serializer.writeObject("bound", m_aabb);
+                    }
+
+                void deserialize(fe::serializerID &serializer)
+                    {
+                        m_eventOnCollision = serializer.read<fe::str>("eventOnCollision");
+                        m_static = serializer.read<bool>("static");
+                        m_enabled = serializer.read<bool>("enabled");
+
+                        serializer.readObject("bound", m_aabb);
+                    }
             };
     }

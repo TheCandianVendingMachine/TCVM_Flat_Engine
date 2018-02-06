@@ -11,13 +11,13 @@ void fe::renderer::startUp()
 		m_renderWindow = new(fe::memoryManager::get().getStackAllocater().alloc(sizeof(sf::RenderWindow))) sf::RenderWindow;
         m_windowSettings = new(fe::memoryManager::get().getStackAllocater().alloc(sizeof(fe::serializerID))) fe::serializerID;
 
-        m_windowSize.x = 1280;
-        m_windowSize.y = 720;
+        m_settings.m_windowSize.x = 1280;
+        m_settings.m_windowSize.y = 720;
 
-        m_borderless = false;
-        m_fullscreen = false;
+        m_settings.m_borderless = false;
+        m_settings.m_fullscreen = false;
 
-        m_fps = 0;
+        m_settings.m_fps = 0;
     }
 
 void fe::renderer::shutDown()
@@ -37,7 +37,7 @@ void fe::renderer::shutDown()
 
 void fe::renderer::save() const
     {
-        //serialize(*m_windowSettings);
+        m_windowSettings->writeObject("settings", m_settings);
 
         std::ofstream out("window.cfg");
         m_windowSettings->outData(out);
@@ -50,27 +50,27 @@ void fe::renderer::load()
         m_windowSettings->readData(in);
         in.close();
 
-        deserialize(*m_windowSettings);
+        m_windowSettings->readObject("settings", m_settings);
         sf::Uint32 settingFlags = sf::Style::Close;
-        sf::VideoMode mode(m_windowSize.x, m_windowSize.y);
+        sf::VideoMode mode(m_settings.m_windowSize.x, m_settings.m_windowSize.y);
 
-        if (m_borderless && m_fullscreen) 
+        if (m_settings.m_borderless && m_settings.m_fullscreen)
             {
                 settingFlags = sf::Style::None | sf::Style::Fullscreen;
                 mode = sf::VideoMode::getDesktopMode();
             }
-        else if (m_borderless)
+        else if (m_settings.m_borderless)
             {
                 settingFlags = sf::Style::None;
             }
-        else if (m_fullscreen)
+        else if (m_settings.m_fullscreen)
             {
                 settingFlags = sf::Style::Fullscreen;
                 mode = sf::VideoMode::getDesktopMode();
             }
 
         m_renderWindow->create(mode, "Flat Engine", settingFlags);
-        m_renderWindow->setFramerateLimit(m_fps);
+        m_renderWindow->setFramerateLimit(m_settings.m_fps);
     }
 
 void fe::renderer::draw(const sf::Drawable &draw)
@@ -90,3 +90,21 @@ fe::Vector2<unsigned int> fe::renderer::getWindowSize()
 
 fe::renderer::~renderer()
     {}
+
+void fe::renderer::settings::serialize(fe::serializerID &serializer) const
+    {
+        serializer.write("windowSizeX", m_windowSize.x);
+        serializer.write("windowSizeY", m_windowSize.y);
+        serializer.write("fpsCap", m_fps);
+        serializer.write("fullscreen", m_fullscreen);
+        serializer.write("borderless", m_borderless);
+    }
+
+void fe::renderer::settings::deserialize(fe::serializerID &serializer)
+    {
+        m_windowSize.x =    serializer.read<unsigned int>("windowSizeX");
+        m_windowSize.y =    serializer.read<unsigned int>("windowSizeY");
+        m_fps =             serializer.read<unsigned int>("fpsCap");
+        m_fullscreen =      serializer.read<bool>("fullscreen");
+        m_borderless =      serializer.read<bool>("borderless");
+    }

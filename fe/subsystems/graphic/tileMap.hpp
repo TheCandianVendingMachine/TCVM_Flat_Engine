@@ -6,7 +6,7 @@
 #include "../../objectManagement/str.hpp"
 #include "../../objectManagement/handleManager.hpp"
 #include "../../math/Vector2.hpp"
-#include "../serializer/serializerID.hpp"
+#include "../serializer/serializable.hpp"
 #include "../../objectManagement/guid.hpp"
 #include "../physics/collision/collisionBody.hpp"
 #include <SFML/Graphics/VertexArray.hpp>
@@ -21,7 +21,7 @@ namespace fe
     {
         namespace imp
             {
-                struct tile
+                struct tile : public fe::serializable
                     {
                         char id[64];
 
@@ -32,10 +32,11 @@ namespace fe
 
                         fe::collider collider;
 
-                        SERIALIZE_ID("tile", "xSize", xSize, "ySize", ySize, "xTexturePosition", xTexturePosition, "yTexturePosition", yTexturePosition, "id", id, "collider", collider);
+                        FLAT_ENGINE_API void serialize(fe::serializerID &serializer) const;
+                        FLAT_ENGINE_API void deserialize(fe::serializerID &serializer);
                     };
 
-                struct tileWorld : public fe::guid
+                struct tileWorld : public fe::guid, public fe::serializable
                     {
                         fe::str id;
                         int handle = -1;
@@ -49,11 +50,12 @@ namespace fe
 
                         fe::collider *colliderPtr = nullptr;
 
-                        SERIALIZE_ID("tile", "id", id, "handle", handle, "x", xPosition, "y", yPosition);
+                        FLAT_ENGINE_API void serialize(fe::serializerID &serializer) const;
+                        FLAT_ENGINE_API void deserialize(fe::serializerID &serializer);
                     };
             }
 
-        class tileMap : private fe::handleManager<fe::imp::tileWorld, 0>
+        class tileMap : private fe::handleManager<fe::imp::tileWorld, 0>, public fe::serializable
             {
                 private:
                     std::vector<fe::imp::tile> m_fabrications; // tiles already defined
@@ -65,9 +67,6 @@ namespace fe
 
                     FLAT_ENGINE_API void onAdd(fe::imp::tileWorld *object, fe::Handle objectHandle);
                     FLAT_ENGINE_API void onRemove(fe::imp::tileWorld *object, fe::Handle objectHandle);
-
-                    FLAT_ENGINE_API void onSave(fe::serializerID &serial) const;
-                    FLAT_ENGINE_API void onLoad(fe::serializerID &serial);
 
                 public:
                     FLAT_ENGINE_API tileMap();
@@ -91,8 +90,11 @@ namespace fe
 
                     FLAT_ENGINE_API void draw(sf::RenderTarget &target, sf::RenderStates states);
 
-                    SERIALIZE_CALLBACK_ID(onSave, onLoad, "tilemap", "tiles", m_objects, "textureName", m_textureName, "fabricationsPath", m_fabricationFilepath);
-                    SERIALIZE_NAME_ID(Fabrications, "tilemap", "fabrications", m_fabrications);
+                    FLAT_ENGINE_API void serialize(fe::serializerID &serializer) const;
+                    FLAT_ENGINE_API void deserialize(fe::serializerID &serializer);
+
+                    FLAT_ENGINE_API void serializeFabrications(fe::serializerID &serializer) const;
+                    FLAT_ENGINE_API void deserializeFabrications(fe::serializerID &serializer);
 
                     FLAT_ENGINE_API void loadFabrications(const char *filepath);
                     FLAT_ENGINE_API void saveFabrications(const char *filepath);

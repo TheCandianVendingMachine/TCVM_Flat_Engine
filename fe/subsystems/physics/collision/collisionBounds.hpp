@@ -3,11 +3,11 @@
 #pragma once
 #define FLAT_ENGINE_EXPORT
 #include "../../../flatEngineExport.hpp"
-#include "../../serializer/serializerID.hpp"
+#include "../../serializer/serializable.hpp"
 
 namespace fe
     {
-        struct collisionBounds
+        struct collisionBounds : public fe::serializable
             {
                 float m_positionX = 0.f;
                 float m_positionY = 0.f;
@@ -17,9 +17,12 @@ namespace fe
                 virtual bool intersects(const collisionBounds &other) const = 0;
                 virtual bool contains(const collisionBounds &other) const = 0;
                 virtual bool contains(float x, float y) const = 0;
+
+                virtual void serialize(fe::serializerID &serializer) const = 0;
+                virtual void deserialize(fe::serializerID &serializer) = 0;
             };
 
-        struct AABB : collisionBounds
+        struct AABB : public collisionBounds
             {
                 float m_sizeX = 0.f;
                 float m_sizeY = 0.f;
@@ -34,6 +37,7 @@ namespace fe
                 FLAT_ENGINE_API float volume() const;
                 FLAT_ENGINE_API float perimeter() const;
 
-                SERIALIZE_ID("aabb", "sizeX", m_sizeX, "sizeY", m_sizeY, "posX", m_positionX, "posY", m_positionY, "globalPosX", m_globalPositionX, "globalPosY", m_globalPositionY);
+                FLAT_ENGINE_API void serialize(fe::serializerID &serializer) const;
+                FLAT_ENGINE_API void deserialize(fe::serializerID &serializer);
             };
     }

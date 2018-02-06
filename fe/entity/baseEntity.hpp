@@ -13,7 +13,7 @@
 #include "../subsystems/graphic/renderObject/sceneGraph.hpp"
 #include "../subsystems/physics/physicsEngine.hpp"
 #include "../objectManagement/guid.hpp"
-#include "../subsystems/serializer/serializerID.hpp"
+#include "../subsystems/serializer/serializable.hpp"
 #include <SFML/Graphics/Color.hpp>
 
 namespace fe
@@ -42,7 +42,7 @@ namespace fe
                 return static_cast<std::int16_t>(lhs) & static_cast<std::int16_t>(rhs);
             }
 
-        class baseEntity : public fe::guid
+        class baseEntity : public fe::guid, public fe::serializable
             {
                 protected:
                     fe::sceneGraphObject *m_renderObject;
@@ -50,7 +50,6 @@ namespace fe
                     fe::collider *m_collisionBody;
 
                     fe::entityModules m_enabledModulesEnum;
-                    std::int16_t m_enabledModulesNum;
 
                     fe::Handle m_handle;
 
@@ -115,58 +114,43 @@ namespace fe
                     FLAT_ENGINE_API fe::rigidBody *getRigidBody() const;
                     FLAT_ENGINE_API fe::collider *getCollider() const;
 
-                    SERIALIZE_ID("defaultVars",
-                        "modules", m_enabledModulesNum,
-                        "handle", m_handle,
-                        "posX", m_positionX,
-                        "posY", m_positionY,
-                        "sizeX", m_sizeX,
-                        "sizeY", m_sizeY,
-                        "enabled", m_enabled,
-                        "moved", m_moved,
-                        "static", m_static,
-                        "renderObject", m_renderObject);
+                    FLAT_ENGINE_API void serialize(fe::serializerID &serializer) const;
+                    FLAT_ENGINE_API void deserialize(fe::serializerID &serializer);
 
             };
 
         template<typename ...Args>
         void fe::baseEntity::initialize(fe::gameWorld &world, Args &&...args)
             {
-                if (m_renderObject)
-                    {
-                        delete m_renderObject;
-                        m_renderObject = nullptr;
-                    }
-
-                if (m_collisionBody)
-                    {
-                        delete m_collisionBody;
-                        m_collisionBody = nullptr;
-                    }
-
-                if (m_rigidBody)
-                    {
-                        delete m_rigidBody;
-                        m_rigidBody = nullptr;
-                    }
-
                 if (m_enabledModulesEnum & fe::entityModules::RENDER_OBJECT)
                     {
-                        m_renderObject = world.getSceneGraph().allocateRenderObject();
+                        if (!m_renderObject)
+                            {
+                                m_renderObject = world.getSceneGraph().allocateRenderObject();
+                            }
                     }
                 else if (m_enabledModulesEnum & fe::entityModules::RENDER_TEXT)
                     {
-                        m_renderObject = world.getSceneGraph().allocateRenderText();
+                        if (!m_renderObject)
+                            {
+                                m_renderObject = world.getSceneGraph().allocateRenderText();
+                            }
                     }
 
                 if (m_enabledModulesEnum & fe::entityModules::RIGID_BODY)
                     {
-                        m_rigidBody = fe::engine::get().getPhysicsEngine().createRigidBody();
+                        if (!m_rigidBody)
+                            {
+                                m_rigidBody = fe::engine::get().getPhysicsEngine().createRigidBody();
+                            }
                     }
 
                 if (m_enabledModulesEnum & fe::entityModules::COLLISION_BODY)
                     {
-                        m_collisionBody = fe::engine::get().getCollisionWorld().createCollider(0.f, 0.f);
+                        if (!m_collisionBody)
+                            {
+                                m_collisionBody = fe::engine::get().getCollisionWorld().createCollider(0.f, 0.f);
+                            }
                     }
 
                 if (m_renderObject)

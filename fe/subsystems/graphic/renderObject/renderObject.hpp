@@ -7,7 +7,7 @@
 #include "../../physics/transformable.hpp"
 #include "../../../typeDefines.hpp"
 #include "../../resourceManager/fontData.hpp"
-#include "../../serializer/serializerID.hpp"
+#include "../../serializer/serializable.hpp"
 #include <SFML/Graphics/VertexArray.hpp>
 #include <SFML/Graphics/Font.hpp>
 
@@ -25,7 +25,7 @@ namespace fe
                 TEXT = 1 << 1,
             };
 
-        struct sceneGraphObject
+        struct sceneGraphObject : public fe::serializable
             {
                 fe::transformable m_transform;
                 fe::transformable m_tempTransform;
@@ -40,14 +40,8 @@ namespace fe
                 sceneGraphObject() : m_type(NONE) {}
                 virtual void setSize(float x, float y) {}
 
-                SERIALIZE_ID(   "sceneGraphObject",
-                                "type", m_type,
-                                "vertColour", m_vertColour,
-                                "texCoords", m_texCoords,
-                                "graphNode", m_graphNode,
-                                "zPosition", m_zPosition,
-                                "draw", m_draw,
-                                "static", m_static);
+                FLAT_ENGINE_API virtual void serialize(fe::serializerID &serializer) const;
+                FLAT_ENGINE_API virtual void deserialize(fe::serializerID &serializer);
             };
 
         struct renderObject : public sceneGraphObject
@@ -57,15 +51,8 @@ namespace fe
                 renderObject() { m_type = OBJECT; }
                 void setSize(float x, float y) { m_verticies[2] = x; m_verticies[3] = y; }
 
-                SERIALIZE_ID(   "renderObject",
-                                "type", m_type,
-                                "vertColour", m_vertColour,
-                                "texCoords", m_texCoords,
-                                "graphNode", m_graphNode,
-                                "zPosition", m_zPosition,
-                                "draw", m_draw,
-                                "static", m_static,
-                                "verticies", m_verticies);
+                FLAT_ENGINE_API void serialize(fe::serializerID &serializer) const;
+                FLAT_ENGINE_API void deserialize(fe::serializerID &serializer);
             };
 
         struct renderText : public sceneGraphObject
@@ -88,6 +75,9 @@ namespace fe
 
                 FLAT_ENGINE_API void computeVerticies();
                 FLAT_ENGINE_API void setSize(float x, float y);
+
+                //FLAT_ENGINE_API void serialize(fe::serializerID &serializer) const;
+                //FLAT_ENGINE_API void deserialize(fe::serializerID &serializer);
 
                 SERIALIZE_ID(   "renderText",
                                 "type", m_type,

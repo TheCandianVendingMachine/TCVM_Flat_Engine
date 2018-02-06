@@ -41,4 +41,10 @@ namespace fe
         template<typename ...Args>
         struct is_smart_pointer<const std::shared_ptr<Args...>> : std::true_type
             {};
+
+        template<typename T>
+        struct is_c_str : std::integral_constant<bool,
+            std::is_same<typename std::decay<T>::type, char*>::value ||
+            std::is_same<typename std::decay<T>::type, char const*>::value>
+            {};
     }

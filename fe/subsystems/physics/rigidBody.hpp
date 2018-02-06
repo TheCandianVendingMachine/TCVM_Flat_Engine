@@ -4,11 +4,12 @@
 #define FLAT_ENGINE_EXPORT
 #include "../../flatEngineExport.hpp"
 #include "../../math/Vector2.hpp"
+#include "../serializer/serializable.hpp"
 #include "transformable.hpp"
 
 namespace fe
     {
-        class rigidBody
+        class rigidBody : public fe::serializable
             {
                 private:
                     // Positions of the entity
@@ -42,6 +43,9 @@ namespace fe
                     friend class baseEntity;
 
                 public:
+                    FLAT_ENGINE_API void serialize(fe::serializerID &serializer) const;
+                    FLAT_ENGINE_API void deserialize(fe::serializerID &serializer);
+
                     FLAT_ENGINE_API float getVelocityX() const;
                     FLAT_ENGINE_API float getVelocityY() const;
                     FLAT_ENGINE_API float getForceX() const;

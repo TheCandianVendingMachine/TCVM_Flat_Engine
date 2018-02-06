@@ -1,4 +1,5 @@
 #include "collisionBounds.hpp"
+#include "../../serializer/serializerID.hpp"
 #include <algorithm>
 
 bool fe::AABB::intersects(const collisionBounds &other) const
@@ -47,4 +48,24 @@ float fe::AABB::volume() const
 float fe::AABB::perimeter() const
     {
         return 2.f * (m_sizeX + m_sizeY);
+    }
+
+void fe::AABB::serialize(fe::serializerID &serializer) const
+    {
+        serializer.write("sizeX", m_sizeX);
+        serializer.write("sizeY", m_sizeY);
+        serializer.write("localPosX", m_positionX);
+        serializer.write("localPosY", m_positionY);
+        serializer.write("globalPosX", m_globalPositionX);
+        serializer.write("globalPosY", m_globalPositionY);
+    }
+
+void fe::AABB::deserialize(fe::serializerID &serializer)
+    {
+        m_sizeX = serializer.read<float>("sizeX");
+        m_sizeY = serializer.read<float>("sizeY");
+        m_positionX = serializer.read<float>("localPosX");
+        m_positionY = serializer.read<float>("localPosY");
+        m_globalPositionX = serializer.read<float>("globalPosX");
+        m_globalPositionY = serializer.read<float>("globalPosY");
     }
