@@ -13,7 +13,9 @@ void fe::gui::button::drawElement(sf::RenderTarget &target, const fe::matrix3d &
         target.draw(m_shape, m_texture);
     }
 
-fe::gui::button::button(const fe::Vector2d &size, const std::function<void()> &callback) : m_callback(callback)
+fe::gui::button::button(const fe::Vector2d &size, const std::function<void()> &press, const std::function<void()> &release) :
+    m_pressCallback(press),
+    m_releaseCallback(release)
     {
         m_shape.setPrimitiveType(sf::PrimitiveType::Quads);
         m_shape.resize(4);
@@ -33,7 +35,7 @@ void fe::gui::button::update()
         if (m_parentPanel->mouseHover(getPosition(), m_size) && m_parentPanel->getMousePressed() && !m_pressed)
             {
                 m_pressed = true;
-                m_callback();
+                m_pressCallback();
                 fe::gameEvent event(m_event, 1);
                 event.args[0].arg.TYPE_VOIDP = this;
                 event.args[0].argType = gameEventArgument::type::TYPE_VOIDP;
@@ -42,6 +44,12 @@ void fe::gui::button::update()
         else if (!m_parentPanel->getMousePressed() && m_pressed)
             {
                 m_pressed = false;
+                m_releaseCallback();
+
+                fe::gameEvent event(m_extraEvent, 1);
+                event.args[0].arg.TYPE_VOIDP = this;
+                event.args[0].argType = gameEventArgument::type::TYPE_VOIDP;
+                fe::engine::get().getEventSender().sendEngineEvent(event, m_extraEvent);
             }
 
         if (m_parentPanel->mouseHover(getPosition(), m_size))
@@ -54,7 +62,12 @@ void fe::gui::button::update()
             }
     }
 
-void fe::gui::button::setCallback(std::function<void()> callback)
+void fe::gui::button::setReleaseCallback(std::function<void()> callback)
     {
-        m_callback = callback;
+        m_releaseCallback = callback;
+    }
+
+void fe::gui::button::setPressCallback(std::function<void()> callback)
+    {
+        m_pressCallback = callback;
     }

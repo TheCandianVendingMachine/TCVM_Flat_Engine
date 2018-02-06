@@ -15,7 +15,7 @@ namespace fe
                             bool m_toggle;
 
                         public:
-                            FLAT_ENGINE_API toggleButton(const fe::Vector2d &size, const std::function<void()> &callback);
+                            FLAT_ENGINE_API toggleButton(const fe::Vector2d &size, const std::function<void()> &press, const std::function<void()> &release);
 
                             FLAT_ENGINE_API void update();
                             FLAT_ENGINE_API void setToggle(bool value);

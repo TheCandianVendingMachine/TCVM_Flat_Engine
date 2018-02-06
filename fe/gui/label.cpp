@@ -75,7 +75,7 @@ void fe::gui::label::setCharacterSize(unsigned int point)
         sf::FloatRect textRect = m_text.getLocalBounds();
         m_text.setOrigin(textRect.left + textRect.width / 2.f, textRect.top + textRect.height / 2.f);
 
-        //setSize({ m_text.getLocalBounds().width, m_text.getLocalBounds().height });
+        setSize({ m_text.getLocalBounds().width, m_text.getLocalBounds().height });
     }
 
 unsigned int fe::gui::label::getCharacterSize() const
@@ -90,7 +90,7 @@ void fe::gui::label::setPixelSize(float pixel)
         sf::FloatRect textRect = m_text.getLocalBounds();
         m_text.setOrigin(textRect.left + textRect.width / 2.f, textRect.top + textRect.height / 2.f);
 
-        //setSize({ m_text.getGlobalBounds().width, m_text.getLocalBounds().height });
+        setSize({ m_text.getGlobalBounds().width, m_text.getLocalBounds().height });
     }
 
 float fe::gui::label::getPixelSize() const
@@ -101,12 +101,13 @@ float fe::gui::label::getPixelSize() const
 void fe::gui::label::setString(const char *str)
     {
         m_text.setString(str);
-        //setSize({ m_text.getLocalBounds().width, m_text.getLocalBounds().height });
+        setSize({ m_text.getLocalBounds().width, m_text.getLocalBounds().height });
     }
 
 void fe::gui::label::setString(const std::string &str)
     {
         m_text.setString(sf::String(str));
+        setSize({ m_text.getLocalBounds().width, m_text.getLocalBounds().height });
     }
 
 std::string fe::gui::label::getString() const

@@ -4,7 +4,9 @@
 #include "../subsystems/messaging/eventSender.hpp"
 #include "../engine.hpp"
 
-fe::gui::toggleButton::toggleButton(const fe::Vector2d &size, const std::function<void()> &callback) : fe::gui::button(size, callback), m_toggle(false)
+fe::gui::toggleButton::toggleButton(const fe::Vector2d &size, const std::function<void()> &press, const std::function<void()> &release) :
+    fe::gui::button(size, press, release),
+    m_toggle(false)
     {
     }
 
@@ -16,7 +18,7 @@ void fe::gui::toggleButton::update()
                     m_toggle = !m_toggle;
                     if (m_toggle)
                         {
-                            m_callback();
+                            m_pressCallback();
                             fe::gameEvent event(m_event, 1);
                             event.args[0].arg.TYPE_VOIDP = this;
                             event.args[0].argType = gameEventArgument::type::TYPE_VOIDP;
@@ -30,6 +32,7 @@ void fe::gui::toggleButton::update()
                             event.args[0].argType = gameEventArgument::type::TYPE_VOIDP;
                             fe::engine::get().getEventSender().sendEngineEvent(event, m_extraEvent);
                             setActive(false);
+                            m_releaseCallback();
                         }
                 }
             else if (!m_parentPanel->getMousePressed() && m_pressed)
@@ -53,6 +56,10 @@ void fe::gui::toggleButton::setToggle(bool value)
         setActive(m_toggle);
         if (m_toggle)
             {
-                m_callback();
+                m_pressCallback();
+            }
+        else
+            {
+                m_releaseCallback();
             }
     }

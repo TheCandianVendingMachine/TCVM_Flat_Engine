@@ -89,11 +89,11 @@ fe::gui::guiElement *fe::guiPrefabricatedElements::getElement(fe::str elementPre
 
         if (elementTemplate.m_elementType == priv::elementTemplate::BUTTON)
             {
-                element = new fe::gui::button(size, [](){});
+                element = new fe::gui::button(size, [](){}, [](){});
             }
         else if (elementTemplate.m_elementType == priv::elementTemplate::TOGGLE_BUTTON)
             {
-                element = new fe::gui::toggleButton(size, [](){});
+                element = new fe::gui::toggleButton(size, [](){}, [](){});
             }
         else if (elementTemplate.m_elementType == priv::elementTemplate::LABEL)
             {
