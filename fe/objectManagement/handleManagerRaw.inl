@@ -7,6 +7,7 @@ fe::handleManager<T, objectCount>::handleManager()
         for (unsigned int i = 0; i < m_objectCount; i++)
             {
                 m_handles[i].handle = i;
+                m_handles[i].active = false;
                 base->m_handle = &m_handles[i];
                 if (i + 1 < m_objectCount)
                     {

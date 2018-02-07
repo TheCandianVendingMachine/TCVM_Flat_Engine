@@ -94,7 +94,8 @@ void fe::collisionWorld::handleCollision(void *collider, fe::str event)
         a.m_colliderPositionY = 0.f;
         a.m_penetrationX = 0.f;
         a.m_penetrationY = 0.f;
-        static_cast<fe::collider*>(collider)->m_collisionCallback(a);
+
+        fe::collider *test = static_cast<fe::collider*>(collider);
 
         fe::gameEvent eventObj(event, 2);
         eventObj.args[0].arg.TYPE_VOIDP = collider;
@@ -104,6 +105,7 @@ void fe::collisionWorld::handleCollision(void *collider, fe::str event)
         eventObj.args[1].argType = gameEventArgument::type::TYPE_VOIDP;
 
         fe::engine::get().getEventSender().sendEngineEvent(eventObj, event);
+        static_cast<fe::collider*>(collider)->m_collisionCallback(a);
     }
 
 fe::collisionWorld::collisionWorld() : m_maxPointIndex(0)

@@ -45,9 +45,9 @@ namespace fe
                     FLAT_ENGINE_API void clear();
 
                     /* This block of functions sends the event to a specific person. Allows arguments for time */
-                    FLAT_ENGINE_API void send(gameEvent event, unsigned int to);
-                    FLAT_ENGINE_API void send(gameEvent event, unsigned int to, float time);
-                    FLAT_ENGINE_API void send(gameEvent event, unsigned int to, int frame);
+                    FLAT_ENGINE_API void sendTo(gameEvent event, unsigned int to);
+                    FLAT_ENGINE_API void sendTo(gameEvent event, unsigned int to, float time);
+                    FLAT_ENGINE_API void sendTo(gameEvent event, unsigned int to, int frame);
 
                     /* This block of functions sends the event to a specific event subscriber. Allows arguments for time */
                     FLAT_ENGINE_API void send(gameEvent event, fe::int64 eventType);

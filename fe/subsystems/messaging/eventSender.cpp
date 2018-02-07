@@ -46,7 +46,7 @@ void fe::eventSender::subscribe(eventHandler *handler)
         m_handlers[handler->id()] = handler;
     }
 
-void fe::eventSender::subscribe(eventHandler *handler, fe::int64  messageType)
+void fe::eventSender::subscribe(eventHandler *handler, fe::int64 messageType)
     {
         m_handlers[handler->id()] = handler;
         m_observers[messageType].push_back(handler);
@@ -57,7 +57,7 @@ void fe::eventSender::unsubscribe(eventHandler *handler)
         m_handlers.erase(handler->id());
     }
 
-void fe::eventSender::unsubscribe(eventHandler *handler, fe::int64  messageType)
+void fe::eventSender::unsubscribe(eventHandler *handler, fe::int64 messageType)
     {
         m_observers[messageType].erase(std::remove(m_observers[messageType].begin(), m_observers[messageType].end(), handler), m_observers[messageType].end());
     }
@@ -78,7 +78,7 @@ void fe::eventSender::clear()
     }
 
 
-void fe::eventSender::send(gameEvent event, unsigned int to)
+void fe::eventSender::sendTo(gameEvent event, unsigned int to)
     {
         event.target = to;
         event.sendType = fe::sendType::SEND_TO_TARGET;
@@ -87,7 +87,7 @@ void fe::eventSender::send(gameEvent event, unsigned int to)
         sendEvent(event);
     }
 
-void fe::eventSender::send(gameEvent event, unsigned int to, float time)
+void fe::eventSender::sendTo(gameEvent event, unsigned int to, float time)
     {
         event.target = to;
         event.sendType = fe::sendType::SEND_TO_TARGET;
@@ -98,7 +98,7 @@ void fe::eventSender::send(gameEvent event, unsigned int to, float time)
         m_eventQueueTimed.push(event);
     }
 
-void fe::eventSender::send(gameEvent event, unsigned int to, int frame)
+void fe::eventSender::sendTo(gameEvent event, unsigned int to, int frame)
     {
         event.target = to;
         event.sendType = fe::sendType::SEND_TO_TARGET;
@@ -111,7 +111,7 @@ void fe::eventSender::send(gameEvent event, unsigned int to, int frame)
 
 void fe::eventSender::send(gameEvent event, fe::int64 eventType)
     {
-        event.eventType = eventType + engineEvent::COUNT;
+        event.eventType = eventType;
         event.sendType = fe::sendType::SEND_TO_EVENT;
 
         event.sendTimeType = fe::gameEvent::timeVar::NONE;
@@ -122,7 +122,7 @@ void fe::eventSender::send(gameEvent event, fe::int64 eventType)
 
 void fe::eventSender::send(gameEvent event, fe::int64 eventType, float time)
     {
-        event.eventType = eventType + engineEvent::COUNT;
+        event.eventType = eventType;
         event.sendType = fe::sendType::SEND_TO_EVENT;
 
         event.sendTimeType = fe::gameEvent::timeVar::TIME;
@@ -134,7 +134,7 @@ void fe::eventSender::send(gameEvent event, fe::int64 eventType, float time)
 
 void fe::eventSender::send(gameEvent event, fe::int64 eventType, int frame)
     {
-        event.eventType = eventType + engineEvent::COUNT;
+        event.eventType = eventType;
         event.sendType = fe::sendType::SEND_TO_EVENT;
 
         event.sendTimeType = fe::gameEvent::timeVar::FRAME;
@@ -174,17 +174,17 @@ void fe::eventSender::sendGlobal(gameEvent event, int frame)
 
 void fe::eventSender::sendEngineEvent(gameEvent event, fe::int64 eventType)
     {
-        send(event, eventType - engineEvent::COUNT);
+        send(event, eventType);
     }
 
 void fe::eventSender::sendEngineEvent(gameEvent event, fe::int64 eventType, float time)
     {
-        send(event, eventType - engineEvent::COUNT, time);
+        send(event, eventType, time);
     }
 
 void fe::eventSender::sendEngineEvent(gameEvent event, fe::int64 eventType, int frame)
     {
-        send(event, eventType - engineEvent::COUNT, frame);
+        send(event, eventType, frame);
     }
 
 void fe::eventSender::sendEvents()
