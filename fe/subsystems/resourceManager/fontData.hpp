@@ -2,6 +2,7 @@
 // Data regarding bitmap fonts
 #pragma once
 #include "../serializer/serializerID.hpp"
+#include "../../math/Vector2.hpp"
 
 namespace sf
     {

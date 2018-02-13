@@ -9,6 +9,7 @@
 #include "../graphic/tileMap.hpp"
 #include "../ai/graph.hpp"
 #include "../../entity/baseEntity.hpp"
+#include "../resourceManager/fontData.hpp"
 
 namespace sf
     {
@@ -68,30 +69,10 @@ namespace fe
 
                     FLAT_ENGINE_API void loadTilePrefabs(const char *filepath);
                     
-                    template<typename ...Args>
-                    FLAT_ENGINE_API fe::Handle addGameObject(fe::baseEntity *entity, Args &&...args);
+                    FLAT_ENGINE_API fe::Handle addGameObject(fe::baseEntity *entity, int connected = -1, fe::fontData &data = fe::fontData());
                     FLAT_ENGINE_API void removeGameObject(Handle handle);
 
                     FLAT_ENGINE_API fe::baseEntity *getObject(Handle handle) const;
 
             };
-
-        template<typename ...Args>
-        fe::Handle gameWorld::addGameObject(fe::baseEntity *entity, Args &&...args)
-            {
-                fe::baseEntity *object = m_entityWorld.addGameObject(entity, std::forward<Args>(args)...);
-                if (object->getCollider())
-                    {
-                        if (object->getCollider()->m_static && m_staticBroadphase)
-                            {
-                                m_staticBroadphase->add(object->getCollider());
-                            }
-                        else
-                            {
-                                m_dynamicBroadphase->add(object->getCollider());
-                            }
-                    }
-                object->onAdd(*this);
-                return object->getHandle();
-            }
     }

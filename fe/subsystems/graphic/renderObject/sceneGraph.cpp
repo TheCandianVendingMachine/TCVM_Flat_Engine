@@ -142,6 +142,25 @@ fe::sceneGraphObject *fe::sceneGraph::allocateRenderText()
         return m_renderTextObjects.alloc();
     }
 
+void fe::sceneGraph::createSceneGraphObject(sceneGraphObject *obj, int connected, const fe::fontData &font)
+    {
+        obj->m_graphNode = m_sceneRenderTree.addNode();
+        m_sceneRenderTree.getNode(obj->m_graphNode)->m_userData = obj;
+        if (connected < 0)
+            {
+                setZOrder(obj, obj->m_zPosition);
+            }
+        else 
+            {
+                connect(obj->m_graphNode, connected);
+            }
+
+        if ((fe::uInt8*)obj >= m_renderTextObjects.getBuffer() && (fe::uInt8*)obj <= m_renderTextObjects.getBuffer() + m_renderTextObjects.byteSize())
+            {
+                createRenderTextObject(obj, font);
+            }
+    }
+
 int fe::sceneGraph::deleteSceneObject(sceneGraphObject *obj)
     {
         if ((fe::uInt8*)obj >= m_renderObjects.getBuffer() && (fe::uInt8*)obj <= m_renderObjects.getBuffer() + m_renderObjects.byteSize())

@@ -40,6 +40,8 @@ namespace fe
                 sceneGraphObject() : m_type(NONE) {}
                 virtual void setSize(float x, float y) {}
 
+                FLAT_ENGINE_API void initialize(fe::lightVector2<unsigned int> texturePos, int z);
+
                 FLAT_ENGINE_API virtual void serialize(fe::serializerID &serializer) const;
                 FLAT_ENGINE_API virtual void deserialize(fe::serializerID &serializer);
             };

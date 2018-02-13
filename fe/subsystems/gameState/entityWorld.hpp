@@ -5,6 +5,7 @@
 #include "../../flatEngineExport.hpp"
 #include "../../objectManagement/handleManager.hpp"
 #include "../serializer/serializable.hpp"
+#include "../resourceManager/fontData.hpp"
 
 namespace fe
     {
@@ -28,8 +29,7 @@ namespace fe
                     FLAT_ENGINE_API void update(collisionWorld *collisionWorld, broadphaseAbstract *dynamicBroadphase);
                     FLAT_ENGINE_API void postUpdate();
 
-                    template<typename ...Args>
-                    FLAT_ENGINE_API fe::baseEntity *addGameObject(fe::baseEntity *entity, Args &&...args);
+                    FLAT_ENGINE_API fe::baseEntity *addGameObject(fe::baseEntity *entity, int connected = -1, fe::fontData &data = fe::fontData());
 
                     FLAT_ENGINE_API void clearAllObjects();
                     FLAT_ENGINE_API void removeObject(fe::Handle handle);
@@ -39,15 +39,4 @@ namespace fe
                     FLAT_ENGINE_API void deserialize(fe::serializerID &serializer);
 
             };
-
-        template<typename ...Args>
-        fe::baseEntity *entityWorld::addGameObject(fe::baseEntity *entity, Args &&...args)
-            {
-                fe::Handle objHandle = addObject(entity);
-                fe::baseEntity *object = getObject(objHandle);
-
-                object->initialize(m_gameWorld, std::forward<Args>(args)...);
-
-                return object;
-            }
     }

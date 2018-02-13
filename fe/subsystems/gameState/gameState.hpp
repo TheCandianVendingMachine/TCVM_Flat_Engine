@@ -74,8 +74,7 @@ namespace fe
                     FLAT_ENGINE_API virtual void deinit() {}
                     FLAT_ENGINE_API void shutDown();
 
-                    template<typename ...Args>
-                    FLAT_ENGINE_API fe::Handle addObject(fe::baseEntity *ent, bool staticObject, Args &&...args);
+                    FLAT_ENGINE_API fe::Handle addObject(fe::baseEntity *ent, bool staticObject, int connected = -1, fe::fontData &fontData = fe::fontData());
                     FLAT_ENGINE_API void removeObject(fe::Handle ent);
                     FLAT_ENGINE_API void removeObject(fe::baseEntity *ent);
                     FLAT_ENGINE_API fe::baseEntity *getObject(fe::Handle handle) const;
@@ -102,11 +101,4 @@ namespace fe
                     }
                 return true;
             }
-
-        template<typename ...Args>
-        fe::Handle baseGameState::addObject(fe::baseEntity *ent, bool staticObject, Args &&...args)
-            {
-                return m_gameWorld.addGameObject(ent, std::forward<Args>(args)...);
-            }
-
-}
+    }

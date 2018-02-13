@@ -15,6 +15,7 @@ fe::baseEntity::baseEntity(fe::entityModules modules, bool staticObject) :
     m_rigidBody(nullptr),
     m_collisionBody(nullptr),
     m_moved(false),
+    m_allocatedModules(false),
     m_static(staticObject),
     m_positionX(0.f),
     m_positionY(0.f),
@@ -23,6 +24,31 @@ fe::baseEntity::baseEntity(fe::entityModules modules, bool staticObject) :
     m_colour(sf::Color::White),
     m_enabledModulesEnum(modules)
 {}
+
+void fe::baseEntity::initialize(fe::gameWorld &world, int connected, const fe::fontData &font)
+    {
+        if (m_renderObject)
+            {
+                world.getSceneGraph().createSceneGraphObject(m_renderObject, connected, font);
+                m_renderObject->m_static = m_static;
+            }
+
+        if (m_rigidBody && !m_static)
+            {
+                        
+            }
+
+        if (m_collisionBody)
+            {
+                m_collisionBody->m_static = m_static;
+            }
+
+        setPosition(m_positionX, m_positionY);
+        setSize(m_sizeX, m_sizeY);
+        setColour(m_colour);
+
+        enable(true);
+    }
 
 void fe::baseEntity::deinitialize(fe::gameWorld &world)
     {
@@ -265,6 +291,37 @@ void fe::baseEntity::deserialize(fe::serializerID &serializer)
     {
         m_enabledModulesEnum = fe::entityModules(serializer.read<int>("modules"));
 
+        createModules();
+
+        m_handle = serializer.read<fe::Handle>("handle");
+        
+        m_positionX = serializer.read<float>("positionX");
+        m_positionY = serializer.read<float>("positionY");
+        m_sizeX = serializer.read<float>("sizeX");
+        m_sizeY = serializer.read<float>("sizeY");
+
+        m_colour.r = serializer.read<int>("r");
+        m_colour.g = serializer.read<int>("g");
+        m_colour.b = serializer.read<int>("b");
+        m_colour.a = serializer.read<int>("a");
+
+        m_enabled = serializer.read<bool>("enabled");
+        m_static = serializer.read<bool>("static");
+
+        if (m_collisionBody)  { serializer.readObject("collider", *m_collisionBody); }
+        if (m_renderObject) { serializer.readObject("renderObject", *m_renderObject); }
+        if (m_rigidBody) { serializer.readObject("rigidBody", *m_rigidBody); }
+    }
+
+void fe::baseEntity::createModules()
+    {
+        if (m_allocatedModules)
+            {
+                FE_LOG_WARNING("fe::baseEntity has already allocated its modules. Cannot allocate more");
+                return;
+            }
+
+        m_allocatedModules = true;
         if (m_renderObject)
             {
                 FE_LOG_WARNING("fe::baseEntity::m_renderObject already allocated. Possible Memory Leak");
@@ -298,23 +355,4 @@ void fe::baseEntity::deserialize(fe::serializerID &serializer)
             {
                 m_collisionBody = fe::engine::get().getCollisionWorld().createCollider(0.f, 0.f);
             }
-
-        m_handle = serializer.read<fe::Handle>("handle");
-        
-        m_positionX = serializer.read<float>("positionX");
-        m_positionY = serializer.read<float>("positionY");
-        m_sizeX = serializer.read<float>("sizeX");
-        m_sizeY = serializer.read<float>("sizeY");
-
-        m_colour.r = serializer.read<int>("r");
-        m_colour.g = serializer.read<int>("g");
-        m_colour.b = serializer.read<int>("b");
-        m_colour.a = serializer.read<int>("a");
-
-        m_enabled = serializer.read<bool>("enabled");
-        m_static = serializer.read<bool>("static");
-
-        if (m_collisionBody)  { serializer.readObject("collider", *m_collisionBody); }
-        if (m_renderObject) { serializer.readObject("renderObject", *m_renderObject); }
-        if (m_rigidBody) { serializer.readObject("rigidBody", *m_rigidBody); }
     }

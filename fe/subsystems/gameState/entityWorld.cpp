@@ -56,6 +56,23 @@ void fe::entityWorld::postUpdate()
             }
     }
 
+fe::baseEntity *fe::entityWorld::addGameObject(fe::baseEntity *entity, int connected, fe::fontData &data)
+    {
+        fe::Handle objHandle = addObject(entity);
+        fe::baseEntity *object = getObject(objHandle);
+
+        object->createModules();
+
+        if (object->getRenderObject())
+            {
+                object->getRenderObject()->initialize(fe::lightVector2<unsigned int>(), 0);
+            }
+
+        object->initialize(m_gameWorld, connected, data);
+
+        return object;
+    }
+
 void fe::entityWorld::clearAllObjects()
     {
         fe::handleManager<fe::baseEntity*, FE_MAX_GAME_OBJECTS>::clearAllObjects();
@@ -94,16 +111,16 @@ void fe::entityWorld::deserialize(fe::serializerID &serializer)
                         fe::lightVector2<unsigned int> texCoords(renderObj->m_texCoords[0], renderObj->m_texCoords[1]);
                         if (renderObj->m_type == fe::RENDER_OBJECT_TYPE::TEXT)
                             {
-                                m_gameWorld.addGameObject(ent, texCoords, renderObj->m_zPosition, -1, static_cast<fe::renderText*>(renderObj)->m_fontData);
+                                m_gameWorld.addGameObject(ent, -1, static_cast<fe::renderText*>(renderObj)->m_fontData);
                             }
                         else
                             {
-                                m_gameWorld.addGameObject(ent, texCoords, renderObj->m_zPosition, -1);
+                                m_gameWorld.addGameObject(ent, -1);
                             }
                     }
                 else
                     {
-                        m_gameWorld.addGameObject(ent, fe::Vector2<unsigned int>(0, 0), 0, -1);
+                        m_gameWorld.addGameObject(ent, -1);
                     }
             }
     }

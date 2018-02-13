@@ -38,7 +38,7 @@ namespace fe
                     FLAT_ENGINE_API void transformGraph(int nodeHandle);
                     FLAT_ENGINE_API void drawGraph(int nodeHandle, unsigned int &index);
 
-                    FLAT_ENGINE_API void createRenderTextObject(sceneGraphObject *obj, const fe::fontData &font = fe::fontData());
+                    FLAT_ENGINE_API void createRenderTextObject(sceneGraphObject *obj, const fe::fontData &font);
                     FLAT_ENGINE_API int deleteRenderObject(renderObject *obj); // returns the parent node of the render object
                     FLAT_ENGINE_API int deleteRenderTextObject(renderText *obj); // returns the parent node of the render object
 
@@ -56,8 +56,7 @@ namespace fe
                     FLAT_ENGINE_API void draw(sf::RenderTarget &window);
                     FLAT_ENGINE_API sceneGraphObject *allocateRenderObject();
                     FLAT_ENGINE_API sceneGraphObject *allocateRenderText();
-                    template<typename ...Args>
-                    void createSceneGraphObject(sceneGraphObject *obj, fe::lightVector2<unsigned int> texturePos, int z, int connected, Args &&...args);
+                    FLAT_ENGINE_API void createSceneGraphObject(sceneGraphObject *obj, int connected, const fe::fontData &font = fe::fontData());
                     FLAT_ENGINE_API int deleteSceneObject(sceneGraphObject *obj); // returns the parent node of the render object
 
                     FLAT_ENGINE_API void setZOrder(int node, int z);
@@ -73,28 +72,4 @@ namespace fe
                     FLAT_ENGINE_API fe::transformable &getGlobalTransform();
 
             };
-
-        template<typename ...Args>
-        void fe::sceneGraph::createSceneGraphObject(sceneGraphObject *obj, fe::lightVector2<unsigned int> texturePos, int z, int connected, Args &&...args)
-            {
-                obj->m_texCoords[0] = texturePos.x;
-                obj->m_texCoords[1] = texturePos.y;
-                obj->m_graphNode = m_sceneRenderTree.addNode();
-                obj->m_zPosition = z;
-                m_sceneRenderTree.getNode(obj->m_graphNode)->m_userData = obj;
-
-                if (connected < 0)
-                    {
-                        setZOrder(obj, z);
-                    }
-                else 
-                    {
-                        connect(obj->m_graphNode, connected);
-                    }
-
-                if ((fe::uInt8*)obj >= m_renderTextObjects.getBuffer() && (fe::uInt8*)obj <= m_renderTextObjects.getBuffer() + m_renderTextObjects.byteSize())
-                    {
-                        createRenderTextObject(obj, std::forward<Args>(args)...);
-                    }
-            }
     }

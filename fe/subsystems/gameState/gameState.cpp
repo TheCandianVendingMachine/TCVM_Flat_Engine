@@ -122,6 +122,11 @@ void fe::baseGameState::shutDown()
         m_gameWorld.shutDown();
     }
 
+fe::Handle fe::baseGameState::addObject(fe::baseEntity *ent, bool staticObject, int connected, fe::fontData &fontData)
+    {
+        return m_gameWorld.addGameObject(ent, connected, fontData);
+    }
+
 void fe::baseGameState::removeObject(fe::Handle ent)
     {
         if (m_gameWorld.getDynamicBroadphase())

@@ -65,13 +65,14 @@ namespace fe
                     bool m_moved;
                     bool m_static;
 
+                    bool m_allocatedModules;
+
                     friend class entityWorld;
 
                 public:
                     baseEntity() : baseEntity(fe::entityModules::NONE, false) {};
                     FLAT_ENGINE_API baseEntity(fe::entityModules modules, bool staticObject);
-                    template<typename ...Args>
-                    void initialize(fe::gameWorld &world, Args &&...args);
+                    FLAT_ENGINE_API void initialize(fe::gameWorld &world, int connected = -1, const fe::fontData &font = fe::fontData());
                     FLAT_ENGINE_API void deinitialize(fe::gameWorld &world);
 
                     FLAT_ENGINE_API void enable(bool value);
@@ -117,62 +118,7 @@ namespace fe
                     FLAT_ENGINE_API void serialize(fe::serializerID &serializer) const;
                     FLAT_ENGINE_API void deserialize(fe::serializerID &serializer);
 
+                    FLAT_ENGINE_API void createModules();
+
             };
-
-        template<typename ...Args>
-        void fe::baseEntity::initialize(fe::gameWorld &world, Args &&...args)
-            {
-                if (m_enabledModulesEnum & fe::entityModules::RENDER_OBJECT)
-                    {
-                        if (!m_renderObject)
-                            {
-                                m_renderObject = world.getSceneGraph().allocateRenderObject();
-                            }
-                    }
-                else if (m_enabledModulesEnum & fe::entityModules::RENDER_TEXT)
-                    {
-                        if (!m_renderObject)
-                            {
-                                m_renderObject = world.getSceneGraph().allocateRenderText();
-                            }
-                    }
-
-                if (m_enabledModulesEnum & fe::entityModules::RIGID_BODY)
-                    {
-                        if (!m_rigidBody)
-                            {
-                                m_rigidBody = fe::engine::get().getPhysicsEngine().createRigidBody();
-                            }
-                    }
-
-                if (m_enabledModulesEnum & fe::entityModules::COLLISION_BODY)
-                    {
-                        if (!m_collisionBody)
-                            {
-                                m_collisionBody = fe::engine::get().getCollisionWorld().createCollider(0.f, 0.f);
-                            }
-                    }
-
-                if (m_renderObject)
-                    {
-                        world.getSceneGraph().createSceneGraphObject(m_renderObject, std::forward<Args>(args)...);
-                        m_renderObject->m_static = m_static;
-                    }
-
-                if (m_rigidBody && !m_static)
-                    {
-                        
-                    }
-
-                if (m_collisionBody)
-                    {
-                        m_collisionBody->m_static = m_static;
-                    }
-
-                setPosition(m_positionX, m_positionY);
-                setSize(m_sizeX, m_sizeY);
-                setColour(m_colour);
-
-                enable(true);
-            }
     }

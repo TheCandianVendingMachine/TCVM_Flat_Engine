@@ -108,6 +108,13 @@ void fe::renderObject::deserialize(fe::serializerID &serializer)
         std::reverse(std::begin(m_verticies), std::end(m_verticies));
     }
 
+void fe::sceneGraphObject::initialize(fe::lightVector2<unsigned int> texturePos, int z)
+    {
+        m_texCoords[0] = texturePos.x;
+        m_texCoords[1] = texturePos.y;
+        m_zPosition = z;
+    }
+
 void fe::sceneGraphObject::serialize(fe::serializerID &serializer) const
     {
         serializer.write("type", m_type);
