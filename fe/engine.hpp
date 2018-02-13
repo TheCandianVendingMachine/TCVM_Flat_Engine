@@ -31,6 +31,7 @@ namespace fe
         class profilerLogger;
         class localizationStorage;
         class guiPrefabricatedElements;
+        class scriptManager;
 
         template<typename T>
         class resourceManager;
@@ -57,6 +58,8 @@ namespace fe
 
                     fe::localizationStorage *m_localization;
                     fe::guiPrefabricatedElements *m_prefabGuiElements;
+
+                    fe::scriptManager *m_scriptManager;
 
                     fe::camera m_defaultCamera;
 

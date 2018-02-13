@@ -14,6 +14,7 @@
 #include "debug/profilerLogger.hpp"
 #include "debug/debugDraw.hpp"
 #include "subsystems/filesystem/fileUtilities.hpp"
+#include "subsystems/scripting/scriptManager.hpp"
 
 #include "feAssert.hpp"
 
@@ -246,6 +247,9 @@ void fe::engine::startUp(fe::uInt64 totalMemory, fe::uInt64 stackMemory, fe::uIn
                 m_localization = new(m_memoryManager.getStackAllocater().alloc(sizeof(fe::localizationStorage))) fe::localizationStorage();
                 m_prefabGuiElements = new(m_memoryManager.getStackAllocater().alloc(sizeof(fe::guiPrefabricatedElements))) fe::guiPrefabricatedElements();
 
+                m_scriptManager = new(m_memoryManager.getStackAllocater().alloc(sizeof(fe::scriptManager))) fe::scriptManager();
+                m_scriptManager->startUp();
+
                 m_defaultCamera.setSize(getWindowSize());
                 m_defaultCamera.setPosition(getWindowSize() / 2.f);
             }
@@ -254,6 +258,8 @@ void fe::engine::startUp(fe::uInt64 totalMemory, fe::uInt64 stackMemory, fe::uIn
 void fe::engine::shutDown()
     {
         m_shutDown = true;
+
+        m_scriptManager->shutDown();
 
         m_fontManager->shutDown();
         m_textureManager->shutDown();
