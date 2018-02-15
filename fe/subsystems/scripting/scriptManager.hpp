@@ -3,7 +3,6 @@
 #pragma once
 #define FLAT_ENGINE_EXPORT
 #include "../../flatEngineExport.hpp"
-#define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
 #include <sol.hpp>
 
 namespace fe
@@ -16,5 +15,6 @@ namespace fe
                 public:
                     FLAT_ENGINE_API void startUp();
                     FLAT_ENGINE_API void shutDown();
+
             };
     }

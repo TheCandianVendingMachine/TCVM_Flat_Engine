@@ -367,6 +367,11 @@ const fe::camera &fe::engine::getDefaultCamera() const
         return m_defaultCamera;
     }
 
+fe::scriptManager &fe::engine::getScriptManager() const
+    {
+        return *m_scriptManager;
+    }
+
 void fe::engine::loadResources(const char *resourcesFile)
     {
         enum resourceTypes
@@ -374,7 +379,8 @@ void fe::engine::loadResources(const char *resourcesFile)
                 ERROR_TYPE,
                 TEXTURE,
                 AUDIO,
-                FONT
+                FONT,
+                SCRIPT
             };
 
         std::ifstream in(resourcesFile);
@@ -568,6 +574,10 @@ void fe::engine::loadResources(const char *resourcesFile)
                                                             {
                                                                 typeEnum = FONT;
                                                             }
+                                                        else if (type == "script")
+                                                            {
+                                                                typeEnum = SCRIPT;
+                                                            }
 
                                                         synonymTypes[extension] = typeEnum;
                                                         extensions.push_back(extension);
@@ -607,6 +617,8 @@ void fe::engine::loadResources(const char *resourcesFile)
                                     break;
                                 case FONT:
                                     getResourceManager<sf::Font>()->load(possibleResource.c_str(), resources[file].c_str());
+                                    break;
+                                case SCRIPT:
                                     break;
                                 default:
                                     break;

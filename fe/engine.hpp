@@ -117,6 +117,7 @@ namespace fe
                     FLAT_ENGINE_API fe::localizationStorage &getLocalization() const;
                     FLAT_ENGINE_API fe::guiPrefabricatedElements &getPrefabGui() const;
                     FLAT_ENGINE_API const fe::camera &getDefaultCamera() const;
+                    FLAT_ENGINE_API fe::scriptManager &getScriptManager() const;
 
                     FLAT_ENGINE_API void loadResources(const char *resourcesFile);
 
