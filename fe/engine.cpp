@@ -603,6 +603,11 @@ void fe::engine::loadResources(const char *resourcesFile)
         for (auto &possibleResource : allFiles)
             {
                 std::string file = fe::getFileFromDirectory(possibleResource);
+                if (synonymTypes[fe::getFileExtension(possibleResource)] == SCRIPT)
+                    {
+                        getScriptManager().runFile(possibleResource);
+                    }
+
                 if (resources.find(file) != resources.end())
                     {
                         switch (synonymTypes[fe::getFileExtension(possibleResource)])
@@ -617,8 +622,6 @@ void fe::engine::loadResources(const char *resourcesFile)
                                     break;
                                 case FONT:
                                     getResourceManager<sf::Font>()->load(possibleResource.c_str(), resources[file].c_str());
-                                    break;
-                                case SCRIPT:
                                     break;
                                 default:
                                     break;
