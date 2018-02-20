@@ -9,6 +9,8 @@
 #include <string>
 #include <sol.hpp>
 
+#include "scriptHelpers.hpp"
+
 namespace fe
     {
         class functionHandler
@@ -16,12 +18,8 @@ namespace fe
                 private:
                     sol::state &m_state;
 
-                    std::unordered_map<fe::str, sol::protected_function> m_registeredFunctions;
-
                 public:
                     FLAT_ENGINE_API functionHandler(sol::state &state);
-
-                    FLAT_ENGINE_API void registerLuaFunctions();
 
                     template<typename Function, typename T>
                     void registerObjectFunction(const std::string &functionName, T objRef, Function &func);
@@ -33,62 +31,46 @@ namespace fe
                     template<typename ...Functions>
                     void registerFunction(const std::string &functionName, Functions &&...funcs);
 
-                    template<typename Function>
-                    decltype(auto) getFunctionOverload(Function &func);
-                    template<typename ...Functions>
-                    decltype(auto) getFunctionOverload(Functions &&...funcs);
-
                     template<typename ...Args>
                     decltype(auto) call(const std::string &functionName, Args &&...args);
+                    decltype(auto) call(const std::string &functionName);
 
-                    FLAT_ENGINE_API sol::protected_function &getFunction(const std::string &functionName);
-                    FLAT_ENGINE_API sol::protected_function &getFunction(fe::str functionName);
+                    FLAT_ENGINE_API sol::protected_function getFunction(const std::string &functionName);
 
             };
 
         template<typename Function, typename T>
         void functionHandler::registerObjectFunction(const std::string &functionName, T objRef, Function &func)
             {
-                m_state.set_function(functionName, getFunctionOverload(func), objRef);
-                m_registeredFunctions[FE_STR(functionName.c_str())] = m_state[functionName];
+                m_state.set_function(functionName, fe::imp::getFunctionOverload(func), objRef);
             }
 
         template<typename ...Functions, typename T>
         void functionHandler::registerObjectFunction(const std::string &functionName, T objRef, Functions &&...funcs)
             {
-                m_state.set_function(functionName, getFunctionOverload(std::forward<Functions>(funcs)...), objRef);
-                m_registeredFunctions[FE_STR(functionName.c_str())] = m_state[functionName];
+                m_state.set_function(functionName, fe::imp::getFunctionOverload(std::forward<Functions>(funcs)...), objRef);
             }
 
         template<typename Function>
         void functionHandler::registerFunction(const std::string &functionName, Function &func)
             {
-                m_state.set_function(functionName, getFunctionOverload(func));
-                m_registeredFunctions[FE_STR(functionName.c_str())] = m_state[functionName];
+                m_state.set_function(functionName, fe::imp::getFunctionOverload(func));
             }
 
         template<typename ...Functions>
         void functionHandler::registerFunction(const std::string &functionName, Functions &&...funcs)
             {
-                m_state.set_function(functionName, getFunctionOverload(std::forward<Functions>(funcs)...));
-                m_registeredFunctions[FE_STR(functionName.c_str())] = m_state[functionName];
-            }
-
-        template<typename Function>
-        decltype(auto) functionHandler::getFunctionOverload(Function &func)
-            {
-                return func;
-            }
-
-        template<typename ...Functions>
-        decltype(auto) functionHandler::getFunctionOverload(Functions &&...funcs)
-            {
-                return sol::overload(std::forward<Functions>(funcs)...);
+                m_state.set_function(functionName, fe::imp::getFunctionOverload(std::forward<Functions>(funcs)...));
             }
 
         template<typename ...Args>
         decltype(auto) functionHandler::call(const std::string &functionName, Args &&...args)
             {
-                return m_registeredFunctions[FE_STR(functionName.c_str())].call(std::forward<Args>(args)...);
+                return m_state[functionName].call(std::forward<Args>(args)...);
+            }
+
+        inline decltype(auto) fe::functionHandler::call(const std::string &functionName)
+            {
+                return m_state[functionName].call();
             }
     }
