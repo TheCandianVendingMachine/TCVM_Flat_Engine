@@ -11,16 +11,6 @@ void *operator new(size_t bytes)
         return malloc(bytes);
     }
 
-void *operator new[](size_t bytes)
-    {
-        if (fe::memoryManager::exists())
-            {
-                return fe::memoryManager::get().getDynamicAllocater().alloc(bytes, 2);
-            }
-
-        return malloc(bytes);
-    }
-
 void operator delete(void *memory)
     {
         if (fe::memoryManager::exists())
@@ -29,18 +19,7 @@ void operator delete(void *memory)
             }
         else
             {
-                free(memory);
+                //free(memory);
             }
     }
 
-void operator delete[](void *memory)
-    {
-        if (fe::memoryManager::exists())
-            {
-                fe::memoryManager::get().getDynamicAllocater().free(memory);
-            }
-        else
-            {
-                free(memory);
-            }
-    }

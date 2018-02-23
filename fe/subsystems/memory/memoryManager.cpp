@@ -10,7 +10,7 @@ void fe::memoryManager::startUp(fe::uInt64 bufferSize, fe::uInt64 stackSize, fe:
             {
                 m_instance = this;
                 m_bufferSize = bufferSize;
-                m_allocatedBuffer = static_cast<fe::uInt8*>(malloc(m_bufferSize));
+                m_allocatedBuffer = static_cast<fe::uInt8*>(std::malloc(m_bufferSize));
 
                 // start up the different types of memory allocaters
                 m_stackAllocater.startUp(static_cast<fe::uInt8*>(alloc(stackSize)), stackSize);
@@ -28,7 +28,7 @@ void fe::memoryManager::shutDown()
                 m_stackAllocater.clear();
                 m_dynamicAllocater.clear();
 
-                free(m_allocatedBuffer);
+                //std::free(m_allocatedBuffer); // not freeing memory to allow the OS to do so.
                 m_allocatedBuffer = nullptr;
 
                 m_shutDown = true;
