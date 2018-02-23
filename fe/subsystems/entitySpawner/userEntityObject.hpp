@@ -8,6 +8,7 @@
 namespace fe
     {
         class gameWorld;
+        class scriptObject;
         class userEntityObject
             {
                 private:
@@ -26,10 +27,10 @@ namespace fe
                     FLAT_ENGINE_API unsigned int index() const;
                     FLAT_ENGINE_API bool active() const;
 
-                    FLAT_ENGINE_API void onAdd(fe::gameWorld &world);
-                    FLAT_ENGINE_API void onRemove(fe::gameWorld &world);
-                    FLAT_ENGINE_API void update();
-                    FLAT_ENGINE_API void postUpdate();
+                    FLAT_ENGINE_API void onAdd(fe::scriptObject *object, fe::gameWorld &world);
+                    FLAT_ENGINE_API void onRemove(fe::scriptObject *object, fe::gameWorld &world);
+                    FLAT_ENGINE_API void update(fe::scriptObject *object);
+                    FLAT_ENGINE_API void postUpdate(fe::scriptObject *object);
 
                     FLAT_ENGINE_API void setOnAdd(const sol::protected_function &func);
                     FLAT_ENGINE_API void setOnRemove(const sol::protected_function &func);

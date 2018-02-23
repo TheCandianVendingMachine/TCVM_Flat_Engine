@@ -77,12 +77,12 @@ void fe::baseEntity::deinitialize(fe::gameWorld &world)
 
 void fe::baseEntity::onAdd(fe::gameWorld &world)
     {
-        m_entityScriptObject->onAdd(world);
+        m_entityScriptObject->onAdd(this, world);
     }
 
 void fe::baseEntity::onRemove(fe::gameWorld &world)
     {
-        m_entityScriptObject->onRemove(world);
+        m_entityScriptObject->onRemove(this, world);
     }
 
 void fe::baseEntity::enable(bool value)
@@ -141,12 +141,12 @@ void fe::baseEntity::onDestroy(fe::baseGameState &state)
 
 void fe::baseEntity::update()
     {
-        m_entityScriptObject->update();
+        m_entityScriptObject->update(this);
     }
 
 void fe::baseEntity::postUpdate()
     {
-        m_entityScriptObject->postUpdate();
+        m_entityScriptObject->postUpdate(this);
     }
 
 void fe::baseEntity::updateModules()
