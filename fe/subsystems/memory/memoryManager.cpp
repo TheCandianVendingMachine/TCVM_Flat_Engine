@@ -24,10 +24,6 @@ void fe::memoryManager::shutDown()
     {
         if (m_instance && m_allocatedBuffer)
             {
-                // shut down all types of memory allocation and free the pointers allocated inside them
-                m_stackAllocater.clear();
-                m_dynamicAllocater.clear();
-
                 //std::free(m_allocatedBuffer); // not freeing memory to allow the OS to do so.
                 m_allocatedBuffer = nullptr;
 
