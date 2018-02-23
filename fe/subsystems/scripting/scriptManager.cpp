@@ -1,4 +1,5 @@
 #include "scriptManager.hpp"
+#include "../../math/Vector2.hpp"
 
 fe::scriptManager::scriptManager() :
     m_functionHandler(m_luaState),
@@ -22,7 +23,14 @@ void fe::scriptManager::runLua(const std::string &lua)
 
 void fe::scriptManager::runFile(const std::string &file)
     {
-        m_luaState.script_file(file);
+        try 
+            {
+                m_luaState.script_file(file);
+            }
+        catch (std::exception &e)
+            {
+                FE_LOG_ERROR(e.what());
+            }
     }
 
 fe::functionHandler &fe::scriptManager::getFunctionHandler()

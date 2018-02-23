@@ -37,6 +37,7 @@ void fe::baseGameState::startUp()
     {
         m_gameWorld.startUp();
         setCamera(std::move(fe::engine::get().getDefaultCamera()));
+        m_entitySpawner.setWorld(&m_gameWorld);
     }
 
 void fe::baseGameState::handleEvents(const sf::Event &event)
@@ -122,9 +123,9 @@ void fe::baseGameState::shutDown()
         m_gameWorld.shutDown();
     }
 
-fe::Handle fe::baseGameState::addObject(fe::baseEntity *ent, bool staticObject, int connected, fe::fontData &fontData)
+fe::Handle fe::baseGameState::addObject(const char *id)
     {
-        return m_gameWorld.addGameObject(ent, connected, fontData);
+        return m_entitySpawner.spawn(id);
     }
 
 void fe::baseGameState::removeObject(fe::Handle ent)

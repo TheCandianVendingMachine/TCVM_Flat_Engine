@@ -252,6 +252,16 @@ void fe::engine::startUp(fe::uInt64 totalMemory, fe::uInt64 stackMemory, fe::uIn
 
                 m_defaultCamera.setSize(getWindowSize());
                 m_defaultCamera.setPosition(getWindowSize() / 2.f);
+
+                // Initialize a basic entity types in Lua
+                m_scriptManager->runLua(R"(squareEntity = {
+    sceneGraph = {
+        renderType = "renderObject",
+        zPos = 0,
+        colour = { r = 255, g = 255, b = 255, a = 255 }
+    },
+    size = { x = 0, y = 0 }
+})");
             }
     }
 

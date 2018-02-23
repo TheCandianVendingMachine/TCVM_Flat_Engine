@@ -9,8 +9,8 @@ namespace fe
     {
         struct collisionBounds : public fe::serializable
             {
-                float m_positionX = 0.f;
-                float m_positionY = 0.f;
+                float m_positionX = 0.f; // position of the collider on the entity
+                float m_positionY = 0.f; // position of the collider on the entity
                 float m_globalPositionX = 0.f;
                 float m_globalPositionY = 0.f;
 

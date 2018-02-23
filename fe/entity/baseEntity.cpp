@@ -7,8 +7,9 @@
 #include "../subsystems/physics/physicsEngine.hpp"
 #include "../subsystems/physics/collision/collisionWorld.hpp"
 #include "../subsystems/serializer/serializerID.hpp"
+#include "../subsystems/entitySpawner/userEntityObject.hpp"
 
-fe::baseEntity::baseEntity(fe::entityModules modules, bool staticObject) :
+fe::baseEntity::baseEntity(fe::entityModules modules, fe::userEntityObject *scriptObject, bool staticObject) :
     m_killEntity(false),
     m_enabled(false),
     m_renderObject(nullptr),
@@ -22,7 +23,9 @@ fe::baseEntity::baseEntity(fe::entityModules modules, bool staticObject) :
     m_sizeX(0.f),
     m_sizeY(0.f),
     m_colour(sf::Color::White),
-    m_enabledModulesEnum(modules)
+    m_enabledModulesEnum(modules),
+    m_entityScriptObject(scriptObject),
+    scriptObject(this)
 {}
 
 void fe::baseEntity::initialize(fe::gameWorld &world, int connected, const fe::fontData &font)
@@ -70,6 +73,16 @@ void fe::baseEntity::deinitialize(fe::gameWorld &world)
                 fe::engine::get().getCollisionWorld().deleteCollider(m_collisionBody);
                 m_collisionBody = nullptr;
             }
+    }
+
+void fe::baseEntity::onAdd(fe::gameWorld &world)
+    {
+        m_entityScriptObject->onAdd(world);
+    }
+
+void fe::baseEntity::onRemove(fe::gameWorld &world)
+    {
+        m_entityScriptObject->onRemove(world);
     }
 
 void fe::baseEntity::enable(bool value)
@@ -124,6 +137,16 @@ void fe::baseEntity::enableCollision(bool value)
 void fe::baseEntity::onDestroy(fe::baseGameState &state)
     {
         
+    }
+
+void fe::baseEntity::update()
+    {
+        m_entityScriptObject->update();
+    }
+
+void fe::baseEntity::postUpdate()
+    {
+        m_entityScriptObject->postUpdate();
     }
 
 void fe::baseEntity::updateModules()

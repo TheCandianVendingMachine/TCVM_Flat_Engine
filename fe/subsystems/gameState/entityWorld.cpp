@@ -35,12 +35,11 @@ void fe::entityWorld::update(collisionWorld *collisionWorld, broadphaseAbstract 
             {
                 if (m_objects[i] && m_objects[i]->m_enabled)
                     {
-                        m_objects[i]->update();
-
                         if (m_objects[i]->m_collisionBody && !m_objects[i]->m_collisionBody->m_static)
                             {
                                 dynamicBroadphase->update(m_objects[i]->m_collisionBody);
                             }
+                        m_objects[i]->update();
                     }
             }
     }
@@ -69,6 +68,7 @@ fe::baseEntity *fe::entityWorld::addGameObject(fe::baseEntity *entity, int conne
             }
 
         object->initialize(m_gameWorld, connected, data);
+        object->onAdd(m_gameWorld);
 
         return object;
     }
@@ -80,6 +80,7 @@ void fe::entityWorld::clearAllObjects()
 
 void fe::entityWorld::removeObject(fe::Handle handle)
     {
+        getObject(handle)->onRemove(m_gameWorld);
         fe::handleManager<fe::baseEntity*, FE_MAX_GAME_OBJECTS>::removeObject(handle);
     }
 

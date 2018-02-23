@@ -174,13 +174,16 @@ fe::Handle fe::gameWorld::addGameObject(fe::baseEntity *entity, int connected, f
                         m_dynamicBroadphase->add(object->getCollider());
                     }
             }
-        object->onAdd(*this);
+        
+        // Entity Spawner Logic
+
         return object->getHandle();
     }
 
 void fe::gameWorld::removeGameObject(Handle handle)
     {
-        getObject(handle)->onRemove(*this);
+        // Entity Spawner Logic
+
         m_entityWorld.removeObject(handle);
     }
 

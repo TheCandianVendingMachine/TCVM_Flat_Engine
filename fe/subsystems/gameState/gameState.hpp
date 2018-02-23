@@ -7,6 +7,7 @@
 #include "../../debug/logger.hpp"
 #include "../graphic/camera.hpp"
 #include "gameWorld.hpp"
+#include "../entitySpawner/entitySpawner.hpp"
 
 #include <vector>
 #include <queue>
@@ -33,6 +34,7 @@ namespace fe
                     std::vector<gui::panel*> m_guiPanels;
                     std::queue<gui::panel*> m_guiPanelsToAdd;
                     fe::gameWorld m_gameWorld;
+                    fe::entitySpawner m_entitySpawner;
                     fe::camera m_stateCamera;
 
                 protected:
@@ -74,7 +76,7 @@ namespace fe
                     FLAT_ENGINE_API virtual void deinit() {}
                     FLAT_ENGINE_API void shutDown();
 
-                    FLAT_ENGINE_API fe::Handle addObject(fe::baseEntity *ent, bool staticObject, int connected = -1, fe::fontData &fontData = fe::fontData());
+                    FLAT_ENGINE_API fe::Handle addObject(const char *id);
                     FLAT_ENGINE_API void removeObject(fe::Handle ent);
                     FLAT_ENGINE_API void removeObject(fe::baseEntity *ent);
                     FLAT_ENGINE_API fe::baseEntity *getObject(fe::Handle handle) const;

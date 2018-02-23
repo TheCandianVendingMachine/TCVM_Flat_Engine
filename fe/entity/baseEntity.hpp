@@ -14,6 +14,7 @@
 #include "../subsystems/physics/physicsEngine.hpp"
 #include "../objectManagement/guid.hpp"
 #include "../subsystems/serializer/serializable.hpp"
+#include "scriptObject.hpp"
 #include <SFML/Graphics/Color.hpp>
 
 namespace fe
@@ -22,6 +23,7 @@ namespace fe
         class rigidBody;
         class baseGameState;
         class gameWorld;
+        class userEntityObject;
 
         enum class entityModules : std::int16_t
             {
@@ -42,12 +44,14 @@ namespace fe
                 return static_cast<std::int16_t>(lhs) & static_cast<std::int16_t>(rhs);
             }
 
-        class baseEntity : public fe::guid, public fe::serializable
+        class baseEntity : public fe::guid, public fe::serializable, private fe::scriptObject
             {
                 protected:
                     fe::sceneGraphObject *m_renderObject;
                     fe::rigidBody *m_rigidBody;
                     fe::collider *m_collisionBody;
+
+                    fe::userEntityObject *m_entityScriptObject; // object that handles updating per fe::baseEntity::update
 
                     fe::entityModules m_enabledModulesEnum;
 
@@ -70,10 +74,13 @@ namespace fe
                     friend class entityWorld;
 
                 public:
-                    baseEntity() : baseEntity(fe::entityModules::NONE, false) {};
-                    FLAT_ENGINE_API baseEntity(fe::entityModules modules, bool staticObject);
+                    baseEntity() : baseEntity(fe::entityModules::NONE, nullptr, false) {};
+                    FLAT_ENGINE_API baseEntity(fe::entityModules modules, fe::userEntityObject *scriptObject, bool staticObject);
                     FLAT_ENGINE_API void initialize(fe::gameWorld &world, int connected = -1, const fe::fontData &font = fe::fontData());
                     FLAT_ENGINE_API void deinitialize(fe::gameWorld &world);
+
+                    FLAT_ENGINE_API void onAdd(fe::gameWorld &world);
+                    FLAT_ENGINE_API void onRemove(fe::gameWorld &world);
 
                     FLAT_ENGINE_API void enable(bool value);
                     FLAT_ENGINE_API bool getEnabled() const;
@@ -88,11 +95,8 @@ namespace fe
 
                     FLAT_ENGINE_API void onDestroy(fe::baseGameState &state);
 
-                    FLAT_ENGINE_API virtual void onAdd(fe::gameWorld &world) {}
-                    FLAT_ENGINE_API virtual void onRemove(fe::gameWorld &world) {}
-
-                    FLAT_ENGINE_API virtual void update() {}
-                    FLAT_ENGINE_API virtual void postUpdate() {}
+                    FLAT_ENGINE_API void update();
+                    FLAT_ENGINE_API void postUpdate();
                     FLAT_ENGINE_API void updateModules();
 
                     FLAT_ENGINE_API void setPosition(float x, float y);
