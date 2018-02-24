@@ -473,7 +473,7 @@ void fe::aabbTree::colliderAABB(fe::AABB &testAABB, std::function<void(void*)> c
                 iteration++;
                 int currentNode = stack[stackTop - 1];
                 stackTop--;
-                if (m_nodes[currentNode].m_fatAABB.intersects(testAABB))
+                if (currentNode >= 0 && m_nodes[currentNode].m_fatAABB.intersects(testAABB))
                     {
                         if (m_nodes[currentNode].isLeaf())
                             {

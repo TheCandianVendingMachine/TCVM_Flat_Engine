@@ -27,8 +27,8 @@ namespace fe
 
                             struct
                                 {
-                                    int m_left;
-                                    int m_right;
+                                    int m_left = -1;
+                                    int m_right = -1;
                                 };
 
                             void *m_userData;
@@ -41,7 +41,7 @@ namespace fe
                     const unsigned int m_nodeCapacity = (FE_MAX_GAME_OBJECTS * 2) - 1;
                     unsigned int m_freeList;
 
-                    unsigned int m_base;
+                    int m_base;
                     float m_fatness; // how much extra space the AABB contains
 
                     FLAT_ENGINE_API void debugDrawAABB(int node);
