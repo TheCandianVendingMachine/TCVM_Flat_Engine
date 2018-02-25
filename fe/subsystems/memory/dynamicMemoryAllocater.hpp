@@ -21,7 +21,7 @@ namespace fe
 
                     fe::singlyLinkedList<freeHeader> m_freeList;
 
-                    static constexpr fe::uInt64 FREE_BLOCK_SIZE = sizeof(freeHeader);
+                    static constexpr fe::uInt64 FREE_BLOCK_SIZE = sizeof(listNode);
 
                     const fe::uInt8 CHUNK_SIZE; // the size of how much memory is allocated in one pass. A 'chunk' is how much memory will be allocated from the buffer
 
@@ -29,6 +29,10 @@ namespace fe
                     fe::uInt8 *m_memoryBuffer;
 
                     FLAT_ENGINE_API constexpr fe::uInt64 calculateAllocSize(const fe::uInt64 size);
+                    FLAT_ENGINE_API void condense(); // Condenses free list nodes and merges blocks
+
+                    // ensures that the free list is non-looping and full size
+                    FLAT_ENGINE_API bool debug();
 
                 public:
                     FLAT_ENGINE_API dynamicMemoryAllocater(const fe::uInt8 chunkSize = 32);

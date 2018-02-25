@@ -28,10 +28,11 @@ namespace fe
                     // Inserts the node into the linked list at location
                     void insert(node *previous, node *node);
                     
+                    // Replaces node base with node
+                    void replace(node *base, node *replacement);
+
                     // Removes the node from the linked list and frees the memory
                     void remove(node *node);
-                    // Removes the node from the linked list, and does not free the memory
-                    void remove(node *previous, node *node);
 
                     // Clears the linked list of all nodes
                     void clear(bool dealloc = true);
@@ -86,6 +87,34 @@ namespace fe
             }
 
         template<typename T>
+        void singlyLinkedList<T>::replace(node *base, node *replacement)
+            {
+                node *it = head();
+                node *itPrev = nullptr;
+                while (it)
+                    {
+                        if (it == base)
+                            {
+                                break;
+                            }
+                        itPrev = it;
+                        it = it->m_next;
+                    }
+
+                if (!itPrev)
+                    {
+                        // head
+                        m_head = replacement;
+                        m_head->m_next = base->m_next;
+                    }
+                else
+                    {
+                        itPrev->m_next = replacement;
+                        replacement->m_next = base->m_next;
+                    }
+            }
+
+        template<typename T>
         void singlyLinkedList<T>::remove(node *node)
             {
                 singlyLinkedList::node *temp = m_head;
@@ -103,20 +132,6 @@ namespace fe
                 remove(temp, node);
                 delete node;
                 node = nullptr;
-            }
-
-        template<typename T>
-        void singlyLinkedList<T>::remove(node *previous, node *node)
-            {
-                if (!previous)
-                    {
-                        // If there is no previous node, the node is the head.
-                        m_head = node->m_next;
-                    }
-                else
-                    {
-                        previous->m_next = node->m_next;
-                    }
             }
 
         template<typename T>
