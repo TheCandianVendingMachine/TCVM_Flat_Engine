@@ -55,7 +55,7 @@ void fe::entityWorld::postUpdate()
             }
     }
 
-fe::baseEntity *fe::entityWorld::addGameObject(fe::baseEntity *entity, int connected, fe::fontData &data)
+fe::baseEntity *fe::entityWorld::addGameObject(fe::baseEntity *entity, int connected, const fe::fontData &data)
     {
         fe::Handle objHandle = addObject(entity);
         fe::baseEntity *object = getObject(objHandle);

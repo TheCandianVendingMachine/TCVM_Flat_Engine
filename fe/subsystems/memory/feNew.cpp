@@ -1,7 +1,7 @@
 #include "memoryManager.hpp"
 #include <cstdlib>
 
-void *operator new(size_t bytes)
+void *operator new(std::size_t bytes)
     {
         if (fe::memoryManager::exists())
             {
@@ -22,4 +22,3 @@ void operator delete(void *memory)
                 //free(memory);
             }
     }
-

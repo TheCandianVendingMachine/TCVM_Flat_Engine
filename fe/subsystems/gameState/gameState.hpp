@@ -80,6 +80,8 @@ namespace fe
                     FLAT_ENGINE_API void removeObject(fe::Handle ent);
                     FLAT_ENGINE_API void removeObject(fe::baseEntity *ent);
                     FLAT_ENGINE_API fe::baseEntity *getObject(fe::Handle handle) const;
+                    FLAT_ENGINE_API void addPrefab(const char *name);
+                    FLAT_ENGINE_API void getPrefabs(std::vector<std::string> &prefabs) const;
 
                     FLAT_ENGINE_API const fe::gameWorld &getGameWorld() const;
                     FLAT_ENGINE_API fe::gameWorld &getGameWorld();

@@ -69,7 +69,7 @@ namespace fe
 
                     FLAT_ENGINE_API void loadTilePrefabs(const char *filepath);
                     
-                    FLAT_ENGINE_API fe::Handle addGameObject(fe::baseEntity *entity, int connected = -1, fe::fontData &data = fe::fontData());
+                    FLAT_ENGINE_API fe::Handle addGameObject(fe::baseEntity *entity, int connected = -1, const fe::fontData &data = fe::fontData());
                     FLAT_ENGINE_API void removeGameObject(Handle handle);
 
                     FLAT_ENGINE_API fe::baseEntity *getObject(Handle handle) const;

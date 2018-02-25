@@ -29,7 +29,7 @@ namespace fe
                     FLAT_ENGINE_API void update(collisionWorld *collisionWorld, broadphaseAbstract *dynamicBroadphase);
                     FLAT_ENGINE_API void postUpdate();
 
-                    FLAT_ENGINE_API fe::baseEntity *addGameObject(fe::baseEntity *entity, int connected = -1, fe::fontData &data = fe::fontData());
+                    FLAT_ENGINE_API fe::baseEntity *addGameObject(fe::baseEntity *entity, int connected = -1, const fe::fontData &data = fe::fontData());
 
                     FLAT_ENGINE_API void clearAllObjects();
                     FLAT_ENGINE_API void removeObject(fe::Handle handle);

@@ -160,7 +160,7 @@ void fe::gameWorld::loadTilePrefabs(const char *filepath)
         m_tileMap.deserializeFabrications(prefabSerial);
     }
 
-fe::Handle fe::gameWorld::addGameObject(fe::baseEntity *entity, int connected, fe::fontData &data)
+fe::Handle fe::gameWorld::addGameObject(fe::baseEntity *entity, int connected, const fe::fontData &data)
     {
         fe::baseEntity *object = m_entityWorld.addGameObject(entity, connected, data);
         if (object->getCollider())
