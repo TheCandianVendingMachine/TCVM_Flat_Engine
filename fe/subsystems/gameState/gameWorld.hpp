@@ -21,6 +21,7 @@ namespace fe
         class collisionWorld;
         class broadphaseAbstract;
         class serializerID;
+        class baseGameState;
 
         class gameWorld
             {
@@ -32,14 +33,17 @@ namespace fe
                     fe::broadphaseAbstract *m_dynamicBroadphase;
                     fe::broadphaseAbstract *m_staticBroadphase;
                     fe::serializerID *m_serializer;
+                    fe::baseGameState *m_gameState;
 
                     sf::RenderStates m_staticRenderStates;
 
                 public:
-                    FLAT_ENGINE_API gameWorld();
+                    FLAT_ENGINE_API gameWorld(baseGameState *gameState);
 
                     FLAT_ENGINE_API void startUp();
                     FLAT_ENGINE_API void shutDown();
+
+                    FLAT_ENGINE_API fe::baseGameState &getGameState() const;
 
                     FLAT_ENGINE_API void setDynamicBroadphase(fe::broadphaseAbstract *broadphase);
                     FLAT_ENGINE_API void setStaticBroadphase(fe::broadphaseAbstract *broadphase);

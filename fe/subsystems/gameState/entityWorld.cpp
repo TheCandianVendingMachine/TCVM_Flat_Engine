@@ -3,6 +3,8 @@
 #include "../physics/collision/broadphaseAbstract.hpp"
 #include "../physics/collision/collisionWorld.hpp"
 #include "../serializer/serializerID.hpp"
+#include "gameState.hpp"
+#include "../entitySpawner/entitySpawner.hpp"
 
 void fe::entityWorld::onAdd(fe::baseEntity **object, fe::Handle objectHandle)
     {
@@ -93,7 +95,14 @@ void fe::entityWorld::serialize(fe::serializerID &serializer)
     {
         for (unsigned int i = 0; i < objectCount(); i++)
             {
-                serializer.writeObjectList("entities", *m_objects[i]);
+                entityRepresentation entity;
+                entity.m_enabled = m_objects[i]->getEnabled();
+                entity.m_handle = m_objects[i]->getHandle();
+                entity.m_name = m_objects[i]->getName();
+                entity.m_positionX = m_objects[i]->getPosition().x;
+                entity.m_positionY = m_objects[i]->getPosition().y;
+
+                serializer.writeObjectList("entities", entity);
             }
     }
 
@@ -101,27 +110,29 @@ void fe::entityWorld::deserialize(fe::serializerID &serializer)
     {
         while (serializer.listHasItems("entities"))
             {
-                fe::baseEntity *ent = new fe::baseEntity();
-                serializer.readObjectList("entities", *ent);
+                entityRepresentation entity;
+                serializer.readObjectList("entities", entity);
 
-                fe::sceneGraphObject *renderObj = ent->getRenderObject();
-                // To DRY we call fe::gameWorld::addGameObject to handle the addition of the game object. It calls fe::entityWorld::addGameObject which handles init
-                // Kinda backwards, but it avoids code duplication
-                if (renderObj)
-                    {
-                        fe::lightVector2<unsigned int> texCoords(renderObj->m_texCoords[0], renderObj->m_texCoords[1]);
-                        if (renderObj->m_type == fe::RENDER_OBJECT_TYPE::TEXT)
-                            {
-                                m_gameWorld.addGameObject(ent, -1, static_cast<fe::renderText*>(renderObj)->m_fontData);
-                            }
-                        else
-                            {
-                                m_gameWorld.addGameObject(ent, -1);
-                            }
-                    }
-                else
-                    {
-                        m_gameWorld.addGameObject(ent, -1);
-                    }
+                fe::baseEntity *ent = m_gameWorld.getObject(m_gameWorld.getGameState().addObject(entity.m_name.c_str()));
+                ent->setPosition(entity.m_positionX, entity.m_positionY);
+                ent->enable(entity.m_enabled);
             }
+    }
+
+void fe::entityWorld::entityRepresentation::serialize(fe::serializerID &serializer) const
+    {
+        serializer.write("enabled", m_enabled);
+        serializer.write("handle", int(m_handle));
+        serializer.write("name", m_name);
+        serializer.write("positionX", m_positionX);
+        serializer.write("positionY", m_positionY);
+    }
+
+void fe::entityWorld::entityRepresentation::deserialize(fe::serializerID &serializer)
+    {
+        m_enabled = serializer.read<bool>("enabled");
+        m_handle = serializer.read<int>("handle");
+        m_name = serializer.read<std::string>("name");
+        m_positionX = serializer.read<float>("positionX");
+        m_positionY = serializer.read<float>("positionY");
     }

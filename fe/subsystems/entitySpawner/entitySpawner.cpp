@@ -147,6 +147,7 @@ fe::Handle fe::entitySpawner::spawn(const char *luaName)
                 entity->getRenderObject()->m_zPosition = prefab.m_zPosition;
             }
 
+        entity->setName(luaName);
         return objectHandle;
     }
 

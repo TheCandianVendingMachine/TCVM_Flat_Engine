@@ -41,7 +41,7 @@ namespace fe
                     virtual void drawExtra(sf::RenderTarget &app) {}
 
                 public:
-                    FLAT_ENGINE_API baseGameState() {}
+                    FLAT_ENGINE_API baseGameState() : m_gameWorld(this) {}
 
                     FLAT_ENGINE_API void addPanel(gui::panel *panel);
                     FLAT_ENGINE_API void removePanel(fe::str panelID);

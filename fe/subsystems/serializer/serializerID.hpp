@@ -114,7 +114,7 @@ namespace fe
         template<typename T>
         void serializerID::write(const std::string &id, T &&data)
             {
-                if constexpr (fe::is_c_str<T>::value)
+                if constexpr (fe::is_str<T>::value)
                     {
                         m_currentBlock.top()->m_mappedData[id] = data;
                     }
@@ -127,7 +127,7 @@ namespace fe
         template<typename T>
         void serializerID::write(const std::string &id, T &data)
             {
-                if constexpr (fe::is_c_str<T>::value)
+                if constexpr (fe::is_str<T>::value)
                     {
                         m_currentBlock.top()->m_mappedData[id] = data;
                     }
@@ -140,7 +140,7 @@ namespace fe
         template<typename T>
         void serializerID::writeList(const std::string &id, T &&data)
             {
-                if constexpr (fe::is_c_str<T>::value)
+                if constexpr (fe::is_str<T>::value)
                     {
                         m_currentBlock.top()->m_mappedListPrimitiveData[id].emplace_back(data);
                     }

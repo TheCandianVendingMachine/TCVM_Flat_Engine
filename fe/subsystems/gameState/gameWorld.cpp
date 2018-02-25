@@ -6,7 +6,9 @@
 #include "../resourceManager/resourceManager.hpp"
 #include "../../engine.hpp"
 
-fe::gameWorld::gameWorld() : m_entityWorld(*this)
+fe::gameWorld::gameWorld(baseGameState *gameState) :
+    m_entityWorld(*this),
+    m_gameState(gameState)
     {
     }
 
@@ -24,6 +26,11 @@ void fe::gameWorld::shutDown()
         m_sceneGraph.shutDown();
         delete m_serializer;
         m_serializer = nullptr;
+    }
+
+fe::baseGameState &fe::gameWorld::getGameState() const
+    {
+        return *m_gameState;
     }
 
 void fe::gameWorld::setDynamicBroadphase(fe::broadphaseAbstract *broadphase)

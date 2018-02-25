@@ -17,6 +17,18 @@ namespace fe
         class entityWorld : protected fe::handleManager<fe::baseEntity*, FE_MAX_GAME_OBJECTS>, public fe::serializable
             {
                 private:
+                    struct entityRepresentation : fe::serializable
+                        {
+                            std::string m_name;
+                            float m_positionX;
+                            float m_positionY;
+                            fe::Handle m_handle;
+                            bool m_enabled;
+
+                            FLAT_ENGINE_API void serialize(fe::serializerID &serializer) const;
+                            FLAT_ENGINE_API void deserialize(fe::serializerID &serializer);
+                        };
+
                     fe::gameWorld &m_gameWorld;
 
                     FLAT_ENGINE_API void onAdd(fe::baseEntity **object, fe::Handle objectHandle);

@@ -47,4 +47,16 @@ namespace fe
             std::is_same<typename std::decay<T>::type, char*>::value ||
             std::is_same<typename std::decay<T>::type, char const*>::value>
             {};
+
+        template<typename T>
+        struct is_cpp_str : std::integral_constant<bool,
+            std::is_same<typename std::decay<T>::type, std::string>::value ||
+            std::is_same<typename std::decay<T>::type, const std::string>::value>
+            {};
+
+        template<typename T>
+        struct is_str : std::integral_constant<bool,
+            fe::is_c_str<T>::value ||
+            fe::is_cpp_str<T>::value>
+            {};
     }

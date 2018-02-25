@@ -251,6 +251,16 @@ void fe::baseEntity::setColour(const sf::Color colour)
             }
     }
 
+void fe::baseEntity::setName(const std::string &name)
+    {
+        m_name = name;
+    }
+
+std::string fe::baseEntity::getName() const
+    {
+        return m_name;
+    }
+
 fe::lightVector2d fe::baseEntity::getPosition() const
     {
         return fe::lightVector2d(m_positionX, m_positionY);
@@ -284,56 +294,6 @@ fe::collider *fe::baseEntity::getCollider() const
 fe::entityModules fe::baseEntity::getModules() const
     {
         return m_enabledModulesEnum;
-    }
-
-void fe::baseEntity::serialize(fe::serializerID &serializer) const
-    {
-        serializer.write("modules", static_cast<std::uint16_t>(m_enabledModulesEnum));
-        serializer.write("handle", m_handle);
-
-        serializer.write("positionX", m_positionX);
-        serializer.write("positionY", m_positionY);
-
-        serializer.write("sizeX", m_sizeX);
-        serializer.write("sizeY", m_sizeY);
-
-        serializer.write("r", m_colour.r);
-        serializer.write("g", m_colour.g);
-        serializer.write("b", m_colour.b);
-        serializer.write("a", m_colour.a);
-
-        serializer.write("enabled", m_enabled);
-        serializer.write("static", m_static);
-
-        if (m_collisionBody) { serializer.writeObject("collider", *m_collisionBody); }
-        if (m_renderObject) { serializer.writeObject("renderObject", *m_renderObject); }
-        if (m_rigidBody) { serializer.writeObject("rigidBody", *m_rigidBody); }
-    }
-
-void fe::baseEntity::deserialize(fe::serializerID &serializer)
-    {
-        m_enabledModulesEnum = fe::entityModules(serializer.read<int>("modules"));
-
-        createModules();
-
-        m_handle = serializer.read<fe::Handle>("handle");
-        
-        m_positionX = serializer.read<float>("positionX");
-        m_positionY = serializer.read<float>("positionY");
-        m_sizeX = serializer.read<float>("sizeX");
-        m_sizeY = serializer.read<float>("sizeY");
-
-        m_colour.r = serializer.read<int>("r");
-        m_colour.g = serializer.read<int>("g");
-        m_colour.b = serializer.read<int>("b");
-        m_colour.a = serializer.read<int>("a");
-
-        m_enabled = serializer.read<bool>("enabled");
-        m_static = serializer.read<bool>("static");
-
-        if (m_collisionBody)  { serializer.readObject("collider", *m_collisionBody); }
-        if (m_renderObject) { serializer.readObject("renderObject", *m_renderObject); }
-        if (m_rigidBody) { serializer.readObject("rigidBody", *m_rigidBody); }
     }
 
 void fe::baseEntity::createModules()

@@ -17,6 +17,7 @@
 #include "scriptObject.hpp"
 #include "entityModules.hpp"
 #include <SFML/Graphics/Color.hpp>
+#include <string>
 
 namespace fe
     {
@@ -26,7 +27,7 @@ namespace fe
         class gameWorld;
         class userEntityObject;
 
-        class baseEntity : public fe::guid, public fe::serializable, private fe::scriptObject
+        class baseEntity : public fe::guid, private fe::scriptObject
             {
                 protected:
                     fe::sceneGraphObject *m_renderObject;
@@ -38,6 +39,8 @@ namespace fe
                     fe::entityModules m_enabledModulesEnum;
 
                     fe::Handle m_handle;
+
+                    std::string m_name;
 
                     // Local variables to keep updated for debugging. Is only used to set position on initialization
                     float m_positionX;
@@ -91,6 +94,9 @@ namespace fe
 
                     FLAT_ENGINE_API void setColour(const sf::Color colour);
 
+                    FLAT_ENGINE_API void setName(const std::string &name);
+                    FLAT_ENGINE_API std::string getName() const;
+
                     FLAT_ENGINE_API fe::lightVector2d getPosition() const;
                     FLAT_ENGINE_API fe::lightVector2d getSize() const;
                     FLAT_ENGINE_API sf::Color getColour() const;
@@ -100,9 +106,6 @@ namespace fe
                     FLAT_ENGINE_API fe::collider *getCollider() const;
 
                     FLAT_ENGINE_API fe::entityModules getModules() const;
-
-                    FLAT_ENGINE_API void serialize(fe::serializerID &serializer) const;
-                    FLAT_ENGINE_API void deserialize(fe::serializerID &serializer);
 
                     FLAT_ENGINE_API void createModules();
 
