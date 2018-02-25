@@ -11,22 +11,16 @@ namespace fe
         class dynamicMemoryAllocater
             {
                 private:
-                    struct memoryHeader
-                        {
-                            fe::uInt64 m_blockSize = 0; // how much memory is present past the block
-                            fe::uInt8 m_padding;
-                        };
-
                     struct freeHeader
                         {
                             fe::uInt64 m_blockSize = 0; // how much memory is present after the block
+                            const fe::uInt16 m_header = 0xDEAD; // Header to ensure data is proper
                         };
 
                     using listNode = fe::singlyLinkedList<freeHeader>::node;
 
                     fe::singlyLinkedList<freeHeader> m_freeList;
 
-                    static constexpr fe::uInt64 MEMORY_HEADER_SIZE = sizeof(memoryHeader);
                     static constexpr fe::uInt64 FREE_BLOCK_SIZE = sizeof(freeHeader);
 
                     const fe::uInt8 CHUNK_SIZE; // the size of how much memory is allocated in one pass. A 'chunk' is how much memory will be allocated from the buffer

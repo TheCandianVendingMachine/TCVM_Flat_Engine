@@ -48,6 +48,7 @@ void fe::gameStateMachine::push(baseGameState *newState, stateOptions options)
                         m_endState->m_currentState->onDeactive();
                     }
                 
+                m_endState->m_headMarker = fe::memoryManager::get().getStackAllocater().getMarker();
                 auto listBuf = FE_ALLOC_STACK("StateListAlloc", sizeof(stateList));
                 m_endState->m_head = new(listBuf) stateList();
 
@@ -93,7 +94,7 @@ void fe::gameStateMachine::pop()
                     }
                 else
                     {
-                        delete m_endState;
+                        FE_FREE_STACK("StateListDealloc", m_endState->m_headMarker);
                         m_endState = nullptr;
                     }
 
@@ -101,7 +102,8 @@ void fe::gameStateMachine::pop()
                     {
                         if (m_endState->m_head) 
                             {
-                                delete m_endState->m_head;
+                                FE_FREE_STACK("StateListDealloc", m_endState->m_headMarker);
+                                //delete m_endState->m_head;
                             }
                         m_endState->m_head = nullptr;
 

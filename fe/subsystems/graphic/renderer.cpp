@@ -8,6 +8,7 @@
 
 void fe::renderer::startUp()
     {
+        m_renderWindowMarker = fe::memoryManager::get().getStackAllocater().getMarker();
 		m_renderWindow = new(fe::memoryManager::get().getStackAllocater().alloc(sizeof(sf::RenderWindow))) sf::RenderWindow;
         m_windowSettings = new(fe::memoryManager::get().getStackAllocater().alloc(sizeof(fe::serializerID))) fe::serializerID;
 
@@ -24,15 +25,17 @@ void fe::renderer::shutDown()
     {
         if (m_renderWindow)
             {
-                delete m_renderWindow;
+                m_renderWindow->~RenderWindow();
                 m_renderWindow = nullptr;
             }
 
         if (m_windowSettings)
             {
-                delete m_windowSettings;
+                m_windowSettings->~serializerID();
                 m_windowSettings = nullptr;
             }
+
+        FE_FREE_STACK("RendererDealloc", m_renderWindowMarker);
     }
 
 void fe::renderer::save() const

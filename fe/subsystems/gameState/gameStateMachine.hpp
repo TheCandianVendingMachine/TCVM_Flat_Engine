@@ -36,6 +36,8 @@ namespace fe
                             stateList *m_head;
                             stateList *m_tail;
 
+                            fe::uIntPtr m_headMarker = 0; // Stack marker to where the head is allocated
+
                             stateOptions m_options;
 
                             baseGameState *m_currentState;

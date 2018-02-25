@@ -29,7 +29,7 @@ void fe::dynamicMemoryAllocater::startUp(fe::uInt8 *buffer, const fe::uInt64 siz
 
 void *fe::dynamicMemoryAllocater::alloc(const fe::uInt64 size, const fe::uInt8 alignment)
     {
-        fe::uInt64 trueSize = calculateAllocSize(size + alignment + MEMORY_HEADER_SIZE + alignof(memoryHeader));
+        fe::uInt64 trueSize = calculateAllocSize(size + alignment + FREE_BLOCK_SIZE + alignof(freeHeader));
         listNode *it = m_freeList.head();
         listNode *itPrev = nullptr;
         while (it)
@@ -53,15 +53,17 @@ void *fe::dynamicMemoryAllocater::alloc(const fe::uInt64 size, const fe::uInt8 a
         m_freeList.remove(itPrev, it);
 
         void *memory = it;
-        memoryHeader *memHead = new(memory) memoryHeader;
+        freeHeader *memHead = new(memory) freeHeader;
         memHead->m_blockSize = size + alignment;
-        return static_cast<void*>(reinterpret_cast<fe::uInt8*>(memHead) + MEMORY_HEADER_SIZE + alignof(memoryHeader));
+        return static_cast<void*>(reinterpret_cast<fe::uInt8*>(memHead) + FREE_BLOCK_SIZE + alignof(freeHeader));
     }
 
 void fe::dynamicMemoryAllocater::free(void *memory)
     {
-        memory;
-        int i = 0;
+        fe::uInt8 *header = reinterpret_cast<fe::uInt8*>(memory) - FREE_BLOCK_SIZE - alignof(freeHeader);
+        const freeHeader *headerObj = reinterpret_cast<freeHeader*>(header);
+
+        FE_ASSERT(headerObj->m_header == 0xDEAD, "Memory Header Wrong");
     }
 
 void fe::dynamicMemoryAllocater::clear()

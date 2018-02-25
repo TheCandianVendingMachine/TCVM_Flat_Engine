@@ -20,6 +20,7 @@ namespace fe
                 private:
                     sf::RenderWindow *m_renderWindow;
                     fe::serializerID *m_windowSettings;
+                    fe::uIntPtr m_renderWindowMarker;
 
                     struct settings : fe::serializable
                         {
