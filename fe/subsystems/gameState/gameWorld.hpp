@@ -10,6 +10,7 @@
 #include "../ai/graph.hpp"
 #include "../../entity/baseEntity.hpp"
 #include "../resourceManager/fontData.hpp"
+#include "../../entity/entityModules.hpp"
 
 namespace sf
     {
@@ -22,6 +23,7 @@ namespace fe
         class broadphaseAbstract;
         class serializerID;
         class baseGameState;
+        class userEntityObject;
 
         class gameWorld
             {
@@ -73,7 +75,7 @@ namespace fe
 
                     FLAT_ENGINE_API void loadTilePrefabs(const char *filepath);
                     
-                    FLAT_ENGINE_API fe::Handle addGameObject(fe::baseEntity *entity, int connected = -1, const fe::fontData &data = fe::fontData());
+                    FLAT_ENGINE_API fe::Handle addGameObject(fe::entityModules modules, fe::userEntityObject *scriptObject, int connected = -1, const fe::fontData &data = fe::fontData());
                     FLAT_ENGINE_API void removeGameObject(Handle handle);
 
                     FLAT_ENGINE_API fe::baseEntity *getObject(Handle handle) const;

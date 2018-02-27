@@ -20,6 +20,11 @@ fe::entityWorld::entityWorld(fe::gameWorld &gameWorld) : m_gameWorld(gameWorld)
     {
     }
 
+void fe::entityWorld::startUp()
+    {
+        m_entityAllocater.startUp(FE_MAX_GAME_OBJECTS);
+    }
+
 void fe::entityWorld::preUpdate()
     {
         for (unsigned int i = 0; i < objectCount(); i++)
@@ -57,12 +62,13 @@ void fe::entityWorld::postUpdate()
             }
     }
 
-fe::baseEntity *fe::entityWorld::addGameObject(fe::baseEntity *entity, int connected, const fe::fontData &data)
+fe::baseEntity *fe::entityWorld::addGameObject(fe::entityModules modules, fe::userEntityObject *scriptObject, int connected, const fe::fontData &data)
     {
+        fe::baseEntity *entity = m_entityAllocater.alloc(modules, scriptObject, false);
         fe::Handle objHandle = addObject(entity);
         fe::baseEntity *object = getObject(objHandle);
 
-        object->createModules();
+        object->createModules(m_gameWorld.getGameState());
 
         if (object->getRenderObject())
             {

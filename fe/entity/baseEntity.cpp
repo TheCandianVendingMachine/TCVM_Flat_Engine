@@ -180,6 +180,11 @@ void fe::baseEntity::updateModules()
             }
     }
 
+void fe::baseEntity::setScriptObject(fe::userEntityObject *obj)
+    {
+        m_entityScriptObject = obj;
+    }
+
 void fe::baseEntity::setPosition(float x, float y)
     {
         m_positionX = x;
@@ -296,7 +301,7 @@ fe::entityModules fe::baseEntity::getModules() const
         return m_enabledModulesEnum;
     }
 
-void fe::baseEntity::createModules()
+void fe::baseEntity::createModules(fe::baseGameState &currentState)
     {
         if (m_allocatedModules)
             {
@@ -322,11 +327,11 @@ void fe::baseEntity::createModules()
 
         if (m_enabledModulesEnum & fe::entityModules::RENDER_OBJECT)
             {
-                m_renderObject = fe::engine::get().getCurrentState().getGameWorld().getSceneGraph().allocateRenderObject();
+                m_renderObject = currentState.getGameWorld().getSceneGraph().allocateRenderObject();
             }
         else if (m_enabledModulesEnum & fe::entityModules::RENDER_TEXT)
             {
-                m_renderObject = fe::engine::get().getCurrentState().getGameWorld().getSceneGraph().allocateRenderText();
+                m_renderObject = currentState.getGameWorld().getSceneGraph().allocateRenderText();
             }
 
         if (m_enabledModulesEnum & fe::entityModules::RIGID_BODY)

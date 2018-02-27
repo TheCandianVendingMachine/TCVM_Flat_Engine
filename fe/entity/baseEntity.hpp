@@ -4,16 +4,10 @@
 #define FLAT_ENGINE_EXPORT
 #include "../flatEngineExport.hpp"
 #include "../typeDefines.hpp"
-#include "../engine.hpp"
-#include "../subsystems/physics/rigidBody.hpp"
-#include "../subsystems/gameState/gameStateMachine.hpp"
-#include "../subsystems/gameState/gameWorld.hpp"
-#include "../subsystems/physics/collision/collisionBody.hpp"
-#include "../subsystems/physics/collision/collisionWorld.hpp"
-#include "../subsystems/graphic/renderObject/sceneGraph.hpp"
-#include "../subsystems/physics/physicsEngine.hpp"
 #include "../objectManagement/guid.hpp"
 #include "../subsystems/serializer/serializable.hpp"
+#include "../math/Vector2.hpp"
+#include "../subsystems/resourceManager/fontData.hpp"
 #include "scriptObject.hpp"
 #include "entityModules.hpp"
 #include <SFML/Graphics/Color.hpp>
@@ -22,6 +16,7 @@
 namespace fe
     {
         struct sceneGraphObject;
+        struct collider;
         class rigidBody;
         class baseGameState;
         class gameWorld;
@@ -84,6 +79,8 @@ namespace fe
                     FLAT_ENGINE_API void postUpdate();
                     FLAT_ENGINE_API void updateModules();
 
+                    FLAT_ENGINE_API void setScriptObject(fe::userEntityObject *obj);
+
                     FLAT_ENGINE_API void setPosition(float x, float y);
                     FLAT_ENGINE_API void setPosition(fe::Vector2d position);
                     FLAT_ENGINE_API void setPosition(fe::lightVector2d position);
@@ -107,7 +104,7 @@ namespace fe
 
                     FLAT_ENGINE_API fe::entityModules getModules() const;
 
-                    FLAT_ENGINE_API void createModules();
+                    FLAT_ENGINE_API void createModules(fe::baseGameState &currentState);
 
             };
     }

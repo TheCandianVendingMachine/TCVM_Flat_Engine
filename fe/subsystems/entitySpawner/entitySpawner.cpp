@@ -128,7 +128,7 @@ fe::Handle fe::entitySpawner::spawn(const char *luaName)
         const prefabObject &prefab = m_prefabs[luaName];
         
         object->startUp(m_maxObjectCount++);
-        fe::Handle objectHandle = m_world->addGameObject(new fe::baseEntity(prefab.m_modules, object, false), prefab.m_connected, prefab.m_font);
+        fe::Handle objectHandle = m_world->addGameObject(prefab.m_modules, object, prefab.m_connected, prefab.m_font);
         fe::baseEntity *entity = m_world->getObject(objectHandle);
 
         entity->setSize(prefab.m_size);

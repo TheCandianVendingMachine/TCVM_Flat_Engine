@@ -16,6 +16,7 @@ void fe::gameWorld::startUp()
     {
         m_sceneGraph.startUp();
         m_staticRenderStates.texture = &fe::engine::get().getResourceManager<sf::Texture>()->get();
+        m_entityWorld.startUp();
         m_dynamicBroadphase = nullptr;
         m_staticBroadphase = nullptr;
         m_serializer = new fe::serializerID();
@@ -167,9 +168,9 @@ void fe::gameWorld::loadTilePrefabs(const char *filepath)
         m_tileMap.deserializeFabrications(prefabSerial);
     }
 
-fe::Handle fe::gameWorld::addGameObject(fe::baseEntity *entity, int connected, const fe::fontData &data)
+fe::Handle fe::gameWorld::addGameObject(fe::entityModules modules, fe::userEntityObject *scriptObject, int connected, const fe::fontData &data)
     {
-        fe::baseEntity *object = m_entityWorld.addGameObject(entity, connected, data);
+        fe::baseEntity *object = m_entityWorld.addGameObject(modules, scriptObject, connected, data);
         if (object->getCollider())
             {
                 if (object->getCollider()->m_static && m_staticBroadphase)

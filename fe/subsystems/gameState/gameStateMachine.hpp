@@ -36,12 +36,12 @@ namespace fe
                             stateList *m_head;
                             stateList *m_tail;
 
-                            fe::uIntPtr m_headMarker = 0; // Stack marker to where the head is allocated
+                            fe::uIntPtr m_headMarker = 0; // Stack marker to where the head is allocated in m_stateAllocater
 
                             stateOptions m_options;
 
                             baseGameState *m_currentState;
-                            unsigned int m_offset;
+                            fe::uIntPtr m_offset; // Stack marker to where the game state starts allocating stack memory
                         };
 
                     struct stateHolderBase { virtual void *construct() { return nullptr; } };

@@ -3,6 +3,10 @@
 #include "../../gui/guiElement.hpp"
 #include "../../debug/profiler.hpp"
 #include "../../entity/baseEntity.hpp"
+#include "../../engine.hpp"
+#include "../graphic/camera.hpp"
+#include "../gameState/gameWorld.hpp"
+#include "../physics/collision/broadphaseAbstract.hpp"
 #include <algorithm>
 #include <SFML/Graphics/RenderWindow.hpp>
 
