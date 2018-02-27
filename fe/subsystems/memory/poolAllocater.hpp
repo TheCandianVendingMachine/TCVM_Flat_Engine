@@ -34,6 +34,9 @@ namespace fe
                     // Frees the object at the address it is allocated to
                     void free(const T *address);
 
+                    // Returns true if the object at the index has been allocated or not. Similar to checking if object is nullptr
+                    bool allocatedAt(unsigned int index);
+
                     // Returns the object constructed at the address
                     T *at(unsigned int index);
 
@@ -120,6 +123,12 @@ namespace fe
                 size_t offset = address - static_cast<void*>(&m_buffer[0]);
                 std::memset(m_buffer + (offset * sizeof(T)), 0, sizeof(T));
                 m_freeIndicies[offset] = true;
+            }
+
+        template<typename T>
+        bool poolAllocater<T>::allocatedAt(unsigned int index)
+            {
+                return !m_freeIndicies[index];
             }
 
         template<typename T>

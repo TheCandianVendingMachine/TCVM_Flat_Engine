@@ -84,12 +84,15 @@ fe::baseEntity *fe::entityWorld::addGameObject(fe::entityModules modules, fe::us
 void fe::entityWorld::clearAllObjects()
     {
         fe::handleManager<fe::baseEntity*, FE_MAX_GAME_OBJECTS>::clearAllObjects();
+        m_entityAllocater.clear();
     }
 
 void fe::entityWorld::removeObject(fe::Handle handle)
     {
         getObject(handle)->onRemove(m_gameWorld);
+        fe::baseEntity *entAtHandle = getObject(handle);
         fe::handleManager<fe::baseEntity*, FE_MAX_GAME_OBJECTS>::removeObject(handle);
+        m_entityAllocater.free(entAtHandle);
     }
 
 fe::baseEntity *fe::entityWorld::getObject(fe::Handle handle) const
@@ -101,7 +104,7 @@ void fe::entityWorld::getAllObjects(std::vector<fe::baseEntity*> &objects)
     {
         for (unsigned int i = 0; i < m_entityAllocater.getObjectAllocCount(); i++)
             {
-                if (m_entityAllocater.at(i))
+                if (m_entityAllocater.allocatedAt(i))
                     {
                         objects.push_back(m_entityAllocater.at(i));
                     }
