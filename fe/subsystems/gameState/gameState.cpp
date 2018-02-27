@@ -157,6 +157,11 @@ fe::baseEntity *fe::baseGameState::getObject(fe::Handle handle) const
         return m_gameWorld.getObject(handle);
     }
 
+void fe::baseGameState::getAllObjects(std::vector<fe::baseEntity*> &entities)
+    {
+        m_gameWorld.getEntityWorld().getAllObjects(entities);
+    }
+
 void fe::baseGameState::addPrefab(const char *name)
     {
         m_entitySpawner.createPrefab(name);

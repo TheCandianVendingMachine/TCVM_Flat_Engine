@@ -34,6 +34,11 @@ fe::baseGameState &fe::gameWorld::getGameState() const
         return *m_gameState;
     }
 
+fe::entityWorld &fe::gameWorld::getEntityWorld()
+    {
+        return m_entityWorld;
+    }
+
 void fe::gameWorld::setDynamicBroadphase(fe::broadphaseAbstract *broadphase)
     {
         m_dynamicBroadphase = broadphase;

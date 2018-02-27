@@ -46,6 +46,7 @@ namespace fe
                     FLAT_ENGINE_API void shutDown();
 
                     FLAT_ENGINE_API fe::baseGameState &getGameState() const;
+                    FLAT_ENGINE_API fe::entityWorld &getEntityWorld();
 
                     FLAT_ENGINE_API void setDynamicBroadphase(fe::broadphaseAbstract *broadphase);
                     FLAT_ENGINE_API void setStaticBroadphase(fe::broadphaseAbstract *broadphase);

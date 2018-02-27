@@ -97,6 +97,17 @@ fe::baseEntity *fe::entityWorld::getObject(fe::Handle handle) const
         return fe::handleManager<fe::baseEntity*, FE_MAX_GAME_OBJECTS>::getObject(handle);
     }
 
+void fe::entityWorld::getAllObjects(std::vector<fe::baseEntity*> &objects)
+    {
+        for (unsigned int i = 0; i < m_entityAllocater.getObjectAllocCount(); i++)
+            {
+                if (m_entityAllocater.at(i))
+                    {
+                        objects.push_back(m_entityAllocater.at(i));
+                    }
+            }
+    }
+
 void fe::entityWorld::serialize(fe::serializerID &serializer)
     {
         for (unsigned int i = 0; i < objectCount(); i++)
