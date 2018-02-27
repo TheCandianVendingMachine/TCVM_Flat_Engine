@@ -19,6 +19,6 @@ void operator delete(void *memory)
             }
         else
             {
-                //free(memory);
+                free(memory);
             }
     }
