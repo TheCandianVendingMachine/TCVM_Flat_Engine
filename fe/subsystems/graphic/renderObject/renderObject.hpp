@@ -50,7 +50,7 @@ namespace fe
             {
                 float m_verticies[4]; // x, y, w, h
 
-                renderObject() { m_type = OBJECT; }
+                renderObject() : m_verticies{ 0.f, 0.f, 0.f, 0.f } { m_type = OBJECT; }
                 void setSize(float x, float y) { m_verticies[2] = x; m_verticies[3] = y; }
 
                 FLAT_ENGINE_API void serialize(fe::serializerID &serializer) const;

@@ -129,6 +129,7 @@ void fe::dynamicMemoryAllocater::free(void *memory)
         if (itPrev && static_cast<void*>(itPrev + itPrev->m_data.m_blockSize + FREE_BLOCK_SIZE) == static_cast<void*>(header))
             {
                 itPrev->m_data.m_blockSize += blockSize + FREE_BLOCK_SIZE;
+                FE_ASSERT(debug(), "Debug Check Failed");
             }
         else
             {
@@ -153,9 +154,10 @@ void fe::dynamicMemoryAllocater::free(void *memory)
                         newNode->m_next = newNode->m_next->m_next;
                         std::memset(static_cast<fe::uInt8*>(static_cast<void*>(newNode)) + FREE_BLOCK_SIZE, 0, newNode->m_data.m_blockSize);
                     }
+
+                FE_ASSERT(debug(), "Debug Check Failed");
             }
 
-        FE_ASSERT(debug(), "Debug Check Failed");
         FE_ASSERT(!m_freeList.loop(), "Dynamic Memory Allocater loop");
         
     }
