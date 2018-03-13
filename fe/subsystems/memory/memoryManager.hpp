@@ -45,7 +45,9 @@ namespace fe
                     bool m_shutDown;
 
                 public:
-                    FLAT_ENGINE_API void startUp(fe::uInt64 bufferSize, fe::uInt64 stackSize, fe::uInt64 dynamicSize);
+                    FLAT_ENGINE_API void startUp(fe::uInt64 bufferSize);
+                    FLAT_ENGINE_API void startUpStack(fe::uInt64 stackSize);
+                    FLAT_ENGINE_API void startUpDynamic(fe::uInt64 dynamicSize);
                     FLAT_ENGINE_API void shutDown();
                     FLAT_ENGINE_API static memoryManager &get();
 

@@ -4,6 +4,33 @@
 
 fe::profilerLogger *fe::profilerLogger::m_instance = nullptr;
 
+void fe::profilerLogger::print(std::ostream &out, unsigned int profileIndex)
+    {
+        profileData data = m_profileData[profileIndex];
+        fe::time avg;
+        for (unsigned int j = 0; j < std::min(data.m_calls, 500u); j++)
+            {
+                avg += data.m_time[j];
+            }
+
+        if (data.m_calls > 0)
+            {
+                avg /= std::min(data.m_calls, 500u);
+            }
+
+    #if !FE_PROFILE_PRINT_ZEROS
+        if (avg.asMicroseconds() > 0)
+    #endif
+        {
+            out <<  data.m_group << "::" << data.m_name <<
+                    "\nCalls per frame: "   << data.m_calls <<
+                    "\nMicroseconds: "      << avg.asMicroseconds() <<
+                    "\nMilliseconds: "      << avg.asMilliseconds() <<
+                    "\nSeconds: "           << avg.asSeconds() << 
+                    "\nFPS: "               << 1 / avg.asSeconds() << "\n\n";
+        }
+    }
+
 void fe::profilerLogger::startUp()
     {
         if (!m_instance) 
@@ -62,34 +89,7 @@ void fe::profilerLogger::printToStream(std::ostream &out)
     {
         for (unsigned int i = 0; i < m_profilesCreated; i++)
             {
-                profileData data = m_profileData[i];
-                fe::time avg;
-                for (unsigned int j = 0; j < std::min(data.m_calls, 500u); j++)
-                    {
-                        avg += data.m_time[j];
-                    }
-
-                if (data.m_calls > 0)
-                    {
-                        avg /= std::min(data.m_calls, 500u);
-                    }
-
-            #if FE_PROFILE_PRINT_ZEROS
-                out <<  data.m_group << "::" << data.m_name <<
-                        "\nCalls per frame: "   << data.m_calls <<
-                        "\nMicroseconds: "      << avg.asMicroseconds() <<
-                        "\nMilliseconds: "      << avg.asMilliseconds() <<
-                        "\nSeconds: "           << avg.asSeconds() << "\n\n";
-            #else
-                if (avg.asMicroseconds() > 0)
-                    {
-                        out <<  data.m_group << "::" << data.m_name <<
-                                "\nCalls per frame: "   << data.m_calls <<
-                                "\nMicroseconds: "      << avg.asMicroseconds() <<
-                                "\nMilliseconds: "      << avg.asMilliseconds() <<
-                                "\nSeconds: "           << avg.asSeconds() << "\n\n";
-                    }
-            #endif
+                print(out, i);
             }
     }
 
@@ -98,34 +98,7 @@ void fe::profilerLogger::printToStream(fe::str group, std::ostream &out)
         auto profiles = m_profileGroups[group];
         for (unsigned int i = 0; i < profiles.second; i++)
             {
-                profileData data = m_profileData[i];
-                fe::time avg;
-                for (unsigned int j = 0; j < std::min(data.m_calls, 500u); j++)
-                    {
-                        avg += data.m_time[j];
-                    }
-
-                if (data.m_calls > 0)
-                    {
-                        avg /= std::min(data.m_calls, 500u);
-                    }
-
-            #if FE_PROFILE_PRINT_ZEROS
-                out <<  data.m_group << "::" << data.m_name <<
-                        "\nCalls per frame: "   << data.m_calls <<
-                        "\nMicroseconds: "      << avg.asMicroseconds() <<
-                        "\nMilliseconds: "      << avg.asMilliseconds() <<
-                        "\nSeconds: "           << avg.asSeconds() << "\n\n";
-            #else
-                if (avg.asMicroseconds() > 0)
-                    {
-                        out <<  data.m_group << "::" << data.m_name <<
-                                "\nCalls per frame: "   << data.m_calls <<
-                                "\nMicroseconds: "      << avg.asMicroseconds() <<
-                                "\nMilliseconds: "      << avg.asMilliseconds() <<
-                                "\nSeconds: "           << avg.asSeconds() << "\n\n";
-                    }
-            #endif
+                print(out, i);
             }
     }
 

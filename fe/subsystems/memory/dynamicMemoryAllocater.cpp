@@ -1,6 +1,7 @@
 #include "dynamicMemoryAllocater.hpp"
 #include "../../feAssert.hpp"
 #include "../../debug/profiler.hpp"
+#include "../../typeDefines.hpp"
 #include <cstring>
 #include <algorithm>
 #include <cmath>
@@ -12,28 +13,11 @@ constexpr fe::uInt64 fe::dynamicMemoryAllocater::calculateAllocSize(const fe::uI
         return retSize;
     }
 
-void fe::dynamicMemoryAllocater::condense()
-    {
-        listNode *it = m_freeList.head();
-        while (it)
-            {
-                fe::uInt64 size = calculateAllocSize(FREE_BLOCK_SIZE + it->m_data.m_blockSize);
-                if (it->m_next == it + size)
-                    {
-                        // Two blocks are touching, merge
-                        it->m_data.m_blockSize += it->m_next->m_data.m_blockSize + FREE_BLOCK_SIZE;
-                        it->m_data.m_blockSize = calculateAllocSize(it->m_data.m_blockSize);
-                        it->m_next = it->m_next->m_next;
-                    }
-                else
-                    {
-                        it = it->m_next;
-                    }
-            }
-    }
-
 bool fe::dynamicMemoryAllocater::debug()
     {
+    #if not FE_DEBUG_ALLOCATER
+        return true;
+    #endif
         bool good = true;
 
         fe::uInt64 size = 0;
@@ -56,19 +40,21 @@ bool fe::dynamicMemoryAllocater::debug()
 
         good = good && !m_freeList.loop();
         return good;
+        
     }
 
-fe::dynamicMemoryAllocater::dynamicMemoryAllocater(const fe::uInt8 chunkSize) : m_memoryBuffer(nullptr), CHUNK_SIZE(chunkSize)
+fe::dynamicMemoryAllocater::dynamicMemoryAllocater(const fe::uInt8 chunkSize) : m_memoryBuffer(nullptr), CHUNK_SIZE(chunkSize), m_startedUp(false)
     {
 
     }
 
 void fe::dynamicMemoryAllocater::startUp(fe::uInt8 *buffer, const fe::uInt64 size)
     {
-        m_totalSize = calculateAllocSize(size);
+        m_totalSize = size;
         m_memoryBuffer = buffer;
         clear();
         FE_ASSERT(debug(), "Debug Check Failed");
+        m_startedUp = true;
     }
 
 void *fe::dynamicMemoryAllocater::alloc(const fe::uInt64 size, const fe::uInt8 alignment)
@@ -114,6 +100,10 @@ void *fe::dynamicMemoryAllocater::alloc(const fe::uInt64 size, const fe::uInt8 a
 
 void fe::dynamicMemoryAllocater::free(void *memory)
     {
+        if (!memoryInRegion(memory))
+            {
+                return;
+            }
         FE_ASSERT(debug(), "Debug Check Failed");
         fe::uInt8 *header = reinterpret_cast<fe::uInt8*>(memory) - FREE_BLOCK_SIZE;
         freeHeader *headerObj = reinterpret_cast<freeHeader*>(header);
@@ -134,18 +124,40 @@ void fe::dynamicMemoryAllocater::free(void *memory)
 
         FE_ASSERT(debug(), "Debug Check Failed");
         fe::uInt64 blockSize = headerObj->m_blockSize;
-        std::memset(header + FREE_BLOCK_SIZE, 0, blockSize);
-        listNode *newNode = new(header) listNode();
-        newNode->m_data.m_blockSize = blockSize;
-        newNode->m_data.m_header = 0xDEAD;
-        m_freeList.insert(itPrev, newNode);
+        std::memset(header, 0, blockSize + FREE_BLOCK_SIZE);
+        // Condense memory
+        if (itPrev && static_cast<void*>(itPrev + itPrev->m_data.m_blockSize + FREE_BLOCK_SIZE) == static_cast<void*>(header))
+            {
+                itPrev->m_data.m_blockSize += blockSize + FREE_BLOCK_SIZE;
+            }
+        else
+            {
+                listNode *newNode = new(header) listNode();
+                newNode->m_data.m_blockSize = blockSize;
+                newNode->m_data.m_header = 0xDEAD;
+                m_freeList.insert(itPrev, newNode);
+                FE_ASSERT(newNode->m_data.m_header == 0xDEAD, "Memory header invalid");
+
+            #if _DEBUG
+                void *a = static_cast<fe::uInt8*>(static_cast<void*>(newNode)) + newNode->m_data.m_blockSize + FREE_BLOCK_SIZE;
+                void *b = newNode->m_next;
+
+                bool equal = a == b;
+
+                if (a == b)
+            #else
+                if ((static_cast<fe::uInt8*>(static_cast<void*>(newNode)) + newNode->m_data.m_blockSize + FREE_BLOCK_SIZE) == newNode->m_next)
+            #endif
+                    {
+                        newNode->m_data.m_blockSize += FREE_BLOCK_SIZE + newNode->m_next->m_data.m_blockSize;
+                        newNode->m_next = newNode->m_next->m_next;
+                        std::memset(static_cast<fe::uInt8*>(static_cast<void*>(newNode)) + FREE_BLOCK_SIZE, 0, newNode->m_data.m_blockSize);
+                    }
+            }
 
         FE_ASSERT(debug(), "Debug Check Failed");
-        FE_ASSERT(newNode->m_data.m_header == 0xDEAD, "Memory header invalid");
-        condense();
         FE_ASSERT(!m_freeList.loop(), "Dynamic Memory Allocater loop");
-
-        FE_ASSERT(debug(), "Debug Check Failed");
+        
     }
 
 void fe::dynamicMemoryAllocater::clear()
@@ -156,4 +168,14 @@ void fe::dynamicMemoryAllocater::clear()
         base->m_data.m_blockSize = m_totalSize - FREE_BLOCK_SIZE;
         base->m_next = nullptr;
         m_freeList.insert(base);
+    }
+
+bool fe::dynamicMemoryAllocater::startedUp() const
+    {
+        return m_startedUp;
+    }
+
+bool fe::dynamicMemoryAllocater::memoryInRegion(void *memory) const
+    {
+        return memory >= m_memoryBuffer && memory < m_memoryBuffer + m_totalSize;
     }

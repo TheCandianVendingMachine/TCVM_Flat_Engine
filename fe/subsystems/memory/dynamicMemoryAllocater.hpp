@@ -14,7 +14,7 @@ namespace fe
                     struct freeHeader
                         {
                             fe::uInt64 m_blockSize = 0; // how much memory is present after the block
-                            fe::uInt16 m_header = 0xDEAD; // Header to ensure data is proper
+                            fe::uInt16 m_header = 0xDEAD; // Header to ensure data is proper. 0xDEAD == free header | 0xBEEF == used header
                         };
 
                     using listNode = fe::singlyLinkedList<freeHeader>::node;
@@ -28,8 +28,9 @@ namespace fe
                     fe::uInt64 m_totalSize;
                     fe::uInt8 *m_memoryBuffer;
 
+                    bool m_startedUp;
+
                     FLAT_ENGINE_API constexpr fe::uInt64 calculateAllocSize(const fe::uInt64 size);
-                    FLAT_ENGINE_API void condense(); // Condenses free list nodes and merges blocks
 
                     // ensures that the free list is non-looping and full size
                     FLAT_ENGINE_API bool debug();
@@ -43,6 +44,11 @@ namespace fe
                     FLAT_ENGINE_API void free(void *memory);
 
                     FLAT_ENGINE_API void clear();
+
+                    FLAT_ENGINE_API bool startedUp() const;
+
+                    // Returns whether or not memory is withing allocation range
+                    FLAT_ENGINE_API bool memoryInRegion(void *memory) const;
 
             };
     }

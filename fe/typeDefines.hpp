@@ -21,6 +21,7 @@
 
 #define FE_CHAR_START 33 // The characters that will be generated into a bitmap font
 #define FE_CHAR_END 126
+#define FE_DEBUG_ALLOCATER true
 
 namespace fe
     {

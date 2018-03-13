@@ -2,6 +2,7 @@
 #include "../memory/memoryManager.hpp"
 #include "../messaging/eventSender.hpp"
 #include "../../engine.hpp"
+#include "../../debug/profiler.hpp"
 #include "gameState.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 
@@ -164,6 +165,7 @@ void fe::gameStateMachine::preUpdate()
                 push(static_cast<fe::baseGameState*>(m_nextState->construct()), m_nextStateOptions);
             }
 
+        FE_ENGINE_PROFILE("gameStateMachine", "preupdateUserState");
         if (m_endState && m_endState->m_currentState)
             {
                 m_endState->m_currentState->preUpdateDefined();
@@ -175,10 +177,12 @@ void fe::gameStateMachine::preUpdate()
                         tail = tail->m_tail;
                     }
             }
+        FE_END_PROFILE;
     }
 
 void fe::gameStateMachine::update(collisionWorld *collisionWorld)
     {
+        FE_ENGINE_PROFILE("gameStateMachine", "updateUserState");
         if (m_endState && m_endState->m_currentState && m_update)
             {
                 m_endState->m_currentState->updateDefined(collisionWorld);
@@ -190,10 +194,12 @@ void fe::gameStateMachine::update(collisionWorld *collisionWorld)
                         tail = tail->m_tail;
                     }
             }
+        FE_END_PROFILE;
     }
 
 void fe::gameStateMachine::postUpdate(float deltaTime)
     {
+        FE_ENGINE_PROFILE("gameStateMachine", "postupdateUserState");
         if (m_endState && m_endState->m_currentState)
             {
                 m_endState->m_currentState->postUpdate();
@@ -212,10 +218,12 @@ void fe::gameStateMachine::postUpdate(float deltaTime)
             {
                 m_update = true;
             }
+        FE_END_PROFILE;
     }
 
 void fe::gameStateMachine::preDraw()
     {
+        FE_ENGINE_PROFILE("gameStateMachine", "predrawUserState");
         if (m_endState && m_endState->m_currentState)
             {
                 m_endState->m_currentState->preDraw();
@@ -231,6 +239,7 @@ void fe::gameStateMachine::preDraw()
                         tail = tail->m_tail;
                     }
             }
+        FE_END_PROFILE;
     }
 
 void fe::gameStateMachine::drawState(stateList *node, sf::RenderTarget &app)
@@ -244,15 +253,18 @@ void fe::gameStateMachine::drawState(stateList *node, sf::RenderTarget &app)
 
 void fe::gameStateMachine::draw(sf::RenderTarget &app)
     {
+        FE_ENGINE_PROFILE("gameStateMachine", "drawUserState");
         if (m_endState && m_endState->m_currentState)
             {
                 app.setView(m_endState->m_currentState->getCamera().getView());
                 drawState(m_endState, app);
             }
+        FE_END_PROFILE;
     }
 
 void fe::gameStateMachine::postDraw()
     {
+        FE_ENGINE_PROFILE("gameStateMachine", "postdrawUserState");
         if (m_endState && m_endState->m_currentState)
             {
                 m_endState->m_currentState->postDraw();
@@ -267,6 +279,7 @@ void fe::gameStateMachine::postDraw()
                         tail = tail->m_tail;
                     }
             }
+        FE_END_PROFILE;
     }
 
 const fe::sceneGraph &fe::gameStateMachine::getSceneGraph() const

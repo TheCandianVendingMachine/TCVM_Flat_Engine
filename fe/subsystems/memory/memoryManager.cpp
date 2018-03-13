@@ -4,20 +4,26 @@
 
 fe::memoryManager *fe::memoryManager::m_instance = nullptr;
 
-void fe::memoryManager::startUp(fe::uInt64 bufferSize, fe::uInt64 stackSize, fe::uInt64 dynamicSize)
+void fe::memoryManager::startUp(fe::uInt64 bufferSize)
     {
         if (!m_instance)
             {
                 m_instance = this;
                 m_bufferSize = bufferSize;
                 m_allocatedBuffer = static_cast<fe::uInt8*>(std::malloc(m_bufferSize));
-
-                // start up the different types of memory allocaters
-                m_stackAllocater.startUp(static_cast<fe::uInt8*>(alloc(stackSize)), stackSize);
-                m_dynamicAllocater.startUp(static_cast<fe::uInt8*>(alloc(dynamicSize)), dynamicSize);
             }
 
         m_shutDown = false;
+    }
+
+void fe::memoryManager::startUpStack(fe::uInt64 stackSize)
+    {
+        m_stackAllocater.startUp(static_cast<fe::uInt8*>(alloc(stackSize)), stackSize);
+    }
+
+void fe::memoryManager::startUpDynamic(fe::uInt64 dynamicSize)
+    {
+        m_dynamicAllocater.startUp(static_cast<fe::uInt8*>(alloc(dynamicSize)), dynamicSize);
     }
 
 void fe::memoryManager::shutDown()

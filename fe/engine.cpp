@@ -206,7 +206,8 @@ void fe::engine::startUp(fe::uInt64 totalMemory, fe::uInt64 stackMemory, fe::uIn
             {
                 m_instance = this;
 
-                m_memoryManager.startUp(totalMemory, stackMemory, dynamicMemory);
+                m_memoryManager.startUp(totalMemory);
+                m_memoryManager.startUpStack(stackMemory);
 
                 m_threadPool = new(m_memoryManager.getStackAllocater().alloc(sizeof(fe::threadPool<8>))) fe::threadPool<8>();
                 m_threadPool->startUp();
@@ -216,6 +217,8 @@ void fe::engine::startUp(fe::uInt64 totalMemory, fe::uInt64 stackMemory, fe::uIn
 
                 m_profileLogger = new(m_memoryManager.getStackAllocater().alloc(sizeof(fe::profilerLogger))) fe::profilerLogger();
                 m_profileLogger->startUp();
+
+                m_memoryManager.startUpDynamic(dynamicMemory);
 
                 m_debugDraw = new(m_memoryManager.getStackAllocater().alloc(sizeof(fe::debugDraw))) fe::debugDraw();
                 m_debugDraw->startUp();

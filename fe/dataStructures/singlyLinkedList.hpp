@@ -117,19 +117,20 @@ namespace fe
         template<typename T>
         void singlyLinkedList<T>::remove(node *node)
             {
-                singlyLinkedList::node *temp = m_head;
-                if (temp->m_next)
+                singlyLinkedList::node *prev = m_head;
+                if (prev->m_next)
                     {
-                        while (temp->m_next != node)
+                        while (prev->m_next != node)
                             {
-                                temp = temp->m_next;
+                                prev = prev->m_next;
                             }
                     }
-                else
+
+                if (prev)
                     {
-                        temp = nullptr;
+                        prev->m_next = node->m_next;
                     }
-                remove(temp, node);
+
                 delete node;
                 node = nullptr;
             }

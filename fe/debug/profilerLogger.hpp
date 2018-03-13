@@ -34,6 +34,8 @@ namespace fe
 
                     static profilerLogger *m_instance;
 
+                    FLAT_ENGINE_API __forceinline void print(std::ostream &out, unsigned int profileIndex);
+
                 public:
                     FLAT_ENGINE_API void startUp();
                     FLAT_ENGINE_API void shutDown();
