@@ -11,10 +11,13 @@ namespace fe
         class dynamicMemoryAllocater
             {
                 private:
+                    constexpr static fe::uInt16 m_VALID_FREE_HEADER = 0xDEAD;
+                    constexpr static fe::uInt16 m_VALID_USED_HEADER = 0xBEEF;
+
                     struct freeHeader
                         {
                             fe::uInt64 m_blockSize = 0; // how much memory is present after the block
-                            fe::uInt16 m_header = 0xDEAD; // Header to ensure data is proper. 0xDEAD == free header | 0xBEEF == used header
+                            fe::uInt16 m_header = m_VALID_FREE_HEADER; // Header to ensure data is proper. 0xDEAD == free header | 0xBEEF == used header
                         };
 
                     using listNode = fe::singlyLinkedList<freeHeader>::node;

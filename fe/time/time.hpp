@@ -11,11 +11,7 @@ namespace fe
             {
                 private:
                     // time as microseconds
-                    long long m_time;
-
-                    friend FLAT_ENGINE_API fe::time seconds(const long double in);
-                    friend FLAT_ENGINE_API fe::time milliseconds(const long double in);
-                    friend FLAT_ENGINE_API fe::time microseconds(const long double in);
+                    int64_t m_time;
 
                 public:
                     FLAT_ENGINE_API time();
@@ -23,7 +19,7 @@ namespace fe
                     FLAT_ENGINE_API time(const fe::time &time);
                     FLAT_ENGINE_API time(const fe::time &&time);
 
-                    FLAT_ENGINE_API float asSeconds();
+                    FLAT_ENGINE_API double asSeconds();
                     FLAT_ENGINE_API int32_t asMilliseconds();
                     FLAT_ENGINE_API int64_t asMicroseconds();
 
@@ -44,8 +40,8 @@ namespace fe
 
             };
 
-        FLAT_ENGINE_API fe::time seconds(const long double in);
-        FLAT_ENGINE_API fe::time milliseconds(const long double in);
-        FLAT_ENGINE_API fe::time microseconds(const long double in);
+        FLAT_ENGINE_API fe::time seconds(const long long in);
+        FLAT_ENGINE_API fe::time milliseconds(const long long in);
+        FLAT_ENGINE_API fe::time microseconds(const long long in);
         FLAT_ENGINE_API fe::time zero();
     }

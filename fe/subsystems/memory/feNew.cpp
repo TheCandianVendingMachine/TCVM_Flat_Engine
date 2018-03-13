@@ -13,7 +13,7 @@ void *operator new(std::size_t bytes)
 
 void operator delete(void *memory)
     {
-        if (fe::memoryManager::exists() && fe::memoryManager::get().getDynamicAllocater().memoryInRegion(memory))
+        if (fe::memoryManager::exists())
             {
                 fe::memoryManager::get().getDynamicAllocater().free(memory);
             }

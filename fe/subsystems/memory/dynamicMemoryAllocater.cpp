@@ -15,6 +15,7 @@ constexpr fe::uInt64 fe::dynamicMemoryAllocater::calculateAllocSize(const fe::uI
 
 bool fe::dynamicMemoryAllocater::debug()
     {
+#ifdef _DEBUG
     #if not FE_DEBUG_ALLOCATER
         return true;
     #endif
@@ -40,7 +41,8 @@ bool fe::dynamicMemoryAllocater::debug()
 
         good = good && !m_freeList.loop();
         return good;
-        
+#endif
+        return true;
     }
 
 fe::dynamicMemoryAllocater::dynamicMemoryAllocater(const fe::uInt8 chunkSize) : m_memoryBuffer(nullptr), CHUNK_SIZE(chunkSize), m_startedUp(false)
@@ -73,18 +75,18 @@ void *fe::dynamicMemoryAllocater::alloc(const fe::uInt64 size, const fe::uInt8 a
                 it = it->m_next;
             }
         FE_ASSERT(it, "Dynamic Memory Manager out of memory!");
-        FE_ASSERT(it->m_data.m_header == 0xDEAD, "Memory header invalid");
+        FE_ASSERT(it->m_data.m_header == m_VALID_FREE_HEADER, "Memory header invalid");
         fe::uInt64 blockSize = it->m_data.m_blockSize;
 
         // Memory returned
         void *memoryLocation = static_cast<fe::uInt8*>(static_cast<void*>(it)) + FREE_BLOCK_SIZE;
         it->m_data.m_blockSize = trueSize - FREE_BLOCK_SIZE;
-        it->m_data.m_header = 0xBEEF;
+        it->m_data.m_header = m_VALID_USED_HEADER;
 
         // Generate header
         listNode *itNext = it->m_next;
         listNode *newNode = new(static_cast<fe::uInt8*>(static_cast<void*>(it)) + trueSize) listNode();
-        newNode->m_data.m_header = 0xDEAD;
+        newNode->m_data.m_header = m_VALID_FREE_HEADER;
         m_freeList.replace(it, newNode);
         newNode->m_data.m_blockSize = blockSize - trueSize;
 
@@ -108,7 +110,7 @@ void fe::dynamicMemoryAllocater::free(void *memory)
         fe::uInt8 *header = reinterpret_cast<fe::uInt8*>(memory) - FREE_BLOCK_SIZE;
         freeHeader *headerObj = reinterpret_cast<freeHeader*>(header);
 
-        FE_ASSERT(headerObj->m_header == 0xBEEF, "Memory header invalid");
+        FE_ASSERT(headerObj->m_header == m_VALID_USED_HEADER, "Memory header invalid");
 
         listNode *it = m_freeList.head();
         listNode *itPrev = nullptr;
@@ -135,9 +137,9 @@ void fe::dynamicMemoryAllocater::free(void *memory)
             {
                 listNode *newNode = new(header) listNode();
                 newNode->m_data.m_blockSize = blockSize;
-                newNode->m_data.m_header = 0xDEAD;
+                newNode->m_data.m_header = m_VALID_FREE_HEADER;
                 m_freeList.insert(itPrev, newNode);
-                FE_ASSERT(newNode->m_data.m_header == 0xDEAD, "Memory header invalid");
+                FE_ASSERT(newNode->m_data.m_header == m_VALID_FREE_HEADER, "Memory header invalid");
 
             #if _DEBUG
                 void *a = static_cast<fe::uInt8*>(static_cast<void*>(newNode)) + newNode->m_data.m_blockSize + FREE_BLOCK_SIZE;
@@ -147,7 +149,7 @@ void fe::dynamicMemoryAllocater::free(void *memory)
 
                 if (a == b)
             #else
-                if ((static_cast<fe::uInt8*>(static_cast<void*>(newNode)) + newNode->m_data.m_blockSize + FREE_BLOCK_SIZE) == newNode->m_next)
+                if ((static_cast<fe::uInt8*>(static_cast<void*>(newNode)) + newNode->m_data.m_blockSize + FREE_BLOCK_SIZE) == static_cast<void*>(newNode->m_next))
             #endif
                     {
                         newNode->m_data.m_blockSize += FREE_BLOCK_SIZE + newNode->m_next->m_data.m_blockSize;

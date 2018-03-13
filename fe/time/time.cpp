@@ -24,20 +24,20 @@ fe::time::time(const fe::time &&time)
         m_time = std::forward<const long long>(time.m_time);
     }
 
-float fe::time::asSeconds()
+double fe::time::asSeconds()
     {
         // 0.000001 = 1e-6
-        return static_cast<float>(static_cast<long double>(m_time) * 0.000001);
+        return static_cast<double>(m_time) / 1000000;
     }
 
 int32_t fe::time::asMilliseconds()
     {
-        return int32_t(static_cast<long double>(m_time) * 0.001);
+        return static_cast<int32_t>(m_time) / 1000;
     }
 
 int64_t fe::time::asMicroseconds()
     {
-        return int64_t(m_time);
+        return m_time;
     }
 
 fe::time fe::time::operator+(const fe::time &rhs)
@@ -105,25 +105,19 @@ bool fe::time::operator==(const fe::time &rhs)
     }
 
 
-fe::time fe::seconds(const long double in)
+fe::time fe::seconds(const long long in)
     {
-        fe::time ret;
-        ret.m_time = static_cast<long long>(in / 0.000001);
-        return ret;
+        return fe::time(static_cast<float>(in / 1000000));
     }
 
-fe::time fe::milliseconds(const long double in)
+fe::time fe::milliseconds(const long long in)
     {
-        fe::time ret;
-        ret.m_time = static_cast<long long>(in / 0.001);
-        return ret;
+        return fe::time(static_cast<int64_t>(in / 1000));
     }
 
-fe::time fe::microseconds(const long double in)
+fe::time fe::microseconds(const long long in)
     {
-        fe::time ret;
-        ret.m_time = static_cast<long long>(in);
-        return ret;
+        return fe::time(static_cast<int64_t>(in));
     }
 
 fe::time fe::zero()
