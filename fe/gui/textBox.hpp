@@ -18,11 +18,12 @@ namespace fe
                         public:
                             enum options
                                 {
-                                    DISABLE_ALPHABET    = 1 << 0,
-                                    DISABLE_NUMERICS    = 1 << 1,
-                                    DISABLE_INPUT       = 1 << 2,
-                                    WORD_WRAP           = 1 << 3,
-                                    SIZE_TO_TEXT        = 1 << 4,
+                                    DISABLE_ALPHABET                = 1 << 0,
+                                    DISABLE_NUMERICS                = 1 << 1,
+                                    DISABLE_INPUT                   = 1 << 2,
+                                    WORD_WRAP                       = 1 << 3,
+                                    SIZE_TO_TEXT                    = 1 << 4,
+                                    DELETE_INITIAL_TEXT_ON_INPUT    = 1 << 5
                                 };
 
                             friend options operator|(const options &lhs, const options &rhs)
@@ -47,6 +48,7 @@ namespace fe
                             bool m_allowInput;
                             bool m_wordWrap;
                             bool m_sizeToText;
+                            bool m_deleteInitialTextOnInput;
 
                             float m_paddingX;
                             float m_paddingY;

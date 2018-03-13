@@ -125,6 +125,10 @@ namespace fe
                                                                     {
                                                                         options |= (std::stoi(optionIt->value()) != 0) ? fe::gui::textBox::SIZE_TO_TEXT : 0;
                                                                     }
+                                                                else if (std::string(optionIt->name()) == "delete_initial_text_on_input")
+                                                                    {
+                                                                        options |= (std::stoi(optionIt->value()) != 0) ? fe::gui::textBox::DELETE_INITIAL_TEXT_ON_INPUT : 0;
+                                                                    }
                                                                 optionIt = optionIt->next_sibling();
                                                             }
                                                     }

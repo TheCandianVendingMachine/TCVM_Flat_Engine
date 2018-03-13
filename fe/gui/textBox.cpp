@@ -154,6 +154,7 @@ fe::gui::textBox::textBox(fe::Vector2d size, const sf::Font &font, options opt, 
     m_allowInput(false),
     m_wordWrap(false),
     m_sizeToText(false),
+    m_deleteInitialTextOnInput(false),
     m_maxChars(maxChars),
     m_inputText(text),
     m_maxSize(size),
@@ -180,6 +181,13 @@ fe::gui::textBox::textBox(fe::Vector2d size, const sf::Font &font, options opt, 
 
         setActiveColour(sf::Color(255, 255, 255, 255));
         setInactiveColour(sf::Color(255, 255, 255, 220));
+
+        if (m_deleteInitialTextOnInput)
+            {
+                // Because we dont update the visual text there is no visible change
+                m_inputText = "";
+                m_inputTextShown = "";
+            }
     }
 
 fe::gui::textBox::textBox(fe::Vector2d size, const sf::Font &font, options opt, int textStrSize, unsigned int maxChars, float padX, float padY, const std::string &text) :
@@ -188,11 +196,12 @@ fe::gui::textBox::textBox(fe::Vector2d size, const sf::Font &font, options opt, 
 
 void fe::gui::textBox::setOptions(options opt)
     {
-        m_allowAlpha =     !(opt & options::DISABLE_ALPHABET);
-        m_allowNumerics =  !(opt & options::DISABLE_NUMERICS);
-        m_allowInput =     !(opt & options::DISABLE_INPUT);
-        m_wordWrap =        (opt & options::WORD_WRAP);
-        m_sizeToText =      (opt & options::SIZE_TO_TEXT);
+        m_allowAlpha =                 !(opt & options::DISABLE_ALPHABET);
+        m_allowNumerics =              !(opt & options::DISABLE_NUMERICS);
+        m_allowInput =                 !(opt & options::DISABLE_INPUT);
+        m_wordWrap =                    (opt & options::WORD_WRAP);
+        m_sizeToText =                  (opt & options::SIZE_TO_TEXT);
+        m_deleteInitialTextOnInput =    (opt & options::DELETE_INITIAL_TEXT_ON_INPUT);
     }
 
 void fe::gui::textBox::handleEvent(const sf::Event &event)
