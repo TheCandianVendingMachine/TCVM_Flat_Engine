@@ -27,7 +27,7 @@ namespace fe
                         {
                             std::unordered_map<fe::str, unsigned int> m_profiles;
                             char m_groupName[512] = "\0";
-                            fe::str m_groupChildren[25]; // group ID's that are children (new groups underneath this one) to this group
+                            fe::str m_groupChildren[FE_MAX_PROFILER_GROUP_CHILDREN]; // group ID's that are children (new groups underneath this one) to this group
                             unsigned int m_groupChildrenIndex = 0;
                             bool m_profile = true;
                             bool m_new = true;
@@ -37,7 +37,7 @@ namespace fe
                     fe::profilerLogger::profileData m_profileData[FE_MAX_PROFILER_PROFILES];
 
                     profileGroup m_baseGroup;
-                    profileGroup *m_currentGroupStack[25];
+                    profileGroup *m_currentGroupStack[FE_MAX_PROFILER_GROUP_STACK];
 
                     unsigned int m_currentGroupStackIndex;
                     unsigned int m_profilesCreated;

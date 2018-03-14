@@ -9,6 +9,8 @@
 #define FE_PROFILE_PRINT_ZEROS false
 #define FE_MAX_PROFILER_PROFILES 250 // How many different profiler profiles can be created
 #define FE_PROFILER_AVERAGE_MAX 500 // how much data needs to be recorded before an average is computed
+#define FE_MAX_PROFILER_GROUP_CHILDREN 25 // how many children a group can have
+#define FE_MAX_PROFILER_GROUP_STACK 25 // how many groups can be in a stack total
 
 #define FE_DEBUG_NO_SEED true
 #define FE_DEFAULT_RANDOM_SEED 555
