@@ -109,23 +109,27 @@ void fe::sceneGraph::clear()
 
 void fe::sceneGraph::preDraw()
     {
-        FE_ENGINE_PROFILE("scene_graph", "batch_draw");
+        FE_ENGINE_PROFILE("scene_graph", "batch_clear");
         m_batch.clear();
         FE_END_PROFILE;
     }
 
 void fe::sceneGraph::draw(sf::RenderTarget &window)
     {
+        FE_ENGINE_PROFILE("scene_graph", "graph_transform");
         transformGraph(m_baseNode.m_graphNode);
+        FE_END_PROFILE;
 
         sf::RenderStates states;
         states.texture = &fe::engine::get().getResourceManager<sf::Texture>()->get();
 
         unsigned int index = 0;
+        FE_PROFILE("scene_graph", "graph_draw");
         if (m_renderObjects.getObjectAllocCount() <= m_maxObjectsUntilThread || true) 
             {
                 drawGraph(m_baseNode.m_graphNode, index);
             }
+        FE_END_PROFILE;
 
         FE_ENGINE_PROFILE("scene_graph", "window_draw");
         m_batch.draw(window, states, index);

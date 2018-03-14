@@ -31,6 +31,7 @@ namespace fe
                             {
                                 if (fe::profilerLogger::get().wantProfile(FE_STR(group)))
                                     {
+                                        fe::profilerLogger::get().startProfile(group);
 			                            m_startTime = fe::clock::getTimeSinceEpoch();
                                         m_profile = true;
                                     }
@@ -49,7 +50,7 @@ namespace fe
                             {
 			                    m_endTime = fe::clock::getTimeSinceEpoch();
 			                    fe::time runtime = m_endTime - m_startTime;
-                                fe::profilerLogger::get().add(m_groupStr, m_nameStr, runtime);
+                                fe::profilerLogger::get().endProfile(m_groupStr, m_nameStr, runtime);
                             }
                         else if (!m_profileToLogger)
                             {
