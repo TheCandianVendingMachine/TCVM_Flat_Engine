@@ -16,30 +16,20 @@ namespace fe
 		        fe::time m_startTime;
 		        fe::time m_endTime;
 		
-                char m_groupStr[512];
                 char m_nameStr[512];
                 bool m_profile;
-                bool m_profileToLogger;
-		        profiler(const char *group, const char *name, bool profileLogger) 
+		        profiler( const char *name) 
 		            {
                     #if FE_PROFILE_RELEASE || _DEBUG
                         m_profile = false;
-                        m_profileToLogger = profileLogger;
                         strcpy(m_nameStr, name);
-                        strcpy(m_groupStr, group);
-                        if (m_profileToLogger)
+                        if (fe::profilerLogger::get().wantProfile(FE_STR(name)))
                             {
-                                if (fe::profilerLogger::get().wantProfile(FE_STR(group)))
-                                    {
-                                        fe::profilerLogger::get().startProfile(group);
-			                            m_startTime = fe::clock::getTimeSinceEpoch();
-                                        m_profile = true;
-                                    }
+                                fe::profilerLogger::get().startProfile(name);
+			                    m_startTime = fe::clock::getTimeSinceEpoch();
+                                m_profile = true;
                             }
-                        else
-                            {
-                                m_startTime = fe::clock::getTimeSinceEpoch();
-                            }
+
                     #endif
 		            }
 		
@@ -50,32 +40,18 @@ namespace fe
                             {
 			                    m_endTime = fe::clock::getTimeSinceEpoch();
 			                    fe::time runtime = m_endTime - m_startTime;
-                                fe::profilerLogger::get().endProfile(m_groupStr, m_nameStr, runtime);
-                            }
-                        else if (!m_profileToLogger)
-                            {
-                                m_endTime = fe::clock::getTimeSinceEpoch();
-                                fe::time runtime = m_endTime - m_startTime;
-                                int i = 0;
-                                FE_LOG_DEBUG(m_groupStr, m_nameStr, "Microseconds: ", runtime.asMicroseconds(), "Milliseconds: ", runtime.asMilliseconds(), "Seconds: ", runtime.asSeconds());
+                                fe::profilerLogger::get().endProfile(m_nameStr, runtime);
                             }
                     #endif
 		            }
 	        };
     }
 
-#define FE_PROFILE(group, name) { fe::profiler t(group, name, true);
-#define FE_PROFILE_NO_LOG(group, name) { fe::profiler t(group, name, false);
+#define FE_PROFILE(group, name) { fe::profiler t(group ## "_" name);
 #define FE_END_PROFILE }
 
 #if FE_PROFILE_ENGINE
-    #define FE_ENGINE_PROFILE(group, name) { fe::profiler t(group, name, true);
+    #define FE_ENGINE_PROFILE(group, name) { fe::profiler t(group ## "_" name);
 #else
     #define FE_ENGINE_PROFILE(group, name) {
-#endif
-
-#if FE_PROFILE_ENGINE
-    #define FE_ENGINE_PROFILE_NO_LOG(group, name) { fe::profiler t(group, name, false);
-#else
-    #define FE_ENGINE_PROFILE_NO_LOG(group, name) {
 #endif

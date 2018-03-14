@@ -53,19 +53,19 @@ void fe::engine::run()
                 m_accumulator += frameTime;
 
                 FE_ENGINE_PROFILE("engine", "frame");
-                FE_ENGINE_PROFILE("engine_bigInput", "input_preUpdate")
+                FE_ENGINE_PROFILE("engine", "input_preUpdate")
                 m_inputManager->preUpdate();
                 FE_END_PROFILE;
 
-                FE_ENGINE_PROFILE("engine_bigEvent", "event");
+                FE_ENGINE_PROFILE("engine", "event");
                 handleEvents();
                 FE_END_PROFILE;
 
-                FE_ENGINE_PROFILE("engine_bigUpdate", "update")
+                FE_ENGINE_PROFILE("engine_update", "update")
                 update();
                 FE_END_PROFILE;
 
-                FE_ENGINE_PROFILE("engine_bigDraw", "draw")
+                FE_ENGINE_PROFILE("engine_draw", "draw")
                 draw();
                 FE_END_PROFILE;
                 FE_END_PROFILE;

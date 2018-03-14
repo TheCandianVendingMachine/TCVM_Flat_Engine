@@ -4,49 +4,60 @@
 
 fe::profilerLogger *fe::profilerLogger::m_instance = nullptr;
 
-void fe::profilerLogger::print(std::ostream &out, unsigned int profileIndex, const char *prefix)
+void fe::profilerLogger::print(std::ostream &out, profileData &data, const char *prefix)
     {
-        profileData data = m_profileData[profileIndex];
-        fe::time avg;
-        for (unsigned int j = 0; j < std::min(data.m_calls, 500u); j++)
-            {
-                avg += data.m_time[j];
-            }
-
-        if (data.m_calls > 0)
-            {
-                avg /= std::min(data.m_calls, 500u);
-            }
-
     #if !FE_PROFILE_PRINT_ZEROS
-        if (avg.asMicroseconds() > 0)
+        if (data.m_avgTime.asMicroseconds() > 0)
     #endif
         {
-            out <<          prefix << data.m_name           << " {"
+            out <<          prefix << "Results:"            << " {"
                    "\n" <<  prefix << "\tCalls per frame: " << data.m_calls <<
-                   "\n" <<  prefix << "\tMicroseconds: "    << avg.asMicroseconds() <<
-                   "\n" <<  prefix << "\tMilliseconds: "    << avg.asMilliseconds() <<
-                   "\n" <<  prefix << "\tSeconds: "         << avg.asSeconds() <<
-                   "\n" <<  prefix << "\tFPS: "             << 1 / avg.asSeconds() << "\n" << prefix << "}\n";
+                   "\n" <<  prefix << "\tMicroseconds: "    << data.m_avgTime.asMicroseconds() <<
+                   "\n" <<  prefix << "\tMilliseconds: "    << data.m_avgTime.asMilliseconds() <<
+                   "\n" <<  prefix << "\tSeconds: "         << data.m_avgTime.asSeconds() <<
+                   "\n" <<  prefix << "\tFPS: "             << 1 / data.m_avgTime.asSeconds() << "\n" << prefix << "}\n";
         }
     }
 
 void fe::profilerLogger::print(std::ostream &out, profileGroup &group, const char *prefix)
     {
-        out << prefix << group.m_groupName << " {\n";
         char newPrefix[16];
         std::strcpy(newPrefix, prefix);
         std::strcat(newPrefix, "\t");
-        for (auto &profile : group.m_profiles)
+
+        group.m_data->m_avgTime = fe::time();
+        for (unsigned int i = 0; i < group.m_data->m_calls; i++)
             {
-                print(out, profile.second, newPrefix);
+                group.m_data->m_avgTime += group.m_data->m_time[i];
+            }
+        if (group.m_data->m_calls > 0) 
+            {
+                group.m_data->m_avgTime /= group.m_data->m_calls;
+            }
+        out << prefix << group.m_name << " {\n";
+
+        print(out, *group.m_data, newPrefix);
+
+        for (auto &child : group.m_children)
+            {
+                for (unsigned int i = 0; i < group.m_data->m_calls; i++)
+                    {
+                        group.m_data->m_avgTime += group.m_data->m_time[i];
+                    }
+                if (group.m_data->m_calls > 0) 
+                    {
+                        group.m_data->m_avgTime /= group.m_data->m_calls;
+                    }
+            }
+        std::sort(group.m_children.begin(), group.m_children.end(), [](const profileGroup *lhs, const profileGroup *rhs) -> bool { return *lhs > *rhs; });
+
+        for (auto &child : group.m_children)
+            {
+                print(out, *child, newPrefix);
             }
 
-        for (unsigned int i = 0; i < group.m_groupChildrenIndex; i++)
-            {
-                print(out, m_profileGroups[group.m_groupChildren[i]], newPrefix);
-            }
-        group.m_groupChildrenIndex = 0;
+        group.m_data->m_avgTime = fe::time();
+        group.m_children.clear();
         out << prefix << "}\n\n";
     }
 
@@ -55,9 +66,10 @@ void fe::profilerLogger::startUp()
         if (!m_instance) 
             {
                 m_instance = this;
-                std::strcpy(m_baseGroup.m_groupName, "profile_results");
-                m_currentGroupStackIndex = 0;
-                m_currentGroupStack[m_currentGroupStackIndex] = &m_baseGroup;
+                const char *name = "profile_results";
+                m_allProfileGroups[FE_STR(name)] = m_profileGroup[m_groupsCreated++].init(name);
+                m_profileGroupStack.push(m_allProfileGroups[FE_STR(name)]);
+                m_baseGroup = m_profileGroupStack.top();
             }
     }
 
@@ -71,75 +83,54 @@ fe::profilerLogger &fe::profilerLogger::get()
         return *m_instance;
     }
 
-void fe::profilerLogger::startProfile(const char *group)
+void fe::profilerLogger::startProfile(const char *profile)
     {
-        profileGroup &groupObj = m_profileGroups[FE_STR(group)];
-        if (groupObj.m_new)
+        if (m_allProfileGroups.find(FE_STR(profile)) == m_allProfileGroups.end())
             {
-                std::strcpy(groupObj.m_groupName, group);
-                groupObj.m_new = false;
+                m_allProfileGroups[FE_STR(profile)] = m_profileGroup[m_groupsCreated++].init(profile);
+                m_allProfileGroups[FE_STR(profile)]->m_data = &m_profileData[m_profilesCreated++];
             }
 
-        profileGroup *currentGroup = m_currentGroupStack[m_currentGroupStackIndex++];
-        if (std::strcmp(group, currentGroup->m_groupName) != 0) 
-            {
-                bool hasValue = false;
-                for (unsigned int i = 0; i < currentGroup->m_groupChildrenIndex; i++)
-                    {
-                        if (currentGroup->m_groupChildren[i] == FE_STR(group))
-                            {
-                                hasValue = true;
-                                break;
-                            }
-                    }
+        profileGroup *top = m_profileGroupStack.top();
 
-                if (!hasValue) 
-                    {
-                        currentGroup->m_groupChildren[currentGroup->m_groupChildrenIndex++] = FE_STR(group);
-                    }
+        if (std::find(top->m_children.begin(), top->m_children.end(), m_allProfileGroups[FE_STR(profile)]) == top->m_children.end())
+            {
+                top->m_children.push_back(m_allProfileGroups[FE_STR(profile)]);
             }
-        m_currentGroupStack[m_currentGroupStackIndex] = &groupObj;
+        m_profileGroupStack.push(m_allProfileGroups[FE_STR(profile)]);
     }
 
-void fe::profilerLogger::endProfile(const char *group, const char *profile, fe::time time)
+void fe::profilerLogger::endProfile(const char *profile, fe::time time)
     {
-        profileGroup &groupObj = m_profileGroups[FE_STR(group)];
-        if (groupObj.m_profiles.find(FE_STR(profile)) == groupObj.m_profiles.end())
+        profileGroup &group = *m_allProfileGroups[FE_STR(profile)];
+        if (group.m_data->m_calls < FE_PROFILER_AVERAGE_MAX)
             {
-                profileData &data = m_profileData[m_profilesCreated];
-                std::strcpy(data.m_name, profile);
-                groupObj.m_profiles[FE_STR(profile)] = m_profilesCreated++;
+                group.m_data->m_time[group.m_data->m_calls] = time;
+                group.m_data->m_calls++;
             }
-
-        unsigned int profileIndex = groupObj.m_profiles[FE_STR(profile)];
-        profileData &data = m_profileData[profileIndex];
-        if (data.m_calls < FE_PROFILER_AVERAGE_MAX)
-            {
-                data.m_time[data.m_calls] = time;
-            }
-        data.m_calls++;
-        data.m_totalCalls++;
-        m_currentGroupStackIndex--;
+        group.m_data->m_totalCalls++;
+        m_profileGroupStack.pop();
     }
 
 void fe::profilerLogger::printToStream(std::ostream &out)
     {
-        print(out, m_baseGroup);
-    }
-
-void fe::profilerLogger::printToStream(fe::str group, std::ostream &out)
-    {
-        print(out, m_profileGroups[group]);
+        out << m_baseGroup->m_name << " {\n";
+        for (auto &child : m_baseGroup->m_children) 
+            {
+                print(out, *child, "\t");
+            }
+        out << "}\n\n";
+        m_baseGroup->m_children.clear();
     }
 
 void fe::profilerLogger::setProfileGroup(fe::str group, bool profile)
     {
-        m_profileGroups[group].m_profile = profile;
+        m_allProfileGroups[group]->m_profile = profile;
     }
 
 bool fe::profilerLogger::wantProfile(fe::str group)
     {
-        return m_profileGroups.find(group) == m_profileGroups.end() || m_profileGroups[group].m_profile;
+        return m_allProfileGroups.find(group) == m_allProfileGroups.end() || m_allProfileGroups[group]->m_profile;
     }
 
 void fe::profilerLogger::clearTotalCalls()
