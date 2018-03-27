@@ -102,7 +102,9 @@ namespace fe
 
                     FLAT_ENGINE_API void preUpdate();
                     FLAT_ENGINE_API void update(collisionWorld *collisionWorld);
-                    FLAT_ENGINE_API void postUpdate(float deltaTime);
+                    FLAT_ENGINE_API void postUpdate();
+
+                    FLAT_ENGINE_API void cameraUpdate(float deltaTime, int iterations);
 
                     FLAT_ENGINE_API void preDraw();
                     FLAT_ENGINE_API void draw(sf::RenderTarget &app);

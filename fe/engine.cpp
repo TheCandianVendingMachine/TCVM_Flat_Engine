@@ -138,7 +138,11 @@ void fe::engine::update()
         FE_END_PROFILE;
 
         FE_ENGINE_PROFILE("engine_update", "state_postupdate");
-        m_gameStateMachine->postUpdate(m_deltaTime);
+        m_gameStateMachine->postUpdate();
+        FE_END_PROFILE;
+
+        FE_ENGINE_PROFILE("engine_update", "camera_update");
+        m_gameStateMachine->cameraUpdate(m_deltaTime, iterations);
         FE_END_PROFILE;
 
         FE_ENGINE_PROFILE("engine_update", "collision_world_collide");

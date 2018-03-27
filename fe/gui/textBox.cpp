@@ -248,7 +248,7 @@ void fe::gui::textBox::handleEvent(const sf::Event &event)
 
 void fe::gui::textBox::update()
     {
-        if (m_updateSize)
+        if (m_updateSize && false)
             {
                 setSize({ m_characterBoundingBox.x + (m_paddingX * 2.f), m_characterBoundingBox.y + (m_paddingY * 2.f) });
                 m_updateSize = false;

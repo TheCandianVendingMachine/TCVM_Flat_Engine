@@ -197,19 +197,19 @@ void fe::gameStateMachine::update(collisionWorld *collisionWorld)
         FE_END_PROFILE;
     }
 
-void fe::gameStateMachine::postUpdate(float deltaTime)
+void fe::gameStateMachine::postUpdate()
     {
         FE_ENGINE_PROFILE("gameStateMachine", "postupdateUserState");
         if (m_endState && m_endState->m_currentState)
             {
                 m_endState->m_currentState->postUpdate();
-                m_endState->m_currentState->postUpdateDefined(deltaTime);
+                m_endState->m_currentState->postUpdateDefined();
 
                 stateList *tail = m_endState->m_tail;
                 while (tail && tail->m_currentState && tail->m_options & stateOptions::UPDATE_UNDERNEATH)
                     {
                         tail->m_currentState->postUpdate();
-                        tail->m_currentState->postUpdateDefined(deltaTime);
+                        tail->m_currentState->postUpdateDefined();
                         tail = tail->m_tail;
                     }
             }
@@ -219,6 +219,12 @@ void fe::gameStateMachine::postUpdate(float deltaTime)
                 m_update = true;
             }
         FE_END_PROFILE;
+    }
+
+void fe::gameStateMachine::cameraUpdate(float deltaTime, int iterations)
+    {
+        // Only updating end state camera as for that makes the most sense. No other camera should be moving
+        m_endState->m_currentState->updateCamera(deltaTime, iterations);
     }
 
 void fe::gameStateMachine::preDraw()

@@ -68,7 +68,7 @@ void fe::baseGameState::updateDefined(collisionWorld *collisionWorld)
         FE_END_PROFILE;
     }
 
-void fe::baseGameState::postUpdateDefined(float deltaTime)
+void fe::baseGameState::postUpdateDefined()
     {
         m_gameWorld.postUpdate();
 
@@ -91,8 +91,14 @@ void fe::baseGameState::postUpdateDefined(float deltaTime)
                         it++;
                     }
             }
+    }
 
-        m_stateCamera.updateCamera(deltaTime);
+void fe::baseGameState::updateCamera(float deltaTime, int iterations)
+    {
+        for (unsigned int i = 0; i < iterations; i++) 
+            {
+                m_stateCamera.updateCamera(deltaTime);
+            }
     }
 
 void fe::baseGameState::preDrawDefined()
