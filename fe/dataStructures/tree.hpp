@@ -16,6 +16,8 @@ namespace fe
                     {
                         std::vector<int> m_children;
                         int m_parent = -1;
+                        bool m_leaf = true;
+
                         void *m_userData = nullptr;
                     };
             }

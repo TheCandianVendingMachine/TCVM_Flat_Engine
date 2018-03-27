@@ -154,12 +154,11 @@ void fe::collisionWorld::handleCollisions(const fe::broadphaseAbstract *broadpha
                 FE_ENGINE_PROFILE("collision_world", "broadphase_compute_partial");
                 for (unsigned int i = 0; i < m_collisionBodies.getObjectAllocCount(); i++)
                     {
-                        if (!m_collisionBodies.at(i)->m_static)
+                        if (!m_collisionBodies.at(i)->m_static && m_collisionBodies.at(i)->m_moved)
                             {
-                                broadphase->colliderAABB(
-                                    m_collisionBodies.at(i)->m_aabb, 
-                                    std::bind(static_cast<void(fe::collisionWorld::*)(void*, void*)>(&fe::collisionWorld::handleCollision), this, std::placeholders::_1, m_collisionBodies.at(i)));
+                                broadphase->colliderAABB(m_collisionBodies.at(i)->m_aabb, [this, i] (void *otherCollider) { handleCollision(m_collisionBodies.at(i), otherCollider); });
                             }
+                        m_collisionBodies.at(i)->m_moved = false;
                     }
                 FE_END_PROFILE;
 

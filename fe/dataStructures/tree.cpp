@@ -26,6 +26,7 @@ void fe::tree::addChild(int node, int child)
         if (node < 0 || child < 0) return;
         getObject(node)->m_children.push_back(child);
         getObject(child)->m_parent = node;
+        getObject(node)->m_leaf = false;
     }
 
 void fe::tree::removeChild(int node, int child)
@@ -34,6 +35,8 @@ void fe::tree::removeChild(int node, int child)
         priv::node *nodePtr = getObject(node);
         nodePtr->m_children.erase(std::remove(nodePtr->m_children.begin(), nodePtr->m_children.end(), child), nodePtr->m_children.end());
         getObject(child)->m_parent = -1;
+
+        getObject(node)->m_leaf = (getObject(node)->m_children.size() == 0);
     }
 
 fe::priv::node *fe::tree::getNode(int node)

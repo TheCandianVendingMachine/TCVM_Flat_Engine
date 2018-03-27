@@ -8,44 +8,12 @@
 
 void fe::sceneGraph::transformGraph(int nodeHandle)
     {
-        auto node = m_sceneRenderTree.getNode(nodeHandle);
-        if (!static_cast<fe::sceneGraphObject*>(node->m_userData)->m_draw) return;
-        fe::transformable *nodeTransform = &static_cast<fe::sceneGraphObject*>(node->m_userData)->m_transform;
-
-        for (auto &child : node->m_children)
-            {
-                const fe::transformable &realTransform = static_cast<fe::sceneGraphObject*>(m_sceneRenderTree.getNode(child)->m_userData)->m_transform;
-                fe::transformable *tempTransform = &static_cast<fe::sceneGraphObject*>(m_sceneRenderTree.getNode(child)->m_userData)->m_tempTransform;
-                *tempTransform = realTransform;
-                tempTransform->combine(*nodeTransform);
-                nodeTransform->setUpdateChildren(false);
-                transformGraph(child);
-            }
+        
     }
 
 void fe::sceneGraph::drawGraph(int nodeHandle, unsigned int &index)
     {
-        auto node = m_sceneRenderTree.getNode(nodeHandle);
-        if (!static_cast<fe::sceneGraphObject*>(node->m_userData)->m_draw) return;
-        fe::sceneGraphObject *obj = static_cast<fe::sceneGraphObject*>(node->m_userData);
-
-        if (obj->m_type == OBJECT)
-            {
-                FE_ENGINE_PROFILE("scene_graph", "addObjectToBatch");
-                m_batch.add(static_cast<fe::renderObject*>(obj), index);
-                FE_END_PROFILE;
-            }
-        else if (obj->m_type == TEXT)
-            {
-                FE_ENGINE_PROFILE("scene_graph", "addTextToBatch");
-                m_batch.add(static_cast<fe::renderText*>(obj), index);
-                FE_END_PROFILE;
-            }
-
-        for (auto &child : node->m_children)
-            {
-                drawGraph(child, index);
-            }
+        
     }
 
 void fe::sceneGraph::createRenderTextObject(sceneGraphObject *obj, const fe::fontData &font)
@@ -71,6 +39,7 @@ void fe::sceneGraph::addZ(int z)
     {
         int newNode = m_sceneRenderTree.addNode();
         connect(newNode, m_baseNode.m_graphNode);
+        /* set user data 1 */
         m_sceneRenderTree.getNode(newNode)->m_userData = m_sceneGraphObjects.alloc();
         m_zOrderMap[z] = newNode;
     }
@@ -91,6 +60,7 @@ void fe::sceneGraph::startUp()
         m_renderTextObjects.startUp(FE_MAX_TEXT_OBJECTS);
         m_sceneGraphObjects.startUp(FE_MAX_Z_ORDER);
         m_baseNode.m_graphNode = m_sceneRenderTree.addNode();
+        /* set user data 2 */
         m_sceneRenderTree.getNode(m_baseNode.m_graphNode)->m_userData = &m_baseNode;
 
         addZ(0);
@@ -117,9 +87,33 @@ void fe::sceneGraph::preDraw()
 void fe::sceneGraph::draw(sf::RenderTarget &window)
     {
         FE_ENGINE_PROFILE("scene_graph", "graph_transform");
-        transformGraph(m_baseNode.m_graphNode);
-        FE_END_PROFILE;
+        int nodeStack[FE_MAX_GAME_OBJECTS + FE_MAX_TEXT_OBJECTS + FE_MAX_Z_ORDER];
+        unsigned int stackTop = 0;
+        nodeStack[stackTop++] = m_baseNode.m_graphNode;
 
+        while (stackTop > 0)
+            {
+                fe::priv::node *node = m_sceneRenderTree.getNode(nodeStack[stackTop - 1]);
+                stackTop--;
+
+                if (static_cast<fe::sceneGraphObject*>(node->m_userData)->m_draw)
+                    {
+                        fe::transformable *nodeTransform = &static_cast<fe::sceneGraphObject*>(node->m_userData)->m_transform;
+
+                        for (auto &child : node->m_children)
+                            {
+                                const fe::transformable &realTransform = static_cast<fe::sceneGraphObject*>(m_sceneRenderTree.getNode(child)->m_userData)->m_transform;
+                                fe::transformable *tempTransform = &static_cast<fe::sceneGraphObject*>(m_sceneRenderTree.getNode(child)->m_userData)->m_tempTransform;
+                                *tempTransform = realTransform;
+                                tempTransform->combine(*nodeTransform);
+                                nodeTransform->setUpdateChildren(false);
+
+                                nodeStack[stackTop++] = child;
+                            }
+                    }
+            }
+        FE_END_PROFILE;
+        
         sf::RenderStates states;
         states.texture = &fe::engine::get().getResourceManager<sf::Texture>()->get();
 
@@ -127,7 +121,45 @@ void fe::sceneGraph::draw(sf::RenderTarget &window)
         FE_PROFILE("scene_graph", "graph_draw");
         if (m_renderObjects.getObjectAllocCount() <= m_maxObjectsUntilThread || true) 
             {
-                drawGraph(m_baseNode.m_graphNode, index);
+                int nodeStack[FE_MAX_GAME_OBJECTS + FE_MAX_TEXT_OBJECTS + FE_MAX_Z_ORDER];
+                unsigned int stackTop = 0;
+                nodeStack[stackTop++] = m_baseNode.m_graphNode;
+
+                while (stackTop > 0)
+                    {
+                        fe::priv::node *node = nullptr;
+                        FE_ENGINE_PROFILE("scene_graph", "get_node");
+                        node = m_sceneRenderTree.getNode(nodeStack[stackTop - 1]);
+                        FE_END_PROFILE;
+                        stackTop--;
+
+                        fe::sceneGraphObject *object = static_cast<fe::sceneGraphObject*>(node->m_userData);
+                        if (object->m_draw)
+                            {
+                                switch (object->m_type)
+                                    {
+                                        case OBJECT:
+                                            FE_ENGINE_PROFILE("scene_graph", "addObjectToBatch");
+                                            m_batch.add(static_cast<fe::renderObject*>(object), index);
+                                            FE_END_PROFILE;
+                                            break;
+                                        case TEXT:
+                                            FE_ENGINE_PROFILE("scene_graph", "addTextToBatch");
+                                            m_batch.add(static_cast<fe::renderText*>(object), index);
+                                            FE_END_PROFILE;
+                                            break;
+                                        default:
+                                            break;
+                                    }
+
+                                FE_ENGINE_PROFILE("scene_graph", "iterate_children");
+                                for (auto &childIndex : node->m_children)
+                                    {
+                                        nodeStack[stackTop++] = childIndex;
+                                    }
+                                FE_END_PROFILE;
+                            }
+                    }
             }
         FE_END_PROFILE;
 
@@ -149,6 +181,7 @@ fe::sceneGraphObject *fe::sceneGraph::allocateRenderText()
 void fe::sceneGraph::createSceneGraphObject(sceneGraphObject *obj, int connected, const fe::fontData &font)
     {
         obj->m_graphNode = m_sceneRenderTree.addNode();
+        /* set user data 3 */
         m_sceneRenderTree.getNode(obj->m_graphNode)->m_userData = obj;
         if (connected < 0)
             {

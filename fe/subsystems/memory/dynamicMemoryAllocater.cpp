@@ -16,20 +16,20 @@ constexpr fe::uInt64 fe::dynamicMemoryAllocater::calculateAllocSize(const fe::uI
 bool fe::dynamicMemoryAllocater::debug()
     {
 #ifdef _DEBUG
-    #if not FE_DEBUG_ALLOCATER
-        return true;
-    #endif
-        bool good = true;
+    #if FE_DEBUG_ALLOCATER
+        bool good = !m_freeList.loop();
 
         fe::uInt64 size = 0;
         listNode *it = m_freeList.head();
         listNode *itPrev = nullptr;
-        while (it)
+        while (it && good)
             {
                 size += it->m_data.m_blockSize + FREE_BLOCK_SIZE;
                 if (itPrev) 
                     {
                         size += static_cast<fe::uInt8*>(static_cast<void*>(it)) - (static_cast<fe::uInt8*>(static_cast<void*>(itPrev)) + FREE_BLOCK_SIZE + itPrev->m_data.m_blockSize);
+                        good = good && it > itPrev; // determine if memory overlaps
+                        good = good && (static_cast<fe::uInt8*>(static_cast<void*>(itPrev)) + itPrev->m_data.m_blockSize < static_cast<void*>(it));
                     }
                 itPrev = it;
                 it = it->m_next;
@@ -39,15 +39,15 @@ bool fe::dynamicMemoryAllocater::debug()
 
         good = good && size == m_totalSize;
 
-        good = good && !m_freeList.loop();
         return good;
+    #endif
 #endif
         return true;
     }
 
 fe::dynamicMemoryAllocater::dynamicMemoryAllocater(const fe::uInt8 chunkSize) : m_memoryBuffer(nullptr), CHUNK_SIZE(chunkSize), m_startedUp(false)
     {
-
+        FE_ASSERT(CHUNK_SIZE > FREE_BLOCK_SIZE, "Chunk Size is too small");
     }
 
 void fe::dynamicMemoryAllocater::startUp(fe::uInt8 *buffer, const fe::uInt64 size)
@@ -107,6 +107,7 @@ void fe::dynamicMemoryAllocater::free(void *memory)
                 return;
             }
         FE_ASSERT(debug(), "Debug Check Failed");
+
         fe::uInt8 *header = reinterpret_cast<fe::uInt8*>(memory) - FREE_BLOCK_SIZE;
         freeHeader *headerObj = reinterpret_cast<freeHeader*>(header);
 

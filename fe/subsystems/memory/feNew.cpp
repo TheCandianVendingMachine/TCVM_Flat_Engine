@@ -1,5 +1,6 @@
-#include "memoryManager.hpp"
+/*#include "memoryManager.hpp"
 #include <cstdlib>
+#include <new>
 
 void *operator new(std::size_t bytes)
     {
@@ -21,4 +22,4 @@ void operator delete(void *memory)
             {
                 free(memory);
             }
-    }
+    }*/

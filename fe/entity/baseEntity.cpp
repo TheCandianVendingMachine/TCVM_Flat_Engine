@@ -204,6 +204,7 @@ void fe::baseEntity::setPosition(float x, float y)
             {
                 m_collisionBody->m_aabb.m_globalPositionX = x;
                 m_collisionBody->m_aabb.m_globalPositionY = y;
+                m_collisionBody->m_moved = true;
             }
     }
 

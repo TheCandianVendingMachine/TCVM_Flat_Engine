@@ -22,6 +22,7 @@ namespace fe
 
                 bool m_enabled = true;
                 bool m_static;
+                bool m_moved = true; // whether or not this collider moved last frame
 
                 void serialize(fe::serializerID &serializer) const
                     {
