@@ -97,8 +97,6 @@ namespace fe
                     // Updates position of object based on force
                     inline void update(float deltaTime)
                         {
-                            if (!m_enabled) return;
-
                             m_velocityX += (m_impulseX / m_mass) * deltaTime;
                             m_velocityY += (m_impulseY / m_mass) * deltaTime;
 

@@ -72,7 +72,7 @@ void fe::physicsEngine::simulateForces(float deltaTime, unsigned int iterations)
                         if (!body)
                             {
                             }    
-                        else
+                        else if (body->getEnabled())
                             {
                                 float forceX = (-body->getFrictionCoefficient() * body->getForceX());
                                 float forceY = (-body->getFrictionCoefficient() * body->getForceY());

@@ -3,7 +3,8 @@
 
 fe::scriptManager::scriptManager() :
     m_functionHandler(m_luaState),
-    m_userTypeHandler(m_luaState)
+    m_userTypeHandler(m_luaState),
+    m_enumHandler(m_luaState)
     {
     }
 
@@ -41,6 +42,11 @@ fe::functionHandler &fe::scriptManager::getFunctionHandler()
 fe::userTypeHandler &fe::scriptManager::getUserTypeHandler()
     {
         return m_userTypeHandler;
+    }
+
+fe::enumHandler &fe::scriptManager::getEnumHandler()
+    {
+        return m_enumHandler;
     }
 
 sol::state &fe::scriptManager::getLuaState()

@@ -35,6 +35,9 @@ namespace fe
                             fe::lightVector2d m_colliderPosition;
                             int m_connected = -1;
                             int m_zPosition = 0;
+                            float m_maxSpeed = 0.f;
+                            float m_mass = 1.f;
+                            float m_frictionCoef = 0.f;
                             fe::entityModules m_modules = fe::entityModules::NONE;
                         };
 

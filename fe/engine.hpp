@@ -84,6 +84,8 @@ namespace fe
                     FLAT_ENGINE_API void draw();
                     FLAT_ENGINE_API void calcFPS();
 
+                    FLAT_ENGINE_API void registerLua();
+
                 public:
                     FLAT_ENGINE_API engine(const float updateRate = 1.f / 60.f);
 

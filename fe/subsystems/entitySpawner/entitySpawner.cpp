@@ -1,7 +1,9 @@
 #include "entitySpawner.hpp"
 #include "../../feAssert.hpp"
 #include "../../engine.hpp"
+#include "../../entity/baseEntity.hpp"
 #include "../gameState/gameWorld.hpp"
+#include "../physics/rigidBody.hpp"
 #include "../scripting/scriptManager.hpp"
 #include "../resourceManager/resourceManager.hpp"
 
@@ -87,6 +89,22 @@ void fe::entitySpawner::createPrefab(const char *luaName)
             {
                 // init rigid body
                 prefab.m_modules = prefab.m_modules | fe::entityModules::RIGID_BODY;
+
+                sol::table rigidBodyData = luaTable["rigidBody"];
+                if (rigidBodyData["maxSpeed"].get_type() == sol::type::number)
+                    {
+                        prefab.m_maxSpeed = rigidBodyData["maxSpeed"].get<float>();
+                    }
+
+                if (rigidBodyData["mass"].get_type() == sol::type::number)
+                    {
+                        prefab.m_mass = rigidBodyData["mass"].get<float>();
+                    }
+                
+                if (rigidBodyData["friction"].get_type() == sol::type::number)
+                    {
+                        prefab.m_frictionCoef = rigidBodyData["friction"].get<float>();
+                    }
             }
 
         if (luaTable["collisionBody"].get_type() == sol::type::table)
@@ -128,13 +146,18 @@ fe::Handle fe::entitySpawner::spawn(const char *luaName)
         const prefabObject &prefab = m_prefabs[luaName];
         
         object->startUp(m_maxObjectCount++);
+        object->setOnAdd(prefab.m_onAdd);
+        object->setOnRemove(prefab.m_onRemove);
+        object->setUpdate(prefab.m_update);
+        object->setPostUpdate(prefab.m_postUpdate);
+
         fe::Handle objectHandle = m_world->addGameObject(prefab.m_modules, object, prefab.m_connected, prefab.m_font);
         fe::baseEntity *entity = m_world->getObject(objectHandle);
 
         entity->setSize(prefab.m_size);
         entity->setColour(prefab.m_colour);
 
-        if ((prefab.m_modules & fe::entityModules::COLLISION_BODY) == 1)
+        if (prefab.m_modules & fe::entityModules::COLLISION_BODY)
             {
                 entity->getCollider()->m_aabb.m_positionX = prefab.m_colliderPosition.x;
                 entity->getCollider()->m_aabb.m_positionY = prefab.m_colliderPosition.y;
@@ -142,9 +165,16 @@ fe::Handle fe::entitySpawner::spawn(const char *luaName)
                 entity->getCollider()->m_aabb.m_sizeY = prefab.m_colliderSize.y;
             }
 
-        if ((prefab.m_modules & fe::entityModules::RENDER_OBJECT) == 1 || (prefab.m_modules & fe::entityModules::RENDER_TEXT) == 1)
+        if ((prefab.m_modules & fe::entityModules::RENDER_OBJECT) || (prefab.m_modules & fe::entityModules::RENDER_TEXT))
             {
                 entity->getRenderObject()->m_zPosition = prefab.m_zPosition;
+            }
+
+        if (prefab.m_modules & fe::entityModules::RIGID_BODY)
+            {
+                entity->getRigidBody()->setMaxSpeed(prefab.m_maxSpeed);
+                entity->getRigidBody()->setMass(prefab.m_mass);
+                entity->getRigidBody()->setFrictionCoefficient(prefab.m_frictionCoef);
             }
 
         entity->setName(luaName);

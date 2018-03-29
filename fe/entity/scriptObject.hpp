@@ -15,5 +15,7 @@ namespace fe
                 public:
                     FLAT_ENGINE_API scriptObject(baseEntity *obj);
 
+                    FLAT_ENGINE_API void applyForce(float x, float y);
+
             };
     }
