@@ -17,10 +17,10 @@ void fe::collisionWorld::handleCollision(fe::collider *a, fe::collider *b)
         fe::collisionData dataFirst;
         fe::collisionData dataSecond;
 
-        fe::lightVector2d positionA(first->m_positionX, first->m_positionY);
+        fe::lightVector2d positionA(first->m_globalPositionX, first->m_globalPositionY);
         fe::lightVector2d sizeA(first->m_sizeX, first->m_sizeY);
 
-        fe::lightVector2d positionB(second->m_positionX, second->m_positionY);
+        fe::lightVector2d positionB(second->m_globalPositionX, second->m_globalPositionY);
         fe::lightVector2d sizeB(second->m_sizeX, second->m_sizeY);
 
         if (((sizeA.x + positionA.x >= positionB.x && positionA.x < sizeB.x + positionB.x) &&
@@ -40,13 +40,13 @@ void fe::collisionWorld::handleCollision(fe::collider *a, fe::collider *b)
                
                 dataFirst.m_penetrationX = (distance.x > 0 ? minDistance.x - distance.x : -minDistance.x - distance.x) / 2.f;
                 dataFirst.m_penetrationY = (distance.y > 0 ? minDistance.y - distance.y : -minDistance.y - distance.y) / 2.f;
-                dataFirst.m_colliderPositionX = a->m_aabb.m_positionX;
-                dataFirst.m_colliderPositionY = a->m_aabb.m_positionY;
+                dataFirst.m_colliderPositionX = a->m_aabb.m_globalPositionX;
+                dataFirst.m_colliderPositionY = a->m_aabb.m_globalPositionY;
 
                 dataSecond.m_penetrationX = -(distance.x > 0 ? minDistance.x - distance.x : -minDistance.x - distance.x) / 2.f;
                 dataSecond.m_penetrationY = -(distance.y > 0 ? minDistance.y - distance.y : -minDistance.y - distance.y) / 2.f;
-                dataSecond.m_colliderPositionX = b->m_aabb.m_positionX;
-                dataSecond.m_colliderPositionY = b->m_aabb.m_positionY;
+                dataSecond.m_colliderPositionX = b->m_aabb.m_globalPositionX;
+                dataSecond.m_colliderPositionY = b->m_aabb.m_globalPositionY;
 
                 a->m_collisionCallback(dataFirst);
                 b->m_collisionCallback(dataSecond);
@@ -76,16 +76,20 @@ void fe::collisionWorld::handleCollision(fe::collider *a, fe::collider *b)
 
                         fe::engine::get().getEventSender().sendEngineEvent(collisionEventLeft, a->m_eventOnCollision);
                         fe::engine::get().getEventSender().sendEngineEvent(collisionEventRight, b->m_eventOnCollision);
-
-                        fe::gameEvent collisionEventGeneral(COLLISION, 4);
-                        collisionEventGeneral = collisionEventLeft;
-                        collisionEventGeneral.args[2].argType = fe::gameEventArgument::type::TYPE_VOIDP;
-                        collisionEventGeneral.args[3].argType = fe::gameEventArgument::type::TYPE_VOIDP;
-                        collisionEventGeneral.args[2].arg.TYPE_VOIDP = &dataFirst;
-                        collisionEventGeneral.args[3].arg.TYPE_VOIDP = &dataSecond;
-
-                        fe::engine::get().getEventSender().sendEngineEvent(collisionEventGeneral, COLLISION);
                     }
+
+                fe::gameEvent collisionEventGeneral(COLLISION, 4);
+                collisionEventGeneral.args[0].argType = fe::gameEventArgument::type::TYPE_VOIDP;
+                collisionEventGeneral.args[1].argType = fe::gameEventArgument::type::TYPE_VOIDP;
+                collisionEventGeneral.args[2].argType = fe::gameEventArgument::type::TYPE_VOIDP;
+                collisionEventGeneral.args[3].argType = fe::gameEventArgument::type::TYPE_VOIDP;
+
+                collisionEventGeneral.args[0].arg.TYPE_VOIDP = a;
+                collisionEventGeneral.args[1].arg.TYPE_VOIDP = b;
+                collisionEventGeneral.args[2].arg.TYPE_VOIDP = &dataFirst;
+                collisionEventGeneral.args[3].arg.TYPE_VOIDP = &dataSecond;
+
+                fe::engine::get().getEventSender().sendEngineEvent(collisionEventGeneral, COLLISION);
             }
         FE_END_PROFILE;
     }

@@ -8,10 +8,14 @@
 #include "rigidBody.hpp"
 #include "../memory/poolAllocater.hpp"
 #include "../../math/Vector3.hpp"
+#include "../messaging/eventHandler.hpp"
+#include "collision/collisionData.hpp"
 
 namespace fe
     {
-        class physicsEngine
+        class collider;
+
+        class physicsEngine : public fe::eventHandler
             {
                 private:
                     fe::poolAllocater<rigidBody> m_rigidBodies;
@@ -22,8 +26,12 @@ namespace fe
 
                     const unsigned int m_maxObjectsUntilThread;
 
+                    FLAT_ENGINE_API void handleCollision(fe::collider *a, fe::collider *b, fe::collisionData aData, fe::collisionData bData);
+
                 public:
                     FLAT_ENGINE_API physicsEngine();
+
+                    FLAT_ENGINE_API void handleEvent(const gameEvent &event);
 
                     FLAT_ENGINE_API void startUp();
                     FLAT_ENGINE_API void shutDown();

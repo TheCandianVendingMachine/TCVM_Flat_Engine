@@ -5,6 +5,61 @@
 #include "../threading/threadPool.hpp"
 #include "../../debug/profiler.hpp"
 #include "../../math/mathFuncs.hpp"
+#include "../../engineEvents.hpp"
+#include "collision/collisionBody.hpp"
+#include "../../entity/baseEntity.hpp"
+#include "../messaging/gameEvent.hpp"
+#include "../messaging/eventSender.hpp"
+
+void fe::physicsEngine::handleCollision(fe::collider *a, fe::collider *b, fe::collisionData aData, fe::collisionData bData)
+    {
+        fe::baseEntity *aEnt = static_cast<fe::baseEntity*>(a->m_owner);
+        if (aEnt)
+            {
+                fe::rigidBody *aRigid = aEnt->getRigidBody();
+                if (aRigid)
+                    {
+                        if (std::abs(aData.m_penetrationX) < std::abs(aData.m_penetrationY))
+                            {
+                                aEnt->setPosition(aEnt->getPosition() + fe::lightVector2d(aData.m_penetrationX, 0));
+                                if (aData.m_penetrationX < 0.f)
+                                    {
+                                        aRigid->setVelocity(std::min(aRigid->getVelocityX(), 0.f), aRigid->getVelocityY());
+                                        aRigid->setForce(std::min(aRigid->getForceX(), 0.f), aRigid->getForceY());
+                                    }
+                                else
+                                    {
+                                        aRigid->setVelocity(std::max(aRigid->getVelocityX(), 0.f), aRigid->getVelocityY());
+                                        aRigid->setForce(std::max(aRigid->getForceX(), 0.f), aRigid->getForceY());
+                                    }
+                            }
+                        else 
+                            {
+                                aEnt->setPosition(aEnt->getPosition() + fe::lightVector2d(0, aData.m_penetrationY));
+                                if (aData.m_penetrationY < 0.f)
+                                    {
+                                        aRigid->setVelocity(aRigid->getVelocityX(), std::min(aRigid->getVelocityY(), 0.f));
+                                        aRigid->setForce(aRigid->getVelocityX(), std::min(aRigid->getForceY(), 0.f));
+                                    }
+                                else
+                                    {
+                                        aRigid->setVelocity(aRigid->getVelocityX(), std::max(aRigid->getVelocityY(), 0.f));
+                                        aRigid->setForce(aRigid->getVelocityX(), std::max(aRigid->getForceY(), 0.f));
+                                    }
+                            }
+                    }
+            }
+
+        fe::baseEntity *bEnt = static_cast<fe::baseEntity*>(b->m_owner);
+        if (bEnt)
+            {
+                fe::rigidBody *bRigid = bEnt->getRigidBody();
+                if (bRigid)
+                    {
+                        bEnt->setPosition(bEnt->getPosition() - fe::lightVector2d(bData.m_penetrationX, bData.m_penetrationY));
+                    }
+            }
+    }
 
 fe::physicsEngine::physicsEngine() :
     m_gravityForceX(0.f),
@@ -14,14 +69,29 @@ fe::physicsEngine::physicsEngine() :
     {
     }
 
+void fe::physicsEngine::handleEvent(const gameEvent &event)
+    {
+        switch (event.eventType)
+            {
+                case COLLISION:
+                    handleCollision(static_cast<fe::collider*>(event.args[0].arg.TYPE_VOIDP), static_cast<fe::collider*>(event.args[1].arg.TYPE_VOIDP),
+                                    *static_cast<fe::collisionData*>(event.args[2].arg.TYPE_VOIDP), *static_cast<fe::collisionData*>(event.args[3].arg.TYPE_VOIDP));
+                    break;
+                default:
+                    break;
+            }
+    }
+
 void fe::physicsEngine::startUp()
     {
         m_rigidBodies.startUp(FE_MAX_GAME_OBJECTS);
+        fe::engine::get().getEventSender().subscribe(this, COLLISION);
     }
 
 void fe::physicsEngine::shutDown()
     {
         m_rigidBodies.clear();
+        fe::engine::get().getEventSender().unsubscribeAll(this);
     }
 
 void fe::physicsEngine::clear()

@@ -160,6 +160,9 @@ namespace fe
                 lightVector2<T> operator-(const fe::Vector2<T> &rhs) { return fe::lightVector2<T>(x - rhs.x, y - rhs.y); }
                 lightVector2<T> operator+(const fe::Vector2<T> &rhs) { return fe::lightVector2<T>(x + rhs.x, y + rhs.y); }
 
+                lightVector2<T> operator*(T rhs) { return fe::lightVector2<T>(x * rhs, y * rhs); }
+                lightVector2<T> operator/(T rhs) { return fe::lightVector2<T>(x / rhs, y / rhs); }
+
                 sf::Vector2f convertToSfVec2() { return sf::Vector2<T>(x, y); }
             };
 

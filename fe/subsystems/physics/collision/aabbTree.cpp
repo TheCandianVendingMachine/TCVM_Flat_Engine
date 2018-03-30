@@ -393,15 +393,19 @@ fe::aabbTree::aabbTree() : m_base(treeNode::Null), m_fatness(5.f)
             {
                 m_nodes[i].m_next = i + 1;
                 m_nodes[i].m_height = -1;
-                m_nodes[i].m_fatAABB.m_positionX = 0.f;
-                m_nodes[i].m_fatAABB.m_positionY = 0.f;
+                m_nodes[i].m_fatAABB.m_offsetX = 0.f;
+                m_nodes[i].m_fatAABB.m_offsetY = 0.f;
+                m_nodes[i].m_fatAABB.m_globalPositionX = 0.f;
+                m_nodes[i].m_fatAABB.m_globalPositionX = 0.f;
                 m_nodes[i].m_fatAABB.m_sizeX = 0.f;
                 m_nodes[i].m_fatAABB.m_sizeY = 0.f;
             }
         m_nodes[m_nodeCapacity - 1].m_next = treeNode::Null;
         m_nodes[m_nodeCapacity - 1].m_height = -1;
-        m_nodes[m_nodeCapacity - 1].m_fatAABB.m_positionX = 0.f;
-        m_nodes[m_nodeCapacity - 1].m_fatAABB.m_positionY = 0.f;
+        m_nodes[m_nodeCapacity - 1].m_fatAABB.m_offsetX = 0.f;
+        m_nodes[m_nodeCapacity - 1].m_fatAABB.m_offsetY = 0.f;
+        m_nodes[m_nodeCapacity - 1].m_fatAABB.m_globalPositionX = 0.f;
+        m_nodes[m_nodeCapacity - 1].m_fatAABB.m_globalPositionX = 0.f;
         m_nodes[m_nodeCapacity - 1].m_fatAABB.m_sizeX = 0.f;
         m_nodes[m_nodeCapacity - 1].m_fatAABB.m_sizeY = 0.f;
 

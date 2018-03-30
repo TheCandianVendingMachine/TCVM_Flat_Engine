@@ -10,10 +10,10 @@
 void fe::tileMap::onAdd(fe::imp::tileWorld *object, fe::Handle objectHandle)
     {
         object->colliderPtr = fe::engine::get().getCollisionWorld().createCollider(object->colliderSizeX, object->colliderSizeY);
-        object->colliderPtr->m_aabb.m_positionX = object->colliderOffsetX;
-        object->colliderPtr->m_aabb.m_positionY = object->colliderOffsetY;
-        object->colliderPtr->m_aabb.m_globalPositionX = object->xPosition + object->colliderPtr->m_aabb.m_positionX;
-        object->colliderPtr->m_aabb.m_globalPositionY = object->yPosition + object->colliderPtr->m_aabb.m_positionY;
+        object->colliderPtr->m_aabb.m_offsetX = object->colliderOffsetX;
+        object->colliderPtr->m_aabb.m_offsetY = object->colliderOffsetY;
+        object->colliderPtr->m_aabb.m_globalPositionX = object->xPosition + object->colliderPtr->m_aabb.m_offsetX;
+        object->colliderPtr->m_aabb.m_globalPositionY = object->yPosition + object->colliderPtr->m_aabb.m_offsetY;
 
         fe::gameEvent event(fe::engineEvent::TILE_PLACED, 1);
         event.args[0].arg.TYPE_VOIDP = object;
@@ -137,8 +137,8 @@ void fe::tileMap::create(const char *name, fe::Vector2<unsigned int> size, fe::V
 
         fab.collider.m_aabb.m_sizeX = colliderSize.x;
         fab.collider.m_aabb.m_sizeY = colliderSize.y;
-        fab.collider.m_aabb.m_positionX = colliderOffset.x;
-        fab.collider.m_aabb.m_positionY = colliderOffset.y;
+        fab.collider.m_aabb.m_offsetX = colliderOffset.x;
+        fab.collider.m_aabb.m_offsetY = colliderOffset.y;
 
         create(fab);
     }
@@ -161,8 +161,8 @@ fe::Handle fe::tileMap::add(fe::Vector2d position, fe::str tileId)
                         tileWorld.id = FE_STR(tile.id);
                         tileWorld.colliderSizeX = tile.collider.m_aabb.m_sizeX;
                         tileWorld.colliderSizeY = tile.collider.m_aabb.m_sizeY;
-                        tileWorld.colliderOffsetX = tile.collider.m_aabb.m_positionX;
-                        tileWorld.colliderOffsetY = tile.collider.m_aabb.m_positionY;
+                        tileWorld.colliderOffsetX = tile.collider.m_aabb.m_offsetX;
+                        tileWorld.colliderOffsetY = tile.collider.m_aabb.m_offsetY;
                         fe::Handle retHandle = addObject(tileWorld);
                         rebuildTilemap();
                         return retHandle;

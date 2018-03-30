@@ -158,6 +158,10 @@ namespace fe
                 lightVector3<T> operator+(const lightVector3<T> &rhs) { return fe::lightVector3<T>(x + rhs.x, y + rhs.y, z + rhs.z); }
                 lightVector3<T> operator-(const fe::Vector3<T> &rhs) { return fe::lightVector3<T>(x - rhs.x, y - rhs.y, z - rhs.z); }
                 lightVector3<T> operator+(const fe::Vector3<T> &rhs) { return fe::lightVector3<T>(x + rhs.x, y + rhs.y, z + rhs.z); }
+
+                lightVector2<T> operator*(T rhs) { return fe::lightVector2<T>(x * rhs, y * rhs, z * rhs); }
+                lightVector2<T> operator/(T rhs) { return fe::lightVector2<T>(x / rhs, y / rhs, z / rhs); }
+
             };
 
         typedef lightVector3<float> lightVector3d;

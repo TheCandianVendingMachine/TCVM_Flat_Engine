@@ -54,8 +54,8 @@ void fe::AABB::serialize(fe::serializerID &serializer) const
     {
         serializer.write("sizeX", m_sizeX);
         serializer.write("sizeY", m_sizeY);
-        serializer.write("localPosX", m_positionX);
-        serializer.write("localPosY", m_positionY);
+        serializer.write("localPosX", m_offsetX);
+        serializer.write("localPosY", m_offsetY);
         serializer.write("globalPosX", m_globalPositionX);
         serializer.write("globalPosY", m_globalPositionY);
     }
@@ -64,8 +64,8 @@ void fe::AABB::deserialize(fe::serializerID &serializer)
     {
         m_sizeX = serializer.read<float>("sizeX");
         m_sizeY = serializer.read<float>("sizeY");
-        m_positionX = serializer.read<float>("localPosX");
-        m_positionY = serializer.read<float>("localPosY");
+        m_offsetX = serializer.read<float>("localPosX");
+        m_offsetY = serializer.read<float>("localPosY");
         m_globalPositionX = serializer.read<float>("globalPosX");
         m_globalPositionY = serializer.read<float>("globalPosY");
     }

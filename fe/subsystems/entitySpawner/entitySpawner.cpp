@@ -169,8 +169,8 @@ fe::Handle fe::entitySpawner::spawn(const char *luaName)
 
         if (prefab.m_modules & fe::entityModules::COLLISION_BODY)
             {
-                entity->getCollider()->m_aabb.m_positionX = prefab.m_colliderPosition.x;
-                entity->getCollider()->m_aabb.m_positionY = prefab.m_colliderPosition.y;
+                entity->getCollider()->m_aabb.m_offsetX = prefab.m_colliderPosition.x;
+                entity->getCollider()->m_aabb.m_offsetY = prefab.m_colliderPosition.y;
                 entity->getCollider()->m_aabb.m_sizeX = prefab.m_colliderSize.x;
                 entity->getCollider()->m_aabb.m_sizeY = prefab.m_colliderSize.y;
                 entity->getCollider()->m_eventOnCollision = prefab.m_collisionEvent;

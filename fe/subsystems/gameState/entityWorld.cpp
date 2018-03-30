@@ -27,13 +27,7 @@ void fe::entityWorld::startUp()
 
 void fe::entityWorld::preUpdate()
     {
-        for (unsigned int i = 0; i < objectCount(); i++)
-            {
-                if (m_objects[i] && m_objects[i]->m_enabled)
-                    {
-                        m_objects[i]->updateModules();
-                    }
-            }
+
     }
 
 void fe::entityWorld::update(collisionWorld *collisionWorld, broadphaseAbstract *dynamicBroadphase)
@@ -58,6 +52,7 @@ void fe::entityWorld::postUpdate()
                 if (m_objects[i] && m_objects[i]->m_enabled)
                     {
                         m_objects[i]->postUpdate();
+                        m_objects[i]->updateModules();
                     }
             }
     }

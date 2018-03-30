@@ -165,6 +165,9 @@ void fe::baseEntity::updateModules()
                 float posX = m_rigidBody->getPositionX();
                 float posY = m_rigidBody->getPositionY();
 
+                m_positionX = posX;
+                m_positionY = posY;
+
                 if (m_renderObject) 
                     {
                         m_renderObject->m_transform.setPosition(posX, posY);
@@ -187,6 +190,12 @@ void fe::baseEntity::updateModules()
                         m_collisionBody->m_aabb.m_globalPositionX = m_renderObject->m_tempTransform.getPosition().x;
                         m_collisionBody->m_aabb.m_globalPositionY = m_renderObject->m_tempTransform.getPosition().y;
                         m_collisionBody->m_moved = true;
+                    }
+
+                if (!m_rigidBody)
+                    {
+                        m_positionX = m_renderObject->m_tempTransform.getPosition().x;
+                        m_positionY = m_renderObject->m_tempTransform.getPosition().y;
                     }
             }
     }
