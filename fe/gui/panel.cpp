@@ -236,6 +236,12 @@ bool fe::gui::panel::mouseHover() const
         return mouseHover({ 0.f, -m_windowOffset }, m_currentSize);
     }
 
+bool fe::gui::panel::mouseHoverToolbar() const
+    {
+        return (m_mousePosition.x - getPosition().x > 0.f       && m_mousePosition.y - getPosition().y > 0.f &&
+                m_mousePosition.x - getPosition().x < m_size.x  && m_mousePosition.y - getPosition().y < m_windowOffset);
+    }
+
 void fe::gui::panel::setSize(fe::Vector2d size)
     {
         fe::gameEvent eventData(fe::engineEvent::GUI_PANEL_SIZE_CHANGE, 6);

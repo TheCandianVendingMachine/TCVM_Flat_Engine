@@ -121,6 +121,8 @@ namespace fe
                             FLAT_ENGINE_API bool mouseHover(const fe::Vector2d &position, const fe::Vector2d &size) const;
                             // Returns if the mouse is currently hovering over the panel
                             FLAT_ENGINE_API bool mouseHover() const;
+                            // Returns if the mouse is currently hovering over the tool bar (top bar)
+                            FLAT_ENGINE_API bool mouseHoverToolbar() const;
 
                             FLAT_ENGINE_API void setSize(fe::Vector2d size);
                             FLAT_ENGINE_API fe::Vector2d getSize() const;
