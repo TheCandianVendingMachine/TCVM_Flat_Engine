@@ -39,12 +39,12 @@ void fe::physicsEngine::handleCollision(fe::collider *a, fe::collider *b, fe::co
                                 if (aData.m_penetrationY < 0.f)
                                     {
                                         aRigid->setVelocity(aRigid->getVelocityX(), std::min(aRigid->getVelocityY(), 0.f));
-                                        aRigid->setForce(aRigid->getVelocityX(), std::min(aRigid->getForceY(), 0.f));
+                                        aRigid->setForce(aRigid->getForceX(), std::min(aRigid->getForceY(), 0.f));
                                     }
                                 else
                                     {
                                         aRigid->setVelocity(aRigid->getVelocityX(), std::max(aRigid->getVelocityY(), 0.f));
-                                        aRigid->setForce(aRigid->getVelocityX(), std::max(aRigid->getForceY(), 0.f));
+                                        aRigid->setForce(aRigid->getForceX(), std::max(aRigid->getForceY(), 0.f));
                                     }
                             }
                     }

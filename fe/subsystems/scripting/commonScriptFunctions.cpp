@@ -1,6 +1,7 @@
 #include "commonScriptFunctions.hpp"
 #include "../../engine.hpp"
 #include "../input/inputManager.hpp"
+#include "../gameState/gameState.hpp"
 
 bool fe::isInputPressed(int input)
     {
@@ -19,4 +20,9 @@ bool fe::isKeyPressed(sf::Keyboard::Key input)
 bool fe::isMousePressed(sf::Mouse::Button input)
     {
         return sf::Mouse::isButtonPressed(input);
+    }
+
+void fe::setCameraPosition(float x, float y)
+    {
+        fe::engine::get().getCurrentState().getCamera().setPosition(x, y);
     }

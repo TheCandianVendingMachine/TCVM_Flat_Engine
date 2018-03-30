@@ -294,21 +294,6 @@ void fe::engine::registerLua()
             "Num7",         sf::Keyboard::Numpad7,
             "Num8",         sf::Keyboard::Numpad8,
             "Num9",         sf::Keyboard::Numpad9,
-            "F1",           sf::Keyboard::F1,
-            "F2",           sf::Keyboard::F2,
-            "F3",           sf::Keyboard::F3,
-            "F4",           sf::Keyboard::F4,
-            "F5",           sf::Keyboard::F5,
-            "F6",           sf::Keyboard::F6,
-            "F7",           sf::Keyboard::F7,
-            "F8",           sf::Keyboard::F8,
-            "F9",           sf::Keyboard::F9,
-            "F10",          sf::Keyboard::F10,
-            "F11",          sf::Keyboard::F11,
-            "F12",          sf::Keyboard::F12,
-            "F13",          sf::Keyboard::F13,
-            "F14",          sf::Keyboard::F14,
-            "F15",          sf::Keyboard::F15,
             "Pause",        sf::Keyboard::Pause,
             "LeftMouse",    sf::Mouse::Left + sf::Keyboard::KeyCount,
             "RightMouse",   sf::Mouse::Right + sf::Keyboard::KeyCount,
@@ -319,9 +304,26 @@ void fe::engine::registerLua()
 
         // Register Functions
         m_scriptManager->getFunctionHandler().registerFunction("isInputPressed", &fe::isInputPressed);
+        m_scriptManager->getFunctionHandler().registerFunction("setCameraPosition", &fe::setCameraPosition);
 
         // Register Objects
-        m_scriptManager->getUserTypeHandler().addCustomType<scriptObject>("scriptObject", "applyForce", &scriptObject::applyForce);
+        m_scriptManager->getUserTypeHandler().addCustomType<fe::Vector2d>(
+            "lightVector2",
+            "x", &Vector2d::x,
+            "y", &Vector2d::y
+        );
+
+        m_scriptManager->getUserTypeHandler().addCustomType<fe::lightVector2d>(
+            "Vector2",
+            "x", &lightVector2d::x,
+            "y", &lightVector2d::y
+        );
+
+        m_scriptManager->getUserTypeHandler().addCustomType<scriptObject>(
+            "scriptObject",
+            "applyForce", &scriptObject::applyForce,
+            "getPosition", &scriptObject::getPosition
+        );
     }
 
 fe::engine::engine(const float updateRate) :

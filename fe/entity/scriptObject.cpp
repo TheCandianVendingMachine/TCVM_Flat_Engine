@@ -14,3 +14,8 @@ void fe::scriptObject::applyForce(float x, float y)
                 m_entity->getRigidBody()->applyForce(x, y);
             }
     }
+
+fe::Vector2d fe::scriptObject::getPosition()
+    {
+        return m_entity->getPosition();
+    }
