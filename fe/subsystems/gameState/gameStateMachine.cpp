@@ -77,6 +77,10 @@ void fe::gameStateMachine::push(baseGameState *newState, stateOptions options)
         // we set the offset here so we can free the memory past the previous state, and behind the current
         m_endState->m_offset = fe::memoryManager::get().getStackAllocater().getMarker();
 
+        m_endState->m_paused = m_endState->m_currentState->isPaused();
+        // If the state being pushed wants to be updated underneath, we dont pause it - otherwise we do
+        m_endState->m_currentState->pause((m_endState->m_options & stateOptions::UPDATE_UNDERNEATH) > 0);
+
         m_update = false;
     }
 
@@ -115,6 +119,8 @@ void fe::gameStateMachine::pop()
                             {
                                 m_endState->m_currentState->onActive();
                             }
+
+                        m_endState->m_currentState->pause(m_endState->m_paused);
                     }
             }
     }

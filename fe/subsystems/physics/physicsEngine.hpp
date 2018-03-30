@@ -14,28 +14,10 @@ namespace fe
             {
                 private:
                     fe::poolAllocater<rigidBody> m_rigidBodies;
-                    struct physicsJob : public fe::threadJob
-                        {
-                            fe::poolAllocater<rigidBody> &m_rigidBodies;
-
-                            float &m_gravityX;
-                            float &m_gravityY;
-                            float m_deltaTime;
-                            unsigned int m_iterations;
-                            unsigned int m_initialIndex;
-                            unsigned int m_endIndex;
-
-                            FLAT_ENGINE_API physicsJob(fe::poolAllocater<rigidBody> &rigidBodies, float &gravityX, float &gravityY);
-                            FLAT_ENGINE_API bool execute();
-                        };
-
-                    physicsJob m_jobA;
-                    physicsJob m_jobB;
-                    physicsJob m_jobC;
-                    physicsJob m_jobD;
 
                     float m_gravityForceX;
                     float m_gravityForceY;
+                    float m_gravityForceZ;
 
                     const unsigned int m_maxObjectsUntilThread;
 

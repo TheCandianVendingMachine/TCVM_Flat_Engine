@@ -46,6 +46,7 @@ void fe::baseGameState::startUp()
 
 void fe::baseGameState::handleEvents(const sf::Event &event)
     {
+        if (m_paused) return;
         for (auto &panel : m_guiPanels)
             {
                 panel->handleEvent(event);
@@ -56,12 +57,15 @@ void fe::baseGameState::handleEvents(const sf::Event &event)
 
 void fe::baseGameState::preUpdateDefined()
     {
+        if (m_paused) return;
         preUpdate();
         m_gameWorld.preUpdate();
     }
 
 void fe::baseGameState::updateDefined(collisionWorld *collisionWorld)
     {
+        if (m_paused) return;
+
         update();
         FE_PROFILE("game_state", "game_world_update");
         m_gameWorld.update(collisionWorld);
@@ -70,6 +74,8 @@ void fe::baseGameState::updateDefined(collisionWorld *collisionWorld)
 
 void fe::baseGameState::postUpdateDefined()
     {
+        if (m_paused) return;
+
         m_gameWorld.postUpdate();
 
         while (!m_guiPanelsToAdd.empty())
@@ -95,6 +101,7 @@ void fe::baseGameState::postUpdateDefined()
 
 void fe::baseGameState::updateCamera(float deltaTime, int iterations)
     {
+        if (m_paused) return;
         for (unsigned int i = 0; i < iterations; i++) 
             {
                 m_stateCamera.updateCamera(deltaTime);
@@ -135,7 +142,10 @@ void fe::baseGameState::shutDown()
 
 fe::Handle fe::baseGameState::addObject(const char *id)
     {
-        return m_entitySpawner.spawn(id);
+        fe::Handle entity= m_entitySpawner.spawn(id);
+        getObject(entity)->enablePhysics(isPaused());
+        getObject(entity)->enableCollision(isPaused());
+        return entity;
     }
 
 void fe::baseGameState::removeObject(fe::Handle ent)
@@ -201,6 +211,24 @@ void fe::baseGameState::setCamera(const fe::camera &&camera)
 fe::camera &fe::baseGameState::getCamera()
     {
         return m_stateCamera;
+    }
+
+void fe::baseGameState::pause(bool pause)
+    {
+        m_paused = pause;
+
+        std::vector<fe::baseEntity*> objects;
+        m_gameWorld.getEntityWorld().getAllObjects(objects);
+        for (auto &obj : objects)
+            {
+                obj->enablePhysics(!pause);
+                obj->enableCollision(!pause);
+            }
+    }
+
+bool fe::baseGameState::isPaused() const
+    {
+        return m_paused;
     }
 
 fe::baseGameState::~baseGameState()

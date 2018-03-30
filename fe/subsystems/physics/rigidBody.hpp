@@ -35,7 +35,7 @@ namespace fe
                     // How heavy the object is
                     float m_mass;
                     // How much the object will be affected by friction
-                    float m_frictionCoeff; // unit float for friction. 1 = Stops immediately -- 0 = Never Slows Down
+                    float m_frictionCoeff;
 
                     // if the object will be updated or not
                     bool m_enabled;
@@ -100,7 +100,7 @@ namespace fe
                             m_velocityX += (m_impulseX / m_mass) * deltaTime;
                             m_velocityY += (m_impulseY / m_mass) * deltaTime;
 
-                            if (m_maxSpeed * m_maxSpeed > m_velocityX * m_velocityX + m_velocityY * m_velocityY) 
+                            if (m_maxSpeed * m_maxSpeed < m_velocityX * m_velocityX + m_velocityY * m_velocityY)
                                 {
                                     float modifier = std::sqrt((m_maxSpeed * m_maxSpeed) / (m_velocityX * m_velocityX + m_velocityY * m_velocityY));
                                     m_velocityX *= modifier;

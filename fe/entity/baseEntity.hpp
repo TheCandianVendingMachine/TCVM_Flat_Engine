@@ -65,13 +65,15 @@ namespace fe
                     FLAT_ENGINE_API void enable(bool value);
                     FLAT_ENGINE_API bool getEnabled() const;
 
+                    FLAT_ENGINE_API void enableDrawing(bool value);
+                    FLAT_ENGINE_API void enablePhysics(bool value);
+                    FLAT_ENGINE_API void enableCollision(bool value);
+
                     FLAT_ENGINE_API void kill(bool value);
                     FLAT_ENGINE_API bool isKilled() const;
 
                     FLAT_ENGINE_API void setHandle(fe::Handle handle);
                     FLAT_ENGINE_API fe::Handle getHandle() const;
-
-                    FLAT_ENGINE_API void enableCollision(bool value);
 
                     FLAT_ENGINE_API void onDestroy(fe::baseGameState &state);
 

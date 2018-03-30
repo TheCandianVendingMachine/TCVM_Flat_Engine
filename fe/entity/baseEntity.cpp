@@ -88,20 +88,10 @@ void fe::baseEntity::onRemove(fe::gameWorld &world)
 void fe::baseEntity::enable(bool value)
     {
         m_enabled = value;
-        if (m_enabledModulesEnum & entityModules::RENDER_OBJECT || m_enabledModulesEnum & entityModules::RENDER_TEXT)
-            {
-                m_renderObject->m_draw = value;
-            }
-
-        if (m_enabledModulesEnum & entityModules::RIGID_BODY)
-            {
-                m_rigidBody->enable(value);
-            }
-
-        if (m_enabledModulesEnum & entityModules::COLLISION_BODY)
-            {
-                m_collisionBody->m_enabled = value;
-            }
+        
+        enableDrawing(value);
+        enablePhysics(value);
+        enableCollision(value);
     }
 
 bool fe::baseEntity::getEnabled() const
@@ -129,9 +119,28 @@ fe::Handle fe::baseEntity::getHandle() const
         return m_handle;
     }
 
+void fe::baseEntity::enableDrawing(bool value)
+    {
+        if (m_enabledModulesEnum & entityModules::RENDER_OBJECT || m_enabledModulesEnum & entityModules::RENDER_TEXT)
+            {
+                m_renderObject->m_draw = value;
+            }
+    }
+
+void fe::baseEntity::enablePhysics(bool value)
+    {
+        if (m_enabledModulesEnum & entityModules::RIGID_BODY)
+            {
+                m_rigidBody->enable(value);
+            }
+    }
+
 void fe::baseEntity::enableCollision(bool value)
     {
-        m_collisionBody->m_enabled = value;
+        if (m_enabledModulesEnum & entityModules::COLLISION_BODY)
+            {
+                m_collisionBody->m_enabled = value;
+            }
     }
 
 void fe::baseEntity::onDestroy(fe::baseGameState &state)

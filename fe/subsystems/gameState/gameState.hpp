@@ -37,11 +37,13 @@ namespace fe
                     fe::entitySpawner m_entitySpawner;
                     fe::camera m_stateCamera;
 
+                    bool m_paused; // If state is paused no updates will occur
+
                 protected:
                     virtual void drawExtra(sf::RenderTarget &app) {}
 
                 public:
-                    FLAT_ENGINE_API baseGameState() : m_gameWorld(this) {}
+                    FLAT_ENGINE_API baseGameState() : m_gameWorld(this), m_paused(false) {}
 
                     FLAT_ENGINE_API void addPanel(gui::panel *panel);
                     FLAT_ENGINE_API void removePanel(fe::str panelID);
@@ -91,6 +93,9 @@ namespace fe
                     FLAT_ENGINE_API void setCamera(const fe::camera &camera);
                     FLAT_ENGINE_API void setCamera(const fe::camera &&camera);
                     FLAT_ENGINE_API fe::camera &getCamera();
+
+                    FLAT_ENGINE_API void pause(bool pause);
+                    FLAT_ENGINE_API bool isPaused() const;
 
                     FLAT_ENGINE_API virtual ~baseGameState();
             };

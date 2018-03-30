@@ -42,6 +42,8 @@ namespace fe
 
                             baseGameState *m_currentState;
                             fe::uIntPtr m_offset; // Stack marker to where the game state starts allocating stack memory
+
+                            bool m_paused = false; // Whether or not this state was paused before the state above it was pushed
                         };
 
                     struct stateHolderBase { virtual void *construct() { return nullptr; } };
