@@ -47,7 +47,7 @@ namespace fe
                 Vector2<dataType> operator-(const Vector2<dataType> &rhs) const { return Vector2<dataType>(x - rhs.x, y - rhs.y); }
                 Vector2<dataType> operator*(const dataType &rhs) const          { return Vector2<dataType>(rhs * x, rhs * y); }
                 Vector2<dataType> operator/(const dataType &rhs) const          { return Vector2<dataType>(x / rhs, y / rhs); }
-                Vector2<dataType> operator-() const                             { return Vector2<dataType>(-rhs.x, -rhs.y); }
+                Vector2<dataType> operator-() const                             { return Vector2<dataType>(-x, -y); }
                 
                 
                 template<typename T> Vector2<dataType> operator+(const Vector2<T> &rhs) const   { return Vector2<dataType>(static_cast<dataType>(rhs.x) + x, static_cast<dataType>(rhs.y) + y); }
@@ -92,7 +92,7 @@ namespace fe
                         return modifier < 1.f ? fe::Vector2d(x * modifier, y * modifier) : *this;
                     }
 
-                Vector2<dataType> abs() const { return Vector2(x > dataType() ? x : -x, y > dataType() ? y : -y); }
+                Vector2<dataType> abs() const { return Vector2(std::abs(x), std::abs(y)); }
 
                 Vector2<dataType> normal() const { return Vector2(-y, x); }
 

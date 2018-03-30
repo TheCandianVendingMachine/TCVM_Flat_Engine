@@ -7,6 +7,7 @@
 #include "../threading/threadJob.hpp"
 #include "rigidBody.hpp"
 #include "../memory/poolAllocater.hpp"
+#include "../../math/Vector3.hpp"
 
 namespace fe
     {
@@ -28,8 +29,8 @@ namespace fe
                     FLAT_ENGINE_API void shutDown();
                     FLAT_ENGINE_API void clear();
 
-                    FLAT_ENGINE_API void setGravity(fe::Vector2d gravity);
-                    FLAT_ENGINE_API fe::Vector2d getGravity() const;
+                    FLAT_ENGINE_API void setGravity(fe::Vector3d gravity);
+                    FLAT_ENGINE_API fe::Vector3d getGravity() const;
 
                     // Simulates forces on all objects the amount of iterations it takes the fixed time step to complete
                     FLAT_ENGINE_API void preUpdate(float deltaTime, unsigned int iterations);

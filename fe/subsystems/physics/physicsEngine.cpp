@@ -8,7 +8,7 @@
 
 fe::physicsEngine::physicsEngine() :
     m_gravityForceX(0.f),
-    m_gravityForceY(10.f),
+    m_gravityForceY(0.f),
     m_gravityForceZ(0.f),
     m_maxObjectsUntilThread(5000) // 5000 = ~when intersection of FPS occurs between threaded physics and not
     {
@@ -29,15 +29,16 @@ void fe::physicsEngine::clear()
         m_rigidBodies.clear();
     }
 
-void fe::physicsEngine::setGravity(fe::Vector2d gravity)
+void fe::physicsEngine::setGravity(fe::Vector3d gravity)
     {
         m_gravityForceX = gravity.x;
         m_gravityForceY = gravity.y;
+        m_gravityForceZ = gravity.z;
     }
 
-fe::Vector2d fe::physicsEngine::getGravity() const
+fe::Vector3d fe::physicsEngine::getGravity() const
     {
-        return fe::Vector2d(m_gravityForceX, m_gravityForceY);
+        return fe::Vector3d(m_gravityForceX, m_gravityForceY, m_gravityForceZ);
     }
 
 void fe::physicsEngine::preUpdate(float deltaTime, unsigned int iterations)
@@ -60,14 +61,14 @@ void fe::physicsEngine::simulateForces(float deltaTime, unsigned int iterations)
 
                         float normalForceX = abs(body->getMass() * m_gravityForceX);
                         float normalForceY = abs(body->getMass() * m_gravityForceY);
-                        float normalForceZ = abs(body->getMass() * m_gravityForceZ);
+                        const float normalForceZ = abs(body->getMass() * m_gravityForceZ);
 
                         float frictionY = body->getFrictionCoefficient() * normalForceY;
                         float frictionX = body->getFrictionCoefficient() * normalForceX;
                         float frictionZ = body->getFrictionCoefficient() * normalForceZ;
 
-                        float forceX = normalForceX;
-                        float forceY = normalForceY;
+                        float forceX = body->getMass() * m_gravityForceX;
+                        float forceY = body->getMass() * m_gravityForceY;
 
                         float frictionForceX = (-frictionZ * (body->getForceX() / bodyTotalForce));
                         float frictionForceY = (-frictionZ * (body->getForceY() / bodyTotalForce));
