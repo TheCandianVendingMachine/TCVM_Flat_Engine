@@ -50,6 +50,8 @@ namespace fe
                     FLAT_ENGINE_API float getVelocityY() const;
                     FLAT_ENGINE_API float getForceX() const;
                     FLAT_ENGINE_API float getForceY() const;
+                    FLAT_ENGINE_API float getImpulseX() const;
+                    FLAT_ENGINE_API float getImpulseY() const;
                     FLAT_ENGINE_API float getPositionX() const;
                     FLAT_ENGINE_API float getPositionY() const;
 

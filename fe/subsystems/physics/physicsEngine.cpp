@@ -9,7 +9,7 @@
 fe::physicsEngine::physicsEngine() :
     m_gravityForceX(0.f),
     m_gravityForceY(0.f),
-    m_gravityForceZ(10.f),
+    m_gravityForceZ(0.f),
     m_maxObjectsUntilThread(5000) // 5000 = ~when intersection of FPS occurs between threaded physics and not
     {
     }
@@ -70,12 +70,12 @@ void fe::physicsEngine::simulateForces(float deltaTime, unsigned int iterations)
                         float frictionForceX = (-friction * (body->getForceX() / bodyTotalForce));
                         float frictionForceY = (-friction * (body->getForceY() / bodyTotalForce));
 
-                        if (abs(frictionForceX + forceX) > abs(body->getForceX()))
+                        if (abs(frictionForceX + forceX) > abs(body->getForceX() + body->getImpulseX()))
                             {
                                 frictionForceX = forceX - body->getForceX();
                             }
 
-                        if (abs(frictionForceY + forceY) > abs(body->getForceY()))
+                        if (abs(frictionForceY + forceY) > abs(body->getForceY() + body->getImpulseY()))
                             {
                                 frictionForceY = forceY - body->getForceY();
                             }

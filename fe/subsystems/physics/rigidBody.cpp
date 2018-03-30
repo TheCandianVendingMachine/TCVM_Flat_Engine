@@ -57,6 +57,16 @@ float fe::rigidBody::getForceY() const
         return m_forceY;
     }
 
+float fe::rigidBody::getImpulseX() const
+    {
+        return m_impulseX;
+    }
+
+float fe::rigidBody::getImpulseY() const
+    {
+        return m_impulseY;
+    }
+
 float fe::rigidBody::getPositionX() const
     {
         return m_positionX;
@@ -74,7 +84,7 @@ float fe::rigidBody::getSpeed() const
 
 float fe::rigidBody::getTotalForce() const
     {
-        return fe::Vector2d(m_forceX, m_forceY).magnitude();
+        return fe::Vector2d(getForceX(), getForceY()).magnitude();
     }
 
 float fe::rigidBody::getHeading() const
@@ -104,7 +114,7 @@ fe::Vector2d fe::rigidBody::getVelocity() const
 
 fe::Vector2d fe::rigidBody::getForce() const
     {
-        return { m_forceX, m_forceY };
+        return { getForceX(), getForceY() };
     }
 
 fe::Vector2d fe::rigidBody::getDirection() const
