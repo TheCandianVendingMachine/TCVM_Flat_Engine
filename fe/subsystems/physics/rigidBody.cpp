@@ -280,3 +280,13 @@ bool fe::rigidBody::getEnabled() const
     {
         return m_enabled;
     }
+
+void fe::rigidBody::setMetaData(void *data)
+    {
+        m_metaData = data;
+    }
+
+void *fe::rigidBody::getMetaData() const
+    {
+        return m_metaData;
+    }

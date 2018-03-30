@@ -13,7 +13,7 @@
 
 namespace fe
     {
-        class inputManager : private fe::handleManager<input*, 0>
+        class inputManager : protected fe::handleManager<input*, 0>
             {
                 private:
                     std::unordered_map<sf::Event::EventType, std::vector<fe::Handle>> m_eventInputs;
@@ -48,6 +48,7 @@ namespace fe
                     FLAT_ENGINE_API fe::Handle add(sf::Keyboard::Key key, input data);
                     FLAT_ENGINE_API fe::Handle add(sf::Mouse::Button button, input data);
                     FLAT_ENGINE_API fe::Handle add(sf::Mouse::Wheel  wheel, input data);
+                    FLAT_ENGINE_API void remove(fe::Handle handle);
 
                     FLAT_ENGINE_API void setActive(sf::Keyboard::Key key, bool active);
                     FLAT_ENGINE_API void setActive(sf::Mouse::Button button, bool active);

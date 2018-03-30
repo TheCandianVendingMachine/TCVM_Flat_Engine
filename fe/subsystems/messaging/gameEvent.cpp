@@ -17,3 +17,15 @@ bool fe::gameEvent::operator<(const gameEvent &rhs) const
             }
         return false;
     }
+
+fe::gameEvent fe::gameEvent::operator=(const gameEvent &rhs)
+    {
+        if (&rhs != this)
+            {
+                for (unsigned int i = 0; i < rhs.argNumber; i++)
+                    {
+                        args[i] = rhs.args[i];
+                    }
+            }
+        return *this;
+    }

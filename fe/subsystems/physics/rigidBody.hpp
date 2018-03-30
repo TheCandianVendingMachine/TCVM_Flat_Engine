@@ -12,6 +12,8 @@ namespace fe
         class rigidBody : public fe::serializable
             {
                 private:
+                    void *m_metaData; // meta data of the collider. Usually the entity owner
+
                     // Positions of the entity
                     float m_positionX;
                     float m_positionY;
@@ -95,6 +97,9 @@ namespace fe
 
                     FLAT_ENGINE_API void enable(bool value);
                     FLAT_ENGINE_API bool getEnabled() const;
+
+                    FLAT_ENGINE_API void setMetaData(void *data);
+                    FLAT_ENGINE_API void *getMetaData() const;
 
                     // Updates position of object based on force
                     inline void update(float deltaTime)

@@ -221,6 +221,17 @@ fe::Handle fe::inputManager::add(sf::Mouse::Wheel wheel, input data)
         return handle;
     }
 
+void fe::inputManager::remove(fe::Handle handle)
+    {
+        removeObject(handle);
+
+        m_realtimeInputs.erase(std::find(m_realtimeInputs.begin(), m_realtimeInputs.end(), handle), m_realtimeInputs.end());
+        for (auto &eventInput : m_eventInputs)
+            {
+                eventInput.second.erase(std::find(eventInput.second.begin(), eventInput.second.end(), handle), eventInput.second.end());
+            }
+    }
+
 void fe::inputManager::setActive(sf::Keyboard::Key key, bool active)
     {
         for (auto &inputHandle : m_realtimeInputs)

@@ -349,10 +349,12 @@ void fe::baseEntity::createModules(fe::baseGameState &currentState)
         if (m_enabledModulesEnum & fe::entityModules::RIGID_BODY)
             {
                 m_rigidBody = fe::engine::get().getPhysicsEngine().createRigidBody();
+                m_rigidBody->setMetaData(this);
             }
 
         if (m_enabledModulesEnum & fe::entityModules::COLLISION_BODY)
             {
                 m_collisionBody = fe::engine::get().getCollisionWorld().createCollider(0.f, 0.f);
+                m_collisionBody->m_owner = this;
             }
     }

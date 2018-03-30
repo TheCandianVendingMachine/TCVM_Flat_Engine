@@ -61,6 +61,7 @@ namespace fe
 
                 FLAT_ENGINE_API bool operator<=(const gameEvent &rhs) const; // used in eventMessanger. Used to check if this frametime is lower than the next message's
                 FLAT_ENGINE_API bool operator<(const gameEvent &rhs) const;  // used in eventMessanger. Used to check if this time is lower than the next message's
+                FLAT_ENGINE_API gameEvent operator=(const gameEvent &rhs);
 
                 private:
                     enum class timeVar

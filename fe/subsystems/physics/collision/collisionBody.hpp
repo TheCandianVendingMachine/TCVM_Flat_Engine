@@ -19,6 +19,7 @@ namespace fe
                 AABB m_aabb;
                 void *m_userData; // any additional data that needs to be stored
                 void *m_metaData; // Memory that the user can use to store meta-data pertaining to the collider
+                void *m_owner; // owner of the collider
 
                 bool m_enabled = true;
                 bool m_static;

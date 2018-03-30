@@ -4,6 +4,7 @@
 #include "../../threading/threadPool.hpp"
 #include "../../messaging/gameEvent.hpp"
 #include "../../messaging/eventSender.hpp"
+#include "../../../engineEvents.hpp"
 #include "aabbTree.hpp"
 #include <functional>
 
@@ -75,6 +76,15 @@ void fe::collisionWorld::handleCollision(fe::collider *a, fe::collider *b)
 
                         fe::engine::get().getEventSender().sendEngineEvent(collisionEventLeft, a->m_eventOnCollision);
                         fe::engine::get().getEventSender().sendEngineEvent(collisionEventRight, b->m_eventOnCollision);
+
+                        fe::gameEvent collisionEventGeneral(COLLISION, 4);
+                        collisionEventGeneral = collisionEventLeft;
+                        collisionEventGeneral.args[2].argType = fe::gameEventArgument::type::TYPE_VOIDP;
+                        collisionEventGeneral.args[3].argType = fe::gameEventArgument::type::TYPE_VOIDP;
+                        collisionEventGeneral.args[2].arg.TYPE_VOIDP = &dataFirst;
+                        collisionEventGeneral.args[3].arg.TYPE_VOIDP = &dataSecond;
+
+                        fe::engine::get().getEventSender().sendEngineEvent(collisionEventGeneral, COLLISION);
                     }
             }
         FE_END_PROFILE;

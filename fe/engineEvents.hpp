@@ -13,6 +13,7 @@ namespace fe
                 TILE_PLACED,
                 TILE_REMOVED,
                 TILE_MAP_TEXTURE_CHANGED,
+                COLLISION,
                 COUNT
         };
     }
