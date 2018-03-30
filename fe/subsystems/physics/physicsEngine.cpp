@@ -67,8 +67,21 @@ void fe::physicsEngine::simulateForces(float deltaTime, unsigned int iterations)
                         float forceX = normalForceX;
                         float forceY = normalForceY;
 
-                        forceX += (-friction * (body->getForceX() / bodyTotalForce));
-                        forceY += (-friction * (body->getForceY() / bodyTotalForce));
+                        float frictionForceX = (-friction * (body->getForceX() / bodyTotalForce));
+                        float frictionForceY = (-friction * (body->getForceY() / bodyTotalForce));
+
+                        if (abs(frictionForceX + forceX) > abs(body->getForceX()))
+                            {
+                                frictionForceX = forceX - body->getForceX();
+                            }
+
+                        if (abs(frictionForceY + forceY) > abs(body->getForceY()))
+                            {
+                                frictionForceY = forceY - body->getForceY();
+                            }
+
+                        forceX += frictionForceX;
+                        forceY += frictionForceY;
 
                         for (unsigned int j = 0; j < iterations; j++)
                             {
