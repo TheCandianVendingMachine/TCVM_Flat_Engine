@@ -36,6 +36,21 @@ void fe::physicsEngine::setGravity(fe::Vector3d gravity)
         m_gravityForceZ = gravity.z;
     }
 
+void fe::physicsEngine::setGravityX(float gravity)
+    {
+        m_gravityForceX = gravity;
+    }
+
+void fe::physicsEngine::setGravityY(float gravity)
+    {
+        m_gravityForceY = gravity;
+    }
+
+void fe::physicsEngine::setGravityZ(float gravity)
+    {
+        m_gravityForceZ = gravity;
+    }
+
 fe::Vector3d fe::physicsEngine::getGravity() const
     {
         return fe::Vector3d(m_gravityForceX, m_gravityForceY, m_gravityForceZ);
@@ -75,12 +90,12 @@ void fe::physicsEngine::simulateForces(float deltaTime, unsigned int iterations)
 
                         if (frictionForceX > 0.f && abs(frictionForceX + forceX) > abs(body->getForceX()))
                             {
-                                frictionForceX = body->getForceX() - forceX;
+                                frictionForceX = abs(body->getForceX()) - forceX;
                             }
 
                         if (frictionForceY > 0.f && abs(frictionForceY + forceY) > abs(body->getForceY()))
                             {
-                                frictionForceY = body->getForceY() - forceY;
+                                frictionForceY = abs(body->getForceY()) - forceY;
                             }
 
                         forceX += frictionForceX;

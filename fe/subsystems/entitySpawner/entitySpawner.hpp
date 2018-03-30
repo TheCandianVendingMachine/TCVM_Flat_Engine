@@ -33,6 +33,7 @@ namespace fe
                             fe::lightVector2<unsigned int> m_size;
                             fe::lightVector2<unsigned int> m_colliderSize;
                             fe::lightVector2d m_colliderPosition;
+                            fe::str m_collisionEvent = 0;
                             int m_connected = -1;
                             int m_zPosition = 0;
                             float m_maxSpeed = 0.f;

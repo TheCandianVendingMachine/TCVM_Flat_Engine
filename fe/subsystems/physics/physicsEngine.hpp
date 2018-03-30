@@ -30,6 +30,9 @@ namespace fe
                     FLAT_ENGINE_API void clear();
 
                     FLAT_ENGINE_API void setGravity(fe::Vector3d gravity);
+                    FLAT_ENGINE_API void setGravityX(float gravity);
+                    FLAT_ENGINE_API void setGravityY(float gravity);
+                    FLAT_ENGINE_API void setGravityZ(float gravity);
                     FLAT_ENGINE_API fe::Vector3d getGravity() const;
 
                     // Simulates forces on all objects the amount of iterations it takes the fixed time step to complete

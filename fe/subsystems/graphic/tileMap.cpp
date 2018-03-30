@@ -125,7 +125,7 @@ fe::Vector2<unsigned int> fe::tileMap::getTileTextureOffset(fe::str tileID) cons
         return fe::Vector2<unsigned int>(0, 0);
     }
 
-void fe::tileMap::create(const char *name, fe::Vector2<unsigned int> size, fe::Vector2<unsigned int> offset)
+void fe::tileMap::create(const char *name, fe::Vector2<unsigned int> size, fe::Vector2<unsigned int> offset, fe::Vector2d colliderSize, fe::Vector2d colliderOffset)
     {
         imp::tile fab;
 
@@ -135,7 +135,17 @@ void fe::tileMap::create(const char *name, fe::Vector2<unsigned int> size, fe::V
         fab.xSize = size.x;
         fab.ySize = size.y;
 
-        m_fabrications.push_back(fab);
+        fab.collider.m_aabb.m_sizeX = colliderSize.x;
+        fab.collider.m_aabb.m_sizeY = colliderSize.y;
+        fab.collider.m_aabb.m_positionX = colliderOffset.x;
+        fab.collider.m_aabb.m_positionY = colliderOffset.y;
+
+        create(fab);
+    }
+
+void fe::tileMap::create(fe::imp::tile &tile)
+    {
+        m_fabrications.push_back(tile);
     }
 
 fe::Handle fe::tileMap::add(fe::Vector2d position, fe::str tileId)
@@ -234,7 +244,7 @@ void fe::tileMap::deserializeFabrications(fe::serializerID &serializer)
             {
                 fe::imp::tile fab;
                 serializer.readObjectList("fabrications", fab);
-                create(fab.id, { fab.xSize, fab.ySize }, { fab.xTexturePosition, fab.yTexturePosition });
+                create(fab);
             }
     }
 

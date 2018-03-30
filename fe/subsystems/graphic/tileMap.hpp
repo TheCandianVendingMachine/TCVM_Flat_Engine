@@ -81,7 +81,8 @@ namespace fe
                     FLAT_ENGINE_API const fe::imp::tileWorld &getPlacedTile(fe::Handle handle) const;
 
                     // Create a tile and put it into the fabrications
-                    FLAT_ENGINE_API void create(const char *name, fe::Vector2<unsigned int> size, fe::Vector2<unsigned int> offset);
+                    FLAT_ENGINE_API void create(const char *name, fe::Vector2<unsigned int> size, fe::Vector2<unsigned int> offset, fe::Vector2d colliderSize, fe::Vector2d colliderOffset);
+                    FLAT_ENGINE_API void create(fe::imp::tile &tile);
 
                     FLAT_ENGINE_API fe::Handle add(fe::Vector2d position, fe::str tileId);
                     FLAT_ENGINE_API imp::tileWorld &get(fe::Handle handle);
