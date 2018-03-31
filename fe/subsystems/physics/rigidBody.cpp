@@ -152,10 +152,10 @@ void fe::rigidBody::setFrictionCoefficient(float fricCoeff)
         m_frictionCoeff = fricCoeff;
     }
 
-void fe::rigidBody::setNormalForce(float x, float y)
+void fe::rigidBody::applyNormalForce(float x, float y)
     {
-        m_normalForceX = x;
-        m_normalForceY = y;
+        m_normalForceX += x;
+        m_normalForceY += y;
     }
 
 void fe::rigidBody::applyForce(float x, float y)

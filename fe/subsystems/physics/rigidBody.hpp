@@ -81,7 +81,7 @@ namespace fe
                     FLAT_ENGINE_API void setMaxSpeed(float maxSpeed);
                     FLAT_ENGINE_API void setFrictionCoefficient(float fricCoeff);
 
-                    FLAT_ENGINE_API void setNormalForce(float x, float y);
+                    FLAT_ENGINE_API void applyNormalForce(float x, float y);
 
                     // applies a force upon the rigid body. 
                     FLAT_ENGINE_API void applyForce(float x, float y);

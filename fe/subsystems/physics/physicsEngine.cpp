@@ -28,7 +28,7 @@ void fe::physicsEngine::handleCollision(fe::collider *a, fe::collider *b, fe::co
                         fe::Vector2d normal(aData.m_normalX, aData.m_normalY);
                         fe::Vector2d force(aRigid->getForce());
                         fe::lightVector2d normalForce = force.project(normal);
-                        aRigid->setNormalForce(normalForce.x, normalForce.y);
+                        aRigid->applyNormalForce(normalForce.x, normalForce.y);
 
                         if (std::abs(aData.m_penetrationX) < std::abs(aData.m_penetrationY))
                             {
@@ -159,12 +159,12 @@ void fe::physicsEngine::simulateForces(float deltaTime, unsigned int iterations)
 
                         if (abs(body->getMass() * body->getNormalForceX()) > 0.f || abs(body->getMass() * m_gravityForceZ) > 0.f)
                             {
-                                frictionForceX = (frictionVelocityReduction * body->getMass()) * -fe::signOf(body->getVelocityX());
+                                frictionForceY = (frictionVelocityReduction * body->getMass()) * -fe::signOf(body->getVelocityY());
                             }
 
                         if (abs(body->getMass() * body->getNormalForceY()) > 0.f || abs(body->getMass() * m_gravityForceZ) > 0.f)
                             {
-                                frictionForceY = (frictionVelocityReduction * body->getMass()) * fe::signOf(body->getVelocityY());
+                                frictionForceX = (frictionVelocityReduction * body->getMass()) * -fe::signOf(body->getVelocityX());
                             }
 
                         forceX += frictionForceX;
