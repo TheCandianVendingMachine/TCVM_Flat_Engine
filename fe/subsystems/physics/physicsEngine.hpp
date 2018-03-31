@@ -24,6 +24,9 @@ namespace fe
                     float m_gravityForceY;
                     float m_gravityForceZ;
 
+                    // How much velocity is taken away with friction calculation
+                    float m_frictionImpulse;
+
                     const unsigned int m_maxObjectsUntilThread;
 
                     FLAT_ENGINE_API void handleCollision(fe::collider *a, fe::collider *b, fe::collisionData aData, fe::collisionData bData);

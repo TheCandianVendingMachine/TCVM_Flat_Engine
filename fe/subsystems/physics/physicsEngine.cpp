@@ -72,6 +72,7 @@ fe::physicsEngine::physicsEngine() :
     m_gravityForceX(0.f),
     m_gravityForceY(0.f),
     m_gravityForceZ(0.f),
+    m_frictionImpulse(3.f),
     m_maxObjectsUntilThread(5000) // 5000 = ~when intersection of FPS occurs between threaded physics and not
     {
     }
@@ -149,33 +150,21 @@ void fe::physicsEngine::simulateForces(float deltaTime, unsigned int iterations)
                     }    
                 else if (body->getEnabled())
                     {
-                        float bodyTotalForce = body->getTotalForce() + 0.00001f;
+                        float forceX = m_gravityForceX;
+                        float forceY = m_gravityForceY;
 
-                        float normalForceX = abs(body->getMass() * body->getNormalForceX());
-                        float normalForceY = abs(body->getMass() * body->getNormalForceY());
-                        const float normalForceZ = abs(body->getMass() * m_gravityForceZ);
+                        const float frictionVelocityReduction = m_frictionImpulse * body->getFrictionCoefficient();
+                        float frictionForceX = 0.f;
+                        float frictionForceY = 0.f;
 
-                        float frictionY = body->getFrictionCoefficient() * normalForceX; // since friction = friction coef * force being pushed into wall we flip these
-                        float frictionX = body->getFrictionCoefficient() * normalForceY;
-                        float frictionZ = body->getFrictionCoefficient() * normalForceZ;
-
-                        float forceX = body->getMass() * m_gravityForceX;
-                        float forceY = body->getMass() * m_gravityForceY;
-
-                        const float bodyUnitForceX = body->getForceX() / bodyTotalForce;
-                        const float bodyUnitForceY = body->getForceY() / bodyTotalForce;
-
-                        float frictionForceX = (-frictionZ * bodyUnitForceX) + (-frictionX * bodyUnitForceX);
-                        float frictionForceY = (-frictionZ * bodyUnitForceY) + (-frictionY * bodyUnitForceY);
-
-                        if (frictionForceX > 0.f && abs(frictionForceX + forceX) > abs(body->getForceX()))
+                        if (abs(body->getMass() * body->getNormalForceX()) > 0.f || abs(body->getMass() * m_gravityForceZ) > 0.f)
                             {
-                                frictionForceX = abs(body->getForceX()) - forceX;
+                                frictionForceX = (frictionVelocityReduction * body->getMass()) * -fe::signOf(body->getVelocityX());
                             }
 
-                        if (frictionForceY > 0.f && abs(frictionForceY + forceY) > abs(body->getForceY()))
+                        if (abs(body->getMass() * body->getNormalForceY()) > 0.f || abs(body->getMass() * m_gravityForceZ) > 0.f)
                             {
-                                frictionForceY = abs(body->getForceY()) - forceY;
+                                frictionForceY = (frictionVelocityReduction * body->getMass()) * fe::signOf(body->getVelocityY());
                             }
 
                         forceX += frictionForceX;
