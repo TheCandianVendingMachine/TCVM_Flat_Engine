@@ -131,6 +131,9 @@ void fe::entityWorld::deserialize(fe::serializerID &serializer)
                 fe::baseEntity *ent = m_gameWorld.getObject(m_gameWorld.getGameState().addObject(entity.m_name.c_str()));
                 ent->setPosition(entity.m_positionX, entity.m_positionY);
                 ent->enable(entity.m_enabled);
+
+                ent->enablePhysics(m_gameWorld.getGameState().isPaused());
+                ent->enableCollision(m_gameWorld.getGameState().isPaused());
             }
     }
 

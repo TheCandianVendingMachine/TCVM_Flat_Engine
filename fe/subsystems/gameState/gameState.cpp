@@ -143,8 +143,8 @@ void fe::baseGameState::shutDown()
 fe::Handle fe::baseGameState::addObject(const char *id)
     {
         fe::Handle entity= m_entitySpawner.spawn(id);
-        getObject(entity)->enablePhysics(isPaused());
-        getObject(entity)->enableCollision(isPaused());
+        getObject(entity)->enablePhysics(!isPaused());
+        getObject(entity)->enableCollision(!isPaused());
         return entity;
     }
 
