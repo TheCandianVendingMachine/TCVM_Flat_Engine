@@ -39,6 +39,10 @@ namespace fe
                     // How much the object will be affected by friction
                     float m_frictionCoeff;
 
+                    // Normal forces acting upon this entity
+                    float m_normalForceX;
+                    float m_normalForceY;
+
                     // if the object will be updated or not
                     bool m_enabled;
 
@@ -57,6 +61,9 @@ namespace fe
                     FLAT_ENGINE_API float getPositionX() const;
                     FLAT_ENGINE_API float getPositionY() const;
 
+                    FLAT_ENGINE_API float getNormalForceX() const;
+                    FLAT_ENGINE_API float getNormalForceY() const;
+
                     FLAT_ENGINE_API float getSpeed() const;
                     FLAT_ENGINE_API float getTotalForce() const;
                     FLAT_ENGINE_API float getHeading() const;
@@ -73,6 +80,8 @@ namespace fe
                     FLAT_ENGINE_API void setMass(float newMass);
                     FLAT_ENGINE_API void setMaxSpeed(float maxSpeed);
                     FLAT_ENGINE_API void setFrictionCoefficient(float fricCoeff);
+
+                    FLAT_ENGINE_API void setNormalForce(float x, float y);
 
                     // applies a force upon the rigid body. 
                     FLAT_ENGINE_API void applyForce(float x, float y);
@@ -125,6 +134,9 @@ namespace fe
 
                             m_impulseX = 0.f;
                             m_impulseY = 0.f;
+
+                            m_normalForceX = 0.f;
+                            m_normalForceY = 0.f;
                         }
 
             };

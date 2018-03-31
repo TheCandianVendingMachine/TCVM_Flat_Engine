@@ -19,9 +19,21 @@ void fe::collisionWorld::handleCollision(fe::collider *a, fe::collider *b)
 
         fe::lightVector2d positionA(first->m_globalPositionX, first->m_globalPositionY);
         fe::lightVector2d sizeA(first->m_sizeX, first->m_sizeY);
+        fe::lightVector2d cornersA[4] = {
+            positionA,
+            positionA + fe::lightVector2d(sizeA.x, 0),
+            positionA + sizeA,
+            positionA + fe::lightVector2d(0, sizeA.y)
+        };
 
         fe::lightVector2d positionB(second->m_globalPositionX, second->m_globalPositionY);
         fe::lightVector2d sizeB(second->m_sizeX, second->m_sizeY);
+        fe::lightVector2d cornersB[4] = {
+            positionB,
+            positionB + fe::lightVector2d(sizeB.x, 0),
+            positionB + sizeB,
+            positionB + fe::lightVector2d(0, sizeB.y)
+        };
 
         if (((sizeA.x + positionA.x >= positionB.x && positionA.x < sizeB.x + positionB.x) &&
              (sizeA.y + positionA.y >= positionB.y && positionA.y < sizeB.y + positionB.y)) || 
@@ -40,13 +52,84 @@ void fe::collisionWorld::handleCollision(fe::collider *a, fe::collider *b)
                
                 dataFirst.m_penetrationX = (distance.x > 0 ? minDistance.x - distance.x : -minDistance.x - distance.x) / 2.f;
                 dataFirst.m_penetrationY = (distance.y > 0 ? minDistance.y - distance.y : -minDistance.y - distance.y) / 2.f;
-                dataFirst.m_colliderPositionX = a->m_aabb.m_globalPositionX;
-                dataFirst.m_colliderPositionY = a->m_aabb.m_globalPositionY;
+                dataFirst.m_colliderPositionX = b->m_aabb.m_globalPositionX;
+                dataFirst.m_colliderPositionY = b->m_aabb.m_globalPositionY;
+                
+                fe::Vector2d edgeCollided;
+                int leftHanded = 0;
+                if (std::abs(dataFirst.m_penetrationX) < std::abs(dataFirst.m_penetrationY))
+                    {
+                        if (dataFirst.m_penetrationX < 0.f)
+                            {
+                                // Left
+                                edgeCollided = (cornersB[2] - cornersB[1]);
+                                leftHanded = 1;
+                            }
+                        else if (dataFirst.m_penetrationX > 0.f)
+                            {
+                                // Right
+                                edgeCollided = (cornersB[3] - cornersB[0]);
+                                leftHanded = -1;
+                            }
+                    }
+                else
+                    {
+                        if (dataFirst.m_penetrationY < 0.f)
+                            {
+                                // Top
+                                edgeCollided = (cornersB[0] - cornersB[1]);
+                                leftHanded = 1;
+                            }
+                        else if (dataFirst.m_penetrationY > 0.f)
+                            {
+                                // Down
+                                edgeCollided = (cornersB[3] - cornersB[2]);
+                                leftHanded = -1;
+                            }
+                    }
+
+                fe::lightVector2d normal = edgeCollided.normal().normalize() * leftHanded;
+                dataFirst.m_normalX = normal.x;
+                dataFirst.m_normalY = normal.y;
 
                 dataSecond.m_penetrationX = -(distance.x > 0 ? minDistance.x - distance.x : -minDistance.x - distance.x) / 2.f;
                 dataSecond.m_penetrationY = -(distance.y > 0 ? minDistance.y - distance.y : -minDistance.y - distance.y) / 2.f;
-                dataSecond.m_colliderPositionX = b->m_aabb.m_globalPositionX;
-                dataSecond.m_colliderPositionY = b->m_aabb.m_globalPositionY;
+                dataSecond.m_colliderPositionX = a->m_aabb.m_globalPositionX;
+                dataSecond.m_colliderPositionY = a->m_aabb.m_globalPositionY;
+
+                if (std::abs(dataSecond.m_penetrationX) < std::abs(dataSecond.m_penetrationY))
+                    {
+                        if (dataSecond.m_penetrationX < 0.f)
+                            {
+                                // Left
+                                edgeCollided = (cornersA[2] - cornersA[1]);
+                                leftHanded = -1;
+                            }
+                        else if (dataSecond.m_penetrationX > 0.f)
+                            {
+                                // Right
+                                edgeCollided = (cornersA[0] - cornersA[3]);
+                                leftHanded = 1;
+                            }
+                    }
+                else
+                    {
+                        if (dataSecond.m_penetrationY < 0.f)
+                            {
+                                // Top
+                                edgeCollided = (cornersA[0] - cornersA[1]);
+                                leftHanded = 1;
+                            }
+                        else if (dataSecond.m_penetrationY > 0.f)
+                            {
+                                // Down
+                                edgeCollided = (cornersA[3] - cornersA[2]);
+                                leftHanded = -1;
+                            }
+                    }
+                normal = edgeCollided.normal().normalize() * leftHanded;
+                dataSecond.m_normalX = normal.x;
+                dataSecond.m_normalY = normal.y;
 
                 a->m_collisionCallback(dataFirst);
                 b->m_collisionCallback(dataSecond);

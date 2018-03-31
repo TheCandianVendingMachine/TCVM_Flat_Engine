@@ -14,5 +14,9 @@ namespace fe
                 float m_penetrationX;
                 float m_penetrationY;
 
+                // The normalized normal of the surface collided with
+                float m_normalX;
+                float m_normalY;
+
             };
     }

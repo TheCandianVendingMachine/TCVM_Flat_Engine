@@ -10,15 +10,26 @@
 #include "../../entity/baseEntity.hpp"
 #include "../messaging/gameEvent.hpp"
 #include "../messaging/eventSender.hpp"
+#include "../../debug/debugDraw.hpp"
 
 void fe::physicsEngine::handleCollision(fe::collider *a, fe::collider *b, fe::collisionData aData, fe::collisionData bData)
     {
         fe::baseEntity *aEnt = static_cast<fe::baseEntity*>(a->m_owner);
+
+        fe::Vector2d lineStart(aData.m_colliderPositionX, aData.m_colliderPositionY);
+        fe::Vector2d lineEnd = lineStart + fe::lightVector2d(aData.m_normalX * 50, aData.m_normalY * 50);
+
+        FE_DEBUG_DRAW_LINE(lineStart.x, lineStart.y, lineEnd.x, lineEnd.y, sf::Color::White);
         if (aEnt)
             {
                 fe::rigidBody *aRigid = aEnt->getRigidBody();
                 if (aRigid)
                     {
+                        fe::Vector2d normal(aData.m_normalX, aData.m_normalY);
+                        fe::Vector2d force(aRigid->getForce());
+                        fe::lightVector2d normalForce = force.project(normal);
+                        aRigid->setNormalForce(normalForce.x, normalForce.y);
+
                         if (std::abs(aData.m_penetrationX) < std::abs(aData.m_penetrationY))
                             {
                                 aEnt->setPosition(aEnt->getPosition() + fe::lightVector2d(aData.m_penetrationX, 0));
@@ -53,11 +64,7 @@ void fe::physicsEngine::handleCollision(fe::collider *a, fe::collider *b, fe::co
         fe::baseEntity *bEnt = static_cast<fe::baseEntity*>(b->m_owner);
         if (bEnt)
             {
-                fe::rigidBody *bRigid = bEnt->getRigidBody();
-                if (bRigid)
-                    {
-                        bEnt->setPosition(bEnt->getPosition() - fe::lightVector2d(bData.m_penetrationX, bData.m_penetrationY));
-                    }
+                
             }
     }
 
@@ -144,19 +151,22 @@ void fe::physicsEngine::simulateForces(float deltaTime, unsigned int iterations)
                     {
                         float bodyTotalForce = body->getTotalForce() + 0.00001f;
 
-                        float normalForceX = abs(body->getMass() * m_gravityForceX);
-                        float normalForceY = abs(body->getMass() * m_gravityForceY);
+                        float normalForceX = abs(body->getMass() * body->getNormalForceX());
+                        float normalForceY = abs(body->getMass() * body->getNormalForceY());
                         const float normalForceZ = abs(body->getMass() * m_gravityForceZ);
 
-                        float frictionY = body->getFrictionCoefficient() * normalForceY;
-                        float frictionX = body->getFrictionCoefficient() * normalForceX;
+                        float frictionY = body->getFrictionCoefficient() * normalForceX; // since friction = friction coef * force being pushed into wall we flip these
+                        float frictionX = body->getFrictionCoefficient() * normalForceY;
                         float frictionZ = body->getFrictionCoefficient() * normalForceZ;
 
                         float forceX = body->getMass() * m_gravityForceX;
                         float forceY = body->getMass() * m_gravityForceY;
 
-                        float frictionForceX = (-frictionZ * (body->getForceX() / bodyTotalForce));
-                        float frictionForceY = (-frictionZ * (body->getForceY() / bodyTotalForce));
+                        const float bodyUnitForceX = body->getForceX() / bodyTotalForce;
+                        const float bodyUnitForceY = body->getForceY() / bodyTotalForce;
+
+                        float frictionForceX = (-frictionZ * bodyUnitForceX) + (-frictionX * bodyUnitForceX);
+                        float frictionForceY = (-frictionZ * bodyUnitForceY) + (-frictionY * bodyUnitForceY);
 
                         if (frictionForceX > 0.f && abs(frictionForceX + forceX) > abs(body->getForceX()))
                             {

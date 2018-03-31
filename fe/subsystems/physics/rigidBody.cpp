@@ -77,6 +77,16 @@ float fe::rigidBody::getPositionY() const
         return m_positionY;
     }
 
+float fe::rigidBody::getNormalForceX() const
+    {
+        return m_normalForceX;
+    }
+
+float fe::rigidBody::getNormalForceY() const
+    {
+        return m_normalForceY;
+    }
+
 float fe::rigidBody::getSpeed() const
     {
         return fe::Vector2d(m_velocityX, m_velocityY).magnitude();
@@ -140,6 +150,12 @@ void fe::rigidBody::setMaxSpeed(float maxSpeed)
 void fe::rigidBody::setFrictionCoefficient(float fricCoeff)
     {
         m_frictionCoeff = fricCoeff;
+    }
+
+void fe::rigidBody::setNormalForce(float x, float y)
+    {
+        m_normalForceX = x;
+        m_normalForceY = y;
     }
 
 void fe::rigidBody::applyForce(float x, float y)
@@ -219,7 +235,9 @@ fe::rigidBody::rigidBody() :
     m_forceX(0.f),
     m_forceY(0.f),
     m_impulseX(0.f),
-    m_impulseY(0.f) 
+    m_impulseY(0.f) ,
+    m_normalForceX(0.f),
+    m_normalForceY(0.f)
     {
     }
 
@@ -235,7 +253,9 @@ fe::rigidBody::rigidBody(float mass) :
     m_forceX(0.f),
     m_forceY(0.f),
     m_impulseX(0.f),
-    m_impulseY(0.f)
+    m_impulseY(0.f),
+    m_normalForceX(0.f),
+    m_normalForceY(0.f)
     {
     }
 
@@ -251,7 +271,9 @@ fe::rigidBody::rigidBody(float mass, float maxSpeed) :
     m_forceX(0.f),
     m_forceY(0.f),
     m_impulseX(0.f),
-    m_impulseY(0.f)
+    m_impulseY(0.f),
+    m_normalForceX(0.f),
+    m_normalForceY(0.f)
     {
     }
 
@@ -267,7 +289,9 @@ fe::rigidBody::rigidBody(float mass, float maxSpeed, float frictionCoeff) :
     m_forceX(0.f),
     m_forceY(0.f),
     m_impulseX(0.f),
-    m_impulseY(0.f)
+    m_impulseY(0.f),
+    m_normalForceX(0.f),
+    m_normalForceY(0.f)
     {
     }
 
