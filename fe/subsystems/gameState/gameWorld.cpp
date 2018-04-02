@@ -5,6 +5,7 @@
 #include "../../debug/profiler.hpp"
 #include "../resourceManager/resourceManager.hpp"
 #include "../../engine.hpp"
+#include <fstream>
 
 fe::gameWorld::gameWorld(baseGameState *gameState) :
     m_entityWorld(*this),
@@ -127,6 +128,13 @@ void fe::gameWorld::draw(sf::RenderTarget &app)
         if (m_staticBroadphase) m_staticBroadphase->debugDraw();
     }
 
+void fe::gameWorld::save(const std::string &save)
+    {
+        std::ofstream out(save);
+        this->save(out);
+        out.close();
+    }
+
 void fe::gameWorld::save(std::ofstream &out)
     {
         save();
@@ -141,6 +149,13 @@ void fe::gameWorld::save()
         m_tileMap.serialize(*m_serializer);
         FE_LOG("Saving Entities");
         m_entityWorld.serialize(*m_serializer);
+    }
+
+void fe::gameWorld::load(const std::string &load)
+    {
+        std::ifstream in(load);
+        this->load(in);
+        in.close();
     }
 
 void fe::gameWorld::load(std::ifstream &in)

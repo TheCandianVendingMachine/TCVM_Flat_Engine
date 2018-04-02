@@ -69,8 +69,10 @@ namespace fe
                     FLAT_ENGINE_API void preDraw();
                     FLAT_ENGINE_API void draw(sf::RenderTarget &app);
 
+                    FLAT_ENGINE_API void save(const std::string &save);
                     FLAT_ENGINE_API void save(std::ofstream &out);
                     FLAT_ENGINE_API void save();
+                    FLAT_ENGINE_API void load(const std::string &load);
                     FLAT_ENGINE_API void load(std::ifstream &in);
                     FLAT_ENGINE_API void load();
 

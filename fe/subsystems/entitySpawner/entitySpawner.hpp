@@ -40,6 +40,7 @@ namespace fe
                             float m_mass = 1.f;
                             float m_frictionCoef = 0.f;
                             fe::entityModules m_modules = fe::entityModules::NONE;
+                            bool m_solid = true;
                         };
 
                     std::unordered_map<std::string, prefabObject> m_prefabs;

@@ -171,6 +171,10 @@ fe::gui::panel *fe::guiPrefabricatedElements::getGUI(const char *guiPrefabId)
 
 fe::gui::panel *fe::guiPrefabricatedElements::getGUI(fe::str guiPrefabId)
     {
+        if (m_prefabGUI.find(guiPrefabId) == m_prefabGUI.end())
+            {
+                FE_LOG_ERROR("GUI not avaliable");
+            }
         fe::priv::guiTemplate &guiTemplate = m_prefabGUI[guiPrefabId];
         fe::gui::panel *panel = getPanel(guiTemplate.m_panel.id);
 

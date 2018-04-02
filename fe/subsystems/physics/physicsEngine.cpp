@@ -20,7 +20,7 @@ void fe::physicsEngine::handleCollision(fe::collider *a, fe::collider *b, fe::co
         fe::Vector2d lineEnd = lineStart + fe::lightVector2d(aData.m_normalX * 50, aData.m_normalY * 50);
 
         FE_DEBUG_DRAW_LINE(lineStart.x, lineStart.y, lineEnd.x, lineEnd.y, sf::Color::White);
-        if (aEnt)
+        if (aEnt && b->m_solid)
             {
                 fe::rigidBody *aRigid = aEnt->getRigidBody();
                 if (aRigid)
@@ -59,12 +59,6 @@ void fe::physicsEngine::handleCollision(fe::collider *a, fe::collider *b, fe::co
                                     }
                             }
                     }
-            }
-
-        fe::baseEntity *bEnt = static_cast<fe::baseEntity*>(b->m_owner);
-        if (bEnt)
-            {
-                
             }
     }
 
