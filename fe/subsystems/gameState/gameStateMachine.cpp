@@ -46,6 +46,8 @@ void fe::gameStateMachine::push(baseGameState *newState, stateOptions options)
             {
                 if (m_endState->m_currentState)
                     {
+                        // If the end state option wants to be updated underneath, this test will return something > 0. Therefore we check if it is zero to pause
+                        m_endState->m_currentState->pause((m_endState->m_options & stateOptions::UPDATE_UNDERNEATH) == 0);
                         m_endState->m_currentState->onDeactive();
                     }
                 
@@ -78,8 +80,6 @@ void fe::gameStateMachine::push(baseGameState *newState, stateOptions options)
         m_endState->m_offset = fe::memoryManager::get().getStackAllocater().getMarker();
 
         m_endState->m_paused = m_endState->m_currentState->isPaused();
-        // If the state being pushed wants to be updated underneath, we dont pause it - otherwise we do
-        m_endState->m_currentState->pause((m_endState->m_options & stateOptions::UPDATE_UNDERNEATH) > 0);
 
         m_update = false;
     }
