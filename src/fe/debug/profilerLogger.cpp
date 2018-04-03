@@ -1,5 +1,5 @@
-#include "profilerLogger.hpp"
-#include "../objectManagement/str.hpp"
+#include "fe/debug/profilerLogger.hpp"
+#include "fe/objectManagement/str.hpp"
 #include <algorithm>
 
 fe::profilerLogger *fe::profilerLogger::m_instance = nullptr;

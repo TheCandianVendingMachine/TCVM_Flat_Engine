@@ -1,9 +1,9 @@
-#include "tileMap.hpp"
-#include "../../engine.hpp"
-#include "../resourceManager/resourceManager.hpp"
-#include "../physics/collision/collisionWorld.hpp"
-#include "../../engineEvents.hpp"
-#include "../messaging/eventSender.hpp"
+#include "fe/subsystems/graphic/tileMap.hpp"
+#include "fe/engine.hpp"
+#include "fe/subsystems/resourceManager/resourceManager.hpp"
+#include "fe/subsystems/physics/collision/collisionWorld.hpp"
+#include "fe/engineEvents.hpp"
+#include "fe/subsystems/messaging/eventSender.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <algorithm>
 
@@ -173,7 +173,7 @@ fe::Handle fe::tileMap::add(fe::Vector2d position, fe::str tileId)
         return -1;
     }
 
-fe::imp::tileWorld &fe::tileMap::get(fe::Handle handle)
+fe::imp::tileWorld fe::tileMap::get(fe::Handle handle)
     {
         return getObject(handle);
     }

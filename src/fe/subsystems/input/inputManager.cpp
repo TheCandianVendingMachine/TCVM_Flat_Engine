@@ -1,5 +1,5 @@
-﻿#include "inputManager.hpp"
-#include "../../debug/logger.hpp"
+﻿#include "fe/subsystems/input/inputManager.hpp"
+#include "fe/debug/logger.hpp"
 
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Mouse.hpp>

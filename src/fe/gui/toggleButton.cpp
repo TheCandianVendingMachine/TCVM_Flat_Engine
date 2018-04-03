@@ -1,8 +1,8 @@
-#include "toggleButton.hpp"
-#include "panel.hpp"
-#include "../subsystems/messaging/gameEvent.hpp"
-#include "../subsystems/messaging/eventSender.hpp"
-#include "../engine.hpp"
+#include "fe/gui/toggleButton.hpp"
+#include "fe/gui/panel.hpp"
+#include "fe/subsystems/messaging/gameEvent.hpp"
+#include "fe/subsystems/messaging/eventSender.hpp"
+#include "fe/engine.hpp"
 
 fe::gui::toggleButton::toggleButton(const fe::Vector2d &size, const std::function<void()> &press, const std::function<void()> &release) :
     fe::gui::button(size, press, release),

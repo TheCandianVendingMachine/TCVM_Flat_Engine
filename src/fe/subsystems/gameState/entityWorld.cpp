@@ -1,10 +1,10 @@
-#include "entityWorld.hpp"
-#include "../../entity/baseEntity.hpp"
-#include "../physics/collision/broadphaseAbstract.hpp"
-#include "../physics/collision/collisionWorld.hpp"
-#include "../serializer/serializerID.hpp"
-#include "gameState.hpp"
-#include "../entitySpawner/entitySpawner.hpp"
+#include "fe/subsystems/gameState/entityWorld.hpp"
+#include "fe/subsystems/gameState/gameState.hpp"
+#include "fe/entity/baseEntity.hpp"
+#include "fe/subsystems/physics/collision/broadphaseAbstract.hpp"
+#include "fe/subsystems/physics/collision/collisionWorld.hpp"
+#include "fe/subsystems/serializer/serializerID.hpp"
+#include "fe/subsystems/entitySpawner/entitySpawner.hpp"
 
 void fe::entityWorld::onAdd(fe::baseEntity **object, fe::Handle objectHandle)
     {

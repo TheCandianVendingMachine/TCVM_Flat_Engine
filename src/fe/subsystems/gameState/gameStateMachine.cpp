@@ -1,9 +1,9 @@
-#include "gameStateMachine.hpp"
-#include "../memory/memoryManager.hpp"
-#include "../messaging/eventSender.hpp"
-#include "../../engine.hpp"
-#include "../../debug/profiler.hpp"
-#include "gameState.hpp"
+#include "fe/subsystems/gameState/gameStateMachine.hpp"
+#include "fe/subsystems/gameState/gameState.hpp"
+#include "fe/subsystems/memory/memoryManager.hpp"
+#include "fe/subsystems/messaging/eventSender.hpp"
+#include "fe/engine.hpp"
+#include "fe/debug/profiler.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 
 fe::gameStateMachine *fe::gameStateMachine::m_instance = nullptr;

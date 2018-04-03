@@ -1,7 +1,7 @@
-#include "dynamicMemoryAllocater.hpp"
-#include "../../feAssert.hpp"
-#include "../../debug/profiler.hpp"
-#include "../../typeDefines.hpp"
+#include "fe/subsystems/memory/dynamicMemoryAllocater.hpp"
+#include "fe/feAssert.hpp"
+#include "fe/debug/profiler.hpp"
+#include "fe/typeDefines.hpp"
 #include <cstring>
 #include <algorithm>
 #include <cmath>

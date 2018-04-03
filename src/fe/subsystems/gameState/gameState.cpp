@@ -1,12 +1,12 @@
-#include "gameState.hpp"
-#include "../../gui/panel.hpp"
-#include "../../gui/guiElement.hpp"
-#include "../../debug/profiler.hpp"
-#include "../../entity/baseEntity.hpp"
-#include "../../engine.hpp"
-#include "../graphic/camera.hpp"
-#include "../gameState/gameWorld.hpp"
-#include "../physics/collision/broadphaseAbstract.hpp"
+#include "fe/subsystems/gameState/gameState.hpp"
+#include "fe/gui/panel.hpp"
+#include "fe/gui/guiElement.hpp"
+#include "fe/debug/profiler.hpp"
+#include "fe/entity/baseEntity.hpp"
+#include "fe/engine.hpp"
+#include "fe/subsystems/graphic/camera.hpp"
+#include "fe/subsystems/gameState/gameWorld.hpp"
+#include "fe/subsystems/physics/collision/broadphaseAbstract.hpp"
 #include <algorithm>
 #include <SFML/Graphics/RenderWindow.hpp>
 

@@ -1,5 +1,5 @@
-#include "stackAllocater.hpp"
-#include "../../feAssert.hpp"
+#include "fe/subsystems/memory/stackAllocater.hpp"
+#include "fe/feAssert.hpp"
 
 void fe::stackAllocater::startUp(fe::uInt8 *buffer, fe::uInt64 bufferSize)
     {

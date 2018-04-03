@@ -1,9 +1,9 @@
-#include "serializerID.hpp"
-#include "serializable.hpp"
+#include "fe/subsystems/serializer/serializerID.hpp"
+#include "fe/subsystems/serializer/serializable.hpp"
 #include <string.h>
 
 #ifdef FE_IS_ENGINE
-    #include "../../feAssert.hpp"
+    #include "fe/feAssert.hpp"
 #else
     #define FE_ASSERT(check, message) assert(check && message)
 #endif

@@ -1,6 +1,6 @@
-#include "scriptObject.hpp"
-#include "baseEntity.hpp"
-#include "../subsystems/physics/rigidBody.hpp"
+#include "fe/entity/scriptObject.hpp"
+#include "fe/entity/baseEntity.hpp"
+#include "fe/subsystems/physics/rigidBody.hpp"
 
 fe::scriptObject::scriptObject(baseEntity *obj) :
     m_entity(obj)

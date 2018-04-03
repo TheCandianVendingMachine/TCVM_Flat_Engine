@@ -1,5 +1,5 @@
-#include "animationActor.hpp"
-#include "../../../time/clock.hpp"
+#include "fe/subsystems/graphic/animation/animationActor.hpp"
+#include "fe/time/clock.hpp"
 #include <SFML/Graphics/VertexArray.hpp>
 
 fe::animationActor::animationActor(sf::VertexArray *verticies) :

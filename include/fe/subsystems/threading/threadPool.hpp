@@ -107,7 +107,7 @@ namespace fe
                                 std::this_thread::sleep_for(std::chrono::microseconds(1)); 
                             }
 
-                        for (auto &it = m_jobs.begin(); it != m_jobs.end();) 
+                        for (auto it = m_jobs.begin(); it != m_jobs.end();)
                             {
                                 auto job = (*it);
                                 if (job->execute())

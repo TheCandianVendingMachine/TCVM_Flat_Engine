@@ -1,6 +1,6 @@
-#include "animationTexture.hpp"
-#include "animationActor.hpp"
-#include "../../../debug/logger.hpp"
+#include "fe/subsystems/graphic/animation/animationTexture.hpp"
+#include "fe/subsystems/graphic/animation/animationActor.hpp"
+#include "fe/debug/logger.hpp"
 
 #include <SFML/Graphics/Texture.hpp>
 

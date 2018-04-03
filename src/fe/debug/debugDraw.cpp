@@ -1,5 +1,5 @@
-#include "debugDraw.hpp"
-#include "profiler.hpp"
+#include "fe/debug/debugDraw.hpp"
+#include "fe/debug/profiler.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 
 fe::debugDraw *fe::debugDraw::m_instance = nullptr;

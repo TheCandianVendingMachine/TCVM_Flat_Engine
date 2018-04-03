@@ -1,8 +1,8 @@
-#include "spriteBatch.hpp"
-#include "../../physics/transformable.hpp"
-#include "../../../math/matrix.hpp"
-#include "../../../debug/profiler.hpp"
-#include "../../../feAssert.hpp"
+#include "fe/subsystems/graphic/renderObject/spriteBatch.hpp"
+#include "fe/subsystems/physics/transformable.hpp"
+#include "fe/math/matrix.hpp"
+#include "fe/debug/profiler.hpp"
+#include "fe/feAssert.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 
 fe::spriteBatch::spriteBatch()

@@ -1,11 +1,11 @@
-#include "entitySpawner.hpp"
-#include "../../feAssert.hpp"
-#include "../../engine.hpp"
-#include "../../entity/baseEntity.hpp"
-#include "../gameState/gameWorld.hpp"
-#include "../physics/rigidBody.hpp"
-#include "../scripting/scriptManager.hpp"
-#include "../resourceManager/resourceManager.hpp"
+#include "fe/subsystems/entitySpawner/entitySpawner.hpp"
+#include "fe/feAssert.hpp"
+#include "fe/engine.hpp"
+#include "fe/entity/baseEntity.hpp"
+#include "fe/subsystems/gameState/gameWorld.hpp"
+#include "fe/subsystems/physics/rigidBody.hpp"
+#include "fe/subsystems/scripting/scriptManager.hpp"
+#include "fe/subsystems/resourceManager/resourceManager.hpp"
 
 fe::entitySpawner::entitySpawner() : 
     m_world(nullptr),

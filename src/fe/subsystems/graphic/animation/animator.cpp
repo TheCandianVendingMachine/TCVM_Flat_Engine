@@ -1,6 +1,6 @@
-#include "animator.hpp"
-#include "animationTexture.hpp"
-#include "animationActor.hpp"
+#include "fe/subsystems/graphic/animation/animator.hpp"
+#include "fe/subsystems/graphic/animation/animationTexture.hpp"
+#include "fe/subsystems/graphic/animation/animationActor.hpp"
 #include <algorithm>
 #include <SFML/Graphics/VertexArray.hpp>
 

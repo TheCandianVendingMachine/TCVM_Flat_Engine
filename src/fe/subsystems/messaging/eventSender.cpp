@@ -1,6 +1,6 @@
-#include "eventSender.hpp"
-#include "eventHandler.hpp"
-#include "../../engineEvents.hpp"
+#include "fe/subsystems/messaging/eventSender.hpp"
+#include "fe/subsystems/messaging/eventHandler.hpp"
+#include "fe/engineEvents.hpp"
 #include <algorithm>
 
 void fe::eventSender::sendEvent(gameEvent &msg)

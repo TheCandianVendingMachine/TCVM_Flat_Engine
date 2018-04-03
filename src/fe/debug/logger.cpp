@@ -1,8 +1,8 @@
-#include "logger.hpp"
-#include "../feAssert.hpp"
-#include "../subsystems/threading/threadJob.hpp"
-#include "../subsystems/threading/threadPool.hpp"
-#include "../engine.hpp"
+#include "fe/debug/logger.hpp"
+#include "fe/feAssert.hpp"
+#include "fe/subsystems/threading/threadJob.hpp"
+#include "fe/subsystems/threading/threadPool.hpp"
+#include "fe/engine.hpp"
 #include <SFML/System/Err.hpp>
 
 fe::logger *fe::logger::m_instance = nullptr;

@@ -1,5 +1,5 @@
-#include "scriptManager.hpp"
-#include "../../math/Vector2.hpp"
+#include "fe/subsystems/scripting/scriptManager.hpp"
+#include "fe/math/Vector2.hpp"
 
 fe::scriptManager::scriptManager() :
     m_functionHandler(m_luaState),

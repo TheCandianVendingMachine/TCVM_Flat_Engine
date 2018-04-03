@@ -1,5 +1,5 @@
-#include "graphNavigation.hpp"
-#include "graph.hpp"
+#include "fe/subsystems/ai/graph.hpp"
+#include "fe/subsystems/ai/graph.hpp"
 #include <queue>
 #include <memory>
 #include <algorithm>

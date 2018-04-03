@@ -1,6 +1,6 @@
-#include "localizationStorage.hpp"
-#include "../subsystems/parsing/xmlParsing.hpp"
-#include "../objectManagement/str.hpp"
+#include "fe/localization/localizationStorage.hpp"
+#include "fe/subsystems/parsing/xmlParsing.hpp"
+#include "fe/objectManagement/str.hpp"
 #include <rapidxml_print.hpp>
 #include <iostream>
 

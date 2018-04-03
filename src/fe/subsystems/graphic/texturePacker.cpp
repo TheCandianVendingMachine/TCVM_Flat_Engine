@@ -1,4 +1,4 @@
-#include "texturePacker.hpp"
+#include "fe/subsystems/graphic/texturePacker.hpp"
 #include <SFML/Graphics/Image.hpp>
 #include <algorithm>
 

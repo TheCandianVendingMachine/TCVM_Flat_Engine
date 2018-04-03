@@ -1,6 +1,6 @@
-#include "label.hpp"
-#include "../engine.hpp"
-#include "../subsystems/messaging/eventSender.hpp"
+#include "fe/gui/label.hpp"
+#include "fe/engine.hpp"
+#include "fe/subsystems/messaging/eventSender.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 
 void fe::gui::label::drawElement(sf::RenderTarget &target, const fe::matrix3d &matrix)

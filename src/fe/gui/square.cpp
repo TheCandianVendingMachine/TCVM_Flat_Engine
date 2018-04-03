@@ -1,5 +1,5 @@
-#include "square.hpp"
-#include "../subsystems/messaging/eventSender.hpp"
+#include "fe/gui/square.hpp"
+#include "fe/subsystems/messaging/eventSender.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 
 void fe::gui::square::drawElement(sf::RenderTarget &target, const fe::matrix3d &matrix)

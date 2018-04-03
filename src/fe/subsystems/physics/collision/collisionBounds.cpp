@@ -1,5 +1,5 @@
-#include "collisionBounds.hpp"
-#include "../../serializer/serializerID.hpp"
+#include "fe/subsystems/physics/collision/collisionBounds.hpp"
+#include "fe/subsystems/serializer/serializerID.hpp"
 #include <algorithm>
 
 bool fe::AABB::intersects(const collisionBounds &other) const

@@ -1,8 +1,8 @@
-#include "aabbTree.hpp"
-#include "collisionBody.hpp"
+#include "fe/subsystems/physics/collision/aabbTree.hpp"
+#include "fe/subsystems/physics/collision/collisionBody.hpp"
 
-#include "../../../debug/debugDraw.hpp"
-#include "../../../debug/profiler.hpp"
+#include "fe/debug/debugDraw.hpp"
+#include "fe/debug/profiler.hpp"
 
 #include <stack>
 

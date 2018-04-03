@@ -1,7 +1,7 @@
-#include "renderObject.hpp"
-#include "../../../debug/logger.hpp"
-#include "../../../feAssert.hpp"
-#include "../../serializer/serializerID.hpp"
+#include "fe/subsystems/graphic/renderObject/renderObject.hpp"
+#include "fe/debug/logger.hpp"
+#include "fe/feAssert.hpp"
+#include "fe/subsystems/serializer/serializerID.hpp"
 #include <cstring>
 
 fe::renderText::renderText() : 

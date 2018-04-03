@@ -1,11 +1,12 @@
-#include "collisionWorld.hpp"
-#include "../../../debug/profiler.hpp"
-#include "../../../engine.hpp"
-#include "../../threading/threadPool.hpp"
-#include "../../messaging/gameEvent.hpp"
-#include "../../messaging/eventSender.hpp"
-#include "../../../engineEvents.hpp"
-#include "aabbTree.hpp"
+#include "fe/subsystems/physics/collision/collisionWorld.hpp"
+#include "fe/subsystems/physics/collision/aabbTree.hpp"
+#include "fe/debug/profiler.hpp"
+#include "fe/engine.hpp"
+#include "fe/subsystems/threading/threadPool.hpp"
+#include "fe/subsystems/messaging/gameEvent.hpp"
+#include "fe/subsystems/messaging/eventSender.hpp"
+#include "fe/engineEvents.hpp"
+
 #include <functional>
 
 void fe::collisionWorld::handleCollision(fe::collider *a, fe::collider *b)

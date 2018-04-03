@@ -1,6 +1,6 @@
-#include "random.hpp"
-#include "../feAssert.hpp"
-#include "../typeDefines.hpp"
+#include "fe/math/random.hpp"
+#include "fe/feAssert.hpp"
+#include "fe/typeDefines.hpp"
 
 fe::random *fe::random::m_instance = nullptr;
 

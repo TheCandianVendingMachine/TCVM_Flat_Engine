@@ -1,7 +1,7 @@
-#include "commonScriptFunctions.hpp"
-#include "../../engine.hpp"
-#include "../input/inputManager.hpp"
-#include "../gameState/gameState.hpp"
+#include "fe/subsystems/scripting/commonScriptFunctions.hpp"
+#include "fe/subsystems/input/inputManager.hpp"
+#include "fe/subsystems/gameState/gameState.hpp"
+#include "fe/engine.hpp"
 
 bool fe::isInputPressed(int input)
     {

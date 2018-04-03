@@ -1,5 +1,5 @@
-#include "rigidBody.hpp"
-#include "../serializer/serializerID.hpp"
+#include "fe/subsystems/physics/rigidBody.hpp"
+#include "fe/subsystems/serializer/serializerID.hpp"
 
 void fe::rigidBody::serialize(fe::serializerID &serializer) const
     {

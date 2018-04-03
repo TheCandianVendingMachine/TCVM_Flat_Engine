@@ -1,13 +1,13 @@
-#include "baseEntity.hpp"
-#include "../subsystems/physics/rigidBody.hpp"
-#include "../subsystems/graphic/renderObject/renderObject.hpp"
-#include "../subsystems/gameState/gameState.hpp"
-#include "../engine.hpp"
-#include "../subsystems/graphic/renderObject/sceneGraph.hpp"
-#include "../subsystems/physics/physicsEngine.hpp"
-#include "../subsystems/physics/collision/collisionWorld.hpp"
-#include "../subsystems/serializer/serializerID.hpp"
-#include "../subsystems/entitySpawner/userEntityObject.hpp"
+#include "fe/entity/baseEntity.hpp"
+#include "fe/subsystems/physics/rigidBody.hpp"
+#include "fe/subsystems/graphic/renderObject/renderObject.hpp"
+#include "fe/subsystems/gameState/gameState.hpp"
+#include "fe/engine.hpp"
+#include "fe/subsystems/graphic/renderObject/sceneGraph.hpp"
+#include "fe/subsystems/physics/physicsEngine.hpp"
+#include "fe/subsystems/physics/collision/collisionWorld.hpp"
+#include "fe/subsystems/serializer/serializerID.hpp"
+#include "fe/subsystems/entitySpawner/userEntityObject.hpp"
 
 fe::baseEntity::baseEntity(fe::entityModules modules, fe::userEntityObject *scriptObject, bool staticObject) :
     m_killEntity(false),

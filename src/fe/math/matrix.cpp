@@ -1,4 +1,4 @@
-#include "matrix.hpp"
+#include "fe/math/matrix.hpp"
 #include <utility>
 
 fe::matrix3d::matrix3d()

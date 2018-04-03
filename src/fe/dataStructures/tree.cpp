@@ -1,4 +1,4 @@
-#include "tree.hpp"
+#include "fe/dataStructures/tree.hpp"
 #include <algorithm>
 
 fe::tree::tree()

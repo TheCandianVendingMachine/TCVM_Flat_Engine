@@ -1,7 +1,7 @@
-#include "button.hpp"
-#include "panel.hpp"
-#include "../engine.hpp"
-#include "../subsystems/messaging/eventSender.hpp"
+#include "fe/gui/button.hpp"
+#include "fe/gui/panel.hpp"
+#include "fe/engine.hpp"
+#include "fe/subsystems/messaging/eventSender.hpp"
 
 void fe::gui::button::drawElement(sf::RenderTarget &target, const fe::matrix3d &matrix)
     {

@@ -1,12 +1,11 @@
-#include "textBox.hpp"
-#include "../engine.hpp"
-#include "../subsystems/messaging/eventSender.hpp"
+#include "fe/gui/panel.hpp"
+#include "fe/gui/textBox.hpp"
+#include "fe/engine.hpp"
+#include "fe/subsystems/messaging/eventSender.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/Glyph.hpp>
-
-#include "panel.hpp"
 
 bool fe::gui::textBox::checkAddChar(sf::Uint32 ascii, const sf::Glyph &glyph)
     {

@@ -1,5 +1,5 @@
-#include "userEntityObject.hpp"
-#include "../../entity/scriptObject.hpp"
+#include "fe/subsystems/entitySpawner/userEntityObject.hpp"
+#include "fe/entity/scriptObject.hpp"
 
 fe::userEntityObject::userEntityObject() : 
     m_index(0),

@@ -1,10 +1,8 @@
-#include "renderer.hpp"
-
+#include "fe/subsystems/graphic/renderer.hpp"
+#include "fe/subsystems/memory/memoryManager.hpp"
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <fstream>
-
-#include "../memory/memoryManager.hpp"
 
 void fe::renderer::startUp()
     {

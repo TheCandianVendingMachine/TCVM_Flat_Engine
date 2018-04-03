@@ -1,9 +1,9 @@
-#include "sceneGraph.hpp"
-#include "../../../engine.hpp"
-#include "../../resourceManager/resourceManager.hpp"
-#include "../../physics/transformable.hpp"
-#include "../../../debug/profiler.hpp"
-#include "../../threading/threadPool.hpp"
+#include "fe/subsystems/graphic/renderObject/sceneGraph.hpp"
+#include "fe/engine.hpp"
+#include "fe/subsystems/resourceManager/resourceManager.hpp"
+#include "fe/subsystems/physics/transformable.hpp"
+#include "fe/debug/profiler.hpp"
+#include "fe/subsystems/threading/threadPool.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 
 void fe::sceneGraph::transformGraph(int nodeHandle)

@@ -1,8 +1,8 @@
-#include "panel.hpp"
-#include "guiElement.hpp"
-#include "../subsystems/messaging/eventSender.hpp"
-#include "../engineEvents.hpp"
-#include "../engine.hpp"
+#include "fe/gui/panel.hpp"
+#include "fe/gui/guiElement.hpp"
+#include "fe/subsystems/messaging/eventSender.hpp"
+#include "fe/engineEvents.hpp"
+#include "fe/engine.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Window/Event.hpp>
 #include <algorithm>

@@ -1,6 +1,6 @@
-#include "guiElement.hpp"
+#include "fe/gui/guiElement.hpp"
+#include "fe/objectManagement/str.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
-#include "../objectManagement/str.hpp"
 #include <SFML/Graphics/Texture.hpp>
 
 void fe::gui::guiElement::fitToParent()

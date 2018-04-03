@@ -85,7 +85,7 @@ namespace fe
                     FLAT_ENGINE_API void create(fe::imp::tile &tile);
 
                     FLAT_ENGINE_API fe::Handle add(fe::Vector2d position, fe::str tileId);
-                    FLAT_ENGINE_API imp::tileWorld &get(fe::Handle handle);
+                    FLAT_ENGINE_API imp::tileWorld get(fe::Handle handle);
                     FLAT_ENGINE_API void remove(fe::Handle handle);
                     FLAT_ENGINE_API fe::Handle get(fe::Vector2d position);
 

@@ -1,4 +1,4 @@
-#include "gameEvent.hpp"
+#include "fe/subsystems/messaging/gameEvent.hpp"
 
 bool fe::gameEvent::operator<=(const gameEvent &rhs) const
     {

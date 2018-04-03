@@ -1,10 +1,10 @@
-#include "gameWorld.hpp"
-#include "../../entity/baseEntity.hpp"
-#include "../physics/collision/collisionWorld.hpp"
-#include "../physics/collision/broadphaseAbstract.hpp"
-#include "../../debug/profiler.hpp"
-#include "../resourceManager/resourceManager.hpp"
-#include "../../engine.hpp"
+#include "fe/subsystems/gameState/gameWorld.hpp"
+#include "fe/subsystems/resourceManager/resourceManager.hpp"
+#include "fe/subsystems/physics/collision/collisionWorld.hpp"
+#include "fe/subsystems/physics/collision/broadphaseAbstract.hpp"
+#include "fe/entity/baseEntity.hpp"
+#include "fe/debug/profiler.hpp"
+#include "fe/engine.hpp"
 #include <fstream>
 
 fe::gameWorld::gameWorld(baseGameState *gameState) :
