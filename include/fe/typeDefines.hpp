@@ -3,15 +3,32 @@
 #pragma once
 #define FE_IS_ENGINE true // Defined only if engine exists. Useful if writing potentially modular classes
 
-#define FE_PROFILE_ENGINE true
-#define FE_OUTPUT_PROFILE_RESULTS true
-#define FE_PROFILE_RELEASE true
-#define FE_PROFILE_PRINT_ZEROS false
+#ifndef FE_PROFILE_ENGINE
+    #define FE_PROFILE_ENGINE true
+#endif
+
+#ifndef FE_OUTPUT_PROFILE_RESULTS
+    #define FE_OUTPUT_PROFILE_RESULTS true
+#endif
+
+#ifndef FE_PROFILE_RELEASE
+    #define FE_PROFILE_RELEASE true
+#endif
+
+#ifndef FE_PROFILE_PRINT_ZEROS
+    #define FE_PROFILE_PRINT_ZEROS false
+#endif
+
 #define FE_MAX_PROFILER_PROFILES 250 // How many different profiler profiles can be created
 #define FE_PROFILER_AVERAGE_MAX 500 // how much data needs to be recorded before an average is computed
 
-#define FE_DEBUG_NO_SEED true
-#define FE_DEFAULT_RANDOM_SEED 555
+#ifndef FE_DEBUG_NO_SEED
+    #define FE_DEBUG_NO_SEED true
+#endif
+
+#ifndef FE_DEFAULT_RANDOM_SEED
+    #define FE_DEFAULT_RANDOM_SEED 555
+#endif
 
 #define FE_MAX_GAME_OBJECTS 1024 // Max = 2^16
 #define FE_MAX_TEXT_OBJECTS 64
@@ -21,7 +38,9 @@
 
 #define FE_CHAR_START 33 // The characters that will be generated into a bitmap font
 #define FE_CHAR_END 126
-#define FE_DEBUG_ALLOCATER true
+#ifndef FE_DEBUG_ALLOCATER
+    #define FE_DEBUG_ALLOCATER true
+#endif
 
 namespace fe
     {
