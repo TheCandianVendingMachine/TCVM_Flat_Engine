@@ -27,6 +27,7 @@ namespace fe
                             sol::protected_function m_onRemove;
                             sol::protected_function m_update;
                             sol::protected_function m_postUpdate;
+                            sol::protected_function m_onCollision;
                             sol::table m_entityTable;
 
                             fe::fontData m_font = fe::fontData();

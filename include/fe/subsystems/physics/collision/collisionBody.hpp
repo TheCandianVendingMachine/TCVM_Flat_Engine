@@ -14,7 +14,7 @@ namespace fe
         struct collider : public fe::serializable
             {
                 std::function<void(fe::collisionData&)> m_collisionCallback = [](fe::collisionData&) {};
-                fe::str m_eventOnCollision;
+                fe::str m_eventOnCollision = 0;
 
                 AABB m_aabb;
                 void *m_userData; // any additional data that needs to be stored

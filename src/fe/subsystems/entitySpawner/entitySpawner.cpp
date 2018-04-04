@@ -144,6 +144,11 @@ void fe::entitySpawner::createPrefab(const char *luaName)
                     {
                         prefab.m_solid = collisionData["solid"].get<bool>();
                     }
+
+                if (collisionData["on_collision"].get_type() == sol::type::function)
+                    {
+                        prefab.m_onCollision = collisionData["on_collision"];
+                    }
             }
 
         m_prefabs[luaName] = prefab;
@@ -181,6 +186,10 @@ fe::Handle fe::entitySpawner::spawn(const char *luaName)
                 entity->getCollider()->m_aabb.m_sizeY = prefab.m_colliderSize.y;
                 entity->getCollider()->m_eventOnCollision = prefab.m_collisionEvent;
                 entity->getCollider()->m_solid = prefab.m_solid;
+                if (prefab.m_onCollision.valid()) 
+                    {
+                        entity->getCollider()->m_collisionCallback = [prefab](const fe::collisionData &data) { prefab.m_onCollision(data); };
+                    }
             }
 
         if ((prefab.m_modules & fe::entityModules::RENDER_OBJECT) || (prefab.m_modules & fe::entityModules::RENDER_TEXT))

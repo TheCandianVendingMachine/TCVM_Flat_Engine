@@ -75,9 +75,9 @@ void fe::engine::run()
             #if FE_OUTPUT_PROFILE_RESULTS
                 if (m_elapsedFrames % inverseDeltaTime == 0) 
                     {
-                        out.open("profileOutput.txt", std::ios::trunc);
+                        /*out.open("profileOutput.txt", std::ios::trunc);
                         m_profileLogger->printToStream(out);
-                        out.close();
+                        out.close();*/
                         //FE_LOG_DEBUG(getFPS());
                     }
             #endif
