@@ -29,3 +29,21 @@ void fe::scriptObject::scriptObjectDestroy()
     {
         m_entity->kill(true);
     }
+
+fe::Vector2d fe::scriptObject::scriptObjectGetNormalForce()
+    {
+        if (m_entity->getRigidBody())
+            {
+                return fe::Vector2d(m_entity->getRigidBody()->getNormalForceX(), m_entity->getRigidBody()->getNormalForceY());
+            }
+        return fe::Vector2d();
+    }
+
+fe::Vector2d fe::scriptObject::scriptObjectGetForce()
+    {
+        if (m_entity->getRigidBody())
+            {
+                return m_entity->getRigidBody()->getForce();
+            }
+        return fe::Vector2d();
+    }

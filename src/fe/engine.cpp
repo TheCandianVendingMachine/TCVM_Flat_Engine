@@ -323,7 +323,9 @@ void fe::engine::registerLua()
             "scriptObject",
             "applyForce", &scriptObject::scriptObjectApplyForce,
             "getPosition", &scriptObject::scriptObjectGetPosition,
-            "destroy", &scriptObject::scriptObjectDestroy
+            "destroy", &scriptObject::scriptObjectDestroy,
+            "getNormalForce", &scriptObject::scriptObjectGetNormalForce,
+            "getForce", &scriptObject::scriptObjectGetForce
         );
     }
 

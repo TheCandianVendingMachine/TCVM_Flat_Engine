@@ -24,5 +24,8 @@ namespace fe
 
                     FLAT_ENGINE_API void scriptObjectDestroy();
 
+                    FLAT_ENGINE_API fe::Vector2d scriptObjectGetNormalForce();
+                    FLAT_ENGINE_API fe::Vector2d scriptObjectGetForce();
+
             };
     }

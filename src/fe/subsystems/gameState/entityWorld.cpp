@@ -119,14 +119,17 @@ void fe::entityWorld::serialize(fe::serializerID &serializer)
     {
         for (unsigned int i = 0; i < objectCount(); i++)
             {
-                entityRepresentation entity;
-                entity.m_enabled = m_objects[i]->getEnabled();
-                entity.m_handle = m_objects[i]->getHandle();
-                entity.m_name = m_objects[i]->getName();
-                entity.m_positionX = m_objects[i]->getPosition().x;
-                entity.m_positionY = m_objects[i]->getPosition().y;
+                if (m_objects[i])
+                    {
+                        entityRepresentation entity;
+                        entity.m_enabled = m_objects[i]->getEnabled();
+                        entity.m_handle = m_objects[i]->getHandle();
+                        entity.m_name = m_objects[i]->getName();
+                        entity.m_positionX = m_objects[i]->getPosition().x;
+                        entity.m_positionY = m_objects[i]->getPosition().y;
 
-                serializer.writeObjectList("entities", entity);
+                        serializer.writeObjectList("entities", entity);
+                    }
             }
     }
 

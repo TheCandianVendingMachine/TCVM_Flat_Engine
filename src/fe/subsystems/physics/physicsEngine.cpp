@@ -128,6 +128,11 @@ fe::Vector3d fe::physicsEngine::getGravity() const
         return fe::Vector3d(m_gravityForceX, m_gravityForceY, m_gravityForceZ);
     }
 
+void fe::physicsEngine::setFrictionImpulse(float friction)
+    {
+        m_frictionImpulse = friction;
+    }
+
 void fe::physicsEngine::preUpdate(float deltaTime, unsigned int iterations)
     {
 

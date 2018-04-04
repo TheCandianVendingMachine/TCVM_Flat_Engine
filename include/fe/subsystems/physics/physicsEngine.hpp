@@ -46,6 +46,8 @@ namespace fe
                     FLAT_ENGINE_API void setGravityZ(float gravity);
                     FLAT_ENGINE_API fe::Vector3d getGravity() const;
 
+                    FLAT_ENGINE_API void setFrictionImpulse(float friction);
+
                     // Simulates forces on all objects the amount of iterations it takes the fixed time step to complete
                     FLAT_ENGINE_API void preUpdate(float deltaTime, unsigned int iterations);
                     // Waits for the physics jobs to be completed
