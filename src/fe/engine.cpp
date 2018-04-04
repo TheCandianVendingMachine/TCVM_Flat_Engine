@@ -321,8 +321,9 @@ void fe::engine::registerLua()
 
         m_scriptManager->getUserTypeHandler().addCustomType<scriptObject>(
             "scriptObject",
-            "applyForce", &scriptObject::applyForce,
-            "getPosition", &scriptObject::getPosition
+            "applyForce", &scriptObject::scriptObjectApplyForce,
+            "getPosition", &scriptObject::scriptObjectGetPosition,
+            "destroy", &scriptObject::scriptObjectDestroy
         );
     }
 

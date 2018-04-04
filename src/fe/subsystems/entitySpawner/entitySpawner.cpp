@@ -188,7 +188,7 @@ fe::Handle fe::entitySpawner::spawn(const char *luaName)
                 entity->getCollider()->m_solid = prefab.m_solid;
                 if (prefab.m_onCollision.valid()) 
                     {
-                        entity->getCollider()->m_collisionCallback = [prefab](const fe::collisionData &data) { prefab.m_onCollision(data); };
+                        entity->getCollider()->m_collisionCallback = [prefab, entity](const fe::collisionData &data) { prefab.m_onCollision(static_cast<fe::scriptObject*>(entity), data); };
                     }
             }
 

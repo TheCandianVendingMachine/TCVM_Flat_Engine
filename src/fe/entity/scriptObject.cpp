@@ -12,7 +12,7 @@ void fe::scriptObject::setEntityDefinition(sol::table table)
         m_entityDefinition = table;
     }
 
-void fe::scriptObject::applyForce(float x, float y)
+void fe::scriptObject::scriptObjectApplyForce(float x, float y)
     {
         if (m_entity->getRigidBody())
             {
@@ -20,7 +20,12 @@ void fe::scriptObject::applyForce(float x, float y)
             }
     }
 
-fe::Vector2d fe::scriptObject::getPosition()
+fe::Vector2d fe::scriptObject::scriptObjectGetPosition()
     {
         return m_entity->getPosition();
+    }
+
+void fe::scriptObject::scriptObjectDestroy()
+    {
+        m_entity->kill(true);
     }

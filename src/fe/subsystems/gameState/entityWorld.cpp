@@ -49,10 +49,19 @@ void fe::entityWorld::postUpdate()
     {
         for (unsigned int i = 0; i < objectCount(); i++)
             {
-                if (m_objects[i] && m_objects[i]->m_enabled)
+                if (m_objects[i])
                     {
-                        m_objects[i]->postUpdate();
-                        m_objects[i]->updateModules();
+                        if (m_objects[i]->m_enabled)
+                            {
+                                m_objects[i]->postUpdate();
+                                m_objects[i]->updateModules();
+                            }
+
+                        if (m_objects[i]->isKilled())
+                            {
+                                removeObject(m_objects[i]->getHandle());
+                                i--;
+                            }
                     }
             }
     }

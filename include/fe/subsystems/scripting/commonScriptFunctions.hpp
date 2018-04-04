@@ -9,6 +9,8 @@
 
 namespace fe
     {
+        class scriptObject;
+
         FLAT_ENGINE_API bool isInputPressed(int input);
         FLAT_ENGINE_API bool isKeyPressed(sf::Keyboard::Key input);
         FLAT_ENGINE_API bool isMousePressed(sf::Mouse::Button input);

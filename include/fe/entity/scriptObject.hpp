@@ -12,15 +12,17 @@ namespace fe
         class scriptObject
             {
                 private:
-                    baseEntity const *m_entity;
+                    baseEntity *const m_entity;
                     sol::table m_entityDefinition;
 
                 public:
                     FLAT_ENGINE_API scriptObject(baseEntity *obj);
                     FLAT_ENGINE_API void setEntityDefinition(sol::table table);
 
-                    FLAT_ENGINE_API void applyForce(float x, float y);
-                    FLAT_ENGINE_API fe::Vector2d getPosition();
+                    FLAT_ENGINE_API void scriptObjectApplyForce(float x, float y);
+                    FLAT_ENGINE_API fe::Vector2d scriptObjectGetPosition();
+
+                    FLAT_ENGINE_API void scriptObjectDestroy();
 
             };
     }
