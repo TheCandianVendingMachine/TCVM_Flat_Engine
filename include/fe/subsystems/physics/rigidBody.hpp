@@ -118,11 +118,14 @@ namespace fe
                             m_velocityX += (m_impulseX / m_mass) * deltaTime;
                             m_velocityY += (m_impulseY / m_mass) * deltaTime;
 
-                            if (m_maxSpeed * m_maxSpeed < m_velocityX * m_velocityX + m_velocityY * m_velocityY)
+                            if (m_maxSpeed * m_maxSpeed < m_velocityX * m_velocityX)
                                 {
-                                    float modifier = std::sqrt((m_maxSpeed * m_maxSpeed) / (m_velocityX * m_velocityX + m_velocityY * m_velocityY));
-                                    m_velocityX *= modifier;
-                                    m_velocityY *= modifier;
+                                    m_velocityX *= std::sqrt((m_maxSpeed * m_maxSpeed) / (m_velocityX * m_velocityX));
+                                }
+
+                            if (m_maxSpeed * m_maxSpeed < m_velocityY * m_velocityY)
+                                {
+                                    m_velocityY *= std::sqrt((m_maxSpeed * m_maxSpeed) / (m_velocityY * m_velocityY));
                                 }
 
                             m_oldPositionX = m_positionX;

@@ -120,7 +120,8 @@ void fe::engine::update()
         m_gameStateMachine->update(m_collisionWorld);
         FE_END_PROFILE;
 
-        unsigned int iterations = static_cast<unsigned int>(std::ceilf(m_accumulator / m_deltaTime));
+        float test = std::floorf(m_accumulator / m_deltaTime);
+        unsigned int iterations = static_cast<unsigned int>(std::floorf(m_accumulator / m_deltaTime));
         FE_ENGINE_PROFILE("engine_update", "physics_preupdate");
         m_physicsEngine->preUpdate(m_deltaTime, iterations);
         FE_END_PROFILE;
