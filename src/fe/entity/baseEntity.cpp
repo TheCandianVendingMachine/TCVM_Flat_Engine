@@ -187,15 +187,15 @@ void fe::baseEntity::updateModules()
             {
                 if (m_collisionBody)
                     {
-                        m_collisionBody->m_aabb.m_globalPositionX = m_renderObject->m_tempTransform.getPosition().x;
-                        m_collisionBody->m_aabb.m_globalPositionY = m_renderObject->m_tempTransform.getPosition().y;
+                        m_collisionBody->m_aabb.m_globalPositionX = m_renderObject->m_transform.getPosition().x;
+                        m_collisionBody->m_aabb.m_globalPositionY = m_renderObject->m_transform.getPosition().y;
                         m_collisionBody->m_moved = true;
                     }
 
                 if (!m_rigidBody)
                     {
-                        m_positionX = m_renderObject->m_tempTransform.getPosition().x;
-                        m_positionY = m_renderObject->m_tempTransform.getPosition().y;
+                        m_positionX = m_renderObject->m_transform.getPosition().x;
+                        m_positionY = m_renderObject->m_transform.getPosition().y;
                     }
             }
     }

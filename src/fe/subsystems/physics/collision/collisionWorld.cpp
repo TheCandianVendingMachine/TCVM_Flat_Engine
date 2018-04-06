@@ -256,7 +256,8 @@ void fe::collisionWorld::handleCollisions(const fe::broadphaseAbstract *broadpha
             {
                 FE_ENGINE_PROFILE("collision_world", "broadphase_compute_partial");
                 for (unsigned int i = 0; i < m_collisionBodies.getObjectAllocCount(); i++)
-                    {
+                    {   
+                        auto body = m_collisionBodies.at(i);
                         if (!m_collisionBodies.at(i)->m_static && m_collisionBodies.at(i)->m_moved && m_collisionBodies.at(i)->m_enabled)
                             {
                                 broadphase->colliderAABB(m_collisionBodies.at(i)->m_aabb, [this, i] (void *otherCollider) { handleCollision(m_collisionBodies.at(i), otherCollider); });

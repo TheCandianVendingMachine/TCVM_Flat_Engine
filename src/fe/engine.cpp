@@ -305,6 +305,7 @@ void fe::engine::registerLua()
         // Register Functions
         m_scriptManager->getFunctionHandler().registerFunction("isInputPressed", &fe::isInputPressed);
         m_scriptManager->getFunctionHandler().registerFunction("setCameraPosition", &fe::setCameraPosition);
+        m_scriptManager->getFunctionHandler().registerFunction("breakToDebugger", &fe::breakToDebugger);
 
         // Register Objects
         m_scriptManager->getUserTypeHandler().addCustomType<fe::Vector2d>(
