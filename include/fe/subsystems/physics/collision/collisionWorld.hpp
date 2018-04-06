@@ -28,6 +28,8 @@ namespace fe
                     FLAT_ENGINE_API void handleCollision(void *leftCollider, void *rightCollider);
                     FLAT_ENGINE_API void handleCollision(void *collider, fe::str event); // point collision
 
+                    FLAT_ENGINE_API void sendCollisionData(fe::collisionData &dataA, fe::collisionData &dataB, fe::collider *a, fe::collider *b);
+
                 public:
                     FLAT_ENGINE_API collisionWorld();
 

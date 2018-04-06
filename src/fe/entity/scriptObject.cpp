@@ -12,6 +12,11 @@ void fe::scriptObject::setEntityDefinition(sol::table table)
         m_entityDefinition = table;
     }
 
+std::string fe::scriptObject::scriptObjectGetName()
+    {
+        return m_entity->getName();
+    }
+
 void fe::scriptObject::scriptObjectApplyForce(float x, float y)
     {
         if (m_entity->getRigidBody())

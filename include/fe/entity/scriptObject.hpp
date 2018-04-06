@@ -19,6 +19,8 @@ namespace fe
                     FLAT_ENGINE_API scriptObject(baseEntity *obj);
                     FLAT_ENGINE_API void setEntityDefinition(sol::table table);
 
+                    FLAT_ENGINE_API std::string scriptObjectGetName();
+
                     FLAT_ENGINE_API void scriptObjectApplyForce(float x, float y);
                     FLAT_ENGINE_API fe::Vector2d scriptObjectGetPosition();
 

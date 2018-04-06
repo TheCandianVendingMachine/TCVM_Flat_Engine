@@ -55,6 +55,7 @@ fe::Handle fe::handleManager<T, objectCount>::addObject(T object)
 template<typename T, unsigned int objectCount>
 void fe::handleManager<T, objectCount>::removeObject(Handle handle)
     {
+        if (handle < 0 || !m_handles[handle].active) return;
         onRemove(&m_objects[m_handles[handle].handle], m_handles[handle].handle);
         m_handles[handle].active = false;
         m_objects[m_handles[handle].handle] = T();
@@ -63,6 +64,7 @@ void fe::handleManager<T, objectCount>::removeObject(Handle handle)
 template<typename T, unsigned int objectCount>
 bool fe::handleManager<T, objectCount>::handleActive(Handle handle)
     {
+        if (handle < 0) return false;
         return m_handles[handle]->active;
     }
 
@@ -71,7 +73,7 @@ inline void fe::handleManager<T, objectCount>::clearAllObjects()
     {
         for (unsigned int i = 0; i < m_maxIndex; i++)
             {
-                onRemove(&m_objects[i], -1);
+                removeObject(i);
             }
 
         handleObjectList *handle = &m_baseHandleList;
@@ -88,5 +90,6 @@ inline void fe::handleManager<T, objectCount>::clearAllObjects()
 template<typename T, unsigned int objectCount>
 T fe::handleManager<T, objectCount>::getObject(Handle handle) const
     {
+        if (handle < 0) return T();
         return m_objects[m_handles[handle].handle];
     }

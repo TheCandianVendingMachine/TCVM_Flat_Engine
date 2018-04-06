@@ -8,11 +8,13 @@
 
 void fe::entityWorld::onAdd(fe::baseEntity **object, fe::Handle objectHandle)
     {
+        if (objectHandle < 0) return;
         (*object)->setHandle(objectHandle);
     }
 
 void fe::entityWorld::onRemove(fe::baseEntity **object, fe::Handle objectHandle)
     {
+        if (objectHandle < 0) return;
         (*object)->deinitialize(m_gameWorld);
     }
 
@@ -135,6 +137,7 @@ void fe::entityWorld::serialize(fe::serializerID &serializer)
 
 void fe::entityWorld::deserialize(fe::serializerID &serializer)
     {
+        clearAllObjects();
         while (serializer.listHasItems("entities"))
             {
                 entityRepresentation entity;

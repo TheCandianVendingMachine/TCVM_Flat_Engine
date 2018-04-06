@@ -77,6 +77,16 @@ float fe::rigidBody::getPositionY() const
         return m_positionY;
     }
 
+float fe::rigidBody::getOldPositionX() const
+    {
+        return m_oldPositionX;
+    }
+
+float fe::rigidBody::getOldPositionY() const
+    {
+        return m_oldPositionY;
+    }
+
 float fe::rigidBody::getNormalForceX() const
     {
         return m_normalForceX;
