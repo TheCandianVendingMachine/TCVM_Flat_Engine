@@ -153,6 +153,11 @@ void fe::baseEntity::update()
         m_entityScriptObject->update(this);
     }
 
+void fe::baseEntity::fixedUpdate(float deltaTime)
+    {
+        m_entityScriptObject->fixedUpdate(this, deltaTime);
+    }
+
 void fe::baseEntity::postUpdate()
     {
         m_entityScriptObject->postUpdate(this);

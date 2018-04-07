@@ -68,6 +68,8 @@ namespace fe
                     FLAT_ENGINE_API virtual void update() {}
                     FLAT_ENGINE_API void updateDefined(collisionWorld *collisionWorld);
                     FLAT_ENGINE_API void postUpdateDefined();
+                    FLAT_ENGINE_API virtual void fixedUpdate(float deltaTime) {}
+                    FLAT_ENGINE_API void fixedUpdateDefined(float deltaTime);
                     FLAT_ENGINE_API void updateCamera(float deltaTime, int iterations);
                     FLAT_ENGINE_API virtual void postUpdate() {}
 

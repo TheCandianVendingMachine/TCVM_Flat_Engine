@@ -99,6 +99,12 @@ void fe::baseGameState::postUpdateDefined()
             }
     }
 
+void fe::baseGameState::fixedUpdateDefined(float deltaTime)
+    {
+        fixedUpdate(deltaTime);
+        m_gameWorld.fixedUpdate(deltaTime);
+    }
+
 void fe::baseGameState::updateCamera(float deltaTime, int iterations)
     {
         if (m_paused) return;

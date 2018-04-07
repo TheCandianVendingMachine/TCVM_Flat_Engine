@@ -47,6 +47,17 @@ void fe::entityWorld::update(collisionWorld *collisionWorld, broadphaseAbstract 
             }
     }
 
+void fe::entityWorld::fixedUpdate(float deltaTime)
+    {
+        for (unsigned int i = 0; i < objectCount(); i++)
+            {
+                if (m_objects[i] && m_objects[i]->m_enabled)
+                    {
+                        m_objects[i]->fixedUpdate(deltaTime);
+                    }
+            }
+    }
+
 void fe::entityWorld::postUpdate()
     {
         for (unsigned int i = 0; i < objectCount(); i++)

@@ -108,6 +108,13 @@ void fe::gameWorld::update(collisionWorld *collisionWorld)
         FE_END_PROFILE;
     }
 
+void fe::gameWorld::fixedUpdate(float deltaTime)
+    {
+        FE_ENGINE_PROFILE("game_world", "entity_fixed_update");
+        m_entityWorld.fixedUpdate(deltaTime);
+        FE_END_PROFILE;
+    }
+
 void fe::gameWorld::postUpdate()
     {
         FE_ENGINE_PROFILE("game_world", "entity_post_update");

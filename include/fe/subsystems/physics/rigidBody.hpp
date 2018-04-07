@@ -121,11 +121,13 @@ namespace fe
                             if (m_maxSpeed * m_maxSpeed < m_velocityX * m_velocityX)
                                 {
                                     m_velocityX *= std::sqrt((m_maxSpeed * m_maxSpeed) / (m_velocityX * m_velocityX));
+                                    m_impulseX = 0.f;
                                 }
 
                             if (m_maxSpeed * m_maxSpeed < m_velocityY * m_velocityY)
                                 {
                                     m_velocityY *= std::sqrt((m_maxSpeed * m_maxSpeed) / (m_velocityY * m_velocityY));
+                                    m_impulseY = 0.f;
                                 }
 
                             m_oldPositionX = m_positionX;

@@ -15,7 +15,7 @@ bool fe::isInputPressed(int input)
 
 bool fe::isKeyPressed(sf::Keyboard::Key input)
     {
-        return sf::Keyboard::isKeyPressed(input);
+        return fe::engine::get().getInputManager().isKeyPressed(input);
     }
 
 bool fe::isMousePressed(sf::Mouse::Button input)

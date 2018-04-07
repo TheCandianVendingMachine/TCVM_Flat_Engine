@@ -46,6 +46,7 @@ namespace fe
 
                     FLAT_ENGINE_API void preUpdate();
                     FLAT_ENGINE_API void update(collisionWorld *collisionWorld, broadphaseAbstract *dynamicBroadphase);
+                    FLAT_ENGINE_API void fixedUpdate(float deltaTime);
                     FLAT_ENGINE_API void postUpdate();
 
                     FLAT_ENGINE_API fe::baseEntity *addGameObject(fe::entityModules modules, fe::userEntityObject *scriptObject, int connected = -1, const fe::fontData &data = fe::fontData());

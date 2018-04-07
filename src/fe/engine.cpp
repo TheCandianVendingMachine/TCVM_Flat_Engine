@@ -131,6 +131,7 @@ void fe::engine::update()
         while (m_accumulator >= m_deltaTime)
             {
                 m_inputManager->handleKeyPress();
+                m_gameStateMachine->fixedUpdate(m_deltaTime);
                 m_accumulator -= m_deltaTime;
                 ++iterationTest;
             }

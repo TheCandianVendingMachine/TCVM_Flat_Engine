@@ -41,6 +41,12 @@ void fe::userEntityObject::update(fe::scriptObject *object)
         m_update.call(*object);
     }
 
+void fe::userEntityObject::fixedUpdate(fe::scriptObject *object, float deltaTime)
+    {
+        if (!m_fixedUpdate.valid()) return;
+        m_fixedUpdate.call(*object, deltaTime);
+    }
+
 void fe::userEntityObject::postUpdate(fe::scriptObject *object)
     {
         if (!m_postUpdate.valid()) return;
@@ -60,6 +66,11 @@ void fe::userEntityObject::setOnRemove(const sol::protected_function &func)
 void fe::userEntityObject::setUpdate(const sol::protected_function &func)
     {
         m_update = func;
+    }
+
+void fe::userEntityObject::setFixedUpdate(const sol::protected_function &func)
+    {
+        m_fixedUpdate = func;
     }
 
 void fe::userEntityObject::setPostUpdate(const sol::protected_function &func)

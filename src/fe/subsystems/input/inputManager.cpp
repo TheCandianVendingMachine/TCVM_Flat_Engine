@@ -138,6 +138,18 @@ void fe::inputManager::handleEvents(const sf::Event &event)
                             }
                     }
             }
+
+        switch (event.type)
+            {
+                case sf::Event::KeyPressed:
+                    m_realtimeKeyPressed[event.key.code] = true;
+                    break;
+                case sf::Event::KeyReleased:
+                    m_realtimeKeyPressed[event.key.code] = false;
+                    break;
+                default:
+                    break;
+            }
     }
 
 void fe::inputManager::handleKeyPress()
@@ -306,4 +318,13 @@ void fe::inputManager::setActive(sf::Mouse::Wheel wheel, bool active)
 void fe::inputManager::setActive(fe::Handle handle, bool active)
     {
         getObject(handle)->m_frozen = !active;
+    }
+
+bool fe::inputManager::isKeyPressed(sf::Keyboard::Key key) const
+    {
+        if (m_realtimeKeyPressed.find(key) != m_realtimeKeyPressed.end())
+            {
+                return m_realtimeKeyPressed.find(key)->second;
+            }
+        return false;
     }

@@ -177,8 +177,7 @@ void fe::rigidBody::applyForce(float x, float y)
 
 void fe::rigidBody::applyForce(fe::lightVector2d force)
     {
-        m_impulseX += force.x;
-        m_impulseY += force.y;
+        applyForce(force.x, force.y);
     }
 
 void fe::rigidBody::setVelocity(float x, float y)
@@ -189,8 +188,8 @@ void fe::rigidBody::setVelocity(float x, float y)
 
 void fe::rigidBody::setVelocity(fe::lightVector2d velocity)
     {
-        m_velocityX += velocity.x;
-        m_velocityY += velocity.y;
+        m_velocityX = velocity.x;
+        m_velocityY = velocity.y;
     }
 
 void fe::rigidBody::setForce(float x, float y)

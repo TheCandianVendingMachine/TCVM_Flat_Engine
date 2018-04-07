@@ -15,6 +15,7 @@ namespace fe
                     sol::protected_function m_onAdd;
                     sol::protected_function m_onRemove;
                     sol::protected_function m_update;
+                    sol::protected_function m_fixedUpdate;
                     sol::protected_function m_postUpdate;
 
                     unsigned int m_index;
@@ -30,11 +31,13 @@ namespace fe
                     FLAT_ENGINE_API void onAdd(fe::scriptObject *object, fe::gameWorld &world);
                     FLAT_ENGINE_API void onRemove(fe::scriptObject *object, fe::gameWorld &world);
                     FLAT_ENGINE_API void update(fe::scriptObject *object);
+                    FLAT_ENGINE_API void fixedUpdate(fe::scriptObject *object, float deltaTime);
                     FLAT_ENGINE_API void postUpdate(fe::scriptObject *object);
 
                     FLAT_ENGINE_API void setOnAdd(const sol::protected_function &func);
                     FLAT_ENGINE_API void setOnRemove(const sol::protected_function &func);
                     FLAT_ENGINE_API void setUpdate(const sol::protected_function &func);
+                    FLAT_ENGINE_API void setFixedUpdate(const sol::protected_function &func);
                     FLAT_ENGINE_API void setPostUpdate(const sol::protected_function &func);
             };
     }

@@ -19,6 +19,8 @@ namespace fe
                     std::unordered_map<sf::Event::EventType, std::vector<fe::Handle>> m_eventInputs;
                     std::vector<fe::Handle> m_realtimeInputs;
 
+                    std::unordered_map<sf::Keyboard::Key, bool> m_realtimeKeyPressed;
+
                     static inputManager *m_instance;
 
                     FLAT_ENGINE_API bool correctInputEvent(sf::Keyboard::Key key, const sf::Event &event);
@@ -54,6 +56,8 @@ namespace fe
                     FLAT_ENGINE_API void setActive(sf::Mouse::Button button, bool active);
                     FLAT_ENGINE_API void setActive(sf::Mouse::Wheel wheel, bool active);
                     FLAT_ENGINE_API void setActive(fe::Handle handle, bool active);
+
+                    FLAT_ENGINE_API bool isKeyPressed(sf::Keyboard::Key key) const;
 
                     FLAT_ENGINE_API ~inputManager() {}
 

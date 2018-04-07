@@ -203,6 +203,23 @@ void fe::gameStateMachine::update(collisionWorld *collisionWorld)
         FE_END_PROFILE;
     }
 
+void fe::gameStateMachine::fixedUpdate(float deltaTime)
+    {
+        FE_ENGINE_PROFILE("gameStateMachine", "fixedUpdate");
+        if (m_endState && m_endState->m_currentState)
+            {
+                m_endState->m_currentState->fixedUpdateDefined(deltaTime);
+
+                stateList *tail = m_endState->m_tail;
+                while (tail && tail->m_currentState && tail->m_options & stateOptions::UPDATE_UNDERNEATH)
+                    {
+                        tail->m_currentState->fixedUpdateDefined(deltaTime);
+                        tail = tail->m_tail;
+                    }
+            }
+        FE_END_PROFILE;
+    }
+
 void fe::gameStateMachine::postUpdate()
     {
         FE_ENGINE_PROFILE("gameStateMachine", "postupdateUserState");

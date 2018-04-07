@@ -41,6 +41,11 @@ void fe::entitySpawner::createPrefab(const char *luaName)
                 prefab.m_postUpdate = luaTable["postUpdate"];
             }
 
+        if (luaTable["fixedUpdate"].get_type() == sol::type::function)
+            {
+                prefab.m_fixedUpdate = luaTable["fixedUpdate"];
+            }
+
         if (luaTable["onAdd"].get_type() == sol::type::function)
             {
                 prefab.m_onAdd = luaTable["onAdd"];
@@ -171,6 +176,7 @@ fe::Handle fe::entitySpawner::spawn(const char *luaName)
         object->setOnRemove(prefab.m_onRemove);
         object->setUpdate(prefab.m_update);
         object->setPostUpdate(prefab.m_postUpdate);
+        object->setFixedUpdate(prefab.m_fixedUpdate);
 
         fe::Handle objectHandle = m_world->addGameObject(prefab.m_modules, object, prefab.m_connected, prefab.m_font);
         fe::baseEntity *entity = m_world->getObject(objectHandle);
