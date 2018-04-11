@@ -21,11 +21,14 @@ namespace fe
 
                     FLAT_ENGINE_API std::string scriptObjectGetName();
 
+                    FLAT_ENGINE_API void scriptObjectSetVelocity(float x, float y);
+                    FLAT_ENGINE_API void scriptObjectSetForce(float x, float y);
                     FLAT_ENGINE_API void scriptObjectApplyForce(float x, float y);
                     FLAT_ENGINE_API fe::Vector2d scriptObjectGetPosition();
 
                     FLAT_ENGINE_API void scriptObjectDestroy();
 
+                    FLAT_ENGINE_API fe::Vector2d scriptObjectGetVelocity();
                     FLAT_ENGINE_API fe::Vector2d scriptObjectGetNormalForce();
                     FLAT_ENGINE_API fe::Vector2d scriptObjectGetForce();
 

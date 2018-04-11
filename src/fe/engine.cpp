@@ -1,6 +1,7 @@
 #include "fe/engine.hpp"
 #include "fe/subsystems/gameState/gameStateMachine.hpp"
 #include "fe/subsystems/messaging/eventSender.hpp"
+#include "fe/subsystems/messaging/gameEvent.hpp"
 #include "fe/subsystems/input/inputManager.hpp"
 #include "fe/subsystems/resourceManager/resourceManager.hpp"
 #include "fe/subsystems/physics/physicsEngine.hpp"
@@ -304,6 +305,15 @@ void fe::engine::registerLua()
             "XButton2",     sf::Mouse::XButton2 + sf::Keyboard::KeyCount
         );
 
+        m_scriptManager->getEnumHandler().registerEnum("gameEventArgumentType",
+            "bool", fe::gameEventArgument::type::TYPE_BOOL,
+            "float", fe::gameEventArgument::type::TYPE_FLOAT,
+            "int", fe::gameEventArgument::type::TYPE_INT,
+            "string", fe::gameEventArgument::type::TYPE_STRING,
+            "uint", fe::gameEventArgument::type::TYPE_UINT,
+            "voidp", fe::gameEventArgument::type::TYPE_VOIDP
+        );
+
         // Register Functions
         m_scriptManager->getFunctionHandler().registerFunction("isInputPressed", &fe::isInputPressed);
         m_scriptManager->getFunctionHandler().registerFunction("setCameraPosition", &fe::setCameraPosition);
@@ -322,14 +332,23 @@ void fe::engine::registerLua()
             "y", &lightVector2d::y
         );
 
+        m_scriptManager->getUserTypeHandler().addCustomType<fe::gameEventArgument>(
+            "gameEventArgument",
+            "getType", &fe::gameEventArgument::argType,
+            "argument", &fe::gameEventArgument::arg
+        );
+
         m_scriptManager->getUserTypeHandler().addCustomType<scriptObject>(
             "scriptObject",
             "getName", &scriptObject::scriptObjectGetName,
+            "setForce", &scriptObject::scriptObjectSetForce,
+            "setVelocity", &scriptObject::scriptObjectSetVelocity,
             "applyForce", &scriptObject::scriptObjectApplyForce,
             "getPosition", &scriptObject::scriptObjectGetPosition,
             "destroy", &scriptObject::scriptObjectDestroy,
             "getNormalForce", &scriptObject::scriptObjectGetNormalForce,
-            "getForce", &scriptObject::scriptObjectGetForce
+            "getForce", &scriptObject::scriptObjectGetForce,
+            "getVelocity", &scriptObject::scriptObjectGetVelocity
         );
     }
 

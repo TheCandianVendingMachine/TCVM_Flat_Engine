@@ -17,6 +17,22 @@ std::string fe::scriptObject::scriptObjectGetName()
         return m_entity->getName();
     }
 
+void fe::scriptObject::scriptObjectSetVelocity(float x, float y)
+    {
+        if (m_entity->getRigidBody())
+            {
+                m_entity->getRigidBody()->setVelocity(x, y);
+            }
+    }
+
+void fe::scriptObject::scriptObjectSetForce(float x, float y)
+    {
+        if (m_entity->getRigidBody())
+            {
+                m_entity->getRigidBody()->setForce(x, y);
+            }
+    }
+
 void fe::scriptObject::scriptObjectApplyForce(float x, float y)
     {
         if (m_entity->getRigidBody())
@@ -33,6 +49,15 @@ fe::Vector2d fe::scriptObject::scriptObjectGetPosition()
 void fe::scriptObject::scriptObjectDestroy()
     {
         m_entity->kill(true);
+    }
+
+fe::Vector2d fe::scriptObject::scriptObjectGetVelocity()
+    {
+        if (m_entity->getRigidBody())
+            {
+                return m_entity->getRigidBody()->getVelocity();
+            }
+        return fe::Vector2d();
     }
 
 fe::Vector2d fe::scriptObject::scriptObjectGetNormalForce()

@@ -3,13 +3,16 @@
 #pragma once
 #define FLAT_ENGINE_EXPORT
 #include "../../flatEngineExport.hpp"
+#include "../messaging/eventHandler.hpp"
+#include "../../typeDefines.hpp"
 #include <sol.hpp>
+#include <unordered_map>
 
 namespace fe
     {
         class gameWorld;
         class scriptObject;
-        class userEntityObject
+        class userEntityObject : public fe::eventHandler
             {
                 private:
                     sol::protected_function m_onAdd;
@@ -18,6 +21,8 @@ namespace fe
                     sol::protected_function m_fixedUpdate;
                     sol::protected_function m_postUpdate;
 
+                    std::unordered_map<fe::str, sol::protected_function> m_events;
+
                     unsigned int m_index;
                     bool m_active;
 
@@ -25,6 +30,7 @@ namespace fe
                     FLAT_ENGINE_API userEntityObject();
 
                     FLAT_ENGINE_API void startUp(unsigned int index);
+                    FLAT_ENGINE_API void shutDown();
                     FLAT_ENGINE_API unsigned int index() const;
                     FLAT_ENGINE_API bool active() const;
 
@@ -39,5 +45,8 @@ namespace fe
                     FLAT_ENGINE_API void setUpdate(const sol::protected_function &func);
                     FLAT_ENGINE_API void setFixedUpdate(const sol::protected_function &func);
                     FLAT_ENGINE_API void setPostUpdate(const sol::protected_function &func);
+
+                    FLAT_ENGINE_API void addEvent(fe::str event, const sol::protected_function &callback);
+                    FLAT_ENGINE_API void handleEvent(const fe::gameEvent &event);
             };
     }

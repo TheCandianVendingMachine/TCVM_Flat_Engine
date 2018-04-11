@@ -1,5 +1,7 @@
 #include "fe/subsystems/entitySpawner/userEntityObject.hpp"
 #include "fe/entity/scriptObject.hpp"
+#include "fe/subsystems/messaging/eventSender.hpp"
+#include "fe/engine.hpp"
 
 fe::userEntityObject::userEntityObject() : 
     m_index(0),
@@ -11,6 +13,11 @@ void fe::userEntityObject::startUp(unsigned int index)
     {
         m_index = index;
         m_active = true;
+    }
+
+void fe::userEntityObject::shutDown()
+    {
+        fe::engine::get().getEventSender().unsubscribeAll(this);
     }
 
 unsigned int fe::userEntityObject::index() const
@@ -76,4 +83,18 @@ void fe::userEntityObject::setFixedUpdate(const sol::protected_function &func)
 void fe::userEntityObject::setPostUpdate(const sol::protected_function &func)
     {
         m_postUpdate = func;
+    }
+
+void fe::userEntityObject::addEvent(fe::str event, const sol::protected_function &callback)
+    {
+        m_events[event] = callback;
+        fe::engine::get().getEventSender().subscribe(this, event);
+    }
+
+void fe::userEntityObject::handleEvent(const fe::gameEvent &event)
+    {
+        if (m_events.find(event.eventType) != m_events.end())
+            {
+                m_events[event.eventType].call(event.argNumber, event.args);
+            }
     }

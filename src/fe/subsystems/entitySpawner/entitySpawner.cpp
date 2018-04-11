@@ -55,6 +55,17 @@ void fe::entitySpawner::createPrefab(const char *luaName)
             {
                 prefab.m_onRemove = luaTable["onRemove"];
             }
+
+        if (luaTable["events"].get_type() == sol::type::table)
+            {
+                luaTable["events"].get<sol::table>().for_each([&prefab](sol::object key, sol::object value)
+                    {
+                        if (value.get_type() == sol::type::function)
+                            {
+                                prefab.m_events[FE_STR(key.as<std::string>().c_str())] = value.as<sol::protected_function>();
+                            }
+                    });
+            }
         
         // Initialize entity variables
         if (luaTable["size"].get_type() == sol::type::table)
@@ -177,6 +188,11 @@ fe::Handle fe::entitySpawner::spawn(const char *luaName)
         object->setUpdate(prefab.m_update);
         object->setPostUpdate(prefab.m_postUpdate);
         object->setFixedUpdate(prefab.m_fixedUpdate);
+        
+        for (auto &event : prefab.m_events)
+            {
+                object->addEvent(event.first, event.second);
+            }
 
         fe::Handle objectHandle = m_world->addGameObject(prefab.m_modules, object, prefab.m_connected, prefab.m_font);
         fe::baseEntity *entity = m_world->getObject(objectHandle);

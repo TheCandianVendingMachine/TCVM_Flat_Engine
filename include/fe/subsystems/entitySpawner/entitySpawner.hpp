@@ -31,6 +31,8 @@ namespace fe
                             sol::protected_function m_onCollision;
                             sol::table m_entityTable;
 
+                            std::unordered_map<fe::str, sol::protected_function> m_events;
+
                             fe::fontData m_font = fe::fontData();
                             sf::Color m_colour;
                             fe::lightVector2<unsigned int> m_size;
