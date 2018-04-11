@@ -18,6 +18,7 @@ namespace fe
                 public:
                     FLAT_ENGINE_API scriptObject(baseEntity *obj);
                     FLAT_ENGINE_API void setEntityDefinition(sol::table table);
+                    FLAT_ENGINE_API fe::baseEntity *getBaseEntity() const;
 
                     FLAT_ENGINE_API std::string scriptObjectGetName();
 

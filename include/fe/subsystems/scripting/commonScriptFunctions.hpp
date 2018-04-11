@@ -15,5 +15,6 @@ namespace fe
         FLAT_ENGINE_API bool isKeyPressed(sf::Keyboard::Key input);
         FLAT_ENGINE_API bool isMousePressed(sf::Mouse::Button input);
         FLAT_ENGINE_API void setCameraPosition(float x, float y);
+        FLAT_ENGINE_API void sendEvent(const char *eventID, sol::variadic_args args);
         FLAT_ENGINE_API void breakToDebugger();
     }

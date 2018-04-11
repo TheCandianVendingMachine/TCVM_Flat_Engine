@@ -12,6 +12,11 @@ void fe::scriptObject::setEntityDefinition(sol::table table)
         m_entityDefinition = table;
     }
 
+fe::baseEntity *fe::scriptObject::getBaseEntity() const
+    {
+        return m_entity;
+    }
+
 std::string fe::scriptObject::scriptObjectGetName()
     {
         return m_entity->getName();
