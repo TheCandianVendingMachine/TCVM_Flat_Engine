@@ -71,7 +71,7 @@ bool fe::handleManager<T, objectCount>::handleActive(Handle handle)
 template<typename T, unsigned int objectCount>
 inline void fe::handleManager<T, objectCount>::clearAllObjects()
     {
-        for (unsigned int i = 0; i < m_maxIndex; i++)
+        for (unsigned int i = 0; i < m_maxIndex + 1; i++)
             {
                 removeObject(i);
             }
