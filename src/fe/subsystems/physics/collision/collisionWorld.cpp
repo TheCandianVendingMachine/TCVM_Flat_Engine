@@ -132,19 +132,6 @@ void fe::collisionWorld::handleCollision(fe::collider *a, fe::collider *b)
                 dataSecond.m_normalX = normal.x;
                 dataSecond.m_normalY = normal.y;
 
-                // Only calling A's collision callback to avoid doubling the calls
-                a->m_collisionCallback(dataFirst);
-
-                if (a->m_eventOnCollision != 0)
-                    {
-                        fe::gameEvent collisionEventLeft(a->m_eventOnCollision, 2);
-                        collisionEventLeft.args[0].argType = fe::gameEventArgument::type::TYPE_VOIDP;
-                        collisionEventLeft.args[1].argType = fe::gameEventArgument::type::TYPE_VOIDP;
-                        collisionEventLeft.args[0].arg.TYPE_VOIDP = a;
-                        collisionEventLeft.args[1].arg.TYPE_VOIDP = b;
-                        fe::engine::get().getEventSender().sendEngineEvent(collisionEventLeft, a->m_eventOnCollision);
-                    }
-
                 fe::gameEvent collisionEventGeneral(COLLISION, 4);
                 collisionEventGeneral.args[0].argType = fe::gameEventArgument::type::TYPE_VOIDP;
                 collisionEventGeneral.args[1].argType = fe::gameEventArgument::type::TYPE_VOIDP;
@@ -157,6 +144,12 @@ void fe::collisionWorld::handleCollision(fe::collider *a, fe::collider *b)
                 collisionEventGeneral.args[3].arg.TYPE_VOIDP = &dataSecond;
 
                 fe::engine::get().getEventSender().sendEngineEvent(collisionEventGeneral, COLLISION);
+
+                m_collisionPairs[m_collisionPairIndex + 0].collider = a;
+                m_collisionPairs[m_collisionPairIndex + 0].data = dataFirst;
+                m_collisionPairs[m_collisionPairIndex + 1].collider = b;
+                m_collisionPairs[m_collisionPairIndex + 1].data = dataSecond;
+                m_collisionPairIndex += 2;
             }
         FE_END_PROFILE;
     }
@@ -189,7 +182,7 @@ void fe::collisionWorld::handleCollision(void *collider, fe::str event)
         static_cast<fe::collider*>(collider)->m_collisionCallback(a);
     }
 
-fe::collisionWorld::collisionWorld() : m_maxPointIndex(0)
+fe::collisionWorld::collisionWorld() : m_maxPointIndex(0), m_collisionPairIndex(0)
     {
     }
 
@@ -244,13 +237,68 @@ void fe::collisionWorld::handleCollisions(const fe::broadphaseAbstract *broadpha
                     }
                 FE_END_PROFILE;
 
+                FE_ENGINE_PROFILE("collision_world", "cull_collision_pairs");
+                for (unsigned int i = 0; i < m_collisionPairIndex; i += 2)
+                    {
+                        for (unsigned int j = i + 2; j < m_collisionPairIndex; j += 2)
+                            {
+                                // If the collision pairs have the same data like this, then the colliders are flipped
+                                // and duplicate collider pairs exist
+                                if (m_collisionPairs[i + 0].collider == m_collisionPairs[j + 1].collider &&
+                                    m_collisionPairs[i + 1].collider == m_collisionPairs[j + 0].collider)
+                                    {
+                                        m_collisionPairs[i + 0].collider = nullptr;
+                                        m_collisionPairs[i + 1].collider = nullptr;
+                                        break;
+                                    }
+                            }
+                    }
+                FE_END_PROFILE;
+
+                FE_ENGINE_PROFILE("collision_world", "broadphase_handle_collision_pairs_partial");
+                for (unsigned int i = 0; i < m_collisionPairIndex; i += 2)
+                    {
+                        if (!m_collisionPairs[i + 0].collider || !m_collisionPairs[i + 1].collider)
+                            {
+                                continue;
+                            }
+                        fe::collider *a = m_collisionPairs[i + 0].collider;
+                        fe::collider *b = m_collisionPairs[i + 1].collider;
+
+                        a->m_collisionCallback(m_collisionPairs[i + 0].data);
+                        b->m_collisionCallback(m_collisionPairs[i + 1].data);
+
+                        if (a->m_eventOnCollision != 0)
+                            {
+                                fe::gameEvent collisionEventLeft(a->m_eventOnCollision, 2);
+                                collisionEventLeft.args[0].argType = fe::gameEventArgument::type::TYPE_VOIDP;
+                                collisionEventLeft.args[1].argType = fe::gameEventArgument::type::TYPE_VOIDP;
+                                collisionEventLeft.args[0].arg.TYPE_VOIDP = a;
+                                collisionEventLeft.args[1].arg.TYPE_VOIDP = b;
+                                fe::engine::get().getEventSender().sendEngineEvent(collisionEventLeft, a->m_eventOnCollision);
+                            }
+
+                        if (b->m_eventOnCollision != 0)
+                            {
+                                fe::gameEvent collisionEventLeft(b->m_eventOnCollision, 2);
+                                collisionEventLeft.args[0].argType = fe::gameEventArgument::type::TYPE_VOIDP;
+                                collisionEventLeft.args[1].argType = fe::gameEventArgument::type::TYPE_VOIDP;
+                                collisionEventLeft.args[0].arg.TYPE_VOIDP = b;
+                                collisionEventLeft.args[1].arg.TYPE_VOIDP = a;
+                                fe::engine::get().getEventSender().sendEngineEvent(collisionEventLeft, b->m_eventOnCollision);
+                            }
+                    }
+                FE_END_PROFILE;
+
                 FE_ENGINE_PROFILE("collision_world", "broadphase_compute_point_collision_partial");
                 for (unsigned int i = 0; i < m_maxPointIndex; i++)
                     {
                         handleCollision(broadphase->colliderAtPoint(m_pointCollision[i].position), m_pointCollision[i].event);
                     }
                 FE_END_PROFILE;
+
             }
+        m_collisionPairIndex = 0;
         m_maxPointIndex = 0;
     }
 

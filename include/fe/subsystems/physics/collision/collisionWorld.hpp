@@ -24,11 +24,16 @@ namespace fe
                         } m_pointCollision[512];
                     unsigned int m_maxPointIndex;
 
+                    struct 
+                        {
+                            fe::collider *collider;
+                            fe::collisionData data;
+                        } m_collisionPairs[FE_MAX_GAME_OBJECTS * 2];
+                    unsigned int m_collisionPairIndex;
+
                     FLAT_ENGINE_API void handleCollision(fe::collider *a, fe::collider *b);
                     FLAT_ENGINE_API void handleCollision(void *leftCollider, void *rightCollider);
                     FLAT_ENGINE_API void handleCollision(void *collider, fe::str event); // point collision
-
-                    FLAT_ENGINE_API void sendCollisionData(fe::collisionData &dataA, fe::collisionData &dataB, fe::collider *a, fe::collider *b);
 
                 public:
                     FLAT_ENGINE_API collisionWorld();
