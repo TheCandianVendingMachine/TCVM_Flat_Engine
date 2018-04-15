@@ -73,6 +73,8 @@ void fe::baseEntity::deinitialize(fe::gameWorld &world)
                 fe::engine::get().getCollisionWorld().deleteCollider(m_collisionBody);
                 m_collisionBody = nullptr;
             }
+
+        m_entityScriptObject->shutDown();
     }
 
 void fe::baseEntity::onAdd(fe::gameWorld &world)

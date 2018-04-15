@@ -132,38 +132,17 @@ void fe::collisionWorld::handleCollision(fe::collider *a, fe::collider *b)
                 dataSecond.m_normalX = normal.x;
                 dataSecond.m_normalY = normal.y;
 
+                // Only calling A's collision callback to avoid doubling the calls
                 a->m_collisionCallback(dataFirst);
 
-                if (a->m_eventOnCollision == b->m_eventOnCollision && a->m_eventOnCollision != 0)
+                if (a->m_eventOnCollision != 0)
                     {
-                        fe::gameEvent collisionEvent(a->m_eventOnCollision, 2);
-                        collisionEvent.args[0].argType = fe::gameEventArgument::type::TYPE_VOIDP;
-                        collisionEvent.args[1].argType = fe::gameEventArgument::type::TYPE_VOIDP;
-                        collisionEvent.args[0].arg.TYPE_VOIDP = a;
-                        collisionEvent.args[1].arg.TYPE_VOIDP = b;
-                        fe::engine::get().getEventSender().sendEngineEvent(collisionEvent, a->m_eventOnCollision);
-                    }
-                else
-                    {
-                        if (a->m_eventOnCollision != 0) 
-                            {
-                                fe::gameEvent collisionEventLeft(a->m_eventOnCollision, 2);
-                                collisionEventLeft.args[0].argType = fe::gameEventArgument::type::TYPE_VOIDP;
-                                collisionEventLeft.args[1].argType = fe::gameEventArgument::type::TYPE_VOIDP;
-                                collisionEventLeft.args[0].arg.TYPE_VOIDP = a;
-                                collisionEventLeft.args[1].arg.TYPE_VOIDP = b;
-                                fe::engine::get().getEventSender().sendEngineEvent(collisionEventLeft, a->m_eventOnCollision);
-                            }
-
-                        if (b->m_eventOnCollision != 0) 
-                            {
-                                fe::gameEvent collisionEventLeft(b->m_eventOnCollision, 2);
-                                collisionEventLeft.args[0].argType = fe::gameEventArgument::type::TYPE_VOIDP;
-                                collisionEventLeft.args[1].argType = fe::gameEventArgument::type::TYPE_VOIDP;
-                                collisionEventLeft.args[0].arg.TYPE_VOIDP = b;
-                                collisionEventLeft.args[1].arg.TYPE_VOIDP = a;
-                                fe::engine::get().getEventSender().sendEngineEvent(collisionEventLeft, b->m_eventOnCollision);
-                            }
+                        fe::gameEvent collisionEventLeft(a->m_eventOnCollision, 2);
+                        collisionEventLeft.args[0].argType = fe::gameEventArgument::type::TYPE_VOIDP;
+                        collisionEventLeft.args[1].argType = fe::gameEventArgument::type::TYPE_VOIDP;
+                        collisionEventLeft.args[0].arg.TYPE_VOIDP = a;
+                        collisionEventLeft.args[1].arg.TYPE_VOIDP = b;
+                        fe::engine::get().getEventSender().sendEngineEvent(collisionEventLeft, a->m_eventOnCollision);
                     }
 
                 fe::gameEvent collisionEventGeneral(COLLISION, 4);
