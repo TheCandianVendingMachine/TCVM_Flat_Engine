@@ -15,6 +15,10 @@ void fe::entityWorld::onAdd(fe::baseEntity **object, fe::Handle objectHandle)
 void fe::entityWorld::onRemove(fe::baseEntity **object, fe::Handle objectHandle)
     {
         if (objectHandle < 0) return;
+        if (m_gameWorld.getDynamicBroadphase())
+            {
+                m_gameWorld.getDynamicBroadphase()->remove((*object)->getCollider());
+            }
         (*object)->deinitialize(m_gameWorld);
     }
 
