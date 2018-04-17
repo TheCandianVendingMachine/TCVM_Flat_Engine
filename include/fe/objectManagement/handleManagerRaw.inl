@@ -1,5 +1,6 @@
 // handleManagerRaw.inl
 // defines the raw array version of the handle manager
+#include <algorithm>
 template<typename T, unsigned int objectCount>
 fe::handleManager<T, objectCount>::handleManager()
     {
@@ -47,7 +48,7 @@ fe::Handle fe::handleManager<T, objectCount>::addObject(T object)
 
         testHandle->m_handle->active = true;
         m_objects[testHandle->m_handle->handle] = object;
-        m_maxIndex = testHandle->m_handle->handle + 1;
+        m_maxIndex = std::max(static_cast<unsigned int>(testHandle->m_handle->handle + 1), m_maxIndex);
         onAdd(&object, testHandle->m_handle->handle);
         return testHandle->m_handle->handle;
     }
