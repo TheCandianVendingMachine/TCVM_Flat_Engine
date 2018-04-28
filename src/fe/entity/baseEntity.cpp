@@ -25,7 +25,8 @@ fe::baseEntity::baseEntity(fe::entityModules modules, fe::userEntityObject *scri
     m_colour(sf::Color::White),
     m_enabledModulesEnum(modules),
     m_entityScriptObject(scriptObject),
-    scriptObject(this)
+    scriptObject(this),
+    m_baseEntityUtility(this)
 {}
 
 void fe::baseEntity::initialize(fe::gameWorld &world, int connected, const fe::fontData &font)
@@ -152,6 +153,7 @@ void fe::baseEntity::onDestroy(fe::baseGameState &state)
 
 void fe::baseEntity::update()
     {
+        m_baseEntityUtility.update();
         m_entityScriptObject->update(this);
     }
 
@@ -327,6 +329,11 @@ fe::collider *fe::baseEntity::getCollider() const
 fe::entityModules fe::baseEntity::getModules() const
     {
         return m_enabledModulesEnum;
+    }
+
+fe::baseEntityUtilities &fe::baseEntity::getUtilities()
+    {
+        return m_baseEntityUtility;
     }
 
 void fe::baseEntity::createModules(fe::baseGameState &currentState)

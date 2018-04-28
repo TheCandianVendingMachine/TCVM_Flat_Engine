@@ -4,10 +4,10 @@
 
 int fe::graph::addNode()
     {
-        return addObject(new node);
+        return addObject(new ai::node);
     }
 
-void fe::graph::onAdd(node **object, fe::Handle objectHandle)
+void fe::graph::onAdd(ai::node **object, fe::Handle objectHandle)
     {
         (*object)->m_handle = objectHandle;
     }
@@ -23,7 +23,7 @@ int fe::graph::addNode(float posX, float posY, float cost)
 
 void fe::graph::removeNode(int nodeHandle)
     {
-        node *node = getObject(nodeHandle);
+        ai::node *node = getObject(nodeHandle);
 
         for (auto &connection : node->m_connectedNodes)
             {
@@ -50,7 +50,7 @@ void fe::graph::removeEdge(int nodeID, int edge)
         node->m_connectedNodes.erase(std::remove(node->m_connectedNodes.begin(), node->m_connectedNodes.end(), edge), node->m_connectedNodes.end());
     }
 
-fe::node *fe::graph::getNode(int nodeID)
+fe::ai::node *fe::graph::getNode(int nodeID)
     {
         return getObject(nodeID);
     }
@@ -79,15 +79,15 @@ void fe::graph::deserialize(fe::serializerID &serializer)
     {
         while (serializer.listHasItems("nodes"))
             {
-                node tempData;
+                ai::node tempData;
                 serializer.readObjectList("nodes", tempData);
 
-                node *temp = getNode(addObject(new node, tempData.m_handle));
+                ai::node *temp = getNode(addObject(new ai::node, tempData.m_handle));
                 (*temp) = tempData;
             }
     }
 
-void fe::node::serialize(fe::serializerID &serializer) const
+void fe::ai::node::serialize(fe::serializerID &serializer) const
     {
         serializer.write("parent", m_parent);
         serializer.write("handle", m_handle);
@@ -102,7 +102,7 @@ void fe::node::serialize(fe::serializerID &serializer) const
             }
     }
 
-void fe::node::deserialize(fe::serializerID &serializer)
+void fe::ai::node::deserialize(fe::serializerID &serializer)
     {
         m_parent = serializer.read<int>("parent");
         m_handle = serializer.read<int>("handle");
@@ -117,7 +117,7 @@ void fe::node::deserialize(fe::serializerID &serializer)
             }
     }
 
-fe::node &fe::node::operator=(const node &rhs)
+fe::ai::node &fe::ai::node::operator=(const node &rhs)
     {
         if (this != &rhs)
             {

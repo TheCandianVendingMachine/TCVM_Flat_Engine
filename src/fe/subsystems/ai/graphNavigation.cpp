@@ -1,17 +1,18 @@
+#include "fe/subsystems/ai/graphNavigation.hpp"
 #include "fe/subsystems/ai/graph.hpp"
-#include "fe/subsystems/ai/graph.hpp"
+#include "fe/subsystems/ai/node.hpp"
 #include <queue>
 #include <memory>
 #include <algorithm>
 
-std::vector<int> fe::graphNav::aStar(graph &graph, int start, int end, float alpha)
+void fe::graphNav::aStar(std::vector<int> &&waypoints, graph &graph, int start, int end, float alpha)
     {
         std::vector<unsigned int> open;
         std::vector<unsigned int> closed;
 
         open.push_back(start);
         int current = start;
-        node *endNode = graph.getNode(end);
+        ai::node *endNode = graph.getNode(end);
 
         const float H_COST_MOD = 1.f;
 
@@ -55,15 +56,12 @@ std::vector<int> fe::graphNav::aStar(graph &graph, int start, int end, float alp
                     }
             }
         
-        std::vector<int> path;
-        path.push_back(end);
-        node *currentNode = endNode;
+        waypoints.push_back(end);
+        ai::node *currentNode = endNode;
         while (currentNode->m_parent >= 0)
             {
-                path.push_back(currentNode->m_parent);
+                waypoints.push_back(currentNode->m_parent);
                 currentNode = graph.getNode(currentNode->m_parent);
             }
-        std::reverse(path.begin(), path.end());
-
-        return path;
+        std::reverse(waypoints.begin(), waypoints.end());
     }

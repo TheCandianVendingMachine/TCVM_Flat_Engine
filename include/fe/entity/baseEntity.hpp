@@ -10,6 +10,7 @@
 #include "../subsystems/resourceManager/fontData.hpp"
 #include "scriptObject.hpp"
 #include "entityModules.hpp"
+#include "baseEntityUtilities.hpp"
 #include <SFML/Graphics/Color.hpp>
 #include <string>
 
@@ -25,6 +26,8 @@ namespace fe
         class baseEntity : public fe::guid, private fe::scriptObject
             {
                 protected:
+                    fe::baseEntityUtilities m_baseEntityUtility;
+
                     fe::sceneGraphObject *m_renderObject;
                     fe::rigidBody *m_rigidBody;
                     fe::collider *m_collisionBody;
@@ -107,6 +110,8 @@ namespace fe
                     FLAT_ENGINE_API fe::collider *getCollider() const;
 
                     FLAT_ENGINE_API fe::entityModules getModules() const;
+
+                    FLAT_ENGINE_API fe::baseEntityUtilities &getUtilities();
 
                     FLAT_ENGINE_API void createModules(fe::baseGameState &currentState);
 
