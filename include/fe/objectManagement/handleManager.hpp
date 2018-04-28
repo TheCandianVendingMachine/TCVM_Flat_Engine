@@ -42,7 +42,7 @@ namespace fe
 
                 protected:
                     T m_objects[TObjectCount];
-                    T *getObjects();
+                    const T *getObjects() const;
                     fe::Handle getHandle(T object);
 
                     virtual void onAdd(T *object, fe::Handle objectHandle) {}
@@ -54,6 +54,7 @@ namespace fe
                     inline unsigned int objectCount() { return m_maxIndex; }
 
                     Handle addObject(T object);
+                    Handle addObject(T object, Handle handle);
                     void removeObject(Handle handle);
                     bool handleActive(Handle handle);
                     void clearAllObjects();
@@ -76,6 +77,7 @@ namespace fe
                             Handle handle; // Index to the object
                             bool active;
 
+                            handleObject() : handle(0), active(false) {}
                             handleObject(Handle handle) : handle(handle), active(true) {}
                         };
 
@@ -83,7 +85,7 @@ namespace fe
 
                 protected:
                     std::vector<T> m_objects;
-                    std::vector<T> &getObjects();
+                    const std::vector<T> &getObjects() const;
                     typename std::vector<T>::iterator removeHandle(Handle handle);
 
                     fe::Handle getHandle(T object);
@@ -93,6 +95,7 @@ namespace fe
 
                 public:
                     Handle addObject(T object);
+                    Handle addObject(T object, Handle handle);
                     void removeObject(Handle handle);
                     bool handleActive(Handle handle);
                     void clearAllObjects();

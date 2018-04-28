@@ -2,7 +2,7 @@
 // handleManagerVector.inl
 // defines for the vector version of the handle manager
 template<typename T>
-inline std::vector<T> &fe::handleManager<T, 0>::getObjects()
+inline const std::vector<T> &fe::handleManager<T, 0>::getObjects() const
     {
         return m_objects;
     }
@@ -13,14 +13,19 @@ typename std::vector<T>::iterator fe::handleManager<T, 0>::removeHandle(Handle h
         auto it = m_objects.erase(m_objects.begin() + m_handles[handle].handle); 
         m_handles[handle].active = false;
 
+        fe::Handle arrayHandle = m_handles[handle].handle;
+
         // since we are erasing an entity, all handles above it will become invalid. To prevent this, we will subtract all handles
         // above and including the current one by one.
-        for (auto it = m_handles.begin() + handle; it != m_handles.end(); ++it) 
+        for (auto it = m_handles.begin(); it != m_handles.end(); ++it) 
             {
-                it->handle -= 1;
-                if (it->handle < 0)
+                if (it->handle >= arrayHandle)
                     {
-                        it->active = false;
+                        it->handle -= 1;
+                        if (it->handle < 0)
+                            {
+                                it->active = false;
+                            }
                     }
             }
 
@@ -47,18 +52,48 @@ fe::Handle fe::handleManager<T, 0>::getHandle(T object)
     }
 
 template<typename T>
+fe::Handle fe::handleManager<T, 0>::addObject(T object, Handle handle)
+    {
+        if (m_handles.size() <= handle)
+            {
+                m_handles.resize(handle);
+                return addObject(object);
+            }
+        
+        m_objects.push_back(object);
+        m_handles[handle].handle = m_objects.size() - 1;
+        m_handles[handle].active = true;
+
+        onAdd(&m_objects.back(), handle);
+
+        return handle;
+    }
+
+template<typename T>
 fe::Handle fe::handleManager<T, 0>::addObject(T object)
     {
         m_objects.push_back(object);
         m_handles.push_back(handleObject(static_cast<fe::Handle>(m_objects.size() - 1)));
-        onAdd(&m_objects.back(), static_cast<fe::Handle>(m_handles.size() - 1));
-        return static_cast<fe::Handle>(m_handles.size() - 1);
+
+        fe::Handle retHandle = fe::Handle(m_handles.size() - 1);
+
+        onAdd(&m_objects.back(), retHandle);
+        return retHandle;
     }
 
 template<typename T>
 void fe::handleManager<T, 0>::removeObject(Handle handle)
     {
-        if (handle < 0) return;
+        if (handle < 0) 
+            {
+                FE_LOG_WARNING("Invalid Handle");
+                return;
+            }
+        if (m_handles[handle].handle >= m_objects.size())
+            {
+                FE_LOG_WARNING("Handle out of range");
+                return;
+            }
         onRemove(&m_objects[m_handles[handle].handle], m_handles[handle].handle);
         if (m_handles.begin() + handle < m_handles.end())
             {

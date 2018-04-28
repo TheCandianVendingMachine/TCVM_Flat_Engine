@@ -1,6 +1,7 @@
 // handleManagerRaw.inl
 // defines the raw array version of the handle manager
 #include <algorithm>
+#include "handleManager.hpp"
 template<typename T, unsigned int objectCount>
 fe::handleManager<T, objectCount>::handleManager()
     {
@@ -19,8 +20,26 @@ fe::handleManager<T, objectCount>::handleManager()
         m_maxIndex = 0;
     }
 
+template<typename T, unsigned int TObjectCount>
+fe::Handle fe::handleManager<T, TObjectCount>::addObject(T object, Handle handle)
+    {
+        handleObjectList *testHandle = &m_baseHandleList;
+        while (testHandle->m_handle->handle != handle)
+            {
+                testHandle = testHandle->m_tail;
+                if (!testHandle)
+                    {
+                        return -1;
+                    }
+            }
+
+        testHandle->m_handle->active = true;
+        m_objects[testHandle->m_handle->handle] = object;
+        return handle;
+    }
+
 template<typename T, unsigned int objectCount>
-inline T *fe::handleManager<T, objectCount>::getObjects()
+inline const T *fe::handleManager<T, objectCount>::getObjects() const
     {
         return m_objects;
     }
@@ -66,7 +85,7 @@ template<typename T, unsigned int objectCount>
 bool fe::handleManager<T, objectCount>::handleActive(Handle handle)
     {
         if (handle < 0) return false;
-        return m_handles[handle]->active;
+        return m_handles[handle].active;
     }
 
 template<typename T, unsigned int objectCount>

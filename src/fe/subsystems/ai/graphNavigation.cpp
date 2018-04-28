@@ -11,7 +11,7 @@ std::vector<int> fe::graphNav::aStar(graph &graph, int start, int end, float alp
 
         open.push_back(start);
         int current = start;
-        graph::node *endNode = graph.getNode(end);
+        node *endNode = graph.getNode(end);
 
         const float H_COST_MOD = 1.f;
 
@@ -57,7 +57,7 @@ std::vector<int> fe::graphNav::aStar(graph &graph, int start, int end, float alp
         
         std::vector<int> path;
         path.push_back(end);
-        graph::node *currentNode = endNode;
+        node *currentNode = endNode;
         while (currentNode->m_parent >= 0)
             {
                 path.push_back(currentNode->m_parent);

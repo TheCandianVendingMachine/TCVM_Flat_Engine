@@ -43,7 +43,7 @@ void fe::tileMap::rebuildTilemap()
         m_verticies.setPrimitiveType(sf::PrimitiveType::Quads);
 
         int index = 0;
-        for (auto &tileHandle : getObjects())
+        for (auto &tileHandle : m_objects)
             {
                 if (tileHandle.handle < 0)
                     {

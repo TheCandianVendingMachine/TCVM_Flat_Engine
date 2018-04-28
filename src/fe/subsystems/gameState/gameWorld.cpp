@@ -156,6 +156,8 @@ void fe::gameWorld::save()
         m_tileMap.serialize(*m_serializer);
         FE_LOG("Saving Entities");
         m_entityWorld.serialize(*m_serializer);
+        FE_LOG("Loading AI tilemap");
+        m_aiGraph.serialize(*m_serializer);
     }
 
 void fe::gameWorld::load(const std::string &load)
@@ -183,6 +185,8 @@ void fe::gameWorld::load()
         FE_LOG("Loading Entities");
         m_entityWorld.clearAllObjects();
         m_entityWorld.deserialize(*m_serializer);
+        FE_LOG("Loading AI tilemap");
+        m_aiGraph.deserialize(*m_serializer);
     }
 
 void fe::gameWorld::loadTilePrefabs(const char *filepath)

@@ -3,50 +3,62 @@
 #pragma once
 #define FLAT_ENGINE_EXPORT
 #include "../../flatEngineExport.hpp"
+#include "../../objectManagement/handleManager.hpp"
+#include "../serializer/serializable.hpp"
 #include <vector>
 #include <memory>
 
 namespace fe
 	{
+        struct node : public fe::serializable
+		    {
+			    // Nodes this node is connected to
+			    std::vector<int> m_connectedNodes;
+                fe::Handle m_handle;
+			    int m_parent; // used for pathfinding
+
+			    float m_gCost;
+			    float m_hCost;
+			    float m_fCost;
+
+			    float m_posX;
+			    float m_posY;
+
+                void *m_userData;
+
+			    node() : m_parent(-1), m_gCost(-1.f), m_hCost(-1.f), m_fCost(-1.f), m_posX(0.f), m_posY(0.f) {}
+
+                FLAT_ENGINE_API void serialize(fe::serializerID &serializer) const;
+                FLAT_ENGINE_API void deserialize(fe::serializerID &serializer);
+
+                FLAT_ENGINE_API node &operator=(const node &rhs);
+		    };
+
 		class graph;
 		namespace graphNav
 			{
 				std::vector<int> aStar(graph&, int, int, float);
 			}
 
-		class graph
+		class graph : public fe::serializable, private fe::handleManager<node*, 0>
 			{
 				private:
-					struct node
-						{
-							// Nodes this node is connected to
-							std::vector<int> m_connectedNodes;
-							int m_parent; // used for pathfinding
-
-							float m_gCost;
-							float m_hCost;
-							float m_fCost;
-
-							float m_posX;
-							float m_posY;
-
-                            void *m_userData;
-
-							node() : m_parent(-1), m_gCost(-1.f), m_hCost(-1.f), m_fCost(-1.f), m_posX(0.f), m_posY(0.f) {}
-						};
-
-					std::vector<std::unique_ptr<node>> m_nodes;
-					std::vector<int> m_nodeHandles;
-
 					friend std::vector<int> graphNav::aStar(graph&, int, int, float);
+
+                    FLAT_ENGINE_API int addNode();
+                    FLAT_ENGINE_API void onAdd(node **object, fe::Handle objectHandle);
 
 				public:
 					FLAT_ENGINE_API int addNode(float posX, float posY, float cost = 1.f);
+                    FLAT_ENGINE_API void removeNode(int nodeHandle);
 
                     FLAT_ENGINE_API void addEdge(int nodeA, int nodeB);
                     FLAT_ENGINE_API void removeEdge(int nodeID, int edge);
                     FLAT_ENGINE_API node *getNode(int nodeID);
-                    FLAT_ENGINE_API const std::vector<int> &getAllNodes();
+                    FLAT_ENGINE_API const std::vector<int> getAllNodes();
+
+                    FLAT_ENGINE_API void serialize(fe::serializerID &serializer) const;
+                    FLAT_ENGINE_API void deserialize(fe::serializerID &serializer);
 
 			};
 	}
