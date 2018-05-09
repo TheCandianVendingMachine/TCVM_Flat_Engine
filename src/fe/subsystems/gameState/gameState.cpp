@@ -174,9 +174,9 @@ void fe::baseGameState::getAllObjects(std::vector<fe::baseEntity*> &entities)
         m_gameWorld.getEntityWorld().getAllObjects(entities);
     }
 
-void fe::baseGameState::addPrefab(const char *name)
+fe::prefabObject &fe::baseGameState::addPrefab(const char *name)
     {
-        m_entitySpawner.createPrefab(name);
+        return m_entitySpawner.createPrefab(name);
     }
 
 void fe::baseGameState::getPrefabs(std::vector<std::string> &prefabs) const

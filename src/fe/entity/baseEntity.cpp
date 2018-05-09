@@ -214,6 +214,11 @@ void fe::baseEntity::setScriptObject(fe::userEntityObject *obj)
         m_entityScriptObject = obj;
     }
 
+fe::userEntityObject *fe::baseEntity::getEntityObject() const
+    {
+        return m_entityScriptObject;
+    }
+
 void fe::baseEntity::setPosition(float x, float y)
     {
         m_positionX = x;

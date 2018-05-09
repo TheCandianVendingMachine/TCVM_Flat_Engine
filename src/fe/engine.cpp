@@ -86,6 +86,8 @@ void fe::engine::run()
                 m_profileLogger->clearTotalCalls();
                 calcFPS();
 
+                m_scriptManager->update();
+
                 m_logger->swapConsoleBuffer();
                 m_logger->swapFileBuffer();
 
@@ -315,10 +317,10 @@ void fe::engine::registerLua()
         );
 
         // Register Functions
-        m_scriptManager->getFunctionHandler().registerFunction("isInputPressed", &fe::isInputPressed);
-        m_scriptManager->getFunctionHandler().registerFunction("setCameraPosition", &fe::setCameraPosition);
-        m_scriptManager->getFunctionHandler().registerFunction("breakToDebugger", &fe::breakToDebugger);
-        m_scriptManager->getFunctionHandler().registerFunction("sendEvent", &fe::sendEvent);
+        m_scriptManager->getFunctionHandler().registerCPPFunction("isInputPressed", &fe::isInputPressed);
+        m_scriptManager->getFunctionHandler().registerCPPFunction("setCameraPosition", &fe::setCameraPosition);
+        m_scriptManager->getFunctionHandler().registerCPPFunction("breakToDebugger", &fe::breakToDebugger);
+        m_scriptManager->getFunctionHandler().registerCPPFunction("sendEvent", &fe::sendEvent);
 
         // Register Objects
         m_scriptManager->getUserTypeHandler().addCustomType<fe::Vector2d>(

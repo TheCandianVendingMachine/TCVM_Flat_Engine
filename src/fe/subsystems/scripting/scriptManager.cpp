@@ -1,5 +1,6 @@
 #include "fe/subsystems/scripting/scriptManager.hpp"
 #include "fe/math/Vector2.hpp"
+#include "fe/subsystems/filesystem/fileUtilities.hpp"
 
 fe::scriptManager::scriptManager() :
     m_functionHandler(m_luaState),
@@ -15,6 +16,7 @@ void fe::scriptManager::startUp()
 
 void fe::scriptManager::shutDown()
     {
+        m_functionHandler.shutDown();
     }
 
 void fe::scriptManager::runLua(const std::string &lua)
@@ -32,6 +34,11 @@ void fe::scriptManager::runFile(const std::string &file)
             {
                 FE_LOG_ERROR(e.what());
             }
+
+        if (std::find(m_luaFiles.begin(), m_luaFiles.end(), file) == m_luaFiles.end())
+            {
+                m_luaFiles.push_back(file);
+            }
     }
 
 fe::functionHandler &fe::scriptManager::getFunctionHandler()
@@ -47,6 +54,24 @@ fe::userTypeHandler &fe::scriptManager::getUserTypeHandler()
 fe::enumHandler &fe::scriptManager::getEnumHandler()
     {
         return m_enumHandler;
+    }
+
+void fe::scriptManager::update()
+    {
+        bool needLuaUpdate = false;
+        for (auto &path : m_luaFiles)
+            {
+                if (fe::lastTimeModified(path.c_str()) > 10)
+                    {
+                    needLuaUpdate = true;
+                       runFile(path);
+                    }
+            }
+
+        if (needLuaUpdate)
+            {
+                m_functionHandler.reloadAllLuaFunctions();
+            }
     }
 
 sol::state &fe::scriptManager::getLuaState()

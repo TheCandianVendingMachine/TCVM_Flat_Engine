@@ -18,7 +18,7 @@ void fe::entitySpawner::setWorld(fe::gameWorld *world)
         m_world = world;
     }
 
-void fe::entitySpawner::createPrefab(const char *luaName)
+fe::prefabObject &fe::entitySpawner::createPrefab(const char *luaName)
     {
         sol::table luaTable = fe::engine::get().getScriptManager().getLuaState()[luaName];
         prefabObject prefab;
@@ -27,42 +27,43 @@ void fe::entitySpawner::createPrefab(const char *luaName)
         if (luaTable.get_type() != sol::type::table)
             {
                 FE_LOG_WARNING(luaName, " is not a valid entity");
-                return;
+                return prefab;
             }
 
         // Initialize user functions
         if (luaTable["update"].get_type() == sol::type::function)
             {
-                prefab.m_update = luaTable["update"];
+                prefab.m_update = &fe::engine::get().getScriptManager().getFunctionHandler().getLuaFunction(luaName, "update");
             }
 
         if (luaTable["postUpdate"].get_type() == sol::type::function)
             {
-                prefab.m_postUpdate = luaTable["postUpdate"];
+                prefab.m_postUpdate = &fe::engine::get().getScriptManager().getFunctionHandler().getLuaFunction(luaName, "postUpdate");
             }
 
         if (luaTable["fixedUpdate"].get_type() == sol::type::function)
             {
-                prefab.m_fixedUpdate = luaTable["fixedUpdate"];
+                prefab.m_fixedUpdate = &fe::engine::get().getScriptManager().getFunctionHandler().getLuaFunction(luaName, "fixedUpdate");
             }
 
         if (luaTable["onAdd"].get_type() == sol::type::function)
             {
-                prefab.m_onAdd = luaTable["onAdd"];
+                prefab.m_onAdd = &fe::engine::get().getScriptManager().getFunctionHandler().getLuaFunction(luaName, "onAdd");
             }
 
         if (luaTable["onRemove"].get_type() == sol::type::function)
             {
-                prefab.m_onRemove = luaTable["onRemove"];
+                prefab.m_onRemove = &fe::engine::get().getScriptManager().getFunctionHandler().getLuaFunction(luaName, "onRemove");
             }
 
         if (luaTable["events"].get_type() == sol::type::table)
             {
-                luaTable["events"].get<sol::table>().for_each([&prefab](sol::object key, sol::object value)
+                luaTable["events"].get<sol::table>().for_each([&prefab, &luaName](sol::object key, sol::object value)
                     {
                         if (value.get_type() == sol::type::function)
                             {
-                                prefab.m_events[FE_STR(key.as<std::string>().c_str())] = value.as<sol::protected_function>();
+                                prefab.m_events[FE_STR(key.as<std::string>().c_str())] = 
+                                    &fe::engine::get().getScriptManager().getFunctionHandler().getLuaFunction(std::string(luaName) + "/events", key.as<std::string>());
                             }
                     });
             }
@@ -163,11 +164,13 @@ void fe::entitySpawner::createPrefab(const char *luaName)
 
                 if (collisionData["on_collision"].get_type() == sol::type::function)
                     {
-                        prefab.m_onCollision = collisionData["on_collision"];
+                        prefab.m_onCollision = &fe::engine::get().getScriptManager().getFunctionHandler().getLuaFunction(std::string(luaName) + "/collisionBody", "on_collision");
                     }
             }
 
         m_prefabs[luaName] = prefab;
+
+        return m_prefabs[luaName];
     }
 
 fe::Handle fe::entitySpawner::spawn(const char *luaName)
@@ -182,17 +185,7 @@ fe::Handle fe::entitySpawner::spawn(const char *luaName)
             }
         const prefabObject &prefab = m_prefabs[luaName];
         
-        object->startUp(m_maxObjectCount++);
-        object->setOnAdd(prefab.m_onAdd);
-        object->setOnRemove(prefab.m_onRemove);
-        object->setUpdate(prefab.m_update);
-        object->setPostUpdate(prefab.m_postUpdate);
-        object->setFixedUpdate(prefab.m_fixedUpdate);
-        
-        for (auto &event : prefab.m_events)
-            {
-                object->addEvent(event.first, event.second);
-            }
+        *object = prefab;
 
         fe::Handle objectHandle = m_world->addGameObject(prefab.m_modules, object, prefab.m_connected, prefab.m_font);
         fe::baseEntity *entity = m_world->getObject(objectHandle);
@@ -208,9 +201,9 @@ fe::Handle fe::entitySpawner::spawn(const char *luaName)
                 entity->getCollider()->m_aabb.m_sizeY = prefab.m_colliderSize.y;
                 entity->getCollider()->m_eventOnCollision = prefab.m_collisionEvent;
                 entity->getCollider()->m_solid = prefab.m_solid;
-                if (prefab.m_onCollision.valid()) 
+                if (prefab.m_onCollision) 
                     {
-                        entity->getCollider()->m_collisionCallback = [prefab, entity](const fe::collisionData &data) { prefab.m_onCollision(static_cast<fe::scriptObject*>(entity), data); };
+                        entity->getCollider()->m_collisionCallback = [prefab, entity](const fe::collisionData &data) { prefab.m_onCollision->call(static_cast<fe::scriptObject*>(entity), data); };
                     }
             }
 

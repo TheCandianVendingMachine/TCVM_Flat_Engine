@@ -87,6 +87,7 @@ namespace fe
                     FLAT_ENGINE_API void updateModules();
 
                     FLAT_ENGINE_API void setScriptObject(fe::userEntityObject *obj);
+                    FLAT_ENGINE_API fe::userEntityObject *getEntityObject() const;
 
                     FLAT_ENGINE_API void setPosition(float x, float y);
                     FLAT_ENGINE_API void setPosition(fe::Vector2d position);

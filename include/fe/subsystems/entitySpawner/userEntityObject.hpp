@@ -5,23 +5,26 @@
 #include "../../flatEngineExport.hpp"
 #include "../messaging/eventHandler.hpp"
 #include "../../typeDefines.hpp"
-#include <sol.hpp>
+#include "../../objectManagement/str.hpp"
+#include "../scripting/luaFunctionReference.hpp"
 #include <unordered_map>
 
 namespace fe
     {
         class gameWorld;
         class scriptObject;
+        struct prefabObject;
         class userEntityObject : public fe::eventHandler
             {
                 private:
-                    sol::protected_function m_onAdd;
-                    sol::protected_function m_onRemove;
-                    sol::protected_function m_update;
-                    sol::protected_function m_fixedUpdate;
-                    sol::protected_function m_postUpdate;
+                    fe::luaFunctionReference *m_onAdd;
+                    fe::luaFunctionReference *m_onRemove;
+                    fe::luaFunctionReference *m_update;
+                    fe::luaFunctionReference *m_fixedUpdate;
+                    fe::luaFunctionReference *m_postUpdate;
 
-                    std::unordered_map<fe::str, sol::protected_function> m_events;
+                    std::unordered_map<fe::str, fe::luaFunctionReference*> m_userFunctions;
+                    std::unordered_map<fe::str, fe::luaFunctionReference*> m_events;
 
                     unsigned int m_index;
                     bool m_active;
@@ -40,13 +43,24 @@ namespace fe
                     FLAT_ENGINE_API void fixedUpdate(fe::scriptObject *object, float deltaTime);
                     FLAT_ENGINE_API void postUpdate(fe::scriptObject *object);
 
-                    FLAT_ENGINE_API void setOnAdd(const sol::protected_function &func);
-                    FLAT_ENGINE_API void setOnRemove(const sol::protected_function &func);
-                    FLAT_ENGINE_API void setUpdate(const sol::protected_function &func);
-                    FLAT_ENGINE_API void setFixedUpdate(const sol::protected_function &func);
-                    FLAT_ENGINE_API void setPostUpdate(const sol::protected_function &func);
-
-                    FLAT_ENGINE_API void addEvent(fe::str event, const sol::protected_function &callback);
                     FLAT_ENGINE_API void handleEvent(const fe::gameEvent &event);
+
+                    template<typename ...Args>
+                    decltype(auto) call(const std::string &functionName, Args &&...args);
+                    decltype(auto) call(const std::string &functionName);
+
+                    FLAT_ENGINE_API userEntityObject &operator=(const fe::prefabObject &rhs);
             };
+
+        template<typename ...Args>
+        decltype(auto) userEntityObject::call(const std::string &functionName, Args &&...args)
+            {
+                if (m_userFunctions.find(FE_STR(functionName.c_str())) == m_userFunctions.end())
+                    {
+                        FE_LOG_ERROR("Function with name '", functionName, "' does not exist");
+                        return m_userFunctions[0]->call();
+                    }
+
+                return m_userFunctions[FE_STR(functionName.c_str())]->call(std::forward<Args>(args)...);
+            }
     }

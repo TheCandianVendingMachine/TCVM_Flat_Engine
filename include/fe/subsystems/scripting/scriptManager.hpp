@@ -8,6 +8,7 @@
 #include "enumHandler.hpp"
 #include <sol.hpp>
 #include <string>
+#include <vector>
 
 namespace fe
     {
@@ -19,6 +20,8 @@ namespace fe
                     fe::functionHandler m_functionHandler;
                     fe::userTypeHandler m_userTypeHandler;
                     fe::enumHandler m_enumHandler;
+
+                    std::vector<std::string> m_luaFiles;
 
                 public:
                     FLAT_ENGINE_API scriptManager();
@@ -32,6 +35,8 @@ namespace fe
                     FLAT_ENGINE_API fe::functionHandler &getFunctionHandler();
                     FLAT_ENGINE_API fe::userTypeHandler &getUserTypeHandler();
                     FLAT_ENGINE_API fe::enumHandler &getEnumHandler();
+
+                    FLAT_ENGINE_API void update();
 
                     FLAT_ENGINE_API sol::state &getLuaState();
 

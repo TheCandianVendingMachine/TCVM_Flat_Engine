@@ -2,10 +2,17 @@
 #include "fe/entity/scriptObject.hpp"
 #include "fe/subsystems/messaging/eventSender.hpp"
 #include "fe/engine.hpp"
+#include "fe/subsystems/entitySpawner/prefabObject.hpp"
+#include "fe/subsystems/scripting/scriptManager.hpp"
 
 fe::userEntityObject::userEntityObject() : 
     m_index(0),
-    m_active(false)
+    m_active(false),
+    m_onAdd(nullptr),
+    m_onRemove(nullptr),
+    m_update(nullptr),
+    m_fixedUpdate(nullptr),
+    m_postUpdate(nullptr)
     {
     }
 
@@ -32,69 +39,78 @@ bool fe::userEntityObject::active() const
 
 void fe::userEntityObject::onAdd(fe::scriptObject *object, fe::gameWorld &world)
     {
-        if (!m_onAdd.valid()) return;
-        m_onAdd.call(*object);
+        if (!m_onAdd) return;
+        m_onAdd->call(*object);
     }
 
 void fe::userEntityObject::onRemove(fe::scriptObject *object, fe::gameWorld &world)
     {
-        if (!m_onRemove.valid()) return;
-        m_onRemove.call(*object);
+        if (!m_onRemove) return;
+        m_onRemove->call(*object);
     }
 
 void fe::userEntityObject::update(fe::scriptObject *object)
     {
-        if (!m_update.valid()) return;
-        m_update.call(*object);
+        if (!m_update) return;
+        m_update->call(*object);
     }
 
 void fe::userEntityObject::fixedUpdate(fe::scriptObject *object, float deltaTime)
     {
-        if (!m_fixedUpdate.valid()) return;
-        m_fixedUpdate.call(*object, deltaTime);
+        if (!m_fixedUpdate) return;
+        m_fixedUpdate->call(*object, deltaTime);
     }
 
 void fe::userEntityObject::postUpdate(fe::scriptObject *object)
     {
-        if (!m_postUpdate.valid()) return;
-        m_postUpdate.call(*object);
-    }
-
-void fe::userEntityObject::setOnAdd(const sol::protected_function &func)
-    {
-        m_onAdd = func;
-    }
-
-void fe::userEntityObject::setOnRemove(const sol::protected_function &func)
-    {
-        m_onRemove = func;
-    }
-
-void fe::userEntityObject::setUpdate(const sol::protected_function &func)
-    {
-        m_update = func;
-    }
-
-void fe::userEntityObject::setFixedUpdate(const sol::protected_function &func)
-    {
-        m_fixedUpdate = func;
-    }
-
-void fe::userEntityObject::setPostUpdate(const sol::protected_function &func)
-    {
-        m_postUpdate = func;
-    }
-
-void fe::userEntityObject::addEvent(fe::str event, const sol::protected_function &callback)
-    {
-        m_events[event] = callback;
-        fe::engine::get().getEventSender().subscribe(this, event);
+        if (!m_postUpdate) return;
+        m_postUpdate->call(*object);
     }
 
 void fe::userEntityObject::handleEvent(const fe::gameEvent &event)
     {
         if (m_events.find(event.eventType) != m_events.end())
             {
-                m_events[event.eventType].call(event.argNumber, event.args);
+                m_events[event.eventType]->call(event.argNumber, event.args);
             }
     }
+
+decltype(auto) fe::userEntityObject::call(const std::string &functionName)
+    {
+        if (m_userFunctions.find(FE_STR(functionName.c_str())) == m_userFunctions.end())
+            {
+                FE_LOG_ERROR("Function with name '", functionName, "' does not exist");
+                return m_userFunctions[0]->call();
+            }
+
+        return m_userFunctions[FE_STR(functionName.c_str())]->call();
+    }
+
+fe::userEntityObject &fe::userEntityObject::operator=(const fe::prefabObject &rhs)
+    {
+        m_onAdd =           rhs.m_onAdd;
+        m_onRemove =        rhs.m_onRemove;
+        m_update =          rhs.m_update;
+        m_postUpdate =      rhs.m_postUpdate;
+        m_fixedUpdate =     rhs.m_fixedUpdate;
+        
+        for (auto &event : rhs.m_events)
+            {
+                m_events[event.first] = event.second;
+                fe::engine::get().getEventSender().subscribe(this, event.first);
+            }
+
+        m_userFunctions.insert(rhs.m_userFunctions.begin(), rhs.m_userFunctions.end());
+
+
+        sol::state_view(rhs.m_entityTable.lua_state()).script(
+R"(
+error_func = function()
+    return 0 
+end
+)");
+        m_userFunctions[0] = &fe::engine::get().getScriptManager().getFunctionHandler().getLuaFunction("error_func");
+
+        return *this;
+    }
+
