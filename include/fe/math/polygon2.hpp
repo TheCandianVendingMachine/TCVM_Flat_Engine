@@ -13,11 +13,14 @@ namespace fe
             {
                 // Vector of triangles created by triangulated polygon. Triangles are clockwise
                 std::vector<std::array<fe::lightVector2d, 3>> m_verticies;
+                std::vector<fe::lightVector2d> m_points;
 
                 FLAT_ENGINE_API polygon2d() {}
                 FLAT_ENGINE_API polygon2d(const std::initializer_list<fe::lightVector2d> &points);
 
+                FLAT_ENGINE_API void addPoint(fe::lightVector2d point);
                 FLAT_ENGINE_API void createPolygon(const std::initializer_list<fe::lightVector2d> &points);
+                FLAT_ENGINE_API void createPolygon();
 
                 FLAT_ENGINE_API bool pointInPolygon(float x, float y);
 

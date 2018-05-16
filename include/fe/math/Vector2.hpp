@@ -114,13 +114,6 @@ namespace fe
 
             };
 
-        // External functions that are useful for Vector operations
-        template<typename dataType>
-        Vector2<dataType> lerp(const Vector2<dataType> &a, const Vector2<dataType> &b, const float &percent)
-            {
-                return Vector2<dataType>((dataType(1) - percent) * a + (percent * b));
-            }
-
         template<typename dataType, typename vectorType>
         Vector2<dataType> fe::operator*(const dataType &lhs, Vector2<vectorType> &rhs)
             {
@@ -143,6 +136,13 @@ namespace fe
         void fe::operator/=(const dataType &lhs, Vector2<vectorType> &rhs)
             {
                 rhs /= lhs;
+            }
+
+        // External functions that are useful for Vector operations
+        template<typename dataType>
+        Vector2<dataType> lerp(const Vector2<dataType> &a, const Vector2<dataType> &b, const float &percent)
+            {
+                return Vector2<dataType>(a * (dataType(1) - percent) + (b * percent));
             }
 
         template<typename T>

@@ -33,7 +33,23 @@ fe::polygon2d::polygon2d(const std::initializer_list<fe::lightVector2d> &points)
         createPolygon(points);
     }
 
+void fe::polygon2d::addPoint(fe::lightVector2d point)
+    {
+        m_points.push_back(point);
+    }
+
 void fe::polygon2d::createPolygon(const std::initializer_list<fe::lightVector2d> &points)
+    {
+        m_verticies.clear();
+        m_points.clear();
+        for (auto &point : points)
+            {
+                addPoint(point);
+            }
+        createPolygon();
+    }
+
+void fe::polygon2d::createPolygon()
     {
         // Polygon Triangulation using ear clipping algorithm
         // https://www.geometrictools.com/Documentation/TriangulationByEarClipping.pdf
@@ -41,7 +57,7 @@ void fe::polygon2d::createPolygon(const std::initializer_list<fe::lightVector2d>
         using polyNode = fe::doublyLinkedList<fe::lightVector2d>::node;
         fe::Vector2d center;
 
-        for (auto &point : points)
+        for (auto &point : m_points)
             {
                 polygon.insert(point);
                 center += point;
@@ -102,6 +118,7 @@ void fe::polygon2d::createPolygon(const std::initializer_list<fe::lightVector2d>
                         index = 0;
                     }
             }
+        m_points.clear();
     }
 
 bool fe::polygon2d::pointInPolygon(float x, float y)

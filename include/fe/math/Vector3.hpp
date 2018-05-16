@@ -98,7 +98,7 @@ namespace fe
                 Vector3<dataType> normal() const { return Vector3(-y, x, z); }
 
                 float dot(const Vector3<dataType> &other) const { return x * other.x + y * other.y + z * other.z; }
-                float cross(const Vector3<dataType> &other) const { return Vector3<dataType>(y * other.y - z * other.y, z * other.x - x * other.z, x * other.y - y * other.x); }
+                Vector3<dataType> cross(const Vector3<dataType> &other) const { return Vector3<dataType>(y * other.y - z * other.y, z * other.x - x * other.z, x * other.y - y * other.x); }
 
                 Vector3<dataType> project(Vector3<dataType> &other) const
                     {   
