@@ -9,7 +9,6 @@
 #include "fe/subsystems/threading/threadPool.hpp"
 #include "fe/subsystems/threading/threadJob.hpp"
 #include "fe/localization/localizationStorage.hpp"
-#include "fe/gui/guiPrefabricatedElements.hpp"
 #include "fe/debug/logger.hpp"
 #include "fe/debug/profiler.hpp"
 #include "fe/debug/profilerLogger.hpp"
@@ -414,7 +413,6 @@ void fe::engine::startUp(fe::uInt64 totalMemory, fe::uInt64 stackMemory, fe::uIn
                 m_random.startUp();
 
                 m_localization = new(m_memoryManager.getStackAllocater().alloc(sizeof(fe::localizationStorage))) fe::localizationStorage();
-                m_prefabGuiElements = new(m_memoryManager.getStackAllocater().alloc(sizeof(fe::guiPrefabricatedElements))) fe::guiPrefabricatedElements();
 
                 m_scriptManager = new(m_memoryManager.getStackAllocater().alloc(sizeof(fe::scriptManager))) fe::scriptManager();
                 m_scriptManager->startUp();

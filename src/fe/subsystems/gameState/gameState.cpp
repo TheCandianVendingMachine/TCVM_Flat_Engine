@@ -1,6 +1,4 @@
 #include "fe/subsystems/gameState/gameState.hpp"
-#include "fe/gui/panel.hpp"
-#include "fe/gui/guiElement.hpp"
 #include "fe/debug/profiler.hpp"
 #include "fe/entity/baseEntity.hpp"
 #include "fe/engine.hpp"
@@ -9,33 +7,6 @@
 #include "fe/subsystems/physics/collision/broadphaseAbstract.hpp"
 #include <algorithm>
 #include <SFML/Graphics/RenderWindow.hpp>
-
-void fe::baseGameState::addPanel(gui::panel *panel)
-    {
-        m_guiPanelsToAdd.push(panel);
-    }
-
-void fe::baseGameState::removePanel(fe::str panelID)
-    {
-        m_guiPanels.erase(std::remove_if(m_guiPanels.begin(), m_guiPanels.end(), [&panelID](fe::gui::panel *panelPtr) { return panelPtr->id() == panelID; }), m_guiPanels.end());
-    }
-
-void fe::baseGameState::removePanel(gui::panel *panel)
-    {
-        m_guiPanels.erase(std::remove(m_guiPanels.begin(), m_guiPanels.end(), panel), m_guiPanels.end());
-    }
-
-fe::gui::panel *fe::baseGameState::getPanel(fe::str panelID)
-    {
-        for (auto &panel : m_guiPanels)
-            {
-                if (panel->id() == panelID)
-                    {
-                        return panel;
-                    }
-            }
-        return nullptr;
-    }
 
 void fe::baseGameState::startUp()
     {
@@ -47,11 +18,6 @@ void fe::baseGameState::startUp()
 void fe::baseGameState::handleEvents(const sf::Event &event)
     {
         if (m_paused) return;
-        for (auto &panel : m_guiPanels)
-            {
-                panel->handleEvent(event);
-            }
-
         handleWindowEvent(event);
     }
 
@@ -77,26 +43,6 @@ void fe::baseGameState::postUpdateDefined()
         if (m_paused) return;
 
         m_gameWorld.postUpdate();
-
-        while (!m_guiPanelsToAdd.empty())
-            {
-                m_guiPanels.push_back(m_guiPanelsToAdd.front());
-                m_guiPanelsToAdd.pop();
-            }
-
-        for (auto it = m_guiPanels.begin(); it != m_guiPanels.end();)
-            {
-                if ((*it)->isKilled())
-                    {
-                        delete *it;
-                        it = m_guiPanels.erase(it);
-                    }
-                else 
-                    {
-                        (*it)->update();
-                        it++;
-                    }
-            }
     }
 
 void fe::baseGameState::fixedUpdateDefined(float deltaTime)
@@ -133,10 +79,7 @@ void fe::baseGameState::draw(sf::RenderTarget &app)
         // Switch view to default engine view to allow drawing of gui in absolute terms. Near invisible for speed
         sf::View currentView = app.getView();
         app.setView(fe::engine::get().getDefaultCamera().getView());
-        for (auto &panel : m_guiPanels)
-            {
-                panel->draw(app);
-            }
+        // gui draw
         app.setView(currentView);
         FE_END_PROFILE
     }
