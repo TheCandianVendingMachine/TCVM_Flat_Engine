@@ -10,6 +10,7 @@
 
 namespace sf
     {
+        struct Event;
         class RenderTarget;
     }
 

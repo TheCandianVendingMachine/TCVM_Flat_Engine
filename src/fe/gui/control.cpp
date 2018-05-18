@@ -4,7 +4,23 @@
 
 void fe::gui::control::drawDialogElements(fe::gui::guiBatch &target)
     {
-        
+        target.add(m_controlPolygon);
+    }
+
+void fe::gui::control::addPoint(fe::lightVector2d point)
+    {
+        m_controlPolygon.addPoint(point);
+        m_polygonNeedsCreation = true;
+    }
+
+void fe::gui::control::addPoint(float x, float y)
+    {
+        addPoint(x, y);
+    }
+
+fe::gui::control::control() :
+    m_polygonNeedsCreation(false)
+    {
     }
 
 void fe::gui::control::handleEvent(const sf::Event &event)
@@ -55,15 +71,4 @@ void fe::gui::control::handleEvent(const sf::Event &event)
             }
 
         handleWindowEvent(event);
-    }
-
-void fe::gui::control::addPoint(fe::lightVector2d point)
-    {
-        m_controlPolygon.addPoint(point);
-        m_polygonNeedsCreation = true;
-    }
-
-void fe::gui::control::addPoint(float x, float y)
-    {
-        addPoint(x, y);
     }

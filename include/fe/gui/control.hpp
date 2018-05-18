@@ -36,6 +36,8 @@ namespace fe
                             FLAT_ENGINE_API void addPoint(float x, float y);
 
                         public:
+                            FLAT_ENGINE_API control();
+
                             virtual void init() {}
                             virtual void deinit() {}
 
