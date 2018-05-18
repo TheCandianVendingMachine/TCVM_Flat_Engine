@@ -22,6 +22,7 @@ namespace fe
                 FLAT_ENGINE_API void createPolygon(const std::initializer_list<fe::lightVector2d> &points);
                 FLAT_ENGINE_API void createPolygon();
 
+                FLAT_ENGINE_API bool pointInPolygon(fe::lightVector2d point);
                 FLAT_ENGINE_API bool pointInPolygon(float x, float y);
 
             };

@@ -9,23 +9,19 @@ bool isPointConvex(fe::Vector2d a, fe::Vector2d p, fe::Vector2d c, fe::Vector2d 
         return crossP >= 0;
     }
 
-bool pointInTriangle(fe::lightVector2d p, fe::Vector2d a, fe::Vector2d b, fe::Vector2d c)
+bool pointInTriangle(fe::Vector2d p, fe::Vector2d a, fe::Vector2d b, fe::Vector2d c)
     {
-        a -= p;
-        b -= p;
-        c -= p;
-
-        float ab = a.dot(b);
-        float ac = a.dot(c);
-        float bc = b.dot(c);
-
-        float cc = c.dot(c);
-        if (bc * ac - cc * ab < 0.f) return false;
-
-        float bb = b.dot(b);
-        if (ab * bc - ac * bb < 0.f) return false;
+        if ((p - a).cross(b - a) > 0.f) return false;
+        if ((p - b).cross(c - b) > 0.f) return false;
+        if ((p - c).cross(a - c) > 0.f) return false;
 
         return true;
+    }
+
+bool triangleIsCCW(fe::lightVector2d a, fe::lightVector2d b, fe::lightVector2d c)
+    {
+        float det = ((a.x - c.x) * (b.y - c.y)) - ((a.y - c.y) * (b.x - c.x));
+        return det > 0.f;
     }
 
 fe::polygon2d::polygon2d(const std::initializer_list<fe::lightVector2d> &points)
@@ -118,10 +114,21 @@ void fe::polygon2d::createPolygon()
                         index = 0;
                     }
             }
-        m_points.clear();
+    }
+
+bool fe::polygon2d::pointInPolygon(fe::lightVector2d point)
+    {
+        for (auto &triangle : m_verticies)
+            {
+                if (pointInTriangle(point, triangle[0], triangle[1], triangle[2]))
+                    {
+                        return true;
+                    }
+            }
+        return false;
     }
 
 bool fe::polygon2d::pointInPolygon(float x, float y)
     {
-        return false;
+        return pointInPolygon({ x, y });
     }
