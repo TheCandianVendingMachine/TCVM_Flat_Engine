@@ -21,14 +21,20 @@ namespace fe
                     std::ofstream m_output;
                     static logger *m_instance;
 
-                    std::stringstream m_fileBuffer[2];
-                    std::stringstream m_consoleBuffer[2];
+                    struct stringStreamWrapper
+                        {
+                            std::stringstream m_buffer;
+                            bool m_ready = false;
+                        };
 
-                    std::stringstream *m_currentFileBuffer; // Current Buffer Being Written To
-                    std::stringstream *m_nextFileBuffer;    // Current Buffer Being Printed
+                    stringStreamWrapper m_fileBuffer[2];
+                    stringStreamWrapper m_consoleBuffer[2];
 
-                    std::stringstream *m_currentConsoleBuffer; // Current Buffer Being Written To
-                    std::stringstream *m_nextConsoleBuffer;    // Current Buffer Being Printed
+                    stringStreamWrapper *m_currentFileBuffer; // Current Buffer Being Written To
+                    stringStreamWrapper *m_nextFileBuffer;    // Current Buffer Being Printed
+
+                    stringStreamWrapper *m_currentConsoleBuffer; // Current Buffer Being Written To
+                    stringStreamWrapper *m_nextConsoleBuffer;    // Current Buffer Being Printed
 
                     fe::threadFunction m_printJob;
 
@@ -37,8 +43,8 @@ namespace fe
 
                     bool m_running;
                     
-                    FLAT_ENGINE_API std::stringstream &getCurrentFileBuffer();
-                    FLAT_ENGINE_API std::stringstream &getCurrentConsoleBuffer();
+                    FLAT_ENGINE_API stringStreamWrapper &getCurrentFileBuffer();
+                    FLAT_ENGINE_API stringStreamWrapper &getCurrentConsoleBuffer();
 
                     // Threaded functions that do as they say on the tin
                     FLAT_ENGINE_API bool printLogs();
@@ -71,12 +77,14 @@ namespace fe
         template<typename ...Args>
         void logger::log(Args &&...args)
             {
-                getCurrentFileBuffer() << fe::clock::getFormattedTime("%b %Y %H:%M:%S %p") << " - ";
+                stringStreamWrapper &currentFileBuffer = getCurrentFileBuffer();
+                currentFileBuffer.m_buffer << fe::clock::getFormattedTime("%b %Y %H:%M:%S %p") << " - ";
 
                 using expanded = int[];
-                expanded { 0, (getCurrentFileBuffer() << std::forward<Args>(args) << " ", 0)... };
+                expanded { 0, (currentFileBuffer.m_buffer << std::forward<Args>(args) << " ", 0)... };
 
-                getCurrentFileBuffer() << "\n";
+                currentFileBuffer.m_buffer << "\n";
+                currentFileBuffer.m_ready = true;
                 logToConsole(args...);
             }
 
@@ -84,12 +92,14 @@ namespace fe
         void logger::logToConsole(Args &&...args)
             {
             #if _DEBUG
-                getCurrentConsoleBuffer() << "<CNSL> " << fe::clock::getFormattedTime("%b %Y %H:%M:%S %p") << " - ";
+                stringStreamWrapper &currentConsoleBuffer = getCurrentConsoleBuffer();
+                currentConsoleBuffer.m_buffer << "<CNSL> " << fe::clock::getFormattedTime("%b %Y %H:%M:%S %p") << " - ";
 
                 using expanded = int[];
-                expanded { 0, (getCurrentConsoleBuffer() << std::forward<Args>(args) << " ", 0)... };
+                expanded { 0, (currentConsoleBuffer.m_buffer << std::forward<Args>(args) << " ", 0)... };
 
-                getCurrentConsoleBuffer() << "\n";
+                currentConsoleBuffer.m_buffer << "\n";
+                currentConsoleBuffer.m_ready = true;
             #endif
             }
     }
