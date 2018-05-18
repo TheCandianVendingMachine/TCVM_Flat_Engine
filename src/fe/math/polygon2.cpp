@@ -47,6 +47,8 @@ void fe::polygon2d::createPolygon(const std::initializer_list<fe::lightVector2d>
 
 void fe::polygon2d::createPolygon()
     {
+        if (m_points.size() < 2) return;
+
         // Polygon Triangulation using ear clipping algorithm
         // https://www.geometrictools.com/Documentation/TriangulationByEarClipping.pdf
         fe::doublyLinkedList<fe::lightVector2d> polygon;
