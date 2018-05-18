@@ -1,17 +1,5 @@
 #include "fe/gui/dialog.hpp"
 #include <algorithm>
-#include <SFML/Window/Event.hpp>
-
-void fe::gui::dialog::addPoint(fe::lightVector2d point)
-    {
-        addPoint(point.x, point.y);
-    }
-
-void fe::gui::dialog::addPoint(float x, float y)
-    {
-        m_dialogPolygon.addPoint({ x, y });
-        m_polygonNeedsCreation = true;
-    }
 
 void fe::gui::dialog::attach(dialog *element)
     {
@@ -62,70 +50,6 @@ void fe::gui::dialog::setState(dialogStates state)
 fe::gui::dialogStates fe::gui::dialog::getState() const
     {
         return m_dialogState;
-    }
-
-void fe::gui::dialog::handleEvent(const sf::Event &event)
-    {
-        if (m_polygonNeedsCreation)
-            {
-                m_dialogPolygon.createPolygon();
-            }
-
-        bool stateUpdate = false;
-        dialogStates current = m_dialogState;
-        dialogStates next = dialogStates::NONE;
-
-        switch (event.type)
-            {
-                case sf::Event::MouseMoved:
-                    if (current != dialogStates::DISABLED && current != dialogStates::PRESSED)
-                        {
-                            if (m_dialogPolygon.pointInPolygon(event.mouseMove.x, event.mouseMove.y))
-                                {
-                                    next = dialogStates::HIGHLIGHTED;
-                                    stateUpdate = true;
-                                }
-                            else
-                                {
-                                    next = dialogStates::ACTIVE;
-                                    stateUpdate = true;
-                                }
-                        }
-                    break;
-                case sf::Event::MouseButtonPressed:
-                    if (current != dialogStates::DISABLED)
-                        {
-                            if (current == dialogStates::HIGHLIGHTED)
-                                {
-                                    next = dialogStates::PRESSED;
-                                    stateUpdate = true;
-                                }
-                        }
-                    break;
-                case sf::Event::MouseButtonReleased:
-                    if (current != dialogStates::DISABLED)
-                        {
-                            if (current == dialogStates::PRESSED)
-                                {
-                                    next = dialogStates::ACTIVE;
-                                    stateUpdate = true;
-                                }
-                        }
-                    break;
-                default:
-                    break;
-            }
-
-        if (stateUpdate)
-            {
-                if (current != next)
-                    {
-                        onStateChange(current, next);
-                    }
-                m_dialogState = next;
-            }
-
-        handleWindowEvent(event);
     }
 
 void fe::gui::dialog::draw(sf::RenderTarget &target, fe::gui::guiBatch &guiBatch)

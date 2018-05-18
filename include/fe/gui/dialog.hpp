@@ -5,13 +5,11 @@
 #include "fe/flatEngineExport.hpp"
 #include "fe/subsystems/messaging/eventHandler.hpp"
 #include "fe/subsystems/physics/transformable.hpp"
-#include "fe/math/polygon2.hpp"
 #include "dialogStates.hpp"
 #include <vector>
 
 namespace sf
     {
-        struct Event;
         class RenderTarget;
     }
 
@@ -24,27 +22,20 @@ namespace fe
                     {
                         private:
                             std::vector<dialog*> m_containedDialogs;
-                            fe::polygon2d m_dialogPolygon;
 
                             dialogStates m_dialogState;
                             int m_drawOrder;
                             bool m_killed;
-                            bool m_polygonNeedsCreation;
 
                         protected:
-                            virtual void drawDialogElements(fe::gui::guiBatch &target) {}
-                            virtual void drawDialogText(sf::RenderTarget &target) {}
+                            virtual void drawDialogElements(fe::gui::guiBatch &target) = 0;
+                            virtual void drawDialogText(sf::RenderTarget &target) = 0;
 
-                            virtual void handleWindowEvent(const sf::Event &event) {}
-
-                            virtual void onStateChange(dialogStates previous, dialogStates next) {}
-
-                            FLAT_ENGINE_API void addPoint(fe::lightVector2d point);
-                            FLAT_ENGINE_API void addPoint(float x, float y);
+                            virtual void onStateChange(dialogStates previous, dialogStates next) = 0;
 
                         public:
-                            FLAT_ENGINE_API virtual void init() {}
-                            FLAT_ENGINE_API virtual void deinit() {}
+                            virtual void init() = 0;
+                            virtual void deinit() = 0;
 
                             FLAT_ENGINE_API void attach(dialog *element);
                             FLAT_ENGINE_API void detach(dialog *element);
@@ -62,8 +53,8 @@ namespace fe
                             FLAT_ENGINE_API void setState(dialogStates state);
                             FLAT_ENGINE_API dialogStates getState() const;
 
-                            virtual void handleEvent(const gameEvent &event) {}
-                            FLAT_ENGINE_API void handleEvent(const sf::Event &event);
+                            virtual void handleEvent(const gameEvent &event) = 0;
+                            virtual void handleEvent(const sf::Event &event) = 0;
 
                             FLAT_ENGINE_API void draw(sf::RenderTarget &target, fe::gui::guiBatch &guiBatch);
 
