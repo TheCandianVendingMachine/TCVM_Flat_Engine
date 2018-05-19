@@ -4,6 +4,11 @@
 
 void fe::gui::control::drawDialogElements(fe::gui::guiBatch &target)
     {
+        if (m_polygonNeedsCreation)
+            {
+                m_controlPolygon.createPolygon();
+                m_polygonNeedsCreation = false;
+            }
         target.add(m_controlPolygon, m_drawColour);
     }
 
@@ -22,6 +27,7 @@ fe::gui::control::control() :
     m_polygonNeedsCreation(false),
     m_drawColour(sf::Color::White)
     {
+        setState(dialogStates::ACTIVE);
     }
 
 void fe::gui::control::setDrawColour(sf::Color colour)
@@ -36,12 +42,6 @@ sf::Color fe::gui::control::getDrawColour() const
 
 void fe::gui::control::handleEvent(const sf::Event &event)
     {
-        if (m_polygonNeedsCreation)
-            {
-                m_controlPolygon.createPolygon();
-                m_polygonNeedsCreation = false;
-            }
-
         dialogStates current = getState();
 
         switch (event.type)
@@ -62,7 +62,7 @@ void fe::gui::control::handleEvent(const sf::Event &event)
                 case sf::Event::MouseButtonPressed:
                     if (current != dialogStates::DISABLED)
                         {
-                            if (current == dialogStates::HIGHLIGHTED)
+                            if (m_controlPolygon.pointInPolygon(event.mouseButton.x, event.mouseButton.y))
                                 {
                                     setState(dialogStates::PRESSED);
                                 }
@@ -73,7 +73,14 @@ void fe::gui::control::handleEvent(const sf::Event &event)
                         {
                             if (current == dialogStates::PRESSED)
                                 {
-                                    setState(dialogStates::ACTIVE);
+                                    if (m_controlPolygon.pointInPolygon(event.mouseButton.x, event.mouseButton.y))
+                                        {
+                                            setState(dialogStates::HIGHLIGHTED);
+                                        }
+                                    else
+                                        {
+                                            setState(dialogStates::ACTIVE);
+                                        }
                                 }
                         }
                     break;
