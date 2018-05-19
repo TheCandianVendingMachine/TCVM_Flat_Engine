@@ -29,7 +29,7 @@ namespace fe
                         public:
                             FLAT_ENGINE_API guiBatch();
 
-                            FLAT_ENGINE_API void add(const polygon2d &polygon);
+                            FLAT_ENGINE_API void add(const polygon2d &polygon, sf::Color drawColour);
                             FLAT_ENGINE_API void clear();
                             FLAT_ENGINE_API void draw(sf::RenderTarget &app, sf::RenderStates states);
                     };

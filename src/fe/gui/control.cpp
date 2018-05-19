@@ -4,7 +4,7 @@
 
 void fe::gui::control::drawDialogElements(fe::gui::guiBatch &target)
     {
-        target.add(m_controlPolygon);
+        target.add(m_controlPolygon, m_drawColour);
     }
 
 void fe::gui::control::addPoint(fe::lightVector2d point)
@@ -19,8 +19,19 @@ void fe::gui::control::addPoint(float x, float y)
     }
 
 fe::gui::control::control() :
-    m_polygonNeedsCreation(false)
+    m_polygonNeedsCreation(false),
+    m_drawColour(sf::Color::White)
     {
+    }
+
+void fe::gui::control::setDrawColour(sf::Color colour)
+    {
+        m_drawColour = colour;
+    }
+
+sf::Color fe::gui::control::getDrawColour() const
+    {
+        return m_drawColour;
     }
 
 void fe::gui::control::handleEvent(const sf::Event &event)

@@ -6,6 +6,7 @@
 #include "fe/math/polygon2.hpp"
 #include "dialog.hpp"
 #include "dialogStates.hpp"
+#include <SFML/Graphics/Color.hpp>
 
 namespace sf
     {
@@ -23,6 +24,7 @@ namespace fe
                     {
                         private:
                             fe::polygon2d m_controlPolygon;
+                            sf::Color m_drawColour;
                             bool m_polygonNeedsCreation;
 
                         protected:
@@ -40,6 +42,9 @@ namespace fe
 
                             virtual void init() {}
                             virtual void deinit() {}
+
+                            FLAT_ENGINE_API void setDrawColour(sf::Color colour);
+                            FLAT_ENGINE_API sf::Color getDrawColour() const;
 
                             FLAT_ENGINE_API void handleEvent(const sf::Event &event);
                             virtual void handleEvent(const gameEvent &event) {}
