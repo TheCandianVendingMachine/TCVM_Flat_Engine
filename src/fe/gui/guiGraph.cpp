@@ -2,6 +2,13 @@
 #include "fe/debug/profiler.hpp"
 #include "fe/gui/dialog.hpp"
 #include "fe/gui/control.hpp"
+#include "fe/gui/dialogProxy.hpp"
+#include <SFML/Graphics/RenderTarget.hpp>
+
+int fe::gui::guiGraph::getNodeFromObject(void *object)
+    {
+        return -1;
+    }
 
 fe::transformable *fe::gui::guiGraph::getNodeTransform(fe::priv::node *node)
     {
@@ -23,13 +30,28 @@ bool fe::gui::guiGraph::renderNode(fe::priv::node *node) const
         return true;
     }
 
-void fe::gui::guiGraph::drawNode(fe::priv::node *node)
+void fe::gui::guiGraph::drawNode(fe::priv::node *node, sf::RenderTarget &target)
     {
         fe::gui::dialog *dialog = static_cast<fe::gui::dialog*>(node->m_userData);
-        dialog->draw(m_batch);
+        dialog->draw(target);
+        dialog->draw(target);
+    }
+
+void *fe::gui::guiGraph::createZOrderProxy()
+    {
+        return new imp::dialogProxy();
     }
 
 void fe::gui::guiGraph::drawToScreen(sf::RenderTarget &target, sf::RenderStates states)
     {
-        m_batch.draw(target, states);
     }
+
+fe::gui::guiGraph::guiGraph() :
+    renderGraph(2500)
+    {
+    }
+
+void fe::gui::guiGraph::preDraw()
+    {
+    }
+

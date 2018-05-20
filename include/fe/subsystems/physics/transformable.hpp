@@ -52,6 +52,8 @@ namespace fe
                     FLAT_ENGINE_API float getRotation() const;
                     // Get the size of an object if transformed via this matrix
                     FLAT_ENGINE_API fe::lightVector2d getSize(float x, float y) const;
+                    // Get the origin of the object
+                    FLAT_ENGINE_API fe::lightVector2d getOrigin() const;
 
                     // Move the matrix by the offset
                     FLAT_ENGINE_API void move(float x, float y);

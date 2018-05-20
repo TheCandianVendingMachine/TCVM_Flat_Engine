@@ -69,6 +69,11 @@ fe::lightVector2d fe::transformable::getSize(float x, float y) const
         return fe::lightVector2d(m_scaleX * x, m_scaleY * y);
     }
 
+fe::lightVector2d fe::transformable::getOrigin() const
+    {
+        return fe::lightVector2d(m_originX, m_originY);
+    }
+
 fe::lightVector2d fe::transformable::getScale() const
     {
         return { m_scaleX, m_scaleY };
@@ -131,6 +136,7 @@ void fe::transformable::combine(fe::transformable &other)
         m_matrix.combine(other.getMatrix());
         m_positionX = m_matrix[6];
         m_positionY = m_matrix[7];
+        m_rotation += other.m_rotation;
     }
 
 bool fe::transformable::updateChildren() const
@@ -150,6 +156,7 @@ fe::transformable &fe::transformable::operator=(const fe::transformable &rhs)
                 setPosition(rhs.getPosition().x, rhs.getPosition().y);
                 setScale(rhs.getScale().x, rhs.getScale().y);
                 setRotation(rhs.getRotation());
+                setOrigin(rhs.getOrigin().x, rhs.getOrigin().y);
 
                 m_matrix = rhs.m_matrix;
             }

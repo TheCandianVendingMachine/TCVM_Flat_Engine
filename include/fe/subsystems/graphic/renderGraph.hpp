@@ -31,18 +31,36 @@ namespace fe
                     FLAT_ENGINE_API int getZ(int z);
 
                 protected:
-                    FLAT_ENGINE_API virtual fe::transformable *getNodeTransform(fe::priv::node *node) = 0;
-                    FLAT_ENGINE_API virtual fe::transformable *getNodeTempTransform(fe::priv::node *node) = 0;
-                    FLAT_ENGINE_API virtual const sf::Texture *getRenderTexture() const = 0;
-                    FLAT_ENGINE_API virtual bool renderNode(fe::priv::node *node) const = 0;
-                    FLAT_ENGINE_API virtual void drawNode(fe::priv::node *node) = 0;
+                    virtual void onObjectAdd(void *object, int node) {}
+                    virtual void onObjectRemove(void *object, int node) {}
 
-                    FLAT_ENGINE_API virtual void drawToScreen(sf::RenderTarget &target, sf::RenderStates states) = 0;
+                    virtual int getNodeFromObject(void *object) = 0;
+                    virtual fe::transformable *getNodeTransform(fe::priv::node *node) = 0;
+                    virtual fe::transformable *getNodeTempTransform(fe::priv::node *node) = 0;
+                    virtual const sf::Texture *getRenderTexture() const = 0;
+                    virtual bool renderNode(fe::priv::node *node) const { return true; }
+                    virtual void drawNode(fe::priv::node *node, sf::RenderTarget &target) = 0;
+
+                    virtual void drawToScreen(sf::RenderTarget &target, sf::RenderStates states) = 0;
+
+                    virtual void *createZOrderProxy() = 0;
+
+                    virtual void onStartUp() {}
+                    virtual void onShutDown() {}
+                    virtual void onClear() {}
 
                 public:
                     FLAT_ENGINE_API renderGraph(unsigned int maxObjectsUntilThread);
 
-                    FLAT_ENGINE_API virtual void preDraw() = 0;
+                    FLAT_ENGINE_API void startUp();
+                    FLAT_ENGINE_API void shutDown();
+                    FLAT_ENGINE_API void clear();
+
+                    FLAT_ENGINE_API int addObjectToGraph(void *object, int connected = -1, int zPos = 0);
+                    FLAT_ENGINE_API int removeObjectFromGraph(void *object);
+                    FLAT_ENGINE_API int removeNodeFromGraph(int node);
+
+                    virtual void preDraw() = 0;
                     FLAT_ENGINE_API void draw(sf::RenderTarget &window);
 
                     FLAT_ENGINE_API void setZOrder(int node, int z);

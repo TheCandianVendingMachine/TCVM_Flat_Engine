@@ -19,7 +19,7 @@ namespace fe
                             sf::Text m_renderText;
 
                         protected:
-                            FLAT_ENGINE_API void drawDialogText(sf::RenderTarget &target, const fe::matrix3d &drawMatrix);
+                            FLAT_ENGINE_API void drawDialogText(sf::RenderTarget &target, const fe::transformable &drawMatrix);
 
                             // Updates text's origin to be in the center of the control
                             FLAT_ENGINE_API void updateOrigin();

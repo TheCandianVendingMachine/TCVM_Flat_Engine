@@ -1,15 +1,30 @@
 #include "fe/gui/control.hpp"
-#include "fe/gui/guiBatch.hpp"
 #include <SFML/Window/Event.hpp>
+#include <SFML/Graphics/RenderTarget.hpp>
 
-void fe::gui::control::drawDialogElements(fe::gui::guiBatch &target, const fe::matrix3d &drawMatrix)
+void fe::gui::control::drawDialogElements(sf::RenderTarget &target, const fe::matrix3d &drawMatrix)
     {
         if (m_polygonNeedsCreation)
             {
                 m_controlPolygon.createPolygon();
+
+                m_verticies.clear();
+                for (unsigned int i = 0; i < m_controlPolygon.m_verticies.size(); i++)
+                    {
+                        m_verticies.emplace_back(fe::Vector2d(drawMatrix.transformPoint(std::forward<const fe::lightVector2d>(m_controlPolygon.m_verticies[i][0]))).convertToSfVec2());
+                        m_verticies.emplace_back(fe::Vector2d(drawMatrix.transformPoint(std::forward<const fe::lightVector2d>(m_controlPolygon.m_verticies[i][1]))).convertToSfVec2());
+                        m_verticies.emplace_back(fe::Vector2d(drawMatrix.transformPoint(std::forward<const fe::lightVector2d>(m_controlPolygon.m_verticies[i][2]))).convertToSfVec2());
+                    }
+
                 m_polygonNeedsCreation = false;
             }
-        target.add(m_controlPolygon, m_drawColour, drawMatrix);
+
+        for (auto &vert : m_verticies)
+            {
+                vert.color = getDrawColour();
+            }
+
+        target.draw(m_verticies.data(), m_verticies.size(), sf::PrimitiveType::Triangles);
     }
 
 void fe::gui::control::addPoint(fe::lightVector2d point)

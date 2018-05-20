@@ -7,6 +7,8 @@
 #include "dialog.hpp"
 #include "dialogStates.hpp"
 #include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/Vertex.hpp>
+#include <vector>
 
 namespace sf
     {
@@ -23,16 +25,17 @@ namespace fe
                 class control : public fe::gui::dialog
                     {
                         private:
+                            std::vector<sf::Vertex> m_verticies;
                             fe::polygon2d m_controlPolygon;
                             sf::Color m_drawColour;
                             bool m_polygonNeedsCreation;
 
                         protected:
-                            virtual void drawDialogText(sf::RenderTarget &target, const fe::matrix3d &drawMatrix) {}
+                            virtual void drawDialogText(sf::RenderTarget &target, const fe::transformable &drawMatrix) {}
                             virtual void onStateChange(dialogStates previous, dialogStates next) {}
                             virtual void handleWindowEvent(const sf::Event &event) {}
 
-                            FLAT_ENGINE_API void drawDialogElements(fe::gui::guiBatch &target, const fe::matrix3d &drawMatrix) final;
+                            FLAT_ENGINE_API void drawDialogElements(sf::RenderTarget &target, const fe::matrix3d &drawMatrix) final;
 
                             FLAT_ENGINE_API void addPoint(fe::lightVector2d point);
                             FLAT_ENGINE_API void addPoint(float x, float y);

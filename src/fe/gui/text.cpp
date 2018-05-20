@@ -3,12 +3,12 @@
 #include "fe/subsystems/resourceManager/resourceManager.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 
-void fe::gui::text::drawDialogText(sf::RenderTarget &target, const fe::matrix3d &drawMatrix)
+void fe::gui::text::drawDialogText(sf::RenderTarget &target, const fe::transformable &drawMatrix)
     {
         m_renderText.setFillColor(getDrawColour());
 
-        m_renderText.setPosition(getPosition().convertToSfVec2());
-        m_renderText.setRotation(getRotation() * 180.f / 3.14159f);
+        m_renderText.setPosition(drawMatrix.getPosition().convertToSfVec2());
+        m_renderText.setRotation(drawMatrix.getRotation() * 180.f / 3.14159f);
 
         target.draw(m_renderText);
     }

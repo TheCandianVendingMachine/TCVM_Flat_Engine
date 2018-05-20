@@ -6,7 +6,7 @@ void fe::renderGraph::addZ(int z)
         int newNode = m_sceneRenderTree.addNode();
         connect(newNode, m_baseNode);
         /* set user data 1 */
-        m_sceneRenderTree.getNode(newNode)->m_userData = nullptr;
+        m_sceneRenderTree.getNode(newNode)->m_userData = createZOrderProxy();
         m_zOrderMap[z] = newNode;
     }
 
@@ -20,12 +20,60 @@ fe::renderGraph::renderGraph(unsigned int maxObjectsUntilThread) :
     {
     }
 
+void fe::renderGraph::startUp()
+    {
+        m_baseNode = m_sceneRenderTree.addNode();
+        addZ(0);
+        onStartUp();
+    }
+
+void fe::renderGraph::shutDown()
+    {
+        onShutDown();
+    }
+
+void fe::renderGraph::clear()
+    {
+        onClear();
+    }
+
+int fe::renderGraph::addObjectToGraph(void *object, int connected, int zPos)
+    {
+        unsigned int graphNode = m_sceneRenderTree.addNode();
+        m_sceneRenderTree.getNode(graphNode)->m_userData = object;
+
+        if (connected < 0)
+            {
+                setZOrder(graphNode, zPos);
+            }
+        else 
+            {
+                connect(graphNode, connected);
+            }
+
+        onObjectAdd(object, graphNode);
+
+        return graphNode;
+    }
+
+int fe::renderGraph::removeObjectFromGraph(void *object)
+    {
+        return removeNodeFromGraph(getNodeFromObject(object));
+    }
+
+int fe::renderGraph::removeNodeFromGraph(int node)
+    {
+        onObjectRemove(m_sceneRenderTree.getNode(node)->m_userData, node);
+        return m_sceneRenderTree.getNode(node)->m_parent;
+    }
+
 void fe::renderGraph::draw(sf::RenderTarget &window)
     {
         int nodeStack[FE_MAX_GAME_OBJECTS + FE_MAX_TEXT_OBJECTS + FE_MAX_Z_ORDER];
         unsigned int stackTop = 0;
         nodeStack[stackTop++] = m_baseNode;
         FE_ENGINE_PROFILE("render_graph", "graph_transform");
+        // Transform entire graph
         while (stackTop > 0)
             {
                 fe::priv::node *node = m_sceneRenderTree.getNode(nodeStack[stackTop - 1]);
@@ -33,7 +81,12 @@ void fe::renderGraph::draw(sf::RenderTarget &window)
 
                 if (renderNode(node))
                     {
-                        fe::transformable *nodeTransform = getNodeTransform(node);
+                        fe::transformable *nodeTransform = &m_baseTransform;
+                        if (node != m_sceneRenderTree.getNode(m_baseNode)) 
+                            {
+                                nodeTransform = getNodeTransform(node);
+                            }
+
                         for (auto &child : node->m_children)
                             {
                                 const fe::transformable *realTransform = getNodeTransform(m_sceneRenderTree.getNode(child));
@@ -58,6 +111,7 @@ void fe::renderGraph::draw(sf::RenderTarget &window)
 
         while (stackTop > 0)
             {
+                // Render entire graph
                 fe::priv::node *node = nullptr;
                 FE_ENGINE_PROFILE("render_graph", "get_node");
                 node = m_sceneRenderTree.getNode(nodeStack[stackTop - 1]);
@@ -66,7 +120,10 @@ void fe::renderGraph::draw(sf::RenderTarget &window)
 
                 if (renderNode(node))
                     {
-                        drawNode(node);
+                        if (node->m_userData)
+                            {
+                                drawNode(node, window);
+                            }
                         FE_ENGINE_PROFILE("render_graph", "iterate_children");
                         for (auto &childIndex : node->m_children)
                             {
