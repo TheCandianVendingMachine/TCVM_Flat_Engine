@@ -2,14 +2,14 @@
 #include "fe/gui/guiBatch.hpp"
 #include <SFML/Window/Event.hpp>
 
-void fe::gui::control::drawDialogElements(fe::gui::guiBatch &target)
+void fe::gui::control::drawDialogElements(fe::gui::guiBatch &target, const fe::matrix3d &drawMatrix)
     {
         if (m_polygonNeedsCreation)
             {
                 m_controlPolygon.createPolygon();
                 m_polygonNeedsCreation = false;
             }
-        target.add(m_controlPolygon, m_drawColour, *this);
+        target.add(m_controlPolygon, m_drawColour, drawMatrix);
     }
 
 void fe::gui::control::addPoint(fe::lightVector2d point)

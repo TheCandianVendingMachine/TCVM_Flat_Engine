@@ -8,9 +8,8 @@ fe::gui::guiBatch::guiBatch()
         clear();
     }
 
-void fe::gui::guiBatch::add(const polygon2d &polygon, sf::Color drawColour, fe::transformable &transform)
+void fe::gui::guiBatch::add(const polygon2d &polygon, sf::Color drawColour, const fe::matrix3d &drawMatrix)
     {
-        const fe::matrix3d &matrix = transform.getMatrix();
         for (auto &triangle : polygon.m_verticies)
             {
                 if (m_batch.size() < (m_vertexIndex + 3))
@@ -20,9 +19,9 @@ void fe::gui::guiBatch::add(const polygon2d &polygon, sf::Color drawColour, fe::
                         m_batch.emplace_back();
                     }
 
-                m_batch[m_vertexIndex + 0].position = fe::Vector2d(matrix.transformPoint(std::forward<const fe::lightVector2d>(triangle[0]))).convertToSfVec2();
-                m_batch[m_vertexIndex + 1].position = fe::Vector2d(matrix.transformPoint(std::forward<const fe::lightVector2d>(triangle[1]))).convertToSfVec2();
-                m_batch[m_vertexIndex + 2].position = fe::Vector2d(matrix.transformPoint(std::forward<const fe::lightVector2d>(triangle[2]))).convertToSfVec2();
+                m_batch[m_vertexIndex + 0].position = fe::Vector2d(drawMatrix.transformPoint(std::forward<const fe::lightVector2d>(triangle[0]))).convertToSfVec2();
+                m_batch[m_vertexIndex + 1].position = fe::Vector2d(drawMatrix.transformPoint(std::forward<const fe::lightVector2d>(triangle[1]))).convertToSfVec2();
+                m_batch[m_vertexIndex + 2].position = fe::Vector2d(drawMatrix.transformPoint(std::forward<const fe::lightVector2d>(triangle[2]))).convertToSfVec2();
 
                 m_batch[m_vertexIndex + 0].color = drawColour;
                 m_batch[m_vertexIndex + 1].color = drawColour;

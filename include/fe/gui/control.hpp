@@ -28,11 +28,11 @@ namespace fe
                             bool m_polygonNeedsCreation;
 
                         protected:
-                            virtual void drawDialogText(sf::RenderTarget &target) {}
+                            virtual void drawDialogText(sf::RenderTarget &target, const fe::matrix3d &drawMatrix) {}
                             virtual void onStateChange(dialogStates previous, dialogStates next) {}
                             virtual void handleWindowEvent(const sf::Event &event) {}
 
-                            FLAT_ENGINE_API void drawDialogElements(fe::gui::guiBatch &target) final;
+                            FLAT_ENGINE_API void drawDialogElements(fe::gui::guiBatch &target, const fe::matrix3d &drawMatrix) final;
 
                             FLAT_ENGINE_API void addPoint(fe::lightVector2d point);
                             FLAT_ENGINE_API void addPoint(float x, float y);

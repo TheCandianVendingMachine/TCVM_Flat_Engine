@@ -16,25 +16,30 @@ namespace sf
 
 namespace fe 
     {
+        struct matrix3d;
         namespace gui
             {
                 class guiBatch;
                 class dialog : public fe::eventHandler, public fe::transformable
                     {
                         private:
+                            fe::transformable m_drawMatrix;
                             std::vector<dialog*> m_containedDialogs;
+                            dialog *m_parent;
 
                             dialogStates m_dialogState;
                             int m_drawOrder;
                             bool m_killed;
 
                         protected:
-                            virtual void drawDialogElements(fe::gui::guiBatch &target) = 0;
-                            virtual void drawDialogText(sf::RenderTarget &target) = 0;
+                            virtual void drawDialogElements(fe::gui::guiBatch &target, const fe::matrix3d &drawMatrix) = 0;
+                            virtual void drawDialogText(sf::RenderTarget &target, const fe::matrix3d &drawMatrix) = 0;
 
                             virtual void onStateChange(dialogStates previous, dialogStates next) = 0;
 
                         public:
+                            FLAT_ENGINE_API dialog();
+
                             virtual void init() = 0;
                             virtual void deinit() = 0;
 
@@ -57,7 +62,10 @@ namespace fe
                             virtual void handleEvent(const gameEvent &event) = 0;
                             virtual void handleEvent(const sf::Event &event) = 0;
 
-                            FLAT_ENGINE_API void draw(sf::RenderTarget &target, fe::gui::guiBatch &guiBatch);
+                            FLAT_ENGINE_API void draw(sf::RenderTarget &target);
+                            FLAT_ENGINE_API void draw(fe::gui::guiBatch &guiBatch);
+
+                            FLAT_ENGINE_API fe::transformable &getDrawMatrix();
 
                             FLAT_ENGINE_API fe::gui::dialog &operator=(dialog &rhs);
 

@@ -15,6 +15,7 @@ namespace sf
 namespace fe
     {
         struct polygon2d;
+        struct matrix3d;
         class transformable;
 
         namespace gui
@@ -30,7 +31,7 @@ namespace fe
                         public:
                             FLAT_ENGINE_API guiBatch();
 
-                            FLAT_ENGINE_API void add(const polygon2d &polygon, sf::Color drawColour, fe::transformable &transform);
+                            FLAT_ENGINE_API void add(const polygon2d &polygon, sf::Color drawColour, const fe::matrix3d &drawMatrix);
                             FLAT_ENGINE_API void clear();
                             FLAT_ENGINE_API void draw(sf::RenderTarget &app, sf::RenderStates states);
                     };

@@ -1,24 +1,34 @@
 #include "fe/gui/dialog.hpp"
 #include <algorithm>
 
+fe::gui::dialog::dialog() :
+    m_parent(nullptr),
+    m_dialogState(dialogStates::NONE),
+    m_drawOrder(0),
+    m_killed(false)
+    {
+    }
+
 void fe::gui::dialog::attach(dialog *element)
     {
+        element->m_parent = this;
         m_containedDialogs.push_back(element);
     }
 
 void fe::gui::dialog::detach(dialog *element)
     {
+        element->m_parent = nullptr;
         m_containedDialogs.erase(std::remove(m_containedDialogs.begin(), m_containedDialogs.end(), element), m_containedDialogs.end());
     }
 
 bool fe::gui::dialog::isElementAttached(const dialog *element) const
     {
-        return std::find(m_containedDialogs.begin(), m_containedDialogs.end(), element) != m_containedDialogs.end();
+        return element->m_parent != nullptr;
     }
 
 bool fe::gui::dialog::isAttachedTo(const dialog *element) const
     {
-        return element->isElementAttached(this);
+        return element->m_parent == element;
     }
 
 void fe::gui::dialog::kill()
@@ -52,17 +62,20 @@ fe::gui::dialogStates fe::gui::dialog::getState() const
         return m_dialogState;
     }
 
-void fe::gui::dialog::draw(sf::RenderTarget &target, fe::gui::guiBatch &guiBatch)
+void fe::gui::dialog::draw(sf::RenderTarget &target)
     {
-        std::sort(m_containedDialogs.begin(), m_containedDialogs.end(), [] (fe::gui::dialog *a, fe::gui::dialog *b) { return a->getDrawOrder() < b->getDrawOrder(); });
+        drawDialogText(target, m_drawMatrix.getMatrix());
+    }
 
-        for (auto &child : m_containedDialogs)
-            {
-                child->draw(target, guiBatch);
-            }
+void fe::gui::dialog::draw(fe::gui::guiBatch &guiBatch)
+    {
+        drawDialogElements(guiBatch, m_drawMatrix.getMatrix());
+        m_drawMatrix = fe::transformable();
+    }
 
-        drawDialogElements(guiBatch);
-        drawDialogText(target);
+fe::transformable &fe::gui::dialog::getDrawMatrix()
+    {
+        return m_drawMatrix;
     }
 
 fe::gui::dialog &fe::gui::dialog::operator=(dialog &rhs)
@@ -71,6 +84,8 @@ fe::gui::dialog &fe::gui::dialog::operator=(dialog &rhs)
             {
                 m_containedDialogs = rhs.m_containedDialogs;
                 m_killed = rhs.m_killed;
+                m_drawOrder = rhs.m_drawOrder;
+                m_parent = rhs.m_parent;
             }
         return *this;
     }

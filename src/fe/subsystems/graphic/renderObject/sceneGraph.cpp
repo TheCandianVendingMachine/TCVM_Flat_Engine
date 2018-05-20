@@ -6,16 +6,6 @@
 #include "fe/subsystems/threading/threadPool.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 
-void fe::sceneGraph::transformGraph(int nodeHandle)
-    {
-        
-    }
-
-void fe::sceneGraph::drawGraph(int nodeHandle, unsigned int &index)
-    {
-        
-    }
-
 void fe::sceneGraph::createRenderTextObject(sceneGraphObject *obj, const fe::fontData &font)
     {
         static_cast<fe::renderText*>(obj)->m_fontData = font;
