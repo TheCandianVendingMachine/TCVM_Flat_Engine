@@ -19,6 +19,7 @@ namespace fe
         struct matrix3d;
         namespace gui
             {
+                class guiGraph;
                 class dialog : public fe::eventHandler, public fe::transformable
                     {
                         private:
@@ -36,8 +37,8 @@ namespace fe
                         public:
                             FLAT_ENGINE_API dialog();
 
-                            virtual void init() = 0;
-                            virtual void deinit() = 0;
+                            virtual void init(fe::gui::guiGraph &graph, int node) = 0;
+                            virtual void deinit(fe::gui::guiGraph &graph, int node) = 0;
 
                             // Marks GUI dialog for cleanup
                             FLAT_ENGINE_API void kill();

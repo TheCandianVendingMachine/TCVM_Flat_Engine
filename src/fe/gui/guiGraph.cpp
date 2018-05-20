@@ -46,6 +46,16 @@ void fe::gui::guiGraph::drawToScreen(sf::RenderTarget &target, sf::RenderStates 
     {
     }
 
+void fe::gui::guiGraph::onObjectAdd(void *object, int node)
+    {
+        static_cast<fe::gui::dialog*>(object)->init(*this, node);
+    }
+
+void fe::gui::guiGraph::onObjectRemove(void *object, int node)
+    {
+        static_cast<fe::gui::dialog*>(object)->deinit(*this, node);
+    }
+
 fe::gui::guiGraph::guiGraph() :
     renderGraph(2500)
     {

@@ -27,6 +27,9 @@ namespace fe
 
                             FLAT_ENGINE_API void drawToScreen(sf::RenderTarget &target, sf::RenderStates states) final;
 
+                            FLAT_ENGINE_API void onObjectAdd(void *object, int node) final;
+                            FLAT_ENGINE_API void onObjectRemove(void *object, int node) final;
+
                         public:
                             FLAT_ENGINE_API guiGraph();
 

@@ -45,8 +45,8 @@ namespace fe
                         public:
                             FLAT_ENGINE_API control();
 
-                            virtual void init() {}
-                            virtual void deinit() {}
+                            virtual void init(fe::gui::guiGraph &graph, int node) {}
+                            virtual void deinit(fe::gui::guiGraph &graph, int node) {}
 
                             FLAT_ENGINE_API void setDrawColour(sf::Color colour);
                             FLAT_ENGINE_API sf::Color getDrawColour() const;

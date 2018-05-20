@@ -32,7 +32,7 @@ void fe::gui::control::addPoint(fe::lightVector2d point)
 
 void fe::gui::control::addPoint(float x, float y)
     {
-        addPoint(x, y);
+        addPoint(fe::lightVector2d(x, y));
     }
 
 fe::gui::control::control() :

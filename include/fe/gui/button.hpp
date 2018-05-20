@@ -22,8 +22,8 @@ namespace fe
                             sf::Color m_colourOnPress;
 
                         protected:
-                            FLAT_ENGINE_API void onStateChange(dialogStates previous, dialogStates next) final;
-                            FLAT_ENGINE_API void drawDialogElements(sf::RenderTarget &target, const fe::matrix3d &drawMatrix) final;
+                            FLAT_ENGINE_API virtual void onStateChange(dialogStates previous, dialogStates next) override;
+                            FLAT_ENGINE_API virtual void drawDialogElements(sf::RenderTarget &target, const fe::matrix3d &drawMatrix) override;
 
                         public:
                             FLAT_ENGINE_API button(std::initializer_list<fe::lightVector2d> shape);

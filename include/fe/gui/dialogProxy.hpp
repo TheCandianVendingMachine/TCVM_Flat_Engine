@@ -18,8 +18,8 @@ namespace fe
                                     void onStateChange(dialogStates previous, dialogStates next) {}
 
                                 public:
-                                    void init() {}
-                                    void deinit() {}
+                                    void init(fe::gui::guiGraph &graph, int node) {}
+                                    void deinit(fe::gui::guiGraph &graph, int node) {}
 
                                     void handleEvent(const gameEvent &event) {}
                                     void handleEvent(const sf::Event &event) {}
