@@ -3,6 +3,7 @@
 #include "fe/objectManagement/str.hpp"
 #include "fe/gui/dialogStates.hpp"
 #include "fe/subsystems/messaging/eventSender.hpp"
+#include "..\..\..\include\fe\gui\button.hpp"
 
 void fe::gui::button::onStateChange(dialogStates previous, dialogStates next)
     {
@@ -39,6 +40,11 @@ void fe::gui::button::onStateChange(dialogStates previous, dialogStates next)
             }
     }
 
+void fe::gui::button::drawDialogElements(sf::RenderTarget &target, const fe::matrix3d &drawMatrix)
+    {
+        drawPolygon(getControlPolygon(), target, drawMatrix, getDrawColour());
+    }
+
 fe::gui::button::button(std::initializer_list<fe::lightVector2d> shape) :
     m_eventOnPress(FE_STR("gui_button_on_press")),
     m_eventOnRelease(FE_STR("gui_button_on_release")),
@@ -51,6 +57,7 @@ fe::gui::button::button(std::initializer_list<fe::lightVector2d> shape) :
             {
                 addPoint(point);
             }
+        getControlPolygon().createPolygon();
     }
 
 void fe::gui::button::setEventOnPress(fe::str event)
