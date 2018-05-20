@@ -9,7 +9,7 @@ void fe::gui::control::drawDialogElements(fe::gui::guiBatch &target)
                 m_controlPolygon.createPolygon();
                 m_polygonNeedsCreation = false;
             }
-        target.add(m_controlPolygon, m_drawColour);
+        target.add(m_controlPolygon, m_drawColour, *this);
     }
 
 void fe::gui::control::addPoint(fe::lightVector2d point)
@@ -49,7 +49,10 @@ void fe::gui::control::handleEvent(const sf::Event &event)
                 case sf::Event::MouseMoved:
                     if (current != dialogStates::DISABLED && current != dialogStates::PRESSED)
                         {
-                            if (m_controlPolygon.pointInPolygon(event.mouseMove.x, event.mouseMove.y))
+                            fe::lightVector2d realMousePos(event.mouseMove.x, event.mouseMove.y);
+                            realMousePos = getMatrix().transformPointToLocalSpace(std::forward<const fe::lightVector2d>(realMousePos));
+
+                            if (m_controlPolygon.pointInPolygon(realMousePos.x, realMousePos.y))
                                 {
                                     setState(dialogStates::HIGHLIGHTED);
                                 }
@@ -62,7 +65,10 @@ void fe::gui::control::handleEvent(const sf::Event &event)
                 case sf::Event::MouseButtonPressed:
                     if (current != dialogStates::DISABLED)
                         {
-                            if (m_controlPolygon.pointInPolygon(event.mouseButton.x, event.mouseButton.y))
+                            fe::lightVector2d realMousePos(event.mouseButton.x, event.mouseButton.y);
+                            realMousePos = getMatrix().transformPointToLocalSpace(std::forward<const fe::lightVector2d>(realMousePos));
+
+                            if (m_controlPolygon.pointInPolygon(realMousePos.x, realMousePos.y))
                                 {
                                     setState(dialogStates::PRESSED);
                                 }
@@ -73,7 +79,10 @@ void fe::gui::control::handleEvent(const sf::Event &event)
                         {
                             if (current == dialogStates::PRESSED)
                                 {
-                                    if (m_controlPolygon.pointInPolygon(event.mouseButton.x, event.mouseButton.y))
+                                    fe::lightVector2d realMousePos(event.mouseButton.x, event.mouseButton.y);
+                                    realMousePos = getMatrix().transformPointToLocalSpace(std::forward<const fe::lightVector2d>(realMousePos));
+
+                                    if (m_controlPolygon.pointInPolygon(realMousePos.x, realMousePos.y))
                                         {
                                             setState(dialogStates::HIGHLIGHTED);
                                         }

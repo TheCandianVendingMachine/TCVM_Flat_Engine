@@ -165,30 +165,57 @@ void fe::matrix3d::rotate(float radians)
                                 0,            0,             1);
     }
 
-fe::lightVector2d fe::matrix3d::translatePoint(fe::lightVector2d &&point) const
+fe::lightVector2d fe::matrix3d::translatePoint(const fe::lightVector2d &&point) const
     {
         return fe::lightVector2d(values[6] + point.x, values[7] + point.y);
     }
 
-fe::lightVector2d fe::matrix3d::rotatePoint(fe::lightVector2d &&point) const
+fe::lightVector2d fe::matrix3d::rotatePoint(const fe::lightVector2d &&point) const
     {
         return fe::lightVector2d(point.x * values[0] + point.y * values[1],
                                  point.x * values[3] + point.y * values[4]);
     }
 
-fe::lightVector2d fe::matrix3d::rotatePoint(fe::lightVector2d &&point, float radians) const
+fe::lightVector2d fe::matrix3d::rotatePoint(const fe::lightVector2d &&point, float radians) const
     {
         return (*this * fe::matrix3d(cos(radians), -sin(radians), 0,
                                      sin(radians), cos(radians),  0,
-                                     0,            0,             1)).rotatePoint(std::forward<fe::lightVector2d>(point));
+                                     0,            0,             1)).rotatePoint(std::forward<const fe::lightVector2d>(point));
     }
 
-fe::lightVector2d fe::matrix3d::transformPoint(fe::lightVector2d &&point) const
+fe::lightVector2d fe::matrix3d::transformPoint(const fe::lightVector2d &&point) const
     {
         fe::lightVector2d transformed = point;
-        transformed = rotatePoint(std::forward<fe::lightVector2d>(transformed));
-        transformed = translatePoint(std::forward<fe::lightVector2d>(transformed));
+        transformed = rotatePoint(std::forward<const fe::lightVector2d>(transformed));
+        transformed = translatePoint(std::forward<const fe::lightVector2d>(transformed));
         
+        return transformed;
+    }
+
+fe::lightVector2d fe::matrix3d::translatePointToLocalSpace(const fe::lightVector2d &&point) const
+    {
+        return fe::lightVector2d(point.x - values[6], point.y - values[7]);
+    }
+
+fe::lightVector2d fe::matrix3d::rotatePointToLocalSpace(const fe::lightVector2d &&point) const
+    {
+        return fe::lightVector2d(point.x * values[0] + point.y * -values[1],
+                                 point.x * -values[3] + point.y * values[4]);
+    }
+
+fe::lightVector2d fe::matrix3d::rotatePointToLocalSpace(const fe::lightVector2d &&point, float radians) const
+    {
+        return (*this * fe::matrix3d(cos(radians), -sin(radians), 0,
+                                     sin(radians), cos(radians),  0,
+                                     0,            0,             1)).rotatePointToLocalSpace(std::forward<const fe::lightVector2d>(point));
+    }
+
+fe::lightVector2d fe::matrix3d::transformPointToLocalSpace(const fe::lightVector2d &&point) const
+    {
+        fe::lightVector2d transformed = point;
+        transformed = translatePointToLocalSpace(std::forward<const fe::lightVector2d>(transformed));
+        transformed = rotatePointToLocalSpace(std::forward<const fe::lightVector2d>(transformed));
+
         return transformed;
     }
 
