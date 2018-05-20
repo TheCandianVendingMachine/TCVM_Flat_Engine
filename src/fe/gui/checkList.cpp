@@ -33,7 +33,7 @@ fe::gui::checkList::checkList(float checkBoxSize, unsigned int count, mode boxMo
                 float posX = boxPositionIncrement.x * i;
                 float posY = boxPositionIncrement.y * i;
 
-                m_checkBoxes.emplace_back(checkBoxSize, 5.f);
+                m_checkBoxes.emplace_back(checkBoxSize, 10.f, 5.f);
                 m_checkBoxes.back().setPosition(posX, posY);
 
                 if (m_optionCount > i)

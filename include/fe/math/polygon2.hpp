@@ -9,6 +9,10 @@
 
 namespace fe
     {
+        /*
+            POLYGONS MUST BE CONSTRUCTED VIA Counter Clock Wise COORDINATES
+            Creation of polygon may fail if this is not met
+        */
         struct polygon2d
             {
                 // Vector of triangles created by triangulated polygon. Triangles are clockwise

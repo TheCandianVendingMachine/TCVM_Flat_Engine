@@ -2,7 +2,7 @@
 #include "fe/math/Vector3.hpp"
 #include "fe/dataStructures/doublyLinkedList.hpp"
 
-bool isPointConvex(fe::Vector2d a, fe::Vector2d p, fe::Vector2d c, fe::Vector2d center)
+bool triangleIsCCW(fe::Vector2d a, fe::Vector2d p, fe::Vector2d c)
     {
         // If cross product of abc is > 0 its ccw
         float crossP = (p[0] - a[0]) * (c[1] - a[1]) - (p[1] - a[1]) * (c[0] - a[0]);
@@ -16,12 +16,6 @@ bool pointInTriangle(fe::Vector2d p, fe::Vector2d a, fe::Vector2d b, fe::Vector2
         if ((p - c).cross(a - c) > 0.f) return false;
 
         return true;
-    }
-
-bool triangleIsCCW(fe::lightVector2d a, fe::lightVector2d b, fe::lightVector2d c)
-    {
-        float det = ((a.x - c.x) * (b.y - c.y)) - ((a.y - c.y) * (b.x - c.x));
-        return det > 0.f;
     }
 
 fe::polygon2d::polygon2d(const std::initializer_list<fe::lightVector2d> &points)
@@ -50,72 +44,64 @@ void fe::polygon2d::createPolygon()
         if (m_points.size() < 2) return;
 
         // Polygon Triangulation using ear clipping algorithm
-        // https://www.geometrictools.com/Documentation/TriangulationByEarClipping.pdf
-        fe::doublyLinkedList<fe::lightVector2d> polygon;
-        using polyNode = fe::doublyLinkedList<fe::lightVector2d>::node;
-        fe::Vector2d center;
+        // Source: Real Time Collision Detection
+        
+        int size = m_points.size();
 
-        for (auto &point : m_points)
+        std::vector<int> prev;
+        std::vector<int> next;
+        for (int i = 0; i < m_points.size(); i++)
             {
-                polygon.insert(point);
-                center += point;
+                prev.push_back(i - 1);
+                next.push_back(i + 1);
             }
+        prev[0] = size - 1;
+        next[size - 1] = 0;
 
-        center /= polygon.size();
-
-        unsigned int index = 0;
-        while (polygon.size() > 2)
+        int i = 0;
+        while (size > 3)
             {
-                polyNode *a = nullptr;
-                polyNode *p = nullptr;
-                polyNode *c = nullptr;
-
-                if (index != 0) 
+                bool isEar = true;
+                if (triangleIsCCW(m_points[prev[i]], m_points[i], m_points[next[i]]))
                     {
-                        a = polygon.at(index - 1);
+                        int k = next[next[i]];
+                        do
+                        {
+                            bool isSamePoint = 
+                                (m_points[k].x == m_points[prev[i]].x   && m_points[k].y == m_points[prev[i]].y)    ||
+                                (m_points[k].x == m_points[i].x         && m_points[k].y == m_points[i].y)          ||
+                                (m_points[k].x == m_points[next[i]].x   && m_points[k].y == m_points[next[i]].y);
+
+                            if (!isSamePoint && pointInTriangle(m_points[k], m_points[prev[i]], m_points[i], m_points[next[i]]))
+                                {
+                                    isEar = false;
+                                    break;
+                                }
+                            k = next[k];
+                        } while (k != prev[i]);
                     }
                 else
                     {
-                        a = polygon.at(polygon.size() - 1);
+                        isEar = false;
                     }
 
-                p = polygon.at(index);
-
-                if (index + 1 < polygon.size())
+                if (isEar)
                     {
-                        c = polygon.at(index + 1);
+                        m_verticies.push_back({ m_points[prev[i]], m_points[i], m_points[next[i]] });
+
+                        next[prev[i]] = next[i];
+                        prev[next[i]] = prev[i];
+                        size--;
+
+                        i = prev[i];
                     }
                 else
                     {
-                        c = polygon.at(0);
-                    }
-                
-                if (isPointConvex(a->m_data, p->m_data, c->m_data, center))
-                    {
-                        for (unsigned int i = 0; i < polygon.size(); i++)
-                            {
-                                polyNode *indexNode = polygon.at(i);
-                                if (indexNode != a && indexNode != p && indexNode != c)
-                                    {
-                                        if (pointInTriangle(indexNode->m_data, a->m_data, p->m_data, c->m_data))
-                                            {
-                                                goto exit_polygon_check;
-                                            }
-                                    }
-                            }
-
-                        m_verticies.push_back({ a->m_data, p->m_data, c->m_data });
-                        polygon.remove(p);
-
-                        exit_polygon_check:;
-                    }
-
-                index++;
-                if (index >= polygon.size())
-                    {
-                        index = 0;
+                        i = next[i];
                     }
             }
+
+        m_verticies.push_back({ m_points[prev[i]], m_points[i], m_points[next[i]] });
     }
 
 bool fe::polygon2d::pointInPolygon(fe::lightVector2d point)

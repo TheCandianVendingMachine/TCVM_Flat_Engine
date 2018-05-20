@@ -21,7 +21,7 @@ namespace fe
                             FLAT_ENGINE_API void drawDialogElements(sf::RenderTarget &target, const fe::matrix3d &drawMatrix) final;
 
                         public:
-                            FLAT_ENGINE_API checkBox(float radius, float checkMarkWidthFromSide = 5.f);
+                            FLAT_ENGINE_API checkBox(float radius, float boxOutlineWidth = 10.f, float checkMarkWidthFromSide = 5.f);
 
                     };
             }
