@@ -22,7 +22,7 @@ void fe::gui::checkList::handleWindowEvent(const sf::Event &event)
 fe::gui::checkList::checkList(
     float checkBoxSize, unsigned int count,
     float gapBetweenBoxes, float boxOutlineWidth, float checkMarkWidthFromSide,
-    const sf::Font *font, std::initializer_list<std::string> options, float gapBetweenTextAndOption
+    const sf::Font *font, std::initializer_list<std::string> options, unsigned int charSize, float gapBetweenTextAndOption
 ) :
     m_boxSize(checkBoxSize),
     m_gapBetweenBoxes(gapBetweenBoxes),
@@ -45,10 +45,10 @@ fe::gui::checkList::checkList(
                     }
             }
 
-        updateBoxes(checkBoxSize, gapBetweenBoxes, boxOutlineWidth, checkMarkWidthFromSide, gapBetweenTextAndOption);
+        updateBoxes(checkBoxSize, gapBetweenBoxes, boxOutlineWidth, checkMarkWidthFromSide, charSize, gapBetweenTextAndOption);
     }
 
-void fe::gui::checkList::updateBoxes(float checkBoxSize, float gapBetweenBoxes, float boxOutlineWidth, float checkMarkWidthFromSide, float gapBetweenTextAndBox)
+void fe::gui::checkList::updateBoxes(float checkBoxSize, float gapBetweenBoxes, float boxOutlineWidth, float checkMarkWidthFromSide, unsigned int charSize, float gapBetweenTextAndBox)
     {
         m_boxSize = checkBoxSize;
         m_gapBetweenBoxes = gapBetweenBoxes;
@@ -62,6 +62,7 @@ void fe::gui::checkList::updateBoxes(float checkBoxSize, float gapBetweenBoxes, 
 
                 if (i < m_options.size())
                     {
+                        m_options[i].setCharacterSize(charSize);
                         m_options[i].setPosition((m_boxSize) + (boxOutlineWidth * 2.f) + (m_options[i].getSize().x / 2.f) + gapBetweenTextAndBox, (m_boxSize / 2.f) + boxOutlineWidth);
                     }
             }
