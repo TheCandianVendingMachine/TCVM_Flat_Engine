@@ -6,14 +6,9 @@ void fe::gui::control::drawPolygon(fe::polygon2d &poly, sf::RenderTarget &target
     {
         for (unsigned int i = 0; i < poly.m_verticies.size(); i++)
             {
-                m_verticies.emplace_back(fe::Vector2d(drawMatrix.transformPoint(std::forward<const fe::lightVector2d>(poly.m_verticies[i][0]))).convertToSfVec2());
-                m_verticies.emplace_back(fe::Vector2d(drawMatrix.transformPoint(std::forward<const fe::lightVector2d>(poly.m_verticies[i][1]))).convertToSfVec2());
-                m_verticies.emplace_back(fe::Vector2d(drawMatrix.transformPoint(std::forward<const fe::lightVector2d>(poly.m_verticies[i][2]))).convertToSfVec2());
-            }
-
-        for (auto &vert : m_verticies)
-            {
-                vert.color = getDrawColour();
+                m_verticies.emplace_back(fe::Vector2d(drawMatrix.transformPoint(std::forward<const fe::lightVector2d>(poly.m_verticies[i][0]))).convertToSfVec2(), drawColour);
+                m_verticies.emplace_back(fe::Vector2d(drawMatrix.transformPoint(std::forward<const fe::lightVector2d>(poly.m_verticies[i][1]))).convertToSfVec2(), drawColour);
+                m_verticies.emplace_back(fe::Vector2d(drawMatrix.transformPoint(std::forward<const fe::lightVector2d>(poly.m_verticies[i][2]))).convertToSfVec2(), drawColour);
             }
 
         target.draw(m_verticies.data(), m_verticies.size(), sf::PrimitiveType::Triangles);

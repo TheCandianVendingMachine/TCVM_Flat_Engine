@@ -6,16 +6,24 @@ void fe::gui::checkBox::onStateChange(dialogStates previous, dialogStates next)
             {
                 case fe::gui::dialogStates::ACTIVE:
                     setDrawColour(m_colourOnActive);
+                    if (m_checkState != checkState::SELECTED) 
+                        {
+                            m_checkState = checkState::NONE;
+                        }
                     break;
                 case fe::gui::dialogStates::DISABLED:
                     setDrawColour(m_colourOnDeactive);
                     break;
                 case fe::gui::dialogStates::HIGHLIGHTED:
                     setDrawColour(m_colourOnHighlight);
+                    if (m_checkState != checkState::SELECTED) 
+                        {
+                            m_checkState = checkState::HIGHLIGHT;
+                        }
                     break;
                 case fe::gui::dialogStates::PRESSED:
                     setDrawColour(m_colourOnPress);
-                    m_selected = !m_selected;
+                    m_checkState = (m_checkState == checkState::SELECTED) ? checkState::HIGHLIGHT : checkState::SELECTED;
                     break;
                 default:
                     break;
@@ -27,11 +35,18 @@ void fe::gui::checkBox::drawDialogElements(sf::RenderTarget &target, const fe::m
         //drawPolygon(getControlPolygon(), target, drawMatrix, getDrawColour());
         drawPolygon(m_outline, target, drawMatrix, getDrawColour());
 
-        if (m_selected) 
+        if (m_checkState > checkState::NONE)
             {
                 fe::matrix3d checkMatrix = drawMatrix;
                 checkMatrix.translate(fe::lightVector2d(m_boxOutlineWidth, m_boxOutlineWidth));
-                drawPolygon(m_checkMark, target, checkMatrix, getDrawColour());
+
+                sf::Color drawColour = getDrawColour();
+                if (m_checkState == checkState::HIGHLIGHT)
+                    {
+                        drawColour.a = 150;
+                    }
+
+                drawPolygon(m_checkMark, target, checkMatrix, drawColour);
             }
     }
 
@@ -39,7 +54,7 @@ fe::gui::checkBox::checkBox(float radius, float boxOutlineWidth, float checkMark
     m_checkRadius(radius),
     m_boxOutlineWidth(boxOutlineWidth),
     m_distanceFromSide(checkMarkWidthFromSide),
-    m_selected(false),
+    m_checkState(NONE),
     m_colourOnActive(sf::Color::White),
     m_colourOnDeactive(sf::Color::White),
     m_colourOnHighlight(sf::Color::White),
@@ -122,10 +137,10 @@ void fe::gui::checkBox::setColourOnPress(sf::Color colour)
 
 void fe::gui::checkBox::setSelected(bool value)
     {
-        m_selected = value;
+        m_checkState = static_cast<checkState>(value);
     }
 
 bool fe::gui::checkBox::isSelected() const
     {
-        return m_selected;
+        return m_checkState == checkState::SELECTED;
     }

@@ -26,7 +26,12 @@ namespace fe
                             float m_distanceFromSide;
                             float m_boxOutlineWidth;
 
-                            bool m_selected;
+                            enum checkState
+                                {
+                                    NONE =      0,
+                                    SELECTED =  1 << 0,
+                                    HIGHLIGHT = 1 << 1
+                                } m_checkState;
 
                         protected:
                             FLAT_ENGINE_API void onStateChange(dialogStates previous, dialogStates next) final;
