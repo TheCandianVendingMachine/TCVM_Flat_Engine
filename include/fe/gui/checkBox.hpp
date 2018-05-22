@@ -15,6 +15,7 @@ namespace fe
                     {
                         private:
                             fe::polygon2d m_checkMark;
+                            float m_checkRadius;
 
                         protected:
                             FLAT_ENGINE_API void onStateChange(dialogStates previous, dialogStates next) final;

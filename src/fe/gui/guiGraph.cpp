@@ -34,7 +34,6 @@ void fe::gui::guiGraph::drawNode(fe::priv::node *node, sf::RenderTarget &target)
     {
         fe::gui::dialog *dialog = static_cast<fe::gui::dialog*>(node->m_userData);
         dialog->draw(target);
-        dialog->draw(target);
     }
 
 void *fe::gui::guiGraph::createZOrderProxy()

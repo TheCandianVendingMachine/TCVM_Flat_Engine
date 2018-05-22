@@ -38,7 +38,7 @@ namespace fe
                                 };
 
                             // Creates a new checkButton list. Options correspond to text listed alongside check boxes. Left -> Right / Top -> Down
-                            FLAT_ENGINE_API checkList(float checkBoxSize, unsigned int count, mode boxMode, float gapBetweenBoxes = 5.f, sf::Font *font = nullptr, std::initializer_list<std::string> options = {});
+                            FLAT_ENGINE_API checkList(float checkBoxSize, unsigned int count, mode boxMode, float gapBetweenBoxes = 5.f, const sf::Font *font = nullptr, std::initializer_list<std::string> options = {});
 
                             FLAT_ENGINE_API void init(fe::gui::guiGraph &graph, int node);
 
