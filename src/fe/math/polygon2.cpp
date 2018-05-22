@@ -120,3 +120,9 @@ bool fe::polygon2d::pointInPolygon(float x, float y)
     {
         return pointInPolygon({ x, y });
     }
+
+void fe::polygon2d::clear()
+    {
+        m_verticies.clear();
+        m_points.clear();
+    }

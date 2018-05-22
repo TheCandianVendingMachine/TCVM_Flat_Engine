@@ -26,6 +26,12 @@ fe::gui::text::text(const sf::Font *data)
         updateOrigin();
     }
 
+fe::lightVector2d fe::gui::text::getSize() const
+    {
+        sf::FloatRect textRect = m_renderText.getLocalBounds();
+        return fe::transformable::getSize(textRect.width, textRect.height);
+    }
+
 void fe::gui::text::setText(const char *text)
     {
         m_renderText.setString(text);

@@ -27,6 +27,8 @@ namespace fe
                         public:
                             FLAT_ENGINE_API text(const sf::Font *data);
 
+                            FLAT_ENGINE_API fe::lightVector2d getSize() const;
+
                             FLAT_ENGINE_API void setText(const char *text);
                             FLAT_ENGINE_API void setText(const std::string &text);
 

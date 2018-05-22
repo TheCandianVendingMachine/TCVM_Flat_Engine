@@ -29,5 +29,7 @@ namespace fe
                 FLAT_ENGINE_API bool pointInPolygon(fe::lightVector2d point);
                 FLAT_ENGINE_API bool pointInPolygon(float x, float y);
 
+                FLAT_ENGINE_API void clear();
+
             };
     }

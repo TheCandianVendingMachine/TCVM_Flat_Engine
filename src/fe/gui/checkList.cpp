@@ -11,7 +11,11 @@ void fe::gui::checkList::drawDialogElements(sf::RenderTarget &target, const fe::
         drawPolygon(getControlPolygon(), target, drawMatrix, getDrawColour());
     }
 
-fe::gui::checkList::checkList(float checkBoxSize, unsigned int count, mode boxMode, float gapBetweenBoxes, const sf::Font *font, std::initializer_list<std::string> options) :
+fe::gui::checkList::checkList(
+    float checkBoxSize, unsigned int count,
+    mode boxMode, float gapBetweenBoxes, float boxOutlineWidth, float checkMarkWidthFromSide,
+    const sf::Font *font, std::initializer_list<std::string> options, float gapBetweenTextAndOption
+) :
     m_boxSize(checkBoxSize),
     m_gapBetweenBoxes(gapBetweenBoxes),
     m_optionCount((int)options.size() - 1)
@@ -20,33 +24,50 @@ fe::gui::checkList::checkList(float checkBoxSize, unsigned int count, mode boxMo
         addPoint(20.f, 0.f);
         addPoint(20.f, 20.f);
         addPoint(0.f, 20.f);
-        getControlPolygon().createPolygon();
-
-        fe::lightVector2d boxPositionIncrement(0.f, 0.f);
-        if (boxMode == mode::HORIZONTAL)
-            {
-                boxPositionIncrement.x = (0 * 2.f);
-            }
-        else
-            {
-                boxPositionIncrement.y = (0 * 2.f);
-            }
-
-        m_boxPositionIncrement = boxPositionIncrement;
+        //getControlPolygon().createPolygon();
 
         for (int i = 0; i < count; i++)
             {
-                float posX = boxPositionIncrement.x * i;
-                float posY = boxPositionIncrement.y * i;
-
-                m_checkBoxes.emplace_back(checkBoxSize, 10.f, 5.f);
-                m_checkBoxes.back().setPosition(posX, posY);
+                m_checkBoxes.emplace_back(m_boxSize, boxOutlineWidth, checkMarkWidthFromSide);
 
                 if (m_optionCount >= i)
                     {
                         m_options.emplace_back(font);
                         m_options.back().setText(*(options.begin() + i));
-                        m_options.back().setPosition(130.f, checkBoxSize + (checkBoxSize / 2.f));
+                    }
+            }
+
+        updateBoxes(checkBoxSize, boxMode, gapBetweenBoxes, boxOutlineWidth, checkMarkWidthFromSide, gapBetweenTextAndOption);
+    }
+
+void fe::gui::checkList::updateBoxes(float checkBoxSize, mode boxMode, float gapBetweenBoxes, float boxOutlineWidth, float checkMarkWidthFromSide, float gapBetweenTextAndBox)
+    {
+        m_boxSize = checkBoxSize;
+        m_gapBetweenBoxes = gapBetweenBoxes;
+
+        fe::lightVector2d boxPositionIncrement(0.f, 0.f);
+        if (boxMode == mode::HORIZONTAL)
+            {
+                boxPositionIncrement.x = (m_boxSize) + (boxOutlineWidth * 2.f) + (gapBetweenBoxes);
+            }
+        else
+            {
+                boxPositionIncrement.y = (m_boxSize) + (boxOutlineWidth * 2.f) + (gapBetweenBoxes);
+            }
+
+        m_boxPositionIncrement = boxPositionIncrement;
+
+        for (int i = 0; i < m_checkBoxes.size(); i++)
+            {
+                float posX = boxPositionIncrement.x * i;
+                float posY = boxPositionIncrement.y * i;
+
+                m_checkBoxes[i].createCheckBox(m_boxSize, boxOutlineWidth, checkMarkWidthFromSide);
+                m_checkBoxes[i].setPosition(posX, posY);
+
+                if (i < m_options.size())
+                    {
+                        m_options[i].setPosition((m_boxSize) + (boxOutlineWidth * 2.f) + (m_options[i].getSize().x / 2.f) + gapBetweenTextAndBox, (m_boxSize / 2.f) + boxOutlineWidth);
                     }
             }
     }
