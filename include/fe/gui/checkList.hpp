@@ -30,6 +30,8 @@ namespace fe
                             FLAT_ENGINE_API void onStateChange(dialogStates previous, dialogStates next) final;
                             FLAT_ENGINE_API void drawDialogElements(sf::RenderTarget &target, const fe::matrix3d &drawMatrix) final;
 
+                            FLAT_ENGINE_API void handleWindowEvent(const sf::Event &event);
+
                         public:
                             enum class mode
                                 {
@@ -47,6 +49,12 @@ namespace fe
                             FLAT_ENGINE_API void updateBoxes(float checkBoxSize, mode boxMode, float gapBetweenBoxes, float boxOutlineWidth, float checkMarkWidthFromSide, float gapBetweenTextAndBox);
 
                             FLAT_ENGINE_API void init(fe::gui::guiGraph &graph, int node);
+
+                            FLAT_ENGINE_API fe::gui::checkBox &getCheckbox(unsigned int index);
+
+                            // Returns all check box inputs from Left -> Right / Top -> Down
+                            FLAT_ENGINE_API void getSelected(std::vector<bool> &selected);
+                            FLAT_ENGINE_API std::vector<bool> getSelected();
 
                     };
             }

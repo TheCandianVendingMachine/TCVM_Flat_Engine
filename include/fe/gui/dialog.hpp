@@ -27,6 +27,7 @@ namespace fe
 
                             dialogStates m_dialogState;
                             bool m_killed;
+                            bool m_draw;
 
                         protected:
                             virtual void drawDialogElements(sf::RenderTarget &target, const fe::matrix3d &drawMatrix) = 0;
@@ -43,6 +44,9 @@ namespace fe
                             // Marks GUI dialog for cleanup
                             FLAT_ENGINE_API void kill();
                             FLAT_ENGINE_API bool isKilled() const;
+
+                            FLAT_ENGINE_API void setDraw(bool draw);
+                            FLAT_ENGINE_API bool isDrawn() const;
 
                             FLAT_ENGINE_API void setState(dialogStates state);
                             FLAT_ENGINE_API dialogStates getState() const;

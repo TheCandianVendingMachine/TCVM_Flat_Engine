@@ -11,6 +11,14 @@ void fe::gui::checkList::drawDialogElements(sf::RenderTarget &target, const fe::
         drawPolygon(getControlPolygon(), target, drawMatrix, getDrawColour());
     }
 
+void fe::gui::checkList::handleWindowEvent(const sf::Event &event)
+    {
+        for (auto &box : m_checkBoxes)
+            {
+                box.handleEvent(event);
+            }
+    }
+
 fe::gui::checkList::checkList(
     float checkBoxSize, unsigned int count,
     mode boxMode, float gapBetweenBoxes, float boxOutlineWidth, float checkMarkWidthFromSide,
@@ -82,4 +90,31 @@ void fe::gui::checkList::init(fe::gui::guiGraph &graph, int node)
                         graph.addObjectToGraph(&m_options[i], box);
                     }
             }
+    }
+
+fe::gui::checkBox &fe::gui::checkList::getCheckbox(unsigned int index)
+    {
+        return m_checkBoxes[index];
+    }
+
+void fe::gui::checkList::getSelected(std::vector<bool> &selected)
+    {
+        for (unsigned int i = 0; i < m_checkBoxes.size(); i++)
+            {
+                if (i < selected.size())
+                    {
+                        selected[i] = m_checkBoxes[i].isSelected();
+                    }
+                else
+                    {
+                        m_checkBoxes.push_back(m_checkBoxes[i].isSelected());
+                    }
+            }
+    }
+
+std::vector<bool> fe::gui::checkList::getSelected()
+    {
+        std::vector<bool> returnVec;
+        getSelected(returnVec);
+        return returnVec;
     }

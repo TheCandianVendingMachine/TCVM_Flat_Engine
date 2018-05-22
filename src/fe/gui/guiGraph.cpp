@@ -27,7 +27,7 @@ const sf::Texture *fe::gui::guiGraph::getRenderTexture() const
 
 bool fe::gui::guiGraph::renderNode(fe::priv::node *node) const
     {
-        return true;
+        return static_cast<fe::gui::dialog*>(node->m_userData)->isDrawn();
     }
 
 void fe::gui::guiGraph::drawNode(fe::priv::node *node, sf::RenderTarget &target)

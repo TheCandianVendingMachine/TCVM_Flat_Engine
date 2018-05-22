@@ -79,7 +79,7 @@ void fe::renderGraph::draw(sf::RenderTarget &window)
                 fe::priv::node *node = m_sceneRenderTree.getNode(nodeStack[stackTop - 1]);
                 stackTop--;
 
-                if (renderNode(node))
+                if (!node->m_userData || renderNode(node))
                     {
                         fe::transformable *nodeTransform = &m_baseTransform;
                         if (node != m_sceneRenderTree.getNode(m_baseNode)) 
@@ -118,7 +118,7 @@ void fe::renderGraph::draw(sf::RenderTarget &window)
                 FE_END_PROFILE;
                 stackTop--;
 
-                if (renderNode(node))
+                if (!node->m_userData || renderNode(node))
                     {
                         if (node->m_userData)
                             {

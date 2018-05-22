@@ -3,7 +3,8 @@
 
 fe::gui::dialog::dialog() :
     m_dialogState(dialogStates::NONE),
-    m_killed(false)
+    m_killed(false),
+    m_draw(true)
     {
     }
 
@@ -15,6 +16,16 @@ void fe::gui::dialog::kill()
 bool fe::gui::dialog::isKilled() const
     {
         return m_killed;
+    }
+
+void fe::gui::dialog::setDraw(bool draw)
+    {
+        m_draw = draw;
+    }
+
+bool fe::gui::dialog::isDrawn() const
+    {
+        return m_draw;
     }
 
 void fe::gui::dialog::setState(dialogStates state)

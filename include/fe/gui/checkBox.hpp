@@ -15,6 +15,7 @@ namespace fe
                     {
                         private:
                             fe::polygon2d m_checkMark;
+                            fe::polygon2d m_outline;
 
                             sf::Color m_colourOnActive;
                             sf::Color m_colourOnDeactive;
@@ -24,6 +25,8 @@ namespace fe
                             float m_checkRadius;
                             float m_distanceFromSide;
                             float m_boxOutlineWidth;
+
+                            bool m_selected;
 
                         protected:
                             FLAT_ENGINE_API void onStateChange(dialogStates previous, dialogStates next) final;
@@ -37,6 +40,9 @@ namespace fe
                             FLAT_ENGINE_API void setColourOnDeactive(sf::Color colour);
                             FLAT_ENGINE_API void setColourHighlight(sf::Color colour);
                             FLAT_ENGINE_API void setColourOnPress(sf::Color colour);
+
+                            FLAT_ENGINE_API void setSelected(bool value);
+                            FLAT_ENGINE_API bool isSelected() const;
 
                     };
             }
