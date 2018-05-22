@@ -21,7 +21,7 @@ void fe::gui::checkList::handleWindowEvent(const sf::Event &event)
 
 fe::gui::checkList::checkList(
     float checkBoxSize, unsigned int count,
-    mode boxMode, float gapBetweenBoxes, float boxOutlineWidth, float checkMarkWidthFromSide,
+    float gapBetweenBoxes, float boxOutlineWidth, float checkMarkWidthFromSide,
     const sf::Font *font, std::initializer_list<std::string> options, float gapBetweenTextAndOption
 ) :
     m_boxSize(checkBoxSize),
@@ -45,33 +45,20 @@ fe::gui::checkList::checkList(
                     }
             }
 
-        updateBoxes(checkBoxSize, boxMode, gapBetweenBoxes, boxOutlineWidth, checkMarkWidthFromSide, gapBetweenTextAndOption);
+        updateBoxes(checkBoxSize, gapBetweenBoxes, boxOutlineWidth, checkMarkWidthFromSide, gapBetweenTextAndOption);
     }
 
-void fe::gui::checkList::updateBoxes(float checkBoxSize, mode boxMode, float gapBetweenBoxes, float boxOutlineWidth, float checkMarkWidthFromSide, float gapBetweenTextAndBox)
+void fe::gui::checkList::updateBoxes(float checkBoxSize, float gapBetweenBoxes, float boxOutlineWidth, float checkMarkWidthFromSide, float gapBetweenTextAndBox)
     {
         m_boxSize = checkBoxSize;
         m_gapBetweenBoxes = gapBetweenBoxes;
 
-        fe::lightVector2d boxPositionIncrement(0.f, 0.f);
-        if (boxMode == mode::HORIZONTAL)
-            {
-                boxPositionIncrement.x = (m_boxSize) + (boxOutlineWidth * 2.f) + (gapBetweenBoxes);
-            }
-        else
-            {
-                boxPositionIncrement.y = (m_boxSize) + (boxOutlineWidth * 2.f) + (gapBetweenBoxes);
-            }
-
-        m_boxPositionIncrement = boxPositionIncrement;
+        fe::lightVector2d boxPositionIncrement(0.f, (m_boxSize)+(boxOutlineWidth * 2.f) + (gapBetweenBoxes));
 
         for (int i = 0; i < m_checkBoxes.size(); i++)
             {
-                float posX = boxPositionIncrement.x * i;
-                float posY = boxPositionIncrement.y * i;
-
                 m_checkBoxes[i].createCheckBox(m_boxSize, boxOutlineWidth, checkMarkWidthFromSide);
-                m_checkBoxes[i].setPosition(posX, posY);
+                m_checkBoxes[i].setPosition(0.f, boxPositionIncrement.y * i);
 
                 if (i < m_options.size())
                     {

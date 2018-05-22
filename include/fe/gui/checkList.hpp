@@ -33,20 +33,14 @@ namespace fe
                             FLAT_ENGINE_API void handleWindowEvent(const sf::Event &event);
 
                         public:
-                            enum class mode
-                                {
-                                    VERTICAL,
-                                    HORIZONTAL
-                                };
-
                             // Creates a new checkButton list. Options correspond to text listed alongside check boxes. Left -> Right / Top -> Down
                             FLAT_ENGINE_API checkList(
                                 float checkBoxSize, unsigned int count,
-                                mode boxMode, float gapBetweenBoxes = 5.f, float boxOutlineWidth = 10.f, float checkMarkWidthFromSide = 5.f,
+                                float gapBetweenBoxes = 5.f, float boxOutlineWidth = 10.f, float checkMarkWidthFromSide = 5.f,
                                 const sf::Font *font = nullptr, std::initializer_list<std::string> options = {}, float gapBetweenTextAndOption = 5.f
                             );
 
-                            FLAT_ENGINE_API void updateBoxes(float checkBoxSize, mode boxMode, float gapBetweenBoxes, float boxOutlineWidth, float checkMarkWidthFromSide, float gapBetweenTextAndBox);
+                            FLAT_ENGINE_API void updateBoxes(float checkBoxSize, float gapBetweenBoxes, float boxOutlineWidth, float checkMarkWidthFromSide, float gapBetweenTextAndBox);
 
                             FLAT_ENGINE_API void init(fe::gui::guiGraph &graph, int node);
 
