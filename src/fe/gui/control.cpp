@@ -56,7 +56,7 @@ void fe::gui::control::handleEvent(const sf::Event &event)
                     if (current != dialogStates::DISABLED && current != dialogStates::PRESSED)
                         {
                             fe::lightVector2d realMousePos(event.mouseMove.x, event.mouseMove.y);
-                            realMousePos = getMatrix().transformPointToLocalSpace(std::forward<const fe::lightVector2d>(realMousePos));
+                            realMousePos = getDrawMatrix().getMatrix().transformPointToLocalSpace(std::forward<const fe::lightVector2d>(realMousePos));
 
                             if (m_controlPolygon.pointInPolygon(realMousePos.x, realMousePos.y))
                                 {
@@ -72,7 +72,7 @@ void fe::gui::control::handleEvent(const sf::Event &event)
                     if (current != dialogStates::DISABLED)
                         {
                             fe::lightVector2d realMousePos(event.mouseButton.x, event.mouseButton.y);
-                            realMousePos = getMatrix().transformPointToLocalSpace(std::forward<const fe::lightVector2d>(realMousePos));
+                            realMousePos = getDrawMatrix().getMatrix().transformPointToLocalSpace(std::forward<const fe::lightVector2d>(realMousePos));
 
                             if (m_controlPolygon.pointInPolygon(realMousePos.x, realMousePos.y))
                                 {
@@ -86,7 +86,7 @@ void fe::gui::control::handleEvent(const sf::Event &event)
                             if (current == dialogStates::PRESSED)
                                 {
                                     fe::lightVector2d realMousePos(event.mouseButton.x, event.mouseButton.y);
-                                    realMousePos = getMatrix().transformPointToLocalSpace(std::forward<const fe::lightVector2d>(realMousePos));
+                                    realMousePos = getDrawMatrix().getMatrix().transformPointToLocalSpace(std::forward<const fe::lightVector2d>(realMousePos));
 
                                     if (m_controlPolygon.pointInPolygon(realMousePos.x, realMousePos.y))
                                         {
