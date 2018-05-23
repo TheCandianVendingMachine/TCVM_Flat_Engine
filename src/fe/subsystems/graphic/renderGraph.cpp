@@ -84,7 +84,7 @@ void fe::renderGraph::draw(sf::RenderTarget &window)
                         fe::transformable *nodeTransform = &m_baseTransform;
                         if (node != m_sceneRenderTree.getNode(m_baseNode)) 
                             {
-                                nodeTransform = getNodeTransform(node);
+                                nodeTransform = getNodeTempTransform(node);
                             }
 
                         for (auto &child : node->m_children)
