@@ -57,7 +57,7 @@ void fe::gui::checkList::updateBoxes(float checkBoxSize, float gapBetweenBoxes, 
 
         for (int i = 0; i < m_checkBoxes.size(); i++)
             {
-                m_checkBoxes[i].createCheckBox(m_boxSize, boxOutlineWidth, checkMarkWidthFromSide);
+                m_checkBoxes[i].createButton(m_boxSize, boxOutlineWidth, checkMarkWidthFromSide);
                 m_checkBoxes[i].setPosition(0.f, boxPositionIncrement.y * i);
 
                 if (i < m_options.size())
