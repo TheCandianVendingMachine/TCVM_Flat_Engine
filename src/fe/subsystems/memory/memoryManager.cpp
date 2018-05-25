@@ -23,7 +23,7 @@ void fe::memoryManager::startUpStack(fe::uInt64 stackSize)
 
 void fe::memoryManager::startUpDynamic(fe::uInt64 dynamicSize)
     {
-        m_dynamicAllocater.startUp(static_cast<fe::uInt8*>(alloc(dynamicSize)), dynamicSize);
+        //m_dynamicAllocater.startUp(static_cast<fe::uInt8*>(alloc(dynamicSize)), dynamicSize);
     }
 
 void fe::memoryManager::shutDown()
