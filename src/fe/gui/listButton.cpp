@@ -1,4 +1,5 @@
 #include "fe/gui/listButton.hpp"
+#include "fe/debug/profiler.hpp"
 
 void fe::gui::listButton::onStateChange(dialogStates previous, dialogStates next)
     {
@@ -36,6 +37,7 @@ void fe::gui::listButton::onStateChange(dialogStates previous, dialogStates next
 
 void fe::gui::listButton::drawDialogElements(sf::RenderTarget &target, const fe::matrix3d &drawMatrix)
     {
+        FE_ENGINE_PROFILE("gui_list_button", "draw");
         //drawPolygon(getControlPolygon(), target, drawMatrix, getDrawColour());
         drawPolygon(m_outline, target, drawMatrix, getDrawColour());
 
@@ -52,6 +54,7 @@ void fe::gui::listButton::drawDialogElements(sf::RenderTarget &target, const fe:
 
                 drawPolygon(m_mark, target, checkMatrix, drawColour);
             }
+        FE_END_PROFILE;
     }
 
 void fe::gui::listButton::addMarkPoint(float x, float y)

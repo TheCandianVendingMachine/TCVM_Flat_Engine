@@ -1,4 +1,5 @@
 #include "fe/gui/button.hpp"
+#include "fe/debug/profiler.hpp"
 #include "fe/engine.hpp"
 #include "fe/objectManagement/str.hpp"
 #include "fe/gui/dialogStates.hpp"
@@ -42,7 +43,9 @@ void fe::gui::button::onStateChange(dialogStates previous, dialogStates next)
 
 void fe::gui::button::drawDialogElements(sf::RenderTarget &target, const fe::matrix3d &drawMatrix)
     {
+        FE_ENGINE_PROFILE("gui_button", "draw");
         drawPolygon(getControlPolygon(), target, drawMatrix, getDrawColour());
+        FE_END_PROFILE;
     }
 
 fe::gui::button::button(std::initializer_list<fe::lightVector2d> shape) :

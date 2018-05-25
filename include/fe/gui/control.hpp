@@ -27,6 +27,8 @@ namespace fe
                             fe::polygon2d m_controlPolygon;
                             sf::Color m_drawColour;
 
+                            bool m_recreateVerticies;
+
                         protected:
                             virtual void drawDialogElements(sf::RenderTarget &target, const fe::matrix3d &drawMatrix) {}
                             virtual void drawDialogText(sf::RenderTarget &target, const fe::transformable &drawMatrix) {}

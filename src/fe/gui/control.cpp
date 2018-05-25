@@ -1,18 +1,30 @@
 #include "fe/gui/control.hpp"
+#include "fe/debug/profiler.hpp"
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 
 void fe::gui::control::drawPolygon(fe::polygon2d &poly, sf::RenderTarget &target, const fe::matrix3d &drawMatrix, sf::Color drawColour)
     {
+        FE_ENGINE_PROFILE("gui_control", "emplace_verts");
+        m_verticies.clear();
         for (unsigned int i = 0; i < poly.m_verticies.size(); i++)
             {
-                m_verticies.emplace_back(fe::Vector2d(drawMatrix.transformPoint(std::forward<const fe::lightVector2d>(poly.m_verticies[i][0]))).convertToSfVec2(), drawColour);
-                m_verticies.emplace_back(fe::Vector2d(drawMatrix.transformPoint(std::forward<const fe::lightVector2d>(poly.m_verticies[i][1]))).convertToSfVec2(), drawColour);
-                m_verticies.emplace_back(fe::Vector2d(drawMatrix.transformPoint(std::forward<const fe::lightVector2d>(poly.m_verticies[i][2]))).convertToSfVec2(), drawColour);
+                m_verticies.emplace_back(fe::Vector2d(drawMatrix.transformPoint(std::forward<const fe::lightVector2d>(poly.m_verticies[i][0]))).convertToSfVec2());
+                m_verticies.emplace_back(fe::Vector2d(drawMatrix.transformPoint(std::forward<const fe::lightVector2d>(poly.m_verticies[i][1]))).convertToSfVec2());
+                m_verticies.emplace_back(fe::Vector2d(drawMatrix.transformPoint(std::forward<const fe::lightVector2d>(poly.m_verticies[i][2]))).convertToSfVec2());
             }
+        FE_END_PROFILE;
 
+        FE_ENGINE_PROFILE("gui_control", "set_colour");
+        for (unsigned int i = 0; i < m_verticies.size(); i++)
+            {
+                m_verticies[i].color = drawColour;
+            }
+        FE_END_PROFILE;
+
+        FE_ENGINE_PROFILE("gui_control", "draw_to_app");
         target.draw(m_verticies.data(), m_verticies.size(), sf::PrimitiveType::Triangles);
-        m_verticies.clear();
+        FE_END_PROFILE;
     }
 
 fe::polygon2d &fe::gui::control::getControlPolygon()

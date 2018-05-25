@@ -1,4 +1,5 @@
 #include "fe/gui/dialog.hpp"
+#include "fe/debug/profiler.hpp"
 #include <algorithm>
 
 fe::gui::dialog::dialog() :
@@ -41,8 +42,13 @@ fe::gui::dialogStates fe::gui::dialog::getState() const
 
 void fe::gui::dialog::draw(sf::RenderTarget &target)
     {
+        FE_ENGINE_PROFILE("gui_dialog", "draw_elements");
         drawDialogElements(target, m_drawMatrix.getMatrix());
+        FE_END_PROFILE;
+
+        FE_ENGINE_PROFILE("gui_dialog", "draw_text");
         drawDialogText(target, m_drawMatrix);
+        FE_END_PROFILE;
     }
 
 fe::transformable &fe::gui::dialog::getDrawMatrix()

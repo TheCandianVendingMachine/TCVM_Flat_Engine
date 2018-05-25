@@ -1,4 +1,5 @@
 #include "fe/gui/radioList.hpp"
+#include "fe/debug/profiler.hpp"
 #include "fe/gui/guiGraph.hpp"
 #include "fe/engine.hpp"
 #include "fe/subsystems/messaging/gameEvent.hpp"
@@ -11,7 +12,9 @@ void fe::gui::radioList::onStateChange(dialogStates previous, dialogStates next)
 
 void fe::gui::radioList::drawDialogElements(sf::RenderTarget &target, const fe::matrix3d &drawMatrix)
     {
+        FE_ENGINE_PROFILE("gui_radio_list", "draw");
         drawPolygon(getControlPolygon(), target, drawMatrix, getDrawColour());
+        FE_END_PROFILE;
     }
 
 void fe::gui::radioList::handleWindowEvent(const sf::Event &event)

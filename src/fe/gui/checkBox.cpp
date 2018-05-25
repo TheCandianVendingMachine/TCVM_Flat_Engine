@@ -1,4 +1,5 @@
 #include "fe/gui/checkBox.hpp"
+#include "fe/debug/profiler.hpp"
 
 fe::gui::checkBox::checkBox(float radius, float boxOutlineWidth, float checkMarkWidthFromSide) :
     listButton(radius, boxOutlineWidth, checkMarkWidthFromSide)

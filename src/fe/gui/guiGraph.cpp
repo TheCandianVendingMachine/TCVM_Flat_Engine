@@ -3,6 +3,7 @@
 #include "fe/gui/dialog.hpp"
 #include "fe/gui/control.hpp"
 #include "fe/gui/dialogProxy.hpp"
+#include "fe/debug/profiler.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 
 int fe::gui::guiGraph::getNodeFromObject(void *object)
@@ -32,8 +33,10 @@ bool fe::gui::guiGraph::renderNode(fe::priv::node *node) const
 
 void fe::gui::guiGraph::drawNode(fe::priv::node *node, sf::RenderTarget &target)
     {
+        FE_ENGINE_PROFILE("gui_graph", "draw_node");
         fe::gui::dialog *dialog = static_cast<fe::gui::dialog*>(node->m_userData);
         dialog->draw(target);
+        FE_END_PROFILE;
     }
 
 void *fe::gui::guiGraph::createZOrderProxy()

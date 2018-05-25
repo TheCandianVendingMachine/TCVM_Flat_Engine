@@ -118,6 +118,7 @@ void fe::renderGraph::draw(sf::RenderTarget &window)
                 FE_END_PROFILE;
                 stackTop--;
 
+                FE_ENGINE_PROFILE("render_graph", "render_graph");
                 if (!node->m_userData || renderNode(node))
                     {
                         if (node->m_userData)
@@ -131,6 +132,7 @@ void fe::renderGraph::draw(sf::RenderTarget &window)
                             }
                         FE_END_PROFILE;
                     }
+                FE_END_PROFILE;
             }
         FE_END_PROFILE;
 

@@ -1,4 +1,5 @@
 #include "fe/gui/radioButton.hpp"
+#include "fe/debug/profiler.hpp"
 #include "fe/engine.hpp"
 #include "fe/subsystems/messaging/eventSender.hpp"
 #include "fe/objectManagement/str.hpp"
