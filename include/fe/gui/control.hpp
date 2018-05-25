@@ -20,8 +20,6 @@ namespace fe
     {
         namespace gui
             {
-                class guiBatch;
-
                 class control : public fe::gui::dialog
                     {
                         private:
@@ -52,7 +50,7 @@ namespace fe
                             FLAT_ENGINE_API sf::Color getDrawColour() const;
 
                             FLAT_ENGINE_API void handleEvent(const sf::Event &event);
-                            virtual void handleEvent(const gameEvent &event) {}
+                            virtual void handleEvent(const gameEvent &event) override {}
 
                     };
             }

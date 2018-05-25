@@ -43,18 +43,18 @@ fe::eventSender::eventSender() : m_currentFrame(0)
 
 void fe::eventSender::subscribe(eventHandler *handler)
     {
-        m_handlers[handler->id()] = handler;
+        m_handlers[handler->eventHandlerId()] = handler;
     }
 
 void fe::eventSender::subscribe(eventHandler *handler, fe::int64 messageType)
     {
-        m_handlers[handler->id()] = handler;
+        m_handlers[handler->eventHandlerId()] = handler;
         m_observers[messageType].push_back(handler);
     }
 
 void fe::eventSender::unsubscribe(eventHandler *handler)
     {
-        m_handlers.erase(handler->id());
+        m_handlers.erase(handler->eventHandlerId());
     }
 
 void fe::eventSender::unsubscribe(eventHandler *handler, fe::int64 messageType)
@@ -64,7 +64,7 @@ void fe::eventSender::unsubscribe(eventHandler *handler, fe::int64 messageType)
 
 void fe::eventSender::unsubscribeAll(eventHandler *handler)
     {
-        m_handlers.erase(handler->id());
+        m_handlers.erase(handler->eventHandlerId());
         for (auto &observer : m_observers)
             {
                 observer.second.erase(std::remove(observer.second.begin(), observer.second.end(), handler), observer.second.end());

@@ -18,7 +18,7 @@ namespace fe
                     FLAT_ENGINE_API eventHandler(unsigned int id);
 
                     virtual void handleEvent(const gameEvent &event) = 0;
-                    unsigned int id() { return m_id; }
+                    unsigned int eventHandlerId() { return m_id; }
 
                     FLAT_ENGINE_API bool operator==(const eventHandler &rhs);
 

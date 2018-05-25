@@ -148,6 +148,7 @@ void fe::gui::listButton::setColourOnPress(sf::Color colour)
 void fe::gui::listButton::setSelected(bool value)
     {
         m_buttonState = static_cast<buttonState>(value);
+        setState(static_cast<dialogStates>(value));
     }
 
 bool fe::gui::listButton::isSelected() const
