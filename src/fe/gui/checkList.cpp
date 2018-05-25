@@ -95,7 +95,7 @@ void fe::gui::checkList::getSelected(std::vector<bool> &selected)
                     }
                 else
                     {
-                        m_checkBoxes.push_back(m_checkBoxes[i].isSelected());
+                        selected.push_back(m_checkBoxes[i].isSelected());
                     }
             }
     }

@@ -1,4 +1,7 @@
 #include "fe/gui/radioButton.hpp"
+#include "fe/engine.hpp"
+#include "fe/subsystems/messaging/eventSender.hpp"
+#include "fe/objectManagement/str.hpp"
 
 fe::lightVector2d fe::gui::radioButton::getCirclePoint(unsigned int index, float radius) const
     {
@@ -12,8 +15,25 @@ fe::lightVector2d fe::gui::radioButton::getCirclePoint(unsigned int index, float
         return fe::lightVector2d(x, y);
     }
 
-fe::gui::radioButton::radioButton(unsigned int points, float radius, float outlineWidth, float markWidthFromSide) :
+void fe::gui::radioButton::onButtonStateChange(buttonState previous, buttonState next)
+    {
+        if (previous != next && next == buttonState::SELECTED)
+            {
+                fe::gameEvent event(FE_STR("radioButtonSelect"), 2);
+                event.args[0].arg.TYPE_VOIDP = this;
+                event.args[0].argType = fe::gameEventArgument::type::TYPE_VOIDP;
+
+                event.args[1].arg.TYPE_UINTEGER = m_id;
+                event.args[1].argType = fe::gameEventArgument::type::TYPE_UINT;
+
+                fe::engine::get().getEventSender().sendTo(event, m_idToSendTo);
+            }
+    }
+
+fe::gui::radioButton::radioButton(unsigned int id, unsigned int idToSendTo, unsigned int points, float radius, float outlineWidth, float markWidthFromSide) :
     m_points(points),
+    m_id(id),
+    m_idToSendTo(idToSendTo),
     fe::gui::listButton(radius, outlineWidth, markWidthFromSide)
     {
         createButton(radius, outlineWidth, markWidthFromSide);
@@ -40,7 +60,16 @@ void fe::gui::radioButton::createButton(float radius, float outlineWidth, float 
         for (unsigned int i = 0; i <= m_points; i++)
             {
                 fe::lightVector2d coord = getCirclePoint(i, radius - outlineWidth - markWidthFromSide);
-                addMarkPoint(coord.x + radius - markWidthFromSide, coord.y + radius - markWidthFromSide);
+                addMarkPoint(coord.x + radius - outlineWidth, coord.y + radius - outlineWidth);
             }
         createMark();
+
+
+        getControlPolygon().clear();
+        for (unsigned int i = 0; i <= m_points; i++)
+            {
+                fe::lightVector2d coord = getCirclePoint(i, radius);
+                addPoint(coord.x + radius, coord.y + radius);
+            }
+        getControlPolygon().createPolygon();
     }

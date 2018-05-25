@@ -13,6 +13,14 @@ namespace fe
             {
                 class listButton : public fe::gui::control
                     {
+                        protected:
+                            enum buttonState
+                                {
+                                    NONE =      0,
+                                    SELECTED =  1 << 0,
+                                    HIGHLIGHT = 1 << 1
+                                };
+
                         private:
                             fe::polygon2d m_mark;
                             fe::polygon2d m_outline;
@@ -26,12 +34,7 @@ namespace fe
                             float m_distanceFromSide;
                             float m_outlineWidth;
 
-                            enum buttonState
-                                {
-                                    NONE =      0,
-                                    SELECTED =  1 << 0,
-                                    HIGHLIGHT = 1 << 1
-                                } m_buttonState;
+                            buttonState m_buttonState;
 
                         protected:
                             FLAT_ENGINE_API void onStateChange(dialogStates previous, dialogStates next) final;
@@ -67,6 +70,9 @@ namespace fe
 
                             FLAT_ENGINE_API void setSelected(bool value);
                             FLAT_ENGINE_API bool isSelected() const;
+
+                            using fe::gui::control::handleEvent;
+                            virtual void handleEvent(const gameEvent &event) override {}
                     };
             }
     }
