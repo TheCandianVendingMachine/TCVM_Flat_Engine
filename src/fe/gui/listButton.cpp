@@ -39,7 +39,7 @@ void fe::gui::listButton::drawDialogElements(sf::RenderTarget &target, const fe:
     {
         FE_ENGINE_PROFILE("gui_list_button", "draw");
         //drawPolygon(getControlPolygon(), target, drawMatrix, getDrawColour());
-        drawPolygon(m_outline, target, drawMatrix, getDrawColour());
+        drawPolygon(m_outline, drawMatrix, getDrawColour());
 
         if (m_buttonState > buttonState::NONE)
             {
@@ -52,8 +52,10 @@ void fe::gui::listButton::drawDialogElements(sf::RenderTarget &target, const fe:
                         drawColour.a = 150;
                     }
 
-                drawPolygon(m_mark, target, checkMatrix, drawColour);
+                drawPolygon(m_mark, checkMatrix, drawColour);
             }
+
+        draw(target);
         FE_END_PROFILE;
     }
 

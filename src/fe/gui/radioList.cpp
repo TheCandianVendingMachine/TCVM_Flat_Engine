@@ -13,7 +13,8 @@ void fe::gui::radioList::onStateChange(dialogStates previous, dialogStates next)
 void fe::gui::radioList::drawDialogElements(sf::RenderTarget &target, const fe::matrix3d &drawMatrix)
     {
         FE_ENGINE_PROFILE("gui_radio_list", "draw");
-        drawPolygon(getControlPolygon(), target, drawMatrix, getDrawColour());
+        drawPolygon(getControlPolygon(), drawMatrix, getDrawColour());
+        draw(target);
         FE_END_PROFILE;
     }
 

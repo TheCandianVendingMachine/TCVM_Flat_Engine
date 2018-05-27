@@ -27,7 +27,8 @@ namespace fe
                             fe::polygon2d m_controlPolygon;
                             sf::Color m_drawColour;
 
-                            bool m_recreateVerticies;
+                            int m_vertexCount;
+                            int m_activeVertexCount;
 
                         protected:
                             virtual void drawDialogElements(sf::RenderTarget &target, const fe::matrix3d &drawMatrix) {}
@@ -35,7 +36,8 @@ namespace fe
                             virtual void onStateChange(dialogStates previous, dialogStates next) {}
                             virtual void handleWindowEvent(const sf::Event &event) {}
 
-                            FLAT_ENGINE_API void drawPolygon(fe::polygon2d &poly, sf::RenderTarget &target, const fe::matrix3d &drawMatrix, sf::Color drawColour);
+                            FLAT_ENGINE_API void draw(sf::RenderTarget &target);
+                            FLAT_ENGINE_API void drawPolygon(fe::polygon2d &poly, const fe::matrix3d &drawMatrix, sf::Color drawColour);
 
                             FLAT_ENGINE_API fe::polygon2d &getControlPolygon();
 

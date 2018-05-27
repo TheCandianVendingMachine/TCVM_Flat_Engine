@@ -3,27 +3,40 @@
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 
-void fe::gui::control::drawPolygon(fe::polygon2d &poly, sf::RenderTarget &target, const fe::matrix3d &drawMatrix, sf::Color drawColour)
+void fe::gui::control::drawPolygon(fe::polygon2d &poly, const fe::matrix3d &drawMatrix, sf::Color drawColour)
     {
         FE_ENGINE_PROFILE("gui_control", "emplace_verts");
-        m_verticies.clear();
+        m_vertexCount += poly.m_verticies.size() * 3;
         for (unsigned int i = 0; i < poly.m_verticies.size(); i++)
             {
-                m_verticies.emplace_back(fe::Vector2d(drawMatrix.transformPoint(std::forward<const fe::lightVector2d>(poly.m_verticies[i][0]))).convertToSfVec2());
-                m_verticies.emplace_back(fe::Vector2d(drawMatrix.transformPoint(std::forward<const fe::lightVector2d>(poly.m_verticies[i][1]))).convertToSfVec2());
-                m_verticies.emplace_back(fe::Vector2d(drawMatrix.transformPoint(std::forward<const fe::lightVector2d>(poly.m_verticies[i][2]))).convertToSfVec2());
+                if (m_vertexCount > m_verticies.size())
+                    {
+                        m_verticies.emplace_back(fe::Vector2d(drawMatrix.transformPoint(std::move(poly.m_verticies[i][0]))).convertToSfVec2(), drawColour);
+                        m_verticies.emplace_back(fe::Vector2d(drawMatrix.transformPoint(std::move(poly.m_verticies[i][1]))).convertToSfVec2(), drawColour);
+                        m_verticies.emplace_back(fe::Vector2d(drawMatrix.transformPoint(std::move(poly.m_verticies[i][2]))).convertToSfVec2(), drawColour);
+                    }
+                else
+                    {
+                        m_verticies[m_activeVertexCount + 0].position = fe::Vector2d(drawMatrix.transformPoint(std::move(poly.m_verticies[i][0]))).convertToSfVec2();
+                        m_verticies[m_activeVertexCount + 1].position = fe::Vector2d(drawMatrix.transformPoint(std::move(poly.m_verticies[i][1]))).convertToSfVec2();
+                        m_verticies[m_activeVertexCount + 2].position = fe::Vector2d(drawMatrix.transformPoint(std::move(poly.m_verticies[i][2]))).convertToSfVec2();
+
+                        m_verticies[m_activeVertexCount + 0].color = drawColour;
+                        m_verticies[m_activeVertexCount + 1].color = drawColour;
+                        m_verticies[m_activeVertexCount + 2].color = drawColour;
+                    }
+
+                m_activeVertexCount += 3;
             }
         FE_END_PROFILE;
+    }
 
-        FE_ENGINE_PROFILE("gui_control", "set_colour");
-        for (unsigned int i = 0; i < m_verticies.size(); i++)
-            {
-                m_verticies[i].color = drawColour;
-            }
-        FE_END_PROFILE;
-
+void fe::gui::control::draw(sf::RenderTarget &target)
+    {
         FE_ENGINE_PROFILE("gui_control", "draw_to_app");
-        target.draw(m_verticies.data(), m_verticies.size(), sf::PrimitiveType::Triangles);
+        target.draw(m_verticies.data(), m_activeVertexCount, sf::PrimitiveType::Triangles);
+        m_activeVertexCount = 0;
+        m_vertexCount = 0;
         FE_END_PROFILE;
     }
 
@@ -43,7 +56,9 @@ void fe::gui::control::addPoint(float x, float y)
     }
 
 fe::gui::control::control() :
-    m_drawColour(sf::Color::White)
+    m_drawColour(sf::Color::White),
+    m_vertexCount(0),
+    m_activeVertexCount(0)
     {
         setState(dialogStates::ACTIVE);
     }
