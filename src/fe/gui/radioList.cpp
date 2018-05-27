@@ -42,7 +42,7 @@ fe::gui::radioList::radioList(
 
         for (int i = 0; i < count; i++)
             {
-                m_selections.emplace_back(i, eventHandlerId(), 50, m_selectionSize, selectionOutlineWidth, markWidthFromSide);
+                m_selections.emplace_back(i, eventHandlerId(), 30, m_selectionSize, selectionOutlineWidth, markWidthFromSide);
 
                 if (m_optionCount >= i)
                     {
