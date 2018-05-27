@@ -79,10 +79,12 @@ void fe::renderGraph::draw(sf::RenderTarget &window)
                 fe::priv::node *node = m_sceneRenderTree.getNode(nodeStack[stackTop - 1]);
                 stackTop--;
 
+                bool isBaseNode = node == m_sceneRenderTree.getNode(m_baseNode);
+
                 if (!node->m_userData || renderNode(node))
                     {
                         fe::transformable *nodeTransform = &m_baseTransform;
-                        if (node != m_sceneRenderTree.getNode(m_baseNode)) 
+                        if (!isBaseNode)
                             {
                                 nodeTransform = getNodeTempTransform(node);
                             }

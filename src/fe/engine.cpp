@@ -36,7 +36,6 @@ fe::engine *fe::engine::m_instance = nullptr;
 
 void fe::engine::run()
     {
-        std::ofstream out("profileOutput.txt");
         fe::clock updateClock;
         float currentTime = updateClock.getTime().asSeconds();
         float newTime = 0.f;
@@ -75,7 +74,7 @@ void fe::engine::run()
             #if FE_OUTPUT_PROFILE_RESULTS
                 if (m_elapsedFrames % inverseDeltaTime == 0) 
                     {
-                        out.open("profileOutput.txt", std::ios::trunc);
+                        std::ofstream out("profileOutput.txt", std::ios::trunc);
                         m_profileLogger->printToStream(out);
                         out.close();
                         //FE_LOG_DEBUG(getFPS());

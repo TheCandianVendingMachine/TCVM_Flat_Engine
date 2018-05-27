@@ -2,9 +2,10 @@
 // The data which the profiler gained.
 #pragma once
 #define FLAT_ENGINE_EXPORT
-#include "../flatEngineExport.hpp"
-#include "../time/time.hpp"
-#include "../typeDefines.hpp"
+#include "fe/flatEngineExport.hpp"
+#include "fe/time/time.hpp"
+#include "fe/typeDefines.hpp"
+#include "fe/dataStructures/singlyLinkedList.hpp"
 #include <unordered_map>
 #include <ostream>
 #include <stack>
@@ -12,8 +13,25 @@
 namespace fe
     {
         class profilerLogger
-            {
+            {                 
                 private:
+                    struct profileDynamicData
+	                    {
+		                    fe::time m_startTime;
+		                    fe::time m_endTime;
+		
+                            char *m_nameStr = nullptr;
+                            unsigned int m_nameSize = 0;
+                            unsigned int m_index = 0;
+                            profilerLogger *m_profileLogger;
+                            bool m_profile = true;
+                            FLAT_ENGINE_API void init(unsigned int index, profilerLogger *logger);
+                            FLAT_ENGINE_API void start(const char *name);
+                            FLAT_ENGINE_API void end();
+                            FLAT_ENGINE_API void shutDown();
+	                    } m_allProfiles[FE_MAX_PROFILER_PROFILES];
+                    fe::singlyLinkedList<unsigned int> m_unallocatedProfiles;
+
                     struct profileData
                         {
                             fe::time m_time[FE_PROFILER_AVERAGE_MAX];
@@ -30,15 +48,14 @@ namespace fe
                             profileData *m_data;
                             std::vector<profileGroup*> m_children;
 
-                            char m_name[512] = "\0";
+                            char *m_name = nullptr;
+                            unsigned int m_nameSize = 0;
 
                             bool m_profile = true;
 
-                            profileGroup *init(const char *group)
-                                {
-                                    std::strcpy(m_name, group);
-                                    return this;
-                                }
+                            FLAT_ENGINE_API profileGroup *init(const char *group);
+
+                            FLAT_ENGINE_API void shutDown();
 
                             bool operator<(const profileGroup &rhs) const { return m_data->m_avgTime < rhs.m_data->m_avgTime; }
                             bool operator>(const profileGroup &rhs) const { return m_data->m_avgTime > rhs.m_data->m_avgTime; }
@@ -55,6 +72,20 @@ namespace fe
                     FLAT_ENGINE_API void print(std::ostream &out, profileGroup &group, const char *prefix);
 
                 public:
+                    struct profiler
+                        {
+                            profileDynamicData *data;
+                            profiler(profileDynamicData &dat, const char *name) : data(&dat)
+                                {
+                                    if (data) data->start(name);
+                                }
+
+                            ~profiler()
+                                {
+                                    if (data) data->end();
+                                }
+                        };
+
                     FLAT_ENGINE_API void startUp();
                     FLAT_ENGINE_API void shutDown();
 
@@ -67,6 +98,9 @@ namespace fe
 
                     FLAT_ENGINE_API void setProfileGroup(fe::str group, bool profile);
                     FLAT_ENGINE_API bool wantProfile(fe::str group);
+
+                    FLAT_ENGINE_API profileDynamicData &createProfile();
+                    FLAT_ENGINE_API void destroyProfile(profileDynamicData &data);
 
                     // Clears all profiles of the amount of calls in the frame
                     FLAT_ENGINE_API void clearTotalCalls();

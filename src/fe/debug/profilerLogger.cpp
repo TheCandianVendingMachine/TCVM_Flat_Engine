@@ -1,5 +1,8 @@
 #include "fe/debug/profilerLogger.hpp"
 #include "fe/objectManagement/str.hpp"
+#include "fe/time/clock.hpp"
+#include "fe/engine.hpp"
+#include "fe/subsystems/memory/memoryManager.hpp"
 #include <algorithm>
 
 fe::profilerLogger *fe::profilerLogger::m_instance = nullptr;
@@ -70,11 +73,22 @@ void fe::profilerLogger::startUp()
                 m_allProfileGroups[FE_STR(name)] = m_profileGroup[m_groupsCreated++].init(name);
                 m_profileGroupStack.push(m_allProfileGroups[FE_STR(name)]);
                 m_baseGroup = m_profileGroupStack.top();
+
+                for (unsigned int i = 0; i < FE_MAX_PROFILER_PROFILES; i++)
+                    {
+                        m_unallocatedProfiles.insert(i);
+                    }
             }
     }
 
 void fe::profilerLogger::shutDown()
     {
+        for (unsigned int i = 0; i < FE_MAX_PROFILER_PROFILES; i++)
+            {
+                m_allProfiles[i].shutDown();
+                m_profileGroup[i].shutDown();
+                m_unallocatedProfiles.clear();
+            }
         m_instance = nullptr;
     }
 
@@ -133,10 +147,94 @@ bool fe::profilerLogger::wantProfile(fe::str group)
         return m_allProfileGroups.find(group) == m_allProfileGroups.end() || m_allProfileGroups[group]->m_profile;
     }
 
+fe::profilerLogger::profileDynamicData &fe::profilerLogger::createProfile()
+    {
+        fe::singlyLinkedList<unsigned int>::node *currentNode = m_unallocatedProfiles.head();
+        while (currentNode->m_next)
+            {
+                currentNode = currentNode->m_next;
+            }
+
+        unsigned int index = currentNode->m_data;
+        m_unallocatedProfiles.remove(currentNode);
+
+        m_allProfiles[index].init(index, this);
+        return m_allProfiles[index];
+    }
+
+void fe::profilerLogger::destroyProfile(profileDynamicData &data)
+    {
+        m_unallocatedProfiles.insert(data.m_index);
+    }
+
 void fe::profilerLogger::clearTotalCalls()
     {
         for (unsigned int i = 0; i < m_profilesCreated; i++)
             {
                 m_profileData[i].m_calls = 0;
             }
+    }
+
+void fe::profilerLogger::profileDynamicData::init(unsigned int index, profilerLogger *logger)
+    {
+        m_index = index;
+        m_profileLogger = logger;
+    }
+
+void fe::profilerLogger::profileDynamicData::start(const char *name)
+    {
+        #if FE_PROFILE_RELEASE || _DEBUG
+            m_profile = false;
+            unsigned int strSize = std::strlen(name);
+            if (m_nameSize < strSize)
+                {
+                    m_nameSize = strSize;
+                    m_nameStr = static_cast<char*>(fe::memoryManager::get().alloc((m_nameSize + 1) * sizeof(char)));
+                    std::memset(m_nameStr, 0, m_nameSize);
+                }
+            std::strcpy(m_nameStr, name);
+            if (m_profileLogger->wantProfile(FE_STR(name)))
+                {
+                    m_profileLogger->startProfile(name);
+			        m_startTime = fe::clock::getTimeSinceEpoch();
+                    m_profile = true;
+                }
+
+        #endif
+	}
+
+void fe::profilerLogger::profileDynamicData::end()
+    {
+        #if FE_PROFILE_RELEASE || _DEBUG
+            if (m_profile)
+                {
+			        m_endTime = fe::clock::getTimeSinceEpoch();
+			        fe::time runtime = m_endTime - m_startTime;
+                    m_profileLogger->endProfile(m_nameStr, runtime);
+                    m_profileLogger->destroyProfile(*this);
+                }
+        #endif
+	}
+
+void fe::profilerLogger::profileDynamicData::shutDown()
+    {
+        //free(m_nameStr);
+    }
+
+fe::profilerLogger::profileGroup *fe::profilerLogger::profileGroup::init(const char *group)
+    {
+        unsigned int strSize = std::strlen(group);
+        if (m_nameSize < strSize)
+            {
+                m_nameSize = strSize;
+                m_name = static_cast<char*>(fe::memoryManager::get().alloc((m_nameSize + 1) * sizeof(char)));
+                std::memset(m_name, 0, m_nameSize);
+            }
+        std::strcpy(m_name, group);
+        return this;
+    }
+
+void fe::profilerLogger::profileGroup::shutDown()
+    {
+        //free(m_name);
     }
