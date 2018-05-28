@@ -13,6 +13,12 @@ namespace fe
             {
                 class slider : public fe::gui::control
                     {
+                        public:
+                            enum class sliderOrientation
+                                {
+                                    HORIZONTAL,
+                                    VERTICAL
+                                };
                         private:
                             fe::polygon2d m_sliderContainer;
                             fe::Vector2d m_containerSize;
@@ -20,20 +26,16 @@ namespace fe
 
                             fe::Vector2d m_sliderSize;
                             fe::Vector2d m_sliderPosition;
+                            fe::Vector2d m_sliderDistanceFromSide;
 
-                            float m_percentageScrolled; // percentage of the scroll from 0 -> 1
+                            sliderOrientation m_orientation;
 
                             FLAT_ENGINE_API void drawDialogElements(sf::RenderTarget &target, const fe::matrix3d &drawMatrix) final;
                             FLAT_ENGINE_API void onStateChange(dialogStates previous, dialogStates next) final;
 
                         public:
-                            enum class sliderOrientation
-                                {
-                                    HORIZONTAL,
-                                    VERTICAL
-                                };
-
                             FLAT_ENGINE_API slider(sliderOrientation orientation, float sliderControlSize, float scrollSize, float lengthOfOutline, float outlineWidth, float sliderControlWidthFromEdge = 0.f);
+                            FLAT_ENGINE_API float getPercentScrolled() const;
 
                     };
             }
