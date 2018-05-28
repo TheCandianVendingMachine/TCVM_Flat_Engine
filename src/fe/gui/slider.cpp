@@ -8,6 +8,7 @@ void fe::gui::slider::drawDialogElements(sf::RenderTarget &target, const fe::mat
 
         fe::matrix3d tempTransform = drawMatrix;
         tempTransform.translate(m_sliderPosition);
+        setControlOffset(m_sliderPosition);
         drawPolygon(getControlPolygon(), tempTransform, getDrawColour());
 
         draw(target);
@@ -24,7 +25,7 @@ void fe::gui::slider::handleWindowEvent(const sf::Event &event)
             {
                 case sf::Event::MouseButtonPressed:
                     m_sliderGrabPoint.x = event.mouseButton.x - (getPosition().x + m_sliderPosition.x);
-                    m_sliderGrabPoint.y = event.mouseButton.y - (getPosition().x + m_sliderPosition.x);
+                    m_sliderGrabPoint.y = event.mouseButton.y - (getPosition().y + m_sliderPosition.y);
                     break;
                 case sf::Event::MouseMoved:
                     if (getState() == dialogStates::PRESSED)
@@ -33,6 +34,7 @@ void fe::gui::slider::handleWindowEvent(const sf::Event &event)
                             switch (m_orientation)
                                 {
                                     case fe::gui::slider::sliderOrientation::HORIZONTAL:
+                                        m_sliderPosition.y = pos.x;
                                         break;
                                     case fe::gui::slider::sliderOrientation::VERTICAL:
                                         m_sliderPosition.y = pos.y;

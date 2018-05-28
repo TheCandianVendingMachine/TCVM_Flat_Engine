@@ -27,6 +27,8 @@ namespace fe
                             fe::polygon2d m_controlPolygon;
                             sf::Color m_drawColour;
 
+                            fe::lightVector2d m_controlOffset;
+
                             int m_vertexCount;
                             int m_activeVertexCount;
 
@@ -43,6 +45,8 @@ namespace fe
 
                             FLAT_ENGINE_API void addPoint(fe::lightVector2d point);
                             FLAT_ENGINE_API void addPoint(float x, float y);
+
+                            FLAT_ENGINE_API void setControlOffset(fe::lightVector2d offset);
 
                         public:
                             FLAT_ENGINE_API control();

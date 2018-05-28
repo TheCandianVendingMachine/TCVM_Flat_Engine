@@ -55,6 +55,11 @@ void fe::gui::control::addPoint(float x, float y)
         addPoint(fe::lightVector2d(x, y));
     }
 
+void fe::gui::control::setControlOffset(fe::lightVector2d offset)
+    {
+        m_controlOffset = offset;
+    }
+
 fe::gui::control::control() :
     m_drawColour(sf::Color::White),
     m_vertexCount(0),
@@ -83,7 +88,7 @@ void fe::gui::control::handleEvent(const sf::Event &event)
                     if (current != dialogStates::DISABLED && current != dialogStates::PRESSED)
                         {
                             fe::lightVector2d realMousePos(event.mouseMove.x, event.mouseMove.y);
-                            realMousePos = getDrawMatrix().getMatrix().transformPointToLocalSpace(std::forward<const fe::lightVector2d>(realMousePos));
+                            realMousePos = getDrawMatrix().getMatrix().transformPointToLocalSpace(std::forward<const fe::lightVector2d>(realMousePos)) - m_controlOffset;
 
                             if (m_controlPolygon.pointInPolygon(realMousePos.x, realMousePos.y))
                                 {
@@ -99,7 +104,7 @@ void fe::gui::control::handleEvent(const sf::Event &event)
                     if (current != dialogStates::DISABLED)
                         {
                             fe::lightVector2d realMousePos(event.mouseButton.x, event.mouseButton.y);
-                            realMousePos = getDrawMatrix().getMatrix().transformPointToLocalSpace(std::forward<const fe::lightVector2d>(realMousePos));
+                            realMousePos = getDrawMatrix().getMatrix().transformPointToLocalSpace(std::forward<const fe::lightVector2d>(realMousePos)) - m_controlOffset;
 
                             if (m_controlPolygon.pointInPolygon(realMousePos.x, realMousePos.y))
                                 {
@@ -113,7 +118,7 @@ void fe::gui::control::handleEvent(const sf::Event &event)
                             if (current == dialogStates::PRESSED)
                                 {
                                     fe::lightVector2d realMousePos(event.mouseButton.x, event.mouseButton.y);
-                                    realMousePos = getDrawMatrix().getMatrix().transformPointToLocalSpace(std::forward<const fe::lightVector2d>(realMousePos));
+                                    realMousePos = getDrawMatrix().getMatrix().transformPointToLocalSpace(std::forward<const fe::lightVector2d>(realMousePos)) - m_controlOffset;
 
                                     if (m_controlPolygon.pointInPolygon(realMousePos.x, realMousePos.y))
                                         {
