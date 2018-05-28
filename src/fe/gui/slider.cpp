@@ -1,4 +1,6 @@
 #include "fe/gui/slider.hpp"
+#include "fe/debug/logger.hpp"
+#include <SFML/Window/Event.hpp>
 
 void fe::gui::slider::drawDialogElements(sf::RenderTarget &target, const fe::matrix3d &drawMatrix)
     {
@@ -14,6 +16,35 @@ void fe::gui::slider::drawDialogElements(sf::RenderTarget &target, const fe::mat
 void fe::gui::slider::onStateChange(dialogStates previous, dialogStates next)
     {
         
+    }
+
+void fe::gui::slider::handleWindowEvent(const sf::Event &event)
+    {
+        switch (event.type)
+            {
+                case sf::Event::MouseButtonPressed:
+                    m_sliderGrabPoint.x = event.mouseButton.x - (getPosition().x + m_sliderPosition.x);
+                    m_sliderGrabPoint.y = event.mouseButton.y - (getPosition().x + m_sliderPosition.x);
+                    break;
+                case sf::Event::MouseMoved:
+                    if (getState() == dialogStates::PRESSED)
+                        {
+                            fe::Vector2d pos = getMatrix().transformPointToLocalSpace(fe::Vector2d(event.mouseMove.x, event.mouseMove.y) - m_sliderGrabPoint);
+                            switch (m_orientation)
+                                {
+                                    case fe::gui::slider::sliderOrientation::HORIZONTAL:
+                                        break;
+                                    case fe::gui::slider::sliderOrientation::VERTICAL:
+                                        m_sliderPosition.y = pos.y;
+                                        break;
+                                    default:
+                                        break;
+                                }
+                        }
+                    break;
+                default:
+                    break;
+            }
     }
 
 fe::gui::slider::slider(sliderOrientation orientation, float sliderControlSize, float scrollSize, float lengthOfOutline, float outlineWidth, float sliderControlWidthFromEdge) :
@@ -70,7 +101,7 @@ float fe::gui::slider::getPercentScrolled() const
     {
         fe::Vector2d halfSliderSize = m_sliderSize / 2.f;
         fe::Vector2d position = halfSliderSize + (m_sliderPosition - m_containerOutlineWidth - m_sliderDistanceFromSide);
-        fe::Vector2d oppositePosition = m_containerSize - position - m_containerOutlineWidth;
+        fe::Vector2d oppositePosition = m_containerSize - halfSliderSize - m_containerOutlineWidth;
 
         fe::Vector2d distanceToEnd = oppositePosition - position;
         fe::Vector2d originalDistanceToEnd = oppositePosition - halfSliderSize;

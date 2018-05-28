@@ -28,10 +28,13 @@ namespace fe
                             fe::Vector2d m_sliderPosition;
                             fe::Vector2d m_sliderDistanceFromSide;
 
+                            fe::Vector2d m_sliderGrabPoint;
+
                             sliderOrientation m_orientation;
 
                             FLAT_ENGINE_API void drawDialogElements(sf::RenderTarget &target, const fe::matrix3d &drawMatrix) final;
                             FLAT_ENGINE_API void onStateChange(dialogStates previous, dialogStates next) final;
+                            FLAT_ENGINE_API void handleWindowEvent(const sf::Event &event) final;
 
                         public:
                             FLAT_ENGINE_API slider(sliderOrientation orientation, float sliderControlSize, float scrollSize, float lengthOfOutline, float outlineWidth, float sliderControlWidthFromEdge = 0.f);
