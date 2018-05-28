@@ -34,13 +34,32 @@ void fe::gui::slider::handleWindowEvent(const sf::Event &event)
                             switch (m_orientation)
                                 {
                                     case fe::gui::slider::sliderOrientation::HORIZONTAL:
-                                        m_sliderPosition.y = pos.x;
+                                        m_sliderPosition.x = pos.x;
                                         break;
                                     case fe::gui::slider::sliderOrientation::VERTICAL:
                                         m_sliderPosition.y = pos.y;
                                         break;
                                     default:
                                         break;
+                                }
+
+                            if (m_sliderPosition.y < m_minSliderPos.y)
+                                {
+                                    m_sliderPosition.y = m_minSliderPos.y;
+                                }
+                            else if (m_sliderPosition.y + m_sliderSize.y > m_maxSliderPos.y)
+                                {
+                                    m_sliderPosition.y = m_maxSliderPos.y - m_sliderSize.y;
+                                }
+
+
+                            if (m_sliderPosition.x < m_minSliderPos.x)
+                                {
+                                    m_sliderPosition.x = m_minSliderPos.x;
+                                }
+                            else if (m_sliderPosition.x + m_sliderSize.x > m_maxSliderPos.x)
+                                {
+                                    m_sliderPosition.x = m_maxSliderPos.x - m_sliderSize.x;
                                 }
                         }
                     break;
@@ -97,13 +116,16 @@ fe::gui::slider::slider(sliderOrientation orientation, float sliderControlSize, 
 
         m_sliderPosition.x = outlineWidth + sliderControlWidthFromEdge;
         m_sliderPosition.y = outlineWidth + sliderControlWidthFromEdge;
+
+        m_minSliderPos = m_sliderPosition;
+        m_maxSliderPos = m_containerSize - m_minSliderPos;
     }
 
 float fe::gui::slider::getPercentScrolled() const
     {
         fe::Vector2d halfSliderSize = m_sliderSize / 2.f;
         fe::Vector2d position = halfSliderSize + (m_sliderPosition - m_containerOutlineWidth - m_sliderDistanceFromSide);
-        fe::Vector2d oppositePosition = m_containerSize - halfSliderSize - m_containerOutlineWidth;
+        fe::Vector2d oppositePosition = m_containerSize - halfSliderSize - m_containerOutlineWidth - m_sliderDistanceFromSide;
 
         fe::Vector2d distanceToEnd = oppositePosition - position;
         fe::Vector2d originalDistanceToEnd = oppositePosition - halfSliderSize;

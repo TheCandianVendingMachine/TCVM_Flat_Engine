@@ -28,6 +28,9 @@ namespace fe
                             fe::Vector2d m_sliderPosition;
                             fe::Vector2d m_sliderDistanceFromSide;
 
+                            fe::Vector2d m_minSliderPos;
+                            fe::Vector2d m_maxSliderPos;
+
                             fe::Vector2d m_sliderGrabPoint;
 
                             sliderOrientation m_orientation;
