@@ -46,7 +46,7 @@ namespace fe
 
                 Vector3<dataType> operator+(const Vector3<dataType> &rhs) const { return Vector3<dataType>(rhs.x + x, rhs.y + y, rhs.z + z); }
                 Vector3<dataType> operator-(const Vector3<dataType> &rhs) const { return Vector3<dataType>(x - rhs.x, y - rhs.y, z - rhs.z); }
-                Vector3<dataType> operator*(const dataType &rhs) const          { return Vector3<dataType>(rhs * x, rhs * ym rhs * z); }
+                Vector3<dataType> operator*(const dataType &rhs) const          { return Vector3<dataType>(rhs * x, rhs * y, rhs * z); }
                 Vector3<dataType> operator/(const dataType &rhs) const          { return Vector3<dataType>(x / rhs, y / rhs, z / rhs); }
                 Vector3<dataType> operator-() const                             { return Vector3<dataType>(-x, -y, -z); }
                 
