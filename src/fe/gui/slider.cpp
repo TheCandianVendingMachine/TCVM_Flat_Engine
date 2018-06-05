@@ -9,14 +9,30 @@ void fe::gui::slider::drawDialogElements(sf::RenderTarget &target, const fe::mat
         fe::matrix3d tempTransform = drawMatrix;
         tempTransform.translate(m_sliderPosition);
         setControlOffset(m_sliderPosition);
-        drawPolygon(getControlPolygon(), tempTransform, getDrawColour());
+        drawPolygon(getControlPolygon(), tempTransform, m_sliderColour);
 
         draw(target);
     }
 
 void fe::gui::slider::onStateChange(dialogStates previous, dialogStates next)
     {
-        
+        switch (next)
+            {
+                case fe::gui::dialogStates::ACTIVE:
+					m_sliderColour = m_colourOnActive;
+                    break;
+                case fe::gui::dialogStates::DISABLED:
+					m_sliderColour = m_colourOnDeactive;
+                    break;
+                case fe::gui::dialogStates::HIGHLIGHTED:
+					m_sliderColour = m_colourOnHighlight;
+                    break;
+                case fe::gui::dialogStates::PRESSED:
+					m_sliderColour = m_colourOnPress;
+                    break;
+                default:
+                    break;
+            }
     }
 
 void fe::gui::slider::handleWindowEvent(const sf::Event &event)
@@ -71,7 +87,11 @@ void fe::gui::slider::handleWindowEvent(const sf::Event &event)
 fe::gui::slider::slider(sliderOrientation orientation, float sliderControlSize, float scrollSize, float lengthOfOutline, float outlineWidth, float sliderControlWidthFromEdge) :
     m_orientation(orientation),
     m_sliderDistanceFromSide(sliderControlWidthFromEdge, sliderControlWidthFromEdge),
-    m_containerOutlineWidth(outlineWidth, outlineWidth)
+    m_containerOutlineWidth(outlineWidth, outlineWidth),
+	m_colourOnActive(sf::Color::White),
+	m_colourOnDeactive(sf::Color::White),
+	m_colourOnHighlight(sf::Color::White),
+	m_colourOnPress(sf::Color::White)
     {
         // how much of the slider the control has filled. Axis which determines scroll
         float sliderFill = scrollSize * (lengthOfOutline - outlineWidth * 2.f) - (sliderControlWidthFromEdge * 2.f);
@@ -119,6 +139,8 @@ fe::gui::slider::slider(sliderOrientation orientation, float sliderControlSize, 
 
         m_minSliderPos = m_sliderPosition;
         m_maxSliderPos = m_containerSize - m_minSliderPos;
+
+		m_sliderColour = getDrawColour();
     }
 
 float fe::gui::slider::getPercentScrolled() const
@@ -166,5 +188,25 @@ void fe::gui::slider::setPercentScrolled(float percent)
                 default:
                     break;
             }
+	}
+
+void fe::gui::slider::setColourOnActive(sf::Color colour)
+	{
+		m_colourOnActive = colour;
+	}
+
+void fe::gui::slider::setColourOnDeactive(sf::Color colour)
+	{
+		m_colourOnDeactive = colour;
+	}
+
+void fe::gui::slider::setColourHighlight(sf::Color colour)
+	{
+		m_colourOnHighlight = colour;
+	}
+
+void fe::gui::slider::setColourOnPress(sf::Color colour)
+	{
+		m_colourOnPress = colour;
 	}
 
