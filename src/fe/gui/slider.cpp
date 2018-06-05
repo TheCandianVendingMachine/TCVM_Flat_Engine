@@ -147,3 +147,24 @@ float fe::gui::slider::getPercentScrolled() const
         return percentScrolled;
     }
 
+void fe::gui::slider::setPercentScrolled(float percent)
+	{
+		fe::Vector2d halfSliderSize = m_sliderSize / 2.f;
+		fe::Vector2d oppositePosition = m_maxSliderPos - halfSliderSize;
+		fe::Vector2d originalDistanceToEnd = oppositePosition - halfSliderSize - m_minSliderPos;
+
+		fe::Vector2d newPos = -(originalDistanceToEnd * (1.f - percent)) + oppositePosition;
+
+		switch (m_orientation)
+            {
+                case sliderOrientation::HORIZONTAL:
+					m_sliderPosition.x = newPos.x - halfSliderSize.x;
+                    break;
+                case sliderOrientation::VERTICAL:
+					m_sliderPosition.y = newPos.y - halfSliderSize.y;
+                    break;
+                default:
+                    break;
+            }
+	}
+

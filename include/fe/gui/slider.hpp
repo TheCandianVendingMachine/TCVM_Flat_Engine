@@ -42,6 +42,7 @@ namespace fe
                         public:
                             FLAT_ENGINE_API slider(sliderOrientation orientation, float sliderControlSize, float scrollSize, float lengthOfOutline, float outlineWidth, float sliderControlWidthFromEdge = 0.f);
                             FLAT_ENGINE_API float getPercentScrolled() const;
+							FLAT_ENGINE_API void setPercentScrolled(float percent);
 
                     };
             }
