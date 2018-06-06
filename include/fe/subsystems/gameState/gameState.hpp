@@ -2,12 +2,13 @@
 // a base class for all game states that exist
 #pragma once
 #define FLAT_ENGINE_EXPORT
-#include "../../flatEngineExport.hpp"
-#include "../memory/memoryManager.hpp"
-#include "../../debug/logger.hpp"
-#include "../graphic/camera.hpp"
+#include "fe/flatEngineExport.hpp"
+#include "fe/subsystems/memory/memoryManager.hpp"
+#include "fe/debug/logger.hpp"
+#include "fe/subsystems/graphic/camera.hpp"
 #include "gameWorld.hpp"
-#include "../entitySpawner/entitySpawner.hpp"
+#include "fe/subsystems/entitySpawner/entitySpawner.hpp"
+#include "fe/gui/guiGraph.hpp"
 
 #include <vector>
 #include <queue>
@@ -24,8 +25,7 @@ namespace fe
         class baseEntity;
         namespace gui
             {
-                class panel;
-                class guiElement;
+                class dialog;
             }
 
         struct prefabObject;
@@ -33,8 +33,8 @@ namespace fe
         class baseGameState
             {
                 private:
-                    std::vector<gui::panel*> m_guiPanels;
-                    std::queue<gui::panel*> m_guiPanelsToAdd;
+					std::vector<gui::dialog*> m_dialogs;
+					fe::gui::guiGraph m_guiGraph;
                     fe::gameWorld m_gameWorld;
                     fe::entitySpawner m_entitySpawner;
                     fe::camera m_stateCamera;
@@ -47,10 +47,9 @@ namespace fe
                 public:
                     FLAT_ENGINE_API baseGameState() : m_gameWorld(this), m_paused(false) {}
 
-                    FLAT_ENGINE_API void addPanel(gui::panel *panel);
-                    FLAT_ENGINE_API void removePanel(fe::str panelID);
-                    FLAT_ENGINE_API void removePanel(gui::panel *panel);
-                    FLAT_ENGINE_API fe::gui::panel *getPanel(fe::str panelID);
+					FLAT_ENGINE_API int addDialog(fe::gui::dialog *panel, int connected = -1, int zPos = 0);
+                    FLAT_ENGINE_API void removeDialog(fe::gui::dialog *panel);
+
                     // Run a function to check every single panel
                     template<typename Func>
                     bool forEachPanel(Func func);
