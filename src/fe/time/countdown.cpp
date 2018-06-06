@@ -4,6 +4,11 @@ fe::countdown::countdown() : m_started(false)
     {
     }
 
+void fe::countdown::pause(bool pause)
+	{
+		m_timer.stop(pause);
+	}
+
 void fe::countdown::start(fe::time length)
     {
         m_length = length;
@@ -13,7 +18,7 @@ void fe::countdown::start(fe::time length)
 
 bool fe::countdown::isDone()
     {
-        if (m_started && timeUntilCompletion().asMicroseconds() <= 0)
+        if (m_started && hasCompleted())
             {
                 m_started = false;
                 return true;
@@ -21,6 +26,11 @@ bool fe::countdown::isDone()
 
         return false;
     }
+
+bool fe::countdown::hasCompleted()
+	{
+		return timeUntilCompletion().asMicroseconds() <= 0;
+	}
 
 bool fe::countdown::hasStarted()
     {

@@ -107,17 +107,17 @@ bool fe::time::operator==(const fe::time &rhs)
 
 fe::time fe::seconds(const long long in)
     {
-        return fe::time(static_cast<float>(in / 1000000));
+        return fe::time(in * 1000000.f);
     }
 
 fe::time fe::milliseconds(const long long in)
     {
-        return fe::time(static_cast<int64_t>(in / 1000));
+        return fe::time(in * 1000);
     }
 
 fe::time fe::microseconds(const long long in)
     {
-        return fe::time(static_cast<int64_t>(in));
+        return fe::time(in);
     }
 
 fe::time fe::zero()

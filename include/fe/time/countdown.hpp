@@ -19,11 +19,16 @@ namespace fe
                 public:
                     FLAT_ENGINE_API countdown();
 
+					FLAT_ENGINE_API void pause(bool pause);
+
                     // starts the timer for the length provided
                     FLAT_ENGINE_API void start(fe::time length);
                     
                     // returns true if the countdown has completed
                     FLAT_ENGINE_API bool isDone();
+
+					// returns true if the countdown has passed 0, even if it hasnt been started yet
+					FLAT_ENGINE_API bool hasCompleted();
 
                     // Returns true if the countdown has started
                     FLAT_ENGINE_API bool hasStarted();
