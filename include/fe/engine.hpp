@@ -65,12 +65,13 @@ namespace fe
 
                 private:
                     fe::clock m_fpsClock;
+					fe::clock m_elapsedTime;
                     int m_elapsedFrames;
 
                     const float m_deltaTime;
                     float m_accumulator;
-                    float m_elapsedTime;
                     float m_fps; // used to calculate fps
+					float m_elapsedGameTime;
 
                     fe::Vector2d m_screenSize;
                     fe::Vector2d m_mousePosition;
@@ -103,6 +104,7 @@ namespace fe
                     FLAT_ENGINE_API const float getDeltaTime() const;
                     FLAT_ENGINE_API const float getFPS() const;
                     FLAT_ENGINE_API fe::time getElapsedTime() const;
+					FLAT_ENGINE_API fe::time getElapsedGameTime() const;
 
                     FLAT_ENGINE_API const fe::Vector2<unsigned int> getWindowSize() const;
 

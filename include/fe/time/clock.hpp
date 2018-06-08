@@ -16,7 +16,7 @@ namespace fe
 
                     bool m_stopped;
 
-                    fe::time m_getCurrentTime();
+                    fe::time m_getCurrentTime() const;
 
                 public:
                     FLAT_ENGINE_API clock();
@@ -31,7 +31,7 @@ namespace fe
                     FLAT_ENGINE_API void stop(bool value);
 
                     // returns the elapsed time as a fe::Time value
-                    FLAT_ENGINE_API fe::time getTime();
+                    FLAT_ENGINE_API fe::time getTime() const;
 
                     // returns fe::time since the epoch of the system
                     FLAT_ENGINE_API static fe::time getTimeSinceEpoch();

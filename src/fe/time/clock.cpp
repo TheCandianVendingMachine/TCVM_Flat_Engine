@@ -2,7 +2,7 @@
 #include <chrono>
 #include <iomanip>
 
-fe::time fe::clock::m_getCurrentTime()
+fe::time fe::clock::m_getCurrentTime() const
     {
         return getTimeSinceEpoch();
     }
@@ -32,7 +32,7 @@ void fe::clock::stop(bool value)
         m_stopTime = currentTime;
     }
 
-fe::time fe::clock::getTime()
+fe::time fe::clock::getTime() const
     {
         if (!m_stopped)
             {

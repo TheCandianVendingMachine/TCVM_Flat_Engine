@@ -90,7 +90,7 @@ void fe::engine::run()
                 m_logger->swapConsoleBuffer();
                 m_logger->swapFileBuffer();
 
-                m_elapsedTime = currentTime;
+				m_elapsedGameTime = currentTime;
             }
     }
 
@@ -376,8 +376,13 @@ const float fe::engine::getFPS() const
 
 fe::time fe::engine::getElapsedTime() const
     {
-        return fe::seconds(m_elapsedTime);
+        return m_elapsedTime.getTime();
     }
+
+fe::time fe::engine::getElapsedGameTime() const
+	{
+		return fe::seconds(m_elapsedGameTime);
+	}
 
 const fe::Vector2<unsigned int> fe::engine::getWindowSize() const
     {
