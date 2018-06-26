@@ -29,8 +29,16 @@ namespace fe
                     FLAT_ENGINE_API void operator-=(const fe::time &rhs);
 
                     FLAT_ENGINE_API fe::time &operator=(const fe::time &rhs);
-                    FLAT_ENGINE_API fe::time operator/(unsigned int rhs);
-                    FLAT_ENGINE_API void operator/=(unsigned int rhs);
+
+					template<typename T>
+					fe::time operator*(T rhs);
+					template<typename T>
+					fe::time operator/(T rhs);
+
+					template<typename T>
+					void operator*=(T rhs);
+					template<typename T>
+                    void operator/=(T rhs);
 
                     FLAT_ENGINE_API bool operator>(const fe::time &rhs);
                     FLAT_ENGINE_API bool operator>=(const fe::time &rhs);
@@ -40,8 +48,56 @@ namespace fe
 
             };
 
-        FLAT_ENGINE_API fe::time seconds(const long long in);
-        FLAT_ENGINE_API fe::time milliseconds(const long long in);
-        FLAT_ENGINE_API fe::time microseconds(const long long in);
+		template<typename T>
+        fe::time seconds(T in);
+
+		template<typename T>
+        fe::time milliseconds(T in);
+
+		template<typename T>
+        fe::time microseconds(T in);
+
         FLAT_ENGINE_API fe::time zero();
-    }
+
+		template<typename T>
+		fe::time seconds(T in)
+			{
+				return fe::time(in * 1000000);
+			}
+
+		template<typename T>
+		fe::time milliseconds(T in)
+			{
+				return fe::time(in * 1000);
+			}
+
+		template<typename T>
+		fe::time microseconds(T in)
+			{
+				return fe::time(in);
+			}
+
+		template<typename T>
+		inline fe::time time::operator*(T rhs)
+			{
+				return fe::time(m_time * rhs);
+			}
+
+		template<typename T>
+		inline fe::time time::operator/(T rhs)
+			{
+				return fe::time(m_time / rhs);
+			}
+
+		template<typename T>
+		void fe::time::operator*=(T rhs)
+			{
+				m_time *= rhs;
+			}
+
+		template<typename T>
+		void fe::time::operator/=(T rhs)
+			{
+				m_time /= rhs;
+			}
+	}

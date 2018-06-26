@@ -69,16 +69,6 @@ fe::time &fe::time::operator=(const fe::time &rhs)
         return *this;
     }
 
-fe::time fe::time::operator/(unsigned int rhs)
-    {
-        return fe::time(m_time / rhs);
-    }
-
-void fe::time::operator/=(unsigned int rhs)
-    {
-        m_time /= rhs;
-    }
-
 bool fe::time::operator>(const fe::time &rhs)
     {
         return m_time > rhs.m_time;
@@ -102,22 +92,6 @@ bool fe::time::operator<=(const fe::time &rhs)
 bool fe::time::operator==(const fe::time &rhs)
     {
         return m_time == rhs.m_time;
-    }
-
-
-fe::time fe::seconds(const long long in)
-    {
-        return fe::time(in * 1000000.f);
-    }
-
-fe::time fe::milliseconds(const long long in)
-    {
-        return fe::time(in * 1000);
-    }
-
-fe::time fe::microseconds(const long long in)
-    {
-        return fe::time(in);
     }
 
 fe::time fe::zero()
