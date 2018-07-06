@@ -66,8 +66,8 @@ void fe::baseGameState::postUpdateDefined()
 				auto dialog = (*it);
 				if (dialog->isKilled())
 					{
-						it = m_dialogs.erase(it);
 						m_guiGraph.removeObjectFromGraph(dialog);
+						it = m_dialogs.erase(it);
 					}
 				else
 					{

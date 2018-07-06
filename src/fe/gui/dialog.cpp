@@ -64,3 +64,13 @@ fe::gui::dialog &fe::gui::dialog::operator=(dialog &rhs)
             }
         return *this;
     }
+
+void fe::gui::dialog::setGraphNode(int node)
+	{
+		m_graphNode = node;
+	}
+
+int fe::gui::dialog::getGraphNode()
+	{
+		return m_graphNode;
+	}

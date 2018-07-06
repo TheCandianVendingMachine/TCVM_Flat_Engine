@@ -57,8 +57,8 @@ namespace fe
                     FLAT_ENGINE_API void clear();
 
                     FLAT_ENGINE_API int addObjectToGraph(void *object, int connected = -1, int zPos = 0);
-                    FLAT_ENGINE_API int removeObjectFromGraph(void *object);
-                    FLAT_ENGINE_API int removeNodeFromGraph(int node);
+                    FLAT_ENGINE_API void removeObjectFromGraph(void *object);
+                    FLAT_ENGINE_API void removeNodeFromGraph(int node);
 
                     virtual void preDraw() = 0;
                     FLAT_ENGINE_API void draw(sf::RenderTarget &window);

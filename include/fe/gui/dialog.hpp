@@ -26,6 +26,7 @@ namespace fe
                             fe::transformable m_drawMatrix;
 
                             dialogStates m_dialogState;
+							int m_graphNode;
                             bool m_killed;
                             bool m_draw;
 
@@ -59,6 +60,9 @@ namespace fe
                             FLAT_ENGINE_API fe::transformable &getDrawMatrix();
 
                             FLAT_ENGINE_API fe::gui::dialog &operator=(dialog &rhs);
+
+							FLAT_ENGINE_API void setGraphNode(int node);
+							FLAT_ENGINE_API int getGraphNode();
 
                     };
             }

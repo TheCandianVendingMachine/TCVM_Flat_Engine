@@ -56,15 +56,15 @@ int fe::renderGraph::addObjectToGraph(void *object, int connected, int zPos)
         return graphNode;
     }
 
-int fe::renderGraph::removeObjectFromGraph(void *object)
+void fe::renderGraph::removeObjectFromGraph(void *object)
     {
-        return removeNodeFromGraph(getNodeFromObject(object));
+        removeNodeFromGraph(getNodeFromObject(object));
     }
 
-int fe::renderGraph::removeNodeFromGraph(int node)
+void fe::renderGraph::removeNodeFromGraph(int node)
     {
         onObjectRemove(m_sceneRenderTree.getNode(node)->m_userData, node);
-        return m_sceneRenderTree.getNode(node)->m_parent;
+        m_sceneRenderTree.removeNode(node);
     }
 
 void fe::renderGraph::draw(sf::RenderTarget &window)
