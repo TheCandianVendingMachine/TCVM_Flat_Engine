@@ -9,35 +9,41 @@ void fe::countdown::pause(bool pause)
 		m_timer.stop(pause);
 	}
 
-void fe::countdown::start(fe::time length)
+void fe::countdown::start(fe::time length, fe::time startTime)
     {
-        m_length = length;
+        m_length = length + startTime;
         m_started = true;
         m_timer.restart();
     }
 
-bool fe::countdown::isDone()
-    {
-        if (m_started && hasCompleted())
-            {
-                m_started = false;
-                return true;
-            }
-
-        return false;
-    }
-
-bool fe::countdown::hasCompleted()
+void fe::countdown::reset()
 	{
-		return timeUntilCompletion().asMicroseconds() <= 0;
+		m_started = false;
 	}
 
-bool fe::countdown::hasStarted()
+bool fe::countdown::isDone(fe::time currentTime) const
+	{
+		return m_started && hasCompleted(currentTime);
+	}
+
+bool fe::countdown::hasCompleted(fe::time currentTime) const
+	{
+		return timeUntilCompletion(currentTime).asMicroseconds() <= 0;
+	}
+
+fe::time fe::countdown::timeUntilCompletion(fe::time currentTime) const
+	{
+		return m_length - currentTime;
+	}
+
+bool fe::countdown::hasStarted() const
     {
         return m_started;
     }
 
-fe::time fe::countdown::timeUntilCompletion()
-    {
-        return m_length - m_timer.getTime();
-    }
+fe::time fe::countdown::getInternalClockTime() const
+	{
+		return m_timer.getTime();
+	}
+
+
