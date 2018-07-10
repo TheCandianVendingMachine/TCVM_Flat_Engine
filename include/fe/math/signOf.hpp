@@ -1,5 +1,5 @@
-// mathFuncs.hpp
-// various mathematical functions
+// signOf.hpp
+// returns the sign of a variable
 #pragma once
 
 namespace fe

@@ -6,7 +6,7 @@
 #include "fe/typeDefines.hpp"
 #include "fe/math/Vector2.hpp"
 #include "fe/debug/profiler.hpp"
-#include "fe/math/mathFuncs.hpp"
+#include "fe/math/signOf.hpp"
 #include "fe/engineEvents.hpp"
 #include "fe/entity/baseEntity.hpp"
 #include "fe/debug/debugDraw.hpp"
