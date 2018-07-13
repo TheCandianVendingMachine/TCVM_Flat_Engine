@@ -114,6 +114,11 @@ void fe::gui::dialog::setPosition(float x, float y, fe::gui::align alignment)
 		fe::transformable::setPosition(x - alignPos.x, y - alignPos.y);
 	}
 
+void fe::gui::dialog::setPosition(fe::Vector2d pos, fe::gui::align alignment)
+	{
+		setPosition(pos.x, pos.y, alignment);
+	}
+
 void fe::gui::dialog::setWindowPosition(float x, float y, fe::gui::align alignment)
 	{
 		fe::Vector2<unsigned int> windowSize = fe::engine::get().getWindowSize();
@@ -162,6 +167,11 @@ void fe::gui::dialog::setWindowPosition(float x, float y, fe::gui::align alignme
 			}
 
 		fe::transformable::setPosition((windowSize.x * x) - alignPos.x, (windowSize.y * y) - alignPos.y);
+	}
+
+void fe::gui::dialog::setWindowPosition(fe::Vector2d pos, fe::gui::align alignment)
+	{
+		setWindowPosition(pos.x, pos.y, alignment);
 	}
 
 fe::lightVector2d fe::gui::dialog::getSize() const
