@@ -89,7 +89,7 @@ fe::gui::checkBox &fe::gui::checkList::getCheckbox(unsigned int index)
         return m_checkBoxes[index];
     }
 
-void fe::gui::checkList::getSelected(std::vector<bool> &selected)
+void fe::gui::checkList::getSelected(std::vector<bool> &selected) const
     {
         for (unsigned int i = 0; i < m_checkBoxes.size(); i++)
             {
@@ -104,12 +104,24 @@ void fe::gui::checkList::getSelected(std::vector<bool> &selected)
             }
     }
 
-std::vector<bool> fe::gui::checkList::getSelected()
+std::vector<bool> fe::gui::checkList::getSelected() const
     {
         std::vector<bool> returnVec;
         getSelected(returnVec);
         return returnVec;
     }
+
+bool fe::gui::checkList::anySelected() const
+	{
+		for (auto &selection : m_checkBoxes)
+			{
+				if (selection.isSelected())
+					{
+						return true;
+					}
+			}
+		return false;
+	}
 
 fe::lightVector2d fe::gui::checkList::getSize() const
 	{

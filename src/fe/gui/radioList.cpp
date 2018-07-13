@@ -93,7 +93,7 @@ fe::gui::radioButton &fe::gui::radioList::getSelection(unsigned int index)
         return m_selections[index];
     }
 
-void fe::gui::radioList::getSelected(std::vector<bool> &selected)
+void fe::gui::radioList::getSelected(std::vector<bool> &selected) const
     {
         for (unsigned int i = 0; i < m_selections.size(); i++)
             {
@@ -108,12 +108,24 @@ void fe::gui::radioList::getSelected(std::vector<bool> &selected)
             }
     }
 
-std::vector<bool> fe::gui::radioList::getSelected()
+std::vector<bool> fe::gui::radioList::getSelected() const
     {
         std::vector<bool> returnVec;
         getSelected(returnVec);
         return returnVec;
     }
+
+bool fe::gui::radioList::anySelected() const
+	{
+		for (auto &selection : m_selections)
+			{
+				if (selection.isSelected())
+					{
+						return true;
+					}
+			}
+		return false;
+	}
 
 void fe::gui::radioList::handleEvent(const gameEvent &event)
     {

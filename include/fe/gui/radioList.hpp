@@ -47,8 +47,11 @@ namespace fe
                             FLAT_ENGINE_API fe::gui::radioButton &getSelection(unsigned int index);
 
                             // Returns all check box inputs from Left -> Right / Top -> Down
-                            FLAT_ENGINE_API void getSelected(std::vector<bool> &selected);
-                            FLAT_ENGINE_API std::vector<bool> getSelected();
+                            FLAT_ENGINE_API void getSelected(std::vector<bool> &selected) const;
+                            FLAT_ENGINE_API std::vector<bool> getSelected() const;
+
+							// Returns true if any option is selected
+							FLAT_ENGINE_API bool anySelected() const;
 
                             using fe::gui::control::handleEvent;
                             FLAT_ENGINE_API void handleEvent(const fe::gameEvent &event) override;
