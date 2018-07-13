@@ -110,3 +110,23 @@ std::vector<bool> fe::gui::checkList::getSelected()
         getSelected(returnVec);
         return returnVec;
     }
+
+fe::lightVector2d fe::gui::checkList::getSize() const
+	{
+		float size = ((m_gapBetweenBoxes + m_boxSize) * m_optionCount) - m_gapBetweenBoxes; // subtract gapBetweenSelections to avoid extra space on the bottom
+
+		fe::lightVector2d min = getPosition();
+		fe::lightVector2d max(size, size);
+
+		for (auto &text : m_options)
+			{
+				// divide position by two to account for getting the text position from the middle
+				min.x = std::min(min.x, (text.getPosition().x / 2.f) + text.getSize().x);
+				max.x = std::max(max.x, (text.getPosition().x / 2.f) + text.getSize().x);
+
+				min.y = std::min(min.y, (text.getPosition().y / 2.f) + text.getSize().y);
+				max.y = std::max(max.y, (text.getPosition().y / 2.f) + text.getSize().y);
+			}
+
+		return max - min;
+	}

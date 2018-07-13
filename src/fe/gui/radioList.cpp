@@ -129,3 +129,23 @@ void fe::gui::radioList::handleEvent(const gameEvent &event)
                     break;
             }
     }
+
+fe::lightVector2d fe::gui::radioList::getSize() const
+	{
+		float size = ((m_gapBetweenSelections + m_selectionSize) * m_optionCount) - m_gapBetweenSelections; // subtract gapBetweenSelections to avoid extra space on the bottom
+
+		fe::lightVector2d min = getPosition();
+		fe::lightVector2d max(size, size);
+
+		for (auto &text : m_options)
+			{
+				// divide position by two to account for getting the text position from the middle
+				min.x = std::min(min.x, (text.getPosition().x / 2.f) + text.getSize().x);
+				max.x = std::max(max.x, (text.getPosition().x / 2.f) + text.getSize().x);
+
+				min.y = std::min(min.y, (text.getPosition().y / 2.f) + text.getSize().y);
+				max.y = std::max(max.y, (text.getPosition().y / 2.f) + text.getSize().y);
+			}
+
+		return max - min;
+	}

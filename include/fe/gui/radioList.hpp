@@ -52,6 +52,8 @@ namespace fe
 
                             using fe::gui::control::handleEvent;
                             FLAT_ENGINE_API void handleEvent(const fe::gameEvent &event) override;
+
+							FLAT_ENGINE_API fe::lightVector2d getSize() const;
                     };
             }
     }
