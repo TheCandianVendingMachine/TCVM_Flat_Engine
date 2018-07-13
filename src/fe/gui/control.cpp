@@ -137,3 +137,20 @@ void fe::gui::control::handleEvent(const sf::Event &event)
 
         handleWindowEvent(event);
     }
+
+fe::lightVector2d fe::gui::control::getSize() const
+	{
+		fe::lightVector2d max(0.f, 0.f);
+		fe::lightVector2d min(0.f, 0.f);
+
+		for (auto &vert : m_controlPolygon.m_points)
+			{
+				min.x = std::min(min.x, vert.x);
+				min.y = std::min(min.y, vert.y);
+
+				max.x = std::max(max.x, vert.x);
+				max.y = std::max(max.y, vert.y);
+			}
+
+		return max - min;
+	}

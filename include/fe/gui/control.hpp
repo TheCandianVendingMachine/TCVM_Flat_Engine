@@ -60,6 +60,8 @@ namespace fe
                             FLAT_ENGINE_API void handleEvent(const sf::Event &event);
                             virtual void handleEvent(const gameEvent &event) override {}
 
+							FLAT_ENGINE_API virtual fe::lightVector2d getSize() const;
+
                     };
             }
     }

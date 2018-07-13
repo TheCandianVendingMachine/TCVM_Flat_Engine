@@ -19,7 +19,7 @@ void fe::gui::text::drawDialogText(sf::RenderTarget &target, const fe::transform
 void fe::gui::text::updateOrigin()
     {
         sf::FloatRect textRect = m_renderText.getLocalBounds();
-        m_renderText.setOrigin(textRect.left + textRect.width / 2.f, textRect.top + textRect.height / 2.f);
+        m_renderText.setOrigin(textRect.left, textRect.top);
     }
 
 fe::gui::text::text(const sf::Font *data)
@@ -32,7 +32,7 @@ fe::gui::text::text(const sf::Font *data)
 fe::lightVector2d fe::gui::text::getSize() const
     {
         sf::FloatRect textRect = m_renderText.getLocalBounds();
-        return fe::transformable::getSize(textRect.width, textRect.height);
+        return fe::transformable::getSize(textRect.left + textRect.width, textRect.top + textRect.height);
     }
 
 void fe::gui::text::setText(const char *text)
