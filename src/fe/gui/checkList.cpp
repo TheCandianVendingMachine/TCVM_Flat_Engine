@@ -115,7 +115,7 @@ fe::lightVector2d fe::gui::checkList::getSize() const
 	{
 		float size = ((m_gapBetweenBoxes + m_boxSize) * m_optionCount) - m_gapBetweenBoxes; // subtract gapBetweenSelections to avoid extra space on the bottom
 
-		fe::lightVector2d min = getPosition();
+		fe::lightVector2d min = fe::Vector2d() - fe::lightVector2d(m_boxSize, m_boxSize);
 		fe::lightVector2d max(size, size);
 
 		for (auto &text : m_options)

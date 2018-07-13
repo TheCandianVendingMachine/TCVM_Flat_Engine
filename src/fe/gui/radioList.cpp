@@ -134,7 +134,7 @@ fe::lightVector2d fe::gui::radioList::getSize() const
 	{
 		float size = ((m_gapBetweenSelections + m_selectionSize) * m_optionCount) - m_gapBetweenSelections; // subtract gapBetweenSelections to avoid extra space on the bottom
 
-		fe::lightVector2d min = getPosition();
+		fe::lightVector2d min = fe::Vector2d() - fe::lightVector2d(m_selectionSize, m_selectionSize);
 		fe::lightVector2d max(size, size);
 
 		for (auto &text : m_options)
