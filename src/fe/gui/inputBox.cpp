@@ -196,6 +196,16 @@ void fe::gui::inputBox::init(fe::gui::guiGraph &graph, int node)
 
 	}
 
+std::string fe::gui::inputBox::getInput() const
+	{
+		return m_inputText;
+	}
+
+std::string fe::gui::inputBox::getDisplayedInput() const
+	{
+		return m_inputTextDisplayed;
+	}
+
 fe::gui::inputBox::modes fe::gui::operator|(fe::gui::inputBox::modes lhs, fe::gui::inputBox::modes rhs)
 	{
 		return static_cast<fe::gui::inputBox::modes>(static_cast<int>(lhs) | static_cast<int>(rhs));

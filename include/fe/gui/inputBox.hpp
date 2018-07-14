@@ -79,6 +79,12 @@ namespace fe
 							FLAT_ENGINE_API void setOutlineSize(float x, float y);
 
 							FLAT_ENGINE_API void init(fe::gui::guiGraph &graph, int node) override;
+
+							// Returns the entire string in the input box
+							std::string getInput() const;
+							// Returns the input that is currently displayed in the box. Any extra text is ignored
+							std::string getDisplayedInput() const;
+
 					};
-			}
+		}
 	}
