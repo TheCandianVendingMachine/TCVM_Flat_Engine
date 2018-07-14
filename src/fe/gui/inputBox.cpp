@@ -7,9 +7,31 @@
 #include "fe/gui/guiGraph.hpp"
 #include "fe/debug/debugDraw.hpp"
 
+void fe::gui::inputBox::forceBoundUpdate()
+	{
+		m_textBounds.x = 0;
+		m_textBounds.y = 0;
+
+		for (auto &c : m_inputTextDisplayed)
+			{
+				fe::Vector2d size = getCharacterSize(c);
+				m_textBounds.x += size.x;
+				m_textBounds.y = std::max(m_textBounds.y, size.y);
+			}
+
+		fitText();
+		updateText();
+	}
+
+void fe::gui::inputBox::updateText()
+	{
+		m_text.setText(m_inputTextDisplayed);
+		m_text.setPosition(m_containerOutlineWidth.x + m_textDistanceFromEdge, m_containerOutlineWidth.y + (m_bounds.y / 2.f), fe::gui::align::LEFT);
+	}
+
 void fe::gui::inputBox::fitText()
 	{
-		while (m_textBounds.x >= m_bounds.x - (m_containerOutlineWidth.x * 2.f))
+		while (m_inputTextDisplayed.size() > 0 && m_inputText.size() > 0 && m_textBounds.x >= m_bounds.x - (m_containerOutlineWidth.x * 2.f))
 			{
 				if (m_scrollWhenFull)
 					{
@@ -23,6 +45,8 @@ void fe::gui::inputBox::fitText()
 						m_inputTextDisplayed.pop_back();
 					}
 			}
+
+		updateText();
 	}
 
 fe::Vector2d fe::gui::inputBox::getCharacterSize(char c)
@@ -84,8 +108,7 @@ void fe::gui::inputBox::handleASCII(char c)
 				handleCharacter(c);
 			}
 
-		m_text.setText(m_inputTextDisplayed);
-		m_text.setPosition(m_containerOutlineWidth.x + m_textDistanceFromEdge, m_containerOutlineWidth.y + (m_bounds.y / 2.f), fe::gui::align::LEFT);
+		updateText();
 	}
 
 void fe::gui::inputBox::handleWindowEvent(const sf::Event &event)
@@ -212,5 +235,21 @@ std::string fe::gui::inputBox::getInput() const
 std::string fe::gui::inputBox::getDisplayedInput() const
 	{
 		return m_inputTextDisplayed;
+	}
+
+void fe::gui::inputBox::setInput(const std::string &input)
+	{
+		for (auto &c : input)
+			{
+				handleCharacter(c);
+			}
+
+		updateText();
+	}
+
+void fe::gui::inputBox::setCharacterSize(unsigned int size)
+	{
+		m_text.setCharacterSize(size);
+		forceBoundUpdate();
 	}
 
