@@ -74,7 +74,7 @@ void fe::gui::inputBox::handleASCII(char c)
 			{
 				handleOperator(c);
 			}
-		else if ((c >= '0' && c <= '9' && m_allowNumeric) || (m_allowAlpha))
+		else if ((m_allowNumeric && (c >= '0' && c <= '9' || c == '.' || c == '-')) || (m_allowAlpha && (c < '0' || c > '9')))
 			{
 				handleCharacter(c);
 			}
@@ -108,7 +108,7 @@ void fe::gui::inputBox::onStateChange(dialogStates previous, dialogStates next)
 
 void fe::gui::inputBox::drawDialogElements(sf::RenderTarget &target, const fe::matrix3d &drawMatrix)
 	{
-		FE_DEBUG_DRAW_SQUARE(m_textBounds.x, m_textBounds.y, m_text.getPosition().x + getPosition().x, m_text.getPosition().y + getPosition().y, sf::Color::Red);
+		//FE_DEBUG_DRAW_SQUARE(m_textBounds.x, m_textBounds.y, m_text.getPosition().x + getPosition().x, m_text.getPosition().y + getPosition().y, sf::Color::Red);
 		drawPolygon(m_textContainer, drawMatrix, getDrawColour());
 		draw(target);
 	}
@@ -117,9 +117,9 @@ fe::gui::inputBox::inputBox(const sf::Font *const font, modes mode) :
 	m_font(font),
 	m_text(font),
 	m_modes(mode),
-	m_allowAlpha(false),
-	m_allowNumeric(false),
-	m_scrollWhenFull(false),
+	m_allowAlpha(true),
+	m_allowNumeric(true),
+	m_scrollWhenFull(true),
 	m_active(false),
 	m_containerOutlineWidth(5.f, 5.f),
 	m_textDistanceFromEdge(5.f)
@@ -190,10 +190,9 @@ void fe::gui::inputBox::init(fe::gui::guiGraph &graph, int node)
 		m_text.setDrawColour(sf::Color::White);
 		setDrawColour(sf::Color::White);
 
-		m_allowAlpha = static_cast<bool>(m_modes & modes::ALPHA);
-		m_allowNumeric = static_cast<bool>(m_modes & modes::NUMERIC);
-		m_scrollWhenFull = static_cast<bool>(m_modes & modes::SCROLL_WHEN_FULL);
-
+		m_allowAlpha = !static_cast<bool>(m_modes & modes::DISALLOW_ALPHA);
+		m_allowNumeric = !static_cast<bool>(m_modes & modes::DISALLOW_NUMERIC);
+		m_scrollWhenFull = !static_cast<bool>(m_modes & modes::STOP_WHEN_FULL);
 	}
 
 std::string fe::gui::inputBox::getInput() const

@@ -26,9 +26,9 @@ namespace fe
 							enum class modes : int
 								{
 									NONE				= 0,
-									ALPHA				= 1 << 0,
-									NUMERIC				= 1 << 1,
-									SCROLL_WHEN_FULL	= 1 << 2,
+									DISALLOW_ALPHA		= 1 << 0,
+									DISALLOW_NUMERIC	= 1 << 1,
+									STOP_WHEN_FULL		= 1 << 2,
 								};
 
 							FLAT_ENGINE_API friend modes operator|(modes lhs, modes rhs);
@@ -70,7 +70,7 @@ namespace fe
 							FLAT_ENGINE_API void drawDialogElements(sf::RenderTarget &target, const fe::matrix3d &drawMatrix) override;
 
 						public:
-							FLAT_ENGINE_API inputBox(const sf::Font *const font, modes mode = modes::ALPHA | modes::NUMERIC | modes::SCROLL_WHEN_FULL);
+							FLAT_ENGINE_API inputBox(const sf::Font *const font, modes mode = modes::NONE);
 							FLAT_ENGINE_API void setSize(float x, float y);
 							FLAT_ENGINE_API void setSize(fe::Vector2d size);
 
