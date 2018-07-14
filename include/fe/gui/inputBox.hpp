@@ -44,6 +44,8 @@ namespace fe
 
 							bool m_allowAlpha;
 							bool m_allowNumeric;
+							bool m_allowDecimal;
+							bool m_allowNegative;
 							bool m_scrollWhenFull;
 
 							bool m_active;

@@ -42,6 +42,14 @@ namespace fe
                             FLAT_ENGINE_API void handleWindowEvent(const sf::Event &event) final;
 
                         public:
+							/*
+								- orientation = Orientation of the slider
+								- sliderControlSize = Width/Height of slider depending on orientation (It equals: Width for Vertical and Height for Horizontal)
+								- scrollSize = What percentage of the slider it will fill
+								- lengthOfOutline = Width/Height of slider depending on orientation (It equals: Width for Horizontal and Height for Vertical)
+								- outlineWidth = Width of outline of slider
+								- sliderControlWidthFromEdge = Pixel gap between outline and start of slider
+							*/
                             FLAT_ENGINE_API slider(fe::gui::sliderOrientation orientation, float sliderControlSize, float scrollSize, float lengthOfOutline, float outlineWidth, float sliderControlWidthFromEdge = 0.f);
                             FLAT_ENGINE_API float getPercentScrolled() const;
 							FLAT_ENGINE_API void setPercentScrolled(float percent);

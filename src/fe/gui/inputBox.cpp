@@ -70,11 +70,16 @@ void fe::gui::inputBox::handleCharacter(char c)
 
 void fe::gui::inputBox::handleASCII(char c)
 	{
+		bool canInput = m_allowNumeric && (c >= '0' && c <= '9');
+		canInput |= m_allowAlpha && (c < '0' || c > '9');
+		canInput |= m_allowDecimal && c == '.';
+		canInput |= m_allowNegative && c == '-';
+		
 		if (c < ' ')
 			{
 				handleOperator(c);
 			}
-		else if ((m_allowNumeric && (c >= '0' && c <= '9' || c == '.' || c == '-')) || (m_allowAlpha && (c < '0' || c > '9')))
+		else if (canInput)
 			{
 				handleCharacter(c);
 			}
@@ -120,6 +125,8 @@ fe::gui::inputBox::inputBox(const sf::Font *const font, fe::gui::inputBoxModes m
 	m_allowAlpha(true),
 	m_allowNumeric(true),
 	m_scrollWhenFull(true),
+	m_allowDecimal(true),
+	m_allowNegative(true),
 	m_active(false),
 	m_containerOutlineWidth(5.f, 5.f),
 	m_textDistanceFromEdge(5.f)
@@ -193,6 +200,8 @@ void fe::gui::inputBox::init(fe::gui::guiGraph &graph, int node)
 		m_allowAlpha = !static_cast<bool>(m_modes & fe::gui::inputBoxModes::DISALLOW_ALPHA);
 		m_allowNumeric = !static_cast<bool>(m_modes & fe::gui::inputBoxModes::DISALLOW_NUMERIC);
 		m_scrollWhenFull = !static_cast<bool>(m_modes & fe::gui::inputBoxModes::STOP_WHEN_FULL);
+		m_allowDecimal = !static_cast<bool>(m_modes & fe::gui::inputBoxModes::DISALLOW_DECIMALS);
+		m_allowNegative = !static_cast<bool>(m_modes & fe::gui::inputBoxModes::DISALLOW_NEGATIVES);
 	}
 
 std::string fe::gui::inputBox::getInput() const
