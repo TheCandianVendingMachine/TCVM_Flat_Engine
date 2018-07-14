@@ -28,6 +28,11 @@ void fe::polygon2d::addPoint(fe::lightVector2d point)
         m_points.push_back(point);
     }
 
+void fe::polygon2d::addPoint(float x, float y)
+	{
+		addPoint(fe::lightVector2d(x, y));
+	}
+
 void fe::polygon2d::createPolygon(const std::initializer_list<fe::lightVector2d> &points)
     {
         m_verticies.clear();

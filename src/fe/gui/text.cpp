@@ -51,3 +51,8 @@ void fe::gui::text::setCharacterSize(unsigned int size)
         m_renderText.setCharacterSize(size);
         updateOrigin();
     }
+
+unsigned int fe::gui::text::getCharacterSize() const
+	{
+		return m_renderText.getCharacterSize();
+	}
