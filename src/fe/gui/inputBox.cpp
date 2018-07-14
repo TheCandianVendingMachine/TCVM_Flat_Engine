@@ -113,7 +113,7 @@ void fe::gui::inputBox::drawDialogElements(sf::RenderTarget &target, const fe::m
 		draw(target);
 	}
 
-fe::gui::inputBox::inputBox(const sf::Font *const font, modes mode) :
+fe::gui::inputBox::inputBox(const sf::Font *const font, fe::gui::inputBoxModes mode) :
 	m_font(font),
 	m_text(font),
 	m_modes(mode),
@@ -190,9 +190,9 @@ void fe::gui::inputBox::init(fe::gui::guiGraph &graph, int node)
 		m_text.setDrawColour(sf::Color::White);
 		setDrawColour(sf::Color::White);
 
-		m_allowAlpha = !static_cast<bool>(m_modes & modes::DISALLOW_ALPHA);
-		m_allowNumeric = !static_cast<bool>(m_modes & modes::DISALLOW_NUMERIC);
-		m_scrollWhenFull = !static_cast<bool>(m_modes & modes::STOP_WHEN_FULL);
+		m_allowAlpha = !static_cast<bool>(m_modes & fe::gui::inputBoxModes::DISALLOW_ALPHA);
+		m_allowNumeric = !static_cast<bool>(m_modes & fe::gui::inputBoxModes::DISALLOW_NUMERIC);
+		m_scrollWhenFull = !static_cast<bool>(m_modes & fe::gui::inputBoxModes::STOP_WHEN_FULL);
 	}
 
 std::string fe::gui::inputBox::getInput() const
@@ -205,12 +205,3 @@ std::string fe::gui::inputBox::getDisplayedInput() const
 		return m_inputTextDisplayed;
 	}
 
-fe::gui::inputBox::modes fe::gui::operator|(fe::gui::inputBox::modes lhs, fe::gui::inputBox::modes rhs)
-	{
-		return static_cast<fe::gui::inputBox::modes>(static_cast<int>(lhs) | static_cast<int>(rhs));
-	}
-
-fe::gui::inputBox::modes fe::gui::operator&(fe::gui::inputBox::modes lhs, fe::gui::inputBox::modes rhs)
-	{
-		return static_cast<fe::gui::inputBox::modes>(static_cast<int>(lhs) & static_cast<int>(rhs));
-	}

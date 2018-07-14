@@ -6,6 +6,7 @@
 #include "control.hpp"
 #include "fe/math/Vector2.hpp"
 #include "fe/math/polygon2.hpp"
+#include "sliderOrientation.hpp"
 
 namespace fe
     {
@@ -13,12 +14,6 @@ namespace fe
             {
                 class slider : public fe::gui::control
                     {
-                        public:
-                            enum class sliderOrientation
-                                {
-                                    HORIZONTAL,
-                                    VERTICAL
-                                };
                         private:
                             fe::polygon2d m_sliderContainer;
                             fe::Vector2d m_containerSize;
@@ -33,7 +28,7 @@ namespace fe
 
                             fe::Vector2d m_sliderGrabPoint;
 
-                            sliderOrientation m_orientation;
+                            fe::gui::sliderOrientation m_orientation;
 
 							sf::Color m_colourOnActive;
 							sf::Color m_colourOnDeactive;
@@ -47,7 +42,7 @@ namespace fe
                             FLAT_ENGINE_API void handleWindowEvent(const sf::Event &event) final;
 
                         public:
-                            FLAT_ENGINE_API slider(sliderOrientation orientation, float sliderControlSize, float scrollSize, float lengthOfOutline, float outlineWidth, float sliderControlWidthFromEdge = 0.f);
+                            FLAT_ENGINE_API slider(fe::gui::sliderOrientation orientation, float sliderControlSize, float scrollSize, float lengthOfOutline, float outlineWidth, float sliderControlWidthFromEdge = 0.f);
                             FLAT_ENGINE_API float getPercentScrolled() const;
 							FLAT_ENGINE_API void setPercentScrolled(float percent);
 

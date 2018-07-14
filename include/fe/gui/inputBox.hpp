@@ -6,6 +6,7 @@
 #include "fe/gui/control.hpp"
 #include "fe/gui/text.hpp"
 #include "fe/math/Vector2.hpp"
+#include "inputBoxModes.hpp"
 #include <string>
 
 namespace sf
@@ -22,18 +23,6 @@ namespace fe
 			{
 				class inputBox : public fe::gui::control
 					{
-						public:
-							enum class modes : int
-								{
-									NONE				= 0,
-									DISALLOW_ALPHA		= 1 << 0,
-									DISALLOW_NUMERIC	= 1 << 1,
-									STOP_WHEN_FULL		= 1 << 2,
-								};
-
-							FLAT_ENGINE_API friend modes operator|(modes lhs, modes rhs);
-							FLAT_ENGINE_API friend modes operator&(modes lhs, modes rhs);
-
 						private:
 							fe::polygon2d m_textContainer;
 							fe::Vector2d m_containerOutlineWidth;
@@ -51,7 +40,7 @@ namespace fe
 
 							float m_textDistanceFromEdge;
 
-							modes m_modes;
+							fe::gui::inputBoxModes m_modes;
 
 							bool m_allowAlpha;
 							bool m_allowNumeric;
@@ -70,7 +59,7 @@ namespace fe
 							FLAT_ENGINE_API void drawDialogElements(sf::RenderTarget &target, const fe::matrix3d &drawMatrix) override;
 
 						public:
-							FLAT_ENGINE_API inputBox(const sf::Font *const font, modes mode = modes::NONE);
+							FLAT_ENGINE_API inputBox(const sf::Font *const font, fe::gui::inputBoxModes mode = fe::gui::inputBoxModes::NONE);
 							FLAT_ENGINE_API void setSize(float x, float y);
 							FLAT_ENGINE_API void setSize(fe::Vector2d size);
 

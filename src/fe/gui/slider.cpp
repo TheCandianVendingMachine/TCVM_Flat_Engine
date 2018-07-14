@@ -49,10 +49,10 @@ void fe::gui::slider::handleWindowEvent(const sf::Event &event)
                             fe::Vector2d pos = getMatrix().transformPointToLocalSpace(fe::Vector2d(event.mouseMove.x, event.mouseMove.y) - m_sliderGrabPoint);
                             switch (m_orientation)
                                 {
-                                    case fe::gui::slider::sliderOrientation::HORIZONTAL:
+                                    case fe::gui::sliderOrientation::HORIZONTAL:
                                         m_sliderPosition.x = pos.x;
                                         break;
-                                    case fe::gui::slider::sliderOrientation::VERTICAL:
+                                    case fe::gui::sliderOrientation::VERTICAL:
                                         m_sliderPosition.y = pos.y;
                                         break;
                                     default:
@@ -84,7 +84,7 @@ void fe::gui::slider::handleWindowEvent(const sf::Event &event)
             }
     }
 
-fe::gui::slider::slider(sliderOrientation orientation, float sliderControlSize, float scrollSize, float lengthOfOutline, float outlineWidth, float sliderControlWidthFromEdge) :
+fe::gui::slider::slider(fe::gui::sliderOrientation orientation, float sliderControlSize, float scrollSize, float lengthOfOutline, float outlineWidth, float sliderControlWidthFromEdge) :
     m_orientation(orientation),
     m_sliderDistanceFromSide(sliderControlWidthFromEdge, sliderControlWidthFromEdge),
     m_containerOutlineWidth(outlineWidth, outlineWidth),
@@ -100,11 +100,11 @@ fe::gui::slider::slider(sliderOrientation orientation, float sliderControlSize, 
 
         switch (orientation)
             {
-                case fe::gui::slider::sliderOrientation::HORIZONTAL:
+                case fe::gui::sliderOrientation::HORIZONTAL:
                     m_sliderSize = fe::Vector2d(sliderFill, sliderLength);
                     m_containerSize = fe::Vector2d(lengthOfOutline, sliderControlSize);
                     break;
-                case fe::gui::slider::sliderOrientation::VERTICAL:
+                case fe::gui::sliderOrientation::VERTICAL:
                     m_sliderSize = fe::Vector2d(sliderLength, sliderFill);
                     m_containerSize = fe::Vector2d(sliderControlSize, lengthOfOutline);
                     break;
