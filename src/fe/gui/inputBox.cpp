@@ -128,7 +128,11 @@ void fe::gui::inputBox::handleWindowEvent(const sf::Event &event)
 
 void fe::gui::inputBox::onStateChange(dialogStates previous, dialogStates next)
 	{
-		if (next == fe::gui::dialogStates::PRESSED)
+		if (next == fe::gui::dialogStates::NONE)
+			{
+				m_active = false;
+			}
+		else if (next == fe::gui::dialogStates::PRESSED)
 			{
 				m_active = !m_active;
 			}

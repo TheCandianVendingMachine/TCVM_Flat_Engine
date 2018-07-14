@@ -110,6 +110,10 @@ void fe::gui::control::handleEvent(const sf::Event &event)
                                 {
                                     setState(dialogStates::PRESSED);
                                 }
+							else
+								{
+									setState(dialogStates::NONE);
+								}
                         }
                     break;
                 case sf::Event::MouseButtonReleased:
