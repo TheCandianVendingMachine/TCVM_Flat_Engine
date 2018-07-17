@@ -115,6 +115,19 @@ std::vector<bool> fe::gui::radioList::getSelected() const
         return returnVec;
     }
 
+int fe::gui::radioList::getSelectedIndex() const
+	{
+		for (unsigned int i = 0; i < m_selections.size(); i++)
+			{
+				if (m_selections[i].isSelected())
+					{
+						return i;
+					}
+			}
+
+		return -1;
+	}
+
 bool fe::gui::radioList::anySelected() const
 	{
 		for (auto &selection : m_selections)

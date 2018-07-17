@@ -49,6 +49,7 @@ namespace fe
                             // Returns all check box inputs from Left -> Right / Top -> Down
                             FLAT_ENGINE_API void getSelected(std::vector<bool> &selected) const;
                             FLAT_ENGINE_API std::vector<bool> getSelected() const;
+							FLAT_ENGINE_API int getSelectedIndex() const;
 
 							// Returns true if any option is selected
 							FLAT_ENGINE_API bool anySelected() const;
