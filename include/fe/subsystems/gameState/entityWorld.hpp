@@ -2,13 +2,14 @@
 // All entities in the world are stored in here. Manages addition, removal, and serializaiton
 #pragma once
 #define FLAT_ENGINE_EXPORT
-#include "../../flatEngineExport.hpp"
-#include "../../objectManagement/handleManager.hpp"
-#include "../serializer/serializable.hpp"
-#include "../resourceManager/fontData.hpp"
-#include "../memory/poolAllocater.hpp"
-#include "../../entity/baseEntity.hpp"
-#include "../../entity/entityModules.hpp"
+#include "fe/flatEngineExport.hpp"
+#include "fe/objectManagement/handleManager.hpp"
+#include "fe/subsystems/serializer/serializable.hpp"
+#include "fe/subsystems/resourceManager/fontData.hpp"
+#include "fe/subsystems/memory/poolAllocater.hpp"
+#include "fe/entity/baseEntity.hpp"
+#include "fe/entity/entityModules.hpp"
+#include "fe/subsystems/graphic/animation/animator.hpp"
 
 namespace fe
     {
@@ -35,6 +36,7 @@ namespace fe
                     fe::poolAllocater<fe::baseEntity> m_entityAllocater;
 
                     fe::gameWorld &m_gameWorld;
+					fe::animator m_animator;
 
                     FLAT_ENGINE_API void onAdd(fe::baseEntity **object, fe::Handle objectHandle);
                     FLAT_ENGINE_API void onRemove(fe::baseEntity **object, fe::Handle objectHandle);
