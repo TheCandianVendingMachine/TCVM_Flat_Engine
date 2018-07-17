@@ -18,6 +18,8 @@ void fe::spriteBatch::add(fe::renderObject *entity, unsigned int &index)
         fe::lightVector2d transform3 = matrix.transformPoint({  entity->m_verticies[0],                             entity->m_verticies[1] + entity->m_verticies[3] });
         sf::Color entColour = sf::Color(entity->m_vertColour[0],entity->m_vertColour[1], entity->m_vertColour[2],   entity->m_vertColour[3]);
         fe::lightVector2d texCoord(entity->m_texCoords[0], entity->m_texCoords[1]);
+		float entSizeX = entity->m_texCoords[2];
+		float entSizeY = entity->m_texCoords[3];
 
         m_batch[index + 0].position.x = transform0.x;
         m_batch[index + 0].position.y = transform0.y;
@@ -28,20 +30,20 @@ void fe::spriteBatch::add(fe::renderObject *entity, unsigned int &index)
         m_batch[index + 1].position.x = transform1.x;
         m_batch[index + 1].position.y = transform1.y;
         m_batch[index + 1].color = entColour;
-        m_batch[index + 1].texCoords.x = texCoord.x;
+        m_batch[index + 1].texCoords.x = texCoord.x + entSizeX;
         m_batch[index + 1].texCoords.y = texCoord.y;
 
         m_batch[index + 2].position.x = transform2.x;
         m_batch[index + 2].position.y = transform2.y;
         m_batch[index + 2].color = entColour;
-        m_batch[index + 2].texCoords.x = texCoord.x;
-        m_batch[index + 2].texCoords.y = texCoord.y;
+        m_batch[index + 2].texCoords.x = texCoord.x + entSizeX;
+        m_batch[index + 2].texCoords.y = texCoord.y + entSizeY;
 
         m_batch[index + 3].position.x = transform3.x;
         m_batch[index + 3].position.y = transform3.y;
         m_batch[index + 3].color = entColour;
         m_batch[index + 3].texCoords.x = texCoord.x;
-        m_batch[index + 3].texCoords.y = texCoord.y;
+        m_batch[index + 3].texCoords.y = texCoord.y + entSizeY;
 
         index += 4;
     }
