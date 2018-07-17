@@ -2,14 +2,9 @@
 // an object that holds data relavent to animation textures
 #pragma once
 #define FLAT_ENGINE_EXPORT
-#include "../../../flatEngineExport.hpp"
-#include "../../../math/Vector2.hpp"
-#include <SFML/Graphics/Image.hpp>
-
-namespace sf
-    {
-        class Texture;
-    }
+#include "fe/flatEngineExport.hpp"
+#include "fe/math/Vector2.hpp"
+#include <utility>
 
 namespace fe
     {

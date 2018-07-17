@@ -9,6 +9,7 @@
 #include "gameWorld.hpp"
 #include "fe/subsystems/entitySpawner/entitySpawner.hpp"
 #include "fe/gui/guiGraph.hpp"
+#include "fe/subsystems/graphic/animation/animator.hpp"
 
 #include <vector>
 #include <queue>
@@ -36,6 +37,7 @@ namespace fe
 					std::vector<gui::dialog*> m_dialogs;
 					fe::gui::guiGraph m_guiGraph;
                     fe::gameWorld m_gameWorld;
+					fe::animator m_animator;
                     fe::entitySpawner m_entitySpawner;
                     fe::camera m_stateCamera;
 

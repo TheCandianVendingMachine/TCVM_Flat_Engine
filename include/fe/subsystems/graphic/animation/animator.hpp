@@ -2,21 +2,16 @@
 // allows the subscription to a animation with options
 #pragma once
 #define FLAT_ENGINE_EXPORT
-#include "../../../flatEngineExport.hpp"
+#include "fe/flatEngineExport.hpp"
 
 #include <unordered_map>
 #include <vector>
 
-#include "../../../objectManagement/handleManager.hpp"
-#include "../../../time/clock.hpp"
-#include "../../../math/Vector2.hpp"
+#include "fe/objectManagement/handleManager.hpp"
+#include "fe/time/clock.hpp"
+#include "fe/math/Vector2.hpp"
 
 #include "animationTexture.hpp"
-
-namespace sf
-    {
-        class Texture;
-    }
 
 namespace fe
     {
