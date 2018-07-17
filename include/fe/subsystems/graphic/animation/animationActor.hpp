@@ -1,22 +1,18 @@
 // animationActor.hpp
-// Iterates through the animation. Updates a sf::VertexArray to update the current animation
+// Iterates through the animation. Requires you to inject a fe::renderObject to interate
 #pragma once
 #define FLAT_ENGINE_EXPORT
-#include "../../../flatEngineExport.hpp"
-#include "../../../math/Vector2.hpp"
-#include "../../../time/clock.hpp"
-
-namespace sf
-    {
-        class VertexArray;
-    }
+#include "fe/flatEngineExport.hpp"
+#include "fe/math/Vector2.hpp"
+#include "fe/time/time.hpp"
 
 namespace fe 
     {
+		struct renderObject;
         class animationActor
             {
                 private:
-                    sf::VertexArray *m_verticies;
+					fe::renderObject *const m_actorVerticies;
                     fe::time m_lastCheckedTime;
                     fe::time m_pauseTime;
                     unsigned int m_animationFrameSpeed; // how long it takes for a single frame to iterate in milliseconds
@@ -28,7 +24,7 @@ namespace fe
                     bool m_play;
 
                 public:
-                    FLAT_ENGINE_API animationActor(sf::VertexArray *verticies);
+                    FLAT_ENGINE_API animationActor(fe::renderObject *const actor);
 
                     FLAT_ENGINE_API void play(bool value);
                     FLAT_ENGINE_API bool isPlaying() const;

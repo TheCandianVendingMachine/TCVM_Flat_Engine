@@ -28,7 +28,7 @@ namespace fe
                     fe::clock m_elapsedTime;
 
                 public:
-                    FLAT_ENGINE_API fe::Handle addAnimation(fe::Vector2<unsigned int> frameSize, fe::Vector2<unsigned int> animationSize, fe::Vector2<unsigned int> texturePosition = fe::Vector2<unsigned int>(0, 0), bool vertical = true);
+                    FLAT_ENGINE_API fe::Handle addAnimation(fe::Vector2<unsigned int> frameSize, fe::Vector2<unsigned int> animationSize, bool vertical = true, fe::Vector2<unsigned int> texturePosition = fe::Vector2<unsigned int>(0, 0));
                     FLAT_ENGINE_API void removeAnimation(fe::Handle handle);
                 
                     FLAT_ENGINE_API void subscribe(animationActor *actor, fe::Handle animation);
