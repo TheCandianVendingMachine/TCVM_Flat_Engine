@@ -28,7 +28,7 @@ std::pair<fe::Vector2<unsigned int>, fe::Vector2<unsigned int>> fe::animationTex
                 maxFrame = actor->getEndFrame();
             }
 
-        if (actor->getCurrentFrame() >= maxFrame || actor->getCurrentFrame() < actor->getStartFrame())
+        if (actor->getCurrentFrame() > maxFrame || actor->getCurrentFrame() < actor->getStartFrame())
             {
                 actor->setCurrentFrame(actor->getStartFrame());
             }

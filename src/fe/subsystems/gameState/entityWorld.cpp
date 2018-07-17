@@ -29,6 +29,7 @@ fe::entityWorld::entityWorld(fe::gameWorld &gameWorld) : m_gameWorld(gameWorld)
 void fe::entityWorld::startUp()
     {
         m_entityAllocater.startUp(FE_MAX_GAME_OBJECTS);
+		m_animator.startUp();
     }
 
 void fe::entityWorld::preUpdate()
@@ -38,6 +39,7 @@ void fe::entityWorld::preUpdate()
 
 void fe::entityWorld::update(collisionWorld *collisionWorld, broadphaseAbstract *dynamicBroadphase)
     {
+		m_animator.updateTextures();
         for (unsigned int i = 0; i < objectCount(); i++)
             {
                 if (m_objects[i] && m_objects[i]->m_enabled)
@@ -166,6 +168,11 @@ void fe::entityWorld::deserialize(fe::serializerID &serializer)
                 ent->enableCollision(!m_gameWorld.getGameState().isPaused());
             }
     }
+
+fe::animator &fe::entityWorld::getAnimator()
+	{
+		return m_animator;
+	}
 
 void fe::entityWorld::entityRepresentation::serialize(fe::serializerID &serializer) const
     {

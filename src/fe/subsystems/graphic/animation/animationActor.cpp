@@ -7,7 +7,8 @@ fe::animationActor::animationActor(fe::renderObject *const actor) :
     m_currentFrame(0),
     m_endFrame(0),
     m_startFrame(0),
-    m_play(false)
+    m_play(false),
+	m_lastCheckedTime(0)
     {
     }
 
@@ -18,7 +19,7 @@ void fe::animationActor::play(bool value)
             {
                 m_pauseTime = fe::clock::getTimeSinceEpoch();
             }
-        else
+        else if (m_pauseTime > 0)
             {
                 m_lastCheckedTime += fe::clock::getTimeSinceEpoch() - m_pauseTime;
             }
@@ -74,6 +75,15 @@ unsigned int fe::animationActor::getStartFrame()
 void fe::animationActor::setCurrentFrame(unsigned int frame)
     {
         m_currentFrame = frame;
+		if (m_currentFrame > m_endFrame && m_endFrame != 0)
+            {
+                setCurrentFrame(m_currentFrame % m_endFrame);
+            }
+        
+        if (m_currentFrame < m_startFrame)
+            {
+                setCurrentFrame(m_startFrame);
+            }
     }
 
 unsigned int fe::animationActor::getCurrentFrame() const
@@ -84,15 +94,6 @@ unsigned int fe::animationActor::getCurrentFrame() const
 void fe::animationActor::iterateFrame(int amount)
     {
         setCurrentFrame(m_currentFrame + amount);
-        if (m_currentFrame > m_endFrame && m_endFrame != 0)
-            {
-                setCurrentFrame(m_currentFrame % m_endFrame);
-            }
-        
-        if (m_currentFrame < m_startFrame)
-            {
-                setCurrentFrame(m_startFrame);
-            }
     }
 
 void fe::animationActor::updateVerticies(fe::Vector2<unsigned int> offset, fe::Vector2<unsigned int> size)

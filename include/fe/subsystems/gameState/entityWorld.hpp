@@ -61,5 +61,7 @@ namespace fe
                     FLAT_ENGINE_API void serialize(fe::serializerID &serializer);
                     FLAT_ENGINE_API void deserialize(fe::serializerID &serializer);
 
+					FLAT_ENGINE_API fe::animator &getAnimator();
+
             };
     }

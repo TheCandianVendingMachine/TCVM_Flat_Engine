@@ -133,6 +133,50 @@ fe::prefabObject &fe::entitySpawner::createPrefab(const char *luaName)
 					}
 
                 prefab.m_zPosition = sceneGraphData["zPos"].get<int>();
+
+				if (sceneGraphData["animation"].get_type() == sol::type::table)
+					{
+						sol::table animationData = sceneGraphData["animation"];
+						prefab.m_modules = prefab.m_modules | fe::entityModules::ANIMATION;
+
+						if (animationData["frameSize"].get_type() == sol::type::table)
+							{
+								prefab.m_animationFrameSize.x = animationData["frameSize"]["x"].get<unsigned int>();
+								prefab.m_animationFrameSize.y = animationData["frameSize"]["y"].get<unsigned int>();
+							}
+
+						if (animationData["totalSize"].get_type() == sol::type::table)
+							{
+								prefab.m_animationTotalSize.x = animationData["totalSize"]["x"].get<unsigned int>();
+								prefab.m_animationTotalSize.x = animationData["totalSize"]["y"].get<unsigned int>();
+							}
+
+						if (animationData["textureOffset"].get_type() == sol::type::table)
+							{
+								prefab.m_animationTextureOffset.x = animationData["textureOffset"]["x"].get<unsigned int>();
+								prefab.m_animationTextureOffset.x = animationData["textureOffset"]["y"].get<unsigned int>();
+							}
+
+						if (animationData["vertical"].get_type() == sol::type::boolean)
+							{
+								prefab.m_animationIsVertical = animationData["vertical"].get<bool>();
+							}
+
+						if (animationData["startFrame"].get_type() == sol::type::number)
+							{
+								prefab.m_animationStartFrame = animationData["startFrame"].get<unsigned int>();
+							}
+
+						if (animationData["endFrame"].get_type() == sol::type::number)
+							{
+								prefab.m_animationEndFrame = animationData["endFrame"].get<unsigned int>();
+							}
+
+						if (animationData["frameSpeed"].get_type() == sol::type::number)
+							{
+								prefab.m_animationFrameSpeed = animationData["frameSpeed"].get<unsigned int>();
+							}
+					}
             }
 
         if (luaTable["rigidBody"].get_type() == sol::type::table)
@@ -249,6 +293,21 @@ fe::Handle fe::entitySpawner::spawn(const char *luaName)
 
 				entity->getRenderObject()->m_texCoords[2] = prefab.m_textureSize.x;
 				entity->getRenderObject()->m_texCoords[3] = prefab.m_textureSize.y;
+
+				if (prefab.m_modules & fe::entityModules::ANIMATION)
+					{
+						fe::lightVector2<unsigned int> frameSize = prefab.m_animationFrameSize;
+						fe::lightVector2<unsigned int> totalSize = prefab.m_animationTotalSize;
+						fe::lightVector2<unsigned int> textureOffset = offset + prefab.m_animationTextureOffset;
+						bool vertical = prefab.m_animationIsVertical;
+
+						fe::Handle animation = m_world->getEntityWorld().getAnimator().addAnimation(frameSize, totalSize, vertical, textureOffset);
+						m_world->getEntityWorld().getAnimator().subscribe(entity->getActor(), animation);
+
+						entity->getActor()->setStartFrame(prefab.m_animationStartFrame);
+						entity->getActor()->setEndFrame(prefab.m_animationEndFrame);
+						entity->getActor()->setFrameSpeed(prefab.m_animationFrameSpeed);
+					}
             }
 
         if (prefab.m_modules & fe::entityModules::RIGID_BODY)

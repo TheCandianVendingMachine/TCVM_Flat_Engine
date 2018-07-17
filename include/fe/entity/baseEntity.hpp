@@ -22,6 +22,7 @@ namespace fe
         class baseGameState;
         class gameWorld;
         class userEntityObject;
+		class animationActor;
 
         class baseEntity : public fe::guid, private fe::scriptObject
             {
@@ -29,6 +30,7 @@ namespace fe
                     fe::baseEntityUtilities m_baseEntityUtility;
 
                     fe::sceneGraphObject *m_renderObject;
+					fe::animationActor *m_animationActor;
                     fe::rigidBody *m_rigidBody;
                     fe::collider *m_collisionBody;
 
@@ -109,6 +111,7 @@ namespace fe
                     FLAT_ENGINE_API fe::sceneGraphObject *getRenderObject() const;
                     FLAT_ENGINE_API fe::rigidBody *getRigidBody() const;
                     FLAT_ENGINE_API fe::collider *getCollider() const;
+					FLAT_ENGINE_API fe::animationActor *getActor() const;
 
                     FLAT_ENGINE_API fe::entityModules getModules() const;
 
