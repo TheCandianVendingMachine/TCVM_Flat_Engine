@@ -287,6 +287,7 @@ fe::Handle fe::entitySpawner::spawn(const char *luaName)
         if ((prefab.m_modules & fe::entityModules::RENDER_OBJECT) || (prefab.m_modules & fe::entityModules::RENDER_TEXT))
             {
                 entity->getRenderObject()->m_zPosition = prefab.m_zPosition;
+                m_world->getSceneGraph().setZOrder(entity->getRenderObject(), prefab.m_zPosition);
 
                 fe::Vector2<unsigned int> offset = fe::engine::get().getResourceManager<sf::Texture>()->getTexturePosition(prefab.m_textureID);
                 entity->getRenderObject()->m_texCoords[0] = offset.x + prefab.m_textureOffset.x;

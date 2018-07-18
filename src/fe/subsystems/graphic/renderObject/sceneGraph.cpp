@@ -233,7 +233,9 @@ void fe::sceneGraph::setZOrder(int node, int z)
             {
                 connect(node, getZ(z));
             }
-        m_sceneRenderTree.sort(m_baseNode.m_graphNode);
+        m_sceneRenderTree.sort(m_baseNode.m_graphNode, [this](int a, int b) {
+            return getZ(a) < getZ(b);
+        });
     }
 
 void fe::sceneGraph::connect(int a, int b)
