@@ -6,6 +6,7 @@
 #include "fe/subsystems/physics/rigidBody.hpp"
 #include "fe/subsystems/scripting/scriptManager.hpp"
 #include "fe/subsystems/resourceManager/resourceManager.hpp"
+#include "fe/subsystems/messaging/eventSender.hpp"
 
 fe::entitySpawner::entitySpawner() : 
     m_world(nullptr),
@@ -319,6 +320,13 @@ fe::Handle fe::entitySpawner::spawn(const char *luaName)
 
         entity->setName(luaName);
         entity->setEntityDefinition(prefab.m_entityTable);
+
+        fe::gameEvent createEvent(FE_STR((std::string("spawn_") + luaName).c_str()), 1);
+        createEvent.args[0].arg.TYPE_UINTEGER = objectHandle;
+        createEvent.args[0].argType = fe::gameEventArgument::type::TYPE_UINT;
+
+        fe::engine::get().getEventSender().sendGlobal(createEvent);
+
         return objectHandle;
     }
 
