@@ -10,19 +10,19 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 
 int fe::baseGameState::addDialog(fe::gui::dialog *panel, int connected, int zPos)
-	{
-		m_dialogs.push_back(panel);
-		return m_guiGraph.addObjectToGraph(panel, connected, zPos);
-	}
+    {
+        m_dialogs.push_back(panel);
+        return m_guiGraph.addObjectToGraph(panel, connected, zPos);
+    }
 
 void fe::baseGameState::removeDialog(fe::gui::dialog *panel)
-	{
-		panel->kill();
-	}
+    {
+        panel->kill();
+    }
 
 void fe::baseGameState::startUp()
     {
-		m_guiGraph.startUp();
+        m_guiGraph.startUp();
         m_gameWorld.startUp();
         setCamera(std::move(fe::engine::get().getDefaultCamera()));
         m_entitySpawner.setWorld(&m_gameWorld);
@@ -32,10 +32,10 @@ void fe::baseGameState::handleEvents(const sf::Event &event)
     {
         if (m_paused) return;
         handleWindowEvent(event);
-		for (auto &dialog : m_dialogs)
-			{
-				dialog->handleEvent(event);
-			}
+        for (auto &dialog : m_dialogs)
+            {
+                dialog->handleEvent(event);
+            }
     }
 
 void fe::baseGameState::preUpdateDefined()
@@ -61,19 +61,19 @@ void fe::baseGameState::postUpdateDefined()
 
         m_gameWorld.postUpdate();
 
-		for (auto it = m_dialogs.begin(); it != m_dialogs.end();)
-			{
-				auto dialog = (*it);
-				if (dialog->isKilled())
-					{
-						m_guiGraph.removeObjectFromGraph(dialog);
-						it = m_dialogs.erase(it);
-					}
-				else
-					{
-						++it;
-					}
-			}
+        for (auto it = m_dialogs.begin(); it != m_dialogs.end();)
+            {
+                auto dialog = (*it);
+                if (dialog->isKilled())
+                    {
+                        m_guiGraph.removeObjectFromGraph(dialog);
+                        it = m_dialogs.erase(it);
+                    }
+                else
+                    {
+                        ++it;
+                    }
+            }
     }
 
 void fe::baseGameState::fixedUpdateDefined(float deltaTime)
@@ -110,7 +110,7 @@ void fe::baseGameState::draw(sf::RenderTarget &app)
         // Switch view to default engine view to allow drawing of gui in absolute terms. Near invisible for speed
         sf::View currentView = app.getView();
         //app.setView(fe::engine::get().getDefaultCamera().getView());
-		m_guiGraph.draw(app);
+        m_guiGraph.draw(app);
         //app.setView(currentView);
         FE_END_PROFILE
     }
@@ -118,7 +118,7 @@ void fe::baseGameState::draw(sf::RenderTarget &app)
 void fe::baseGameState::shutDown()
     {
         m_gameWorld.shutDown();
-		m_guiGraph.shutDown();
+        m_guiGraph.shutDown();
     }
 
 fe::Handle fe::baseGameState::addObject(const char *id)

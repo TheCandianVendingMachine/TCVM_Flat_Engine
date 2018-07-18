@@ -50,9 +50,9 @@ namespace fe
                             FLAT_ENGINE_API void getSelected(std::vector<bool> &selected) const;
                             FLAT_ENGINE_API std::vector<bool> getSelected() const;
 
-							FLAT_ENGINE_API bool anySelected() const;
+                            FLAT_ENGINE_API bool anySelected() const;
 
-							FLAT_ENGINE_API fe::lightVector2d getSize() const;
+                            FLAT_ENGINE_API fe::lightVector2d getSize() const;
 
                     };
             }

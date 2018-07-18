@@ -10,23 +10,23 @@
 #include <memory>
 
 namespace fe
-	{
-		class graph;
-		namespace graphNav
-			{
-				std::vector<int> aStar(graph&, int, int, float);
-			}
+    {
+        class graph;
+        namespace graphNav
+            {
+                std::vector<int> aStar(graph&, int, int, float);
+            }
 
-		class graph : public fe::serializable, private fe::handleManager<ai::node*, 0>
-			{
-				private:
-					friend std::vector<int> graphNav::aStar(graph&, int, int, float);
+        class graph : public fe::serializable, private fe::handleManager<ai::node*, 0>
+            {
+                private:
+                    friend std::vector<int> graphNav::aStar(graph&, int, int, float);
 
                     FLAT_ENGINE_API int addNode();
                     FLAT_ENGINE_API void onAdd(ai::node **object, fe::Handle objectHandle);
 
-				public:
-					FLAT_ENGINE_API int addNode(float posX, float posY, float cost = 1.f);
+                public:
+                    FLAT_ENGINE_API int addNode(float posX, float posY, float cost = 1.f);
                     FLAT_ENGINE_API void removeNode(int nodeHandle);
 
                     FLAT_ENGINE_API void addEdge(int nodeA, int nodeB);
@@ -37,5 +37,5 @@ namespace fe
                     FLAT_ENGINE_API void serialize(fe::serializerID &serializer) const;
                     FLAT_ENGINE_API void deserialize(fe::serializerID &serializer);
 
-			};
-	}
+            };
+    }

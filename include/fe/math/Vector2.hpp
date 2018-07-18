@@ -31,7 +31,7 @@ namespace fe
                 Vector2(dataType X, dataType Y) : x(X), y(Y) {}
                 Vector2(const Vector2<dataType> &copy) : x(copy.x), y(copy.y) {}
                 Vector2(const lightVector2<dataType> &copy) : x(copy.x), y(copy.y) {}
-				Vector2(const sf::Vector2<dataType> &copy) : x(copy.x), y(copy.y) {}
+                Vector2(const sf::Vector2<dataType> &copy) : x(copy.x), y(copy.y) {}
 
                 template <typename otherDataType>
                 Vector2(const Vector2<otherDataType> &copy) : x(static_cast<dataType>(copy.x)), y(static_cast<dataType>(copy.y)) {}

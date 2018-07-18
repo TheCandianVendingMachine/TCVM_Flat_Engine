@@ -10,25 +10,25 @@ set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/;${CMAKE_MODULE_PATH}")
 # Requires SFML to build
 find_package(SFML 2 COMPONENTS audio graphics window system REQUIRED)
 if(SFML_FOUND)
-	include_directories(${SFML_INCLUDE_DIR})
+    include_directories(${SFML_INCLUDE_DIR})
 else()
-	set(SFML_ROOT "" CACHE PATH "SFML top-level directory")
-	message("\n-> SFML directory not found. Set SFML_ROOT to SFML's top-level path (containing \"include\" and \"lib\" directories).")
-	message("-> Make sure the SFML libraries with the same configuration (Release/Debug, Static/Dynamic) exist.\n")
+    set(SFML_ROOT "" CACHE PATH "SFML top-level directory")
+    message("\n-> SFML directory not found. Set SFML_ROOT to SFML's top-level path (containing \"include\" and \"lib\" directories).")
+    message("-> Make sure the SFML libraries with the same configuration (Release/Debug, Static/Dynamic) exist.\n")
 endif()
 
 find_package(Lua REQUIRED)
 
 macro(fe_link_sfml FE_TARGET)
-	target_link_libraries(${FE_TARGET} ${SFML_LIBRARIES})
+    target_link_libraries(${FE_TARGET} ${SFML_LIBRARIES})
 endmacro()
-	
+    
 macro(fe_link_lua FE_TARGET)
-	target_link_libraries(${FE_TARGET} ${LUA_LIBRARIES})
+    target_link_libraries(${FE_TARGET} ${LUA_LIBRARIES})
 endmacro()
-	
+    
 macro(fe_link_sfml_dependencies FE_TARGET)
-	target_link_libraries(${FE_TARGET} ${SFML_DEPENDENCIES})
+    target_link_libraries(${FE_TARGET} ${SFML_DEPENDENCIES})
 endmacro()
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -39,12 +39,12 @@ add_subdirectory(src)
 set_target_properties(${PROJECT_NAME} PROPERTIES
             CXX_STANDARD 17)
 
-					
+                    
 install(DIRECTORY include
-				DESTINATION .)
+                DESTINATION .)
 
 install(FILES License.txt
-				DESTINATION .)
-				
+                DESTINATION .)
+                
 install(DIRECTORY extlib/headers
-				DESTINATION .)
+                DESTINATION .)

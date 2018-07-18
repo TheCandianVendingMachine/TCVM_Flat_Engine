@@ -27,9 +27,9 @@ void fe::transformable::setPosition(float x, float y)
     }
 
 void fe::transformable::setPosition(fe::Vector2d pos)
-	{
-		setPosition(pos.x, pos.y);
-	}
+    {
+        setPosition(pos.x, pos.y);
+    }
 
 void fe::transformable::setRotation(float radians)
     {
@@ -47,9 +47,9 @@ void fe::transformable::setOrigin(float x, float y)
     }
 
 void fe::transformable::setOrigin(fe::Vector2d origin)
-	{
-		setOrigin(origin.x, origin.y);
-	}
+    {
+        setOrigin(origin.x, origin.y);
+    }
 
 void fe::transformable::setScale(float x, float y)
     {
@@ -60,9 +60,9 @@ void fe::transformable::setScale(float x, float y)
     }
 
 void fe::transformable::setScale(fe::Vector2d scale)
-	{
-		setScale(scale.x, scale.y);
-	}
+    {
+        setScale(scale.x, scale.y);
+    }
 
 void fe::transformable::setScale(float scale)
     {
@@ -100,9 +100,9 @@ void fe::transformable::move(float x, float y)
     }
 
 void fe::transformable::move(fe::Vector2d offset)
-	{
-		move(offset.x, offset.y);
-	}
+    {
+        move(offset.x, offset.y);
+    }
 
 void fe::transformable::rotate(float radians)
     {
@@ -120,9 +120,9 @@ void fe::transformable::scale(float x, float y)
     }
 
 void fe::transformable::scale(fe::Vector2d scaley)
-	{
-		scale(scaley.x, scaley.y);
-	}
+    {
+        scale(scaley.x, scaley.y);
+    }
 
 void fe::transformable::scale(float scale)
     {

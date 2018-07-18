@@ -50,7 +50,7 @@ void fe::gui::guiGraph::drawToScreen(sf::RenderTarget &target, sf::RenderStates 
 
 void fe::gui::guiGraph::onObjectAdd(void *object, int node)
     {
-		static_cast<fe::gui::dialog*>(object)->setGraphNode(node);
+        static_cast<fe::gui::dialog*>(object)->setGraphNode(node);
         static_cast<fe::gui::dialog*>(object)->init(*this, node);
     }
 

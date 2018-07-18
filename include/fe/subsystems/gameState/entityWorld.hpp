@@ -36,7 +36,7 @@ namespace fe
                     fe::poolAllocater<fe::baseEntity> m_entityAllocater;
 
                     fe::gameWorld &m_gameWorld;
-					fe::animator m_animator;
+                    fe::animator m_animator;
 
                     FLAT_ENGINE_API void onAdd(fe::baseEntity **object, fe::Handle objectHandle);
                     FLAT_ENGINE_API void onRemove(fe::baseEntity **object, fe::Handle objectHandle);
@@ -61,7 +61,7 @@ namespace fe
                     FLAT_ENGINE_API void serialize(fe::serializerID &serializer);
                     FLAT_ENGINE_API void deserialize(fe::serializerID &serializer);
 
-					FLAT_ENGINE_API fe::animator &getAnimator();
+                    FLAT_ENGINE_API fe::animator &getAnimator();
 
             };
     }

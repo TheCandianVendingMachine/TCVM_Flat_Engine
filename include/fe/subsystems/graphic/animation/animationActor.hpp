@@ -8,11 +8,11 @@
 
 namespace fe 
     {
-		struct renderObject;
+        struct renderObject;
         class animationActor
             {
                 private:
-					fe::renderObject *const m_actorVerticies;
+                    fe::renderObject *const m_actorVerticies;
                     fe::time m_lastCheckedTime;
                     fe::time m_pauseTime;
                     unsigned int m_animationFrameSpeed; // how long it takes for a single frame to iterate in milliseconds

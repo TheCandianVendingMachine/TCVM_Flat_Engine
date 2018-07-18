@@ -19,16 +19,16 @@ void fe::gui::slider::onStateChange(dialogStates previous, dialogStates next)
         switch (next)
             {
                 case fe::gui::dialogStates::ACTIVE:
-					m_sliderColour = m_colourOnActive;
+                    m_sliderColour = m_colourOnActive;
                     break;
                 case fe::gui::dialogStates::DISABLED:
-					m_sliderColour = m_colourOnDeactive;
+                    m_sliderColour = m_colourOnDeactive;
                     break;
                 case fe::gui::dialogStates::HIGHLIGHTED:
-					m_sliderColour = m_colourOnHighlight;
+                    m_sliderColour = m_colourOnHighlight;
                     break;
                 case fe::gui::dialogStates::PRESSED:
-					m_sliderColour = m_colourOnPress;
+                    m_sliderColour = m_colourOnPress;
                     break;
                 default:
                     break;
@@ -88,10 +88,10 @@ fe::gui::slider::slider(fe::gui::sliderOrientation orientation, float sliderCont
     m_orientation(orientation),
     m_sliderDistanceFromSide(sliderControlWidthFromEdge, sliderControlWidthFromEdge),
     m_containerOutlineWidth(outlineWidth, outlineWidth),
-	m_colourOnActive(sf::Color::White),
-	m_colourOnDeactive(sf::Color::White),
-	m_colourOnHighlight(sf::Color::White),
-	m_colourOnPress(sf::Color::White)
+    m_colourOnActive(sf::Color::White),
+    m_colourOnDeactive(sf::Color::White),
+    m_colourOnHighlight(sf::Color::White),
+    m_colourOnPress(sf::Color::White)
     {
         // how much of the slider the control has filled. Axis which determines scroll
         float sliderFill = scrollSize * (lengthOfOutline - outlineWidth * 2.f) - (sliderControlWidthFromEdge * 2.f);
@@ -140,7 +140,7 @@ fe::gui::slider::slider(fe::gui::sliderOrientation orientation, float sliderCont
         m_minSliderPos = m_sliderPosition;
         m_maxSliderPos = m_containerSize - m_minSliderPos;
 
-		m_sliderColour = getDrawColour();
+        m_sliderColour = getDrawColour();
     }
 
 float fe::gui::slider::getPercentScrolled() const
@@ -170,43 +170,43 @@ float fe::gui::slider::getPercentScrolled() const
     }
 
 void fe::gui::slider::setPercentScrolled(float percent)
-	{
-		fe::Vector2d halfSliderSize = m_sliderSize / 2.f;
-		fe::Vector2d oppositePosition = m_maxSliderPos - halfSliderSize;
-		fe::Vector2d originalDistanceToEnd = oppositePosition - halfSliderSize - m_minSliderPos;
+    {
+        fe::Vector2d halfSliderSize = m_sliderSize / 2.f;
+        fe::Vector2d oppositePosition = m_maxSliderPos - halfSliderSize;
+        fe::Vector2d originalDistanceToEnd = oppositePosition - halfSliderSize - m_minSliderPos;
 
-		fe::Vector2d newPos = -(originalDistanceToEnd * (1.f - percent)) + oppositePosition;
+        fe::Vector2d newPos = -(originalDistanceToEnd * (1.f - percent)) + oppositePosition;
 
-		switch (m_orientation)
+        switch (m_orientation)
             {
                 case sliderOrientation::HORIZONTAL:
-					m_sliderPosition.x = newPos.x - halfSliderSize.x;
+                    m_sliderPosition.x = newPos.x - halfSliderSize.x;
                     break;
                 case sliderOrientation::VERTICAL:
-					m_sliderPosition.y = newPos.y - halfSliderSize.y;
+                    m_sliderPosition.y = newPos.y - halfSliderSize.y;
                     break;
                 default:
                     break;
             }
-	}
+    }
 
 void fe::gui::slider::setColourOnActive(sf::Color colour)
-	{
-		m_colourOnActive = colour;
-	}
+    {
+        m_colourOnActive = colour;
+    }
 
 void fe::gui::slider::setColourOnDeactive(sf::Color colour)
-	{
-		m_colourOnDeactive = colour;
-	}
+    {
+        m_colourOnDeactive = colour;
+    }
 
 void fe::gui::slider::setColourHighlight(sf::Color colour)
-	{
-		m_colourOnHighlight = colour;
-	}
+    {
+        m_colourOnHighlight = colour;
+    }
 
 void fe::gui::slider::setColourOnPress(sf::Color colour)
-	{
-		m_colourOnPress = colour;
-	}
+    {
+        m_colourOnPress = colour;
+    }
 

@@ -16,10 +16,10 @@ namespace fe
             {                 
                 private:
                     struct profileDynamicData
-	                    {
-		                    fe::time m_startTime;
-		                    fe::time m_endTime;
-		
+                        {
+                            fe::time m_startTime;
+                            fe::time m_endTime;
+        
                             char *m_nameStr = nullptr;
                             unsigned int m_nameSize = 0;
                             unsigned int m_index = 0;
@@ -29,7 +29,7 @@ namespace fe
                             FLAT_ENGINE_API void start(const char *name);
                             FLAT_ENGINE_API void end();
                             FLAT_ENGINE_API void shutDown();
-	                    } m_allProfiles[FE_MAX_PROFILER_PROFILES];
+                        } m_allProfiles[FE_MAX_PROFILER_PROFILES];
                     fe::singlyLinkedList<unsigned int> m_unallocatedProfiles;
 
                     struct profileData

@@ -34,15 +34,15 @@ namespace fe
 
                     // Set the position in the world
                     FLAT_ENGINE_API void setPosition(float x, float y);
-					FLAT_ENGINE_API void setPosition(fe::Vector2d pos);
+                    FLAT_ENGINE_API void setPosition(fe::Vector2d pos);
                     // Set the rotation in radians
                     FLAT_ENGINE_API void setRotation(float radians);
                     // Set the origin which the object will transform around
                     FLAT_ENGINE_API void setOrigin(float x, float y);
-					FLAT_ENGINE_API void setOrigin(fe::Vector2d origin);
+                    FLAT_ENGINE_API void setOrigin(fe::Vector2d origin);
                     // Set the scale of the object. Overrides all previous scaling
                     FLAT_ENGINE_API void setScale(float x, float y);
-					FLAT_ENGINE_API void setScale(fe::Vector2d scale);
+                    FLAT_ENGINE_API void setScale(fe::Vector2d scale);
                     // Set the scale of the object. Overrides all previous scaling
                     FLAT_ENGINE_API void setScale(float scale);
                     
@@ -60,10 +60,10 @@ namespace fe
 
                     // Move the matrix by the offset
                     FLAT_ENGINE_API void move(float x, float y);
-					FLAT_ENGINE_API void move(fe::Vector2d offset);
+                    FLAT_ENGINE_API void move(fe::Vector2d offset);
                     // Scale the matrix by the factor
                     FLAT_ENGINE_API void scale(float x, float y);
-					FLAT_ENGINE_API void scale(fe::Vector2d scaley);
+                    FLAT_ENGINE_API void scale(fe::Vector2d scaley);
                     // Scale the matrix by the factor
                     FLAT_ENGINE_API void scale(float scale);
                     // Rotate the matrix by an amount of radians

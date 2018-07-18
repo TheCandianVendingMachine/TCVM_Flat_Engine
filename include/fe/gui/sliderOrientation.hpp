@@ -3,13 +3,13 @@
 #pragma once
 
 namespace fe
-	{
-		namespace gui
-			{
-				enum class sliderOrientation
-					{
-						HORIZONTAL,
-						VERTICAL
-					};
-			}
-	}
+    {
+        namespace gui
+            {
+                enum class sliderOrientation
+                    {
+                        HORIZONTAL,
+                        VERTICAL
+                    };
+            }
+    }

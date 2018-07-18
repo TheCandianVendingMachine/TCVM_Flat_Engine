@@ -6,12 +6,12 @@
 #include <vector>
 
 namespace fe
-	{
-		class graph;
+    {
+        class graph;
 
-		namespace graphNav 
-			{
-				FLAT_ENGINE_API void aStar(std::vector<int> &&waypoints, graph &graph, int start, int end, float alpha = 1.f);
+        namespace graphNav 
+            {
+                FLAT_ENGINE_API void aStar(std::vector<int> &&waypoints, graph &graph, int start, int end, float alpha = 1.f);
 
-			}
-	}
+            }
+    }

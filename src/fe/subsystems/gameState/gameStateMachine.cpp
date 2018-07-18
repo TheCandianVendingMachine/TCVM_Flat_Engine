@@ -247,10 +247,10 @@ void fe::gameStateMachine::postUpdate()
 void fe::gameStateMachine::cameraUpdate(float deltaTime, int iterations)
     {
         // Only updating end state camera as for that makes the most sense. No other camera should be moving
-		if (m_endState && m_endState->m_currentState) 
-			{
-				m_endState->m_currentState->updateCamera(deltaTime, iterations);
-			}
+        if (m_endState && m_endState->m_currentState) 
+            {
+                m_endState->m_currentState->updateCamera(deltaTime, iterations);
+            }
     }
 
 void fe::gameStateMachine::preDraw()

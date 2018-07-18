@@ -116,29 +116,29 @@ std::vector<bool> fe::gui::radioList::getSelected() const
     }
 
 int fe::gui::radioList::getSelectedIndex() const
-	{
-		for (unsigned int i = 0; i < m_selections.size(); i++)
-			{
-				if (m_selections[i].isSelected())
-					{
-						return i;
-					}
-			}
+    {
+        for (unsigned int i = 0; i < m_selections.size(); i++)
+            {
+                if (m_selections[i].isSelected())
+                    {
+                        return i;
+                    }
+            }
 
-		return -1;
-	}
+        return -1;
+    }
 
 bool fe::gui::radioList::anySelected() const
-	{
-		for (auto &selection : m_selections)
-			{
-				if (selection.isSelected())
-					{
-						return true;
-					}
-			}
-		return false;
-	}
+    {
+        for (auto &selection : m_selections)
+            {
+                if (selection.isSelected())
+                    {
+                        return true;
+                    }
+            }
+        return false;
+    }
 
 void fe::gui::radioList::handleEvent(const gameEvent &event)
     {
@@ -156,20 +156,20 @@ void fe::gui::radioList::handleEvent(const gameEvent &event)
     }
 
 fe::lightVector2d fe::gui::radioList::getSize() const
-	{
-		float size = ((m_gapBetweenSelections + m_selectionSize) * m_optionCount) - m_gapBetweenSelections; // subtract gapBetweenSelections to avoid extra space on the bottom
+    {
+        float size = ((m_gapBetweenSelections + m_selectionSize) * m_optionCount) - m_gapBetweenSelections; // subtract gapBetweenSelections to avoid extra space on the bottom
 
-		fe::lightVector2d min = fe::Vector2d() - fe::lightVector2d(m_selectionSize, m_selectionSize);
-		fe::lightVector2d max(size, size);
+        fe::lightVector2d min = fe::Vector2d() - fe::lightVector2d(m_selectionSize, m_selectionSize);
+        fe::lightVector2d max(size, size);
 
-		for (auto &text : m_options)
-			{
-				min.x = std::min(min.x, text.getSize().x);
-				max.x = std::max(max.x, text.getSize().x);
+        for (auto &text : m_options)
+            {
+                min.x = std::min(min.x, text.getSize().x);
+                max.x = std::max(max.x, text.getSize().x);
 
-				min.y = std::min(min.y, text.getSize().y);
-				max.y = std::max(max.y, text.getSize().y);
-			}
+                min.y = std::min(min.y, text.getSize().y);
+                max.y = std::max(max.y, text.getSize().y);
+            }
 
-		return max - min;
-	}
+        return max - min;
+    }

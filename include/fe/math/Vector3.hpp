@@ -32,7 +32,7 @@ namespace fe
                 Vector3(dataType X, dataType Y, dataType Z) : x(X), y(Y), z(Z) {}
                 Vector3(const Vector3<dataType> &copy) : x(copy.x), y(copy.y), z(copy.z) {}
                 Vector3(const lightVector3<dataType> &copy) : x(copy.x), y(copy.y), z(copy.z) {}
-				Vector3(const sf::Vector3<dataType> &copy) : x(copy.x), y(copy.y), z(copy.z) {}
+                Vector3(const sf::Vector3<dataType> &copy) : x(copy.x), y(copy.y), z(copy.z) {}
 
                 template <typename otherDataType>
                 Vector3(const Vector3<otherDataType> &copy) : x(static_cast<dataType>(copy.x)), y(static_cast<dataType>(copy.y)), z(static_cast<dataType>(copy.z)) {}

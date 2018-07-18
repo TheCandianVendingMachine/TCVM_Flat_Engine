@@ -33,7 +33,7 @@ namespace fe
                             FLAT_ENGINE_API void setText(const std::string &text);
 
                             FLAT_ENGINE_API void setCharacterSize(unsigned int size);
-							FLAT_ENGINE_API unsigned int getCharacterSize() const;
+                            FLAT_ENGINE_API unsigned int getCharacterSize() const;
 
                     };
             }

@@ -4,8 +4,8 @@
 #include <SFML/Window/Mouse.hpp>
 
 void fe::compileLuaKeybinds(fe::scriptManager *manager)
-	{
-		// Register C++ Enums
+    {
+        // Register C++ Enums
         manager->getEnumHandler().registerEnum("inputs",
             "A",            sf::Keyboard::A,
             "B",            sf::Keyboard::B,
@@ -99,4 +99,4 @@ void fe::compileLuaKeybinds(fe::scriptManager *manager)
             "XButton1",     sf::Mouse::XButton1 + sf::Keyboard::KeyCount,
             "XButton2",     sf::Mouse::XButton2 + sf::Keyboard::KeyCount
         );
-	}
+    }

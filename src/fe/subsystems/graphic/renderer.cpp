@@ -7,7 +7,7 @@
 void fe::renderer::startUp()
     {
         m_renderWindowMarker = fe::memoryManager::get().getStackAllocater().getMarker();
-		m_renderWindow = new(fe::memoryManager::get().getStackAllocater().alloc(sizeof(sf::RenderWindow))) sf::RenderWindow;
+        m_renderWindow = new(fe::memoryManager::get().getStackAllocater().alloc(sizeof(sf::RenderWindow))) sf::RenderWindow;
         m_windowSettings = new(fe::memoryManager::get().getStackAllocater().alloc(sizeof(fe::serializerID))) fe::serializerID;
 
         m_settings.m_windowSize.x = 1280;
@@ -83,11 +83,11 @@ sf::RenderWindow &fe::renderer::getRenderWindow() const
     {
         return *m_renderWindow;
     }
-	
+    
 fe::Vector2<unsigned int> fe::renderer::getWindowSize()
-	{
-		return fe::Vector2<unsigned int>(m_renderWindow->getSize());
-	}
+    {
+        return fe::Vector2<unsigned int>(m_renderWindow->getSize());
+    }
 
 fe::renderer::~renderer()
     {}

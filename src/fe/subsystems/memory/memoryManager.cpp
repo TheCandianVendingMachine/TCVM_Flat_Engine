@@ -84,10 +84,10 @@ fe::uInt8 *fe::memoryManager::getBuffer() const
 
 fe::memoryManager::~memoryManager()
     {
-		if (!m_shutDown && this == m_instance)
-			{
-				shutDown();
-				m_shutDown = false;
-			}
+        if (!m_shutDown && this == m_instance)
+            {
+                shutDown();
+                m_shutDown = false;
+            }
         FE_ASSERT(m_shutDown, "Memory Manager not shut down manually.");
     }

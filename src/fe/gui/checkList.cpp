@@ -112,32 +112,32 @@ std::vector<bool> fe::gui::checkList::getSelected() const
     }
 
 bool fe::gui::checkList::anySelected() const
-	{
-		for (auto &selection : m_checkBoxes)
-			{
-				if (selection.isSelected())
-					{
-						return true;
-					}
-			}
-		return false;
-	}
+    {
+        for (auto &selection : m_checkBoxes)
+            {
+                if (selection.isSelected())
+                    {
+                        return true;
+                    }
+            }
+        return false;
+    }
 
 fe::lightVector2d fe::gui::checkList::getSize() const
-	{
-		float size = ((m_gapBetweenBoxes + m_boxSize) * m_optionCount) - m_gapBetweenBoxes; // subtract gapBetweenSelections to avoid extra space on the bottom
+    {
+        float size = ((m_gapBetweenBoxes + m_boxSize) * m_optionCount) - m_gapBetweenBoxes; // subtract gapBetweenSelections to avoid extra space on the bottom
 
-		fe::lightVector2d min = fe::Vector2d() - fe::lightVector2d(m_boxSize, m_boxSize);
-		fe::lightVector2d max(size, size);
+        fe::lightVector2d min = fe::Vector2d() - fe::lightVector2d(m_boxSize, m_boxSize);
+        fe::lightVector2d max(size, size);
 
-		for (auto &text : m_options)
-			{
-				min.x = std::min(min.x, text.getSize().x);
-				max.x = std::max(max.x, text.getSize().x);
+        for (auto &text : m_options)
+            {
+                min.x = std::min(min.x, text.getSize().x);
+                max.x = std::max(max.x, text.getSize().x);
 
-				min.y = std::min(min.y, text.getSize().y);
-				max.y = std::max(max.y, text.getSize().y);
-			}
+                min.y = std::min(min.y, text.getSize().y);
+                max.y = std::max(max.y, text.getSize().y);
+            }
 
-		return max - min;
-	}
+        return max - min;
+    }

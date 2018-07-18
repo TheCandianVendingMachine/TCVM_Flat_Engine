@@ -51,7 +51,7 @@ namespace fe
                 float m_verticies[4]; // x, y, w, h
 
 #if _DEBUG
-				fe::uInt16 m_debugHeader = 0xDEAD;
+                fe::uInt16 m_debugHeader = 0xDEAD;
 #endif
 
                 renderObject() : m_verticies{ 0.f, 0.f, 0.f, 0.f } { m_type = OBJECT; }
@@ -73,7 +73,7 @@ namespace fe
                 unsigned int m_strPos;
 
 #if _DEBUG
-				fe::uInt16 m_debugHeader = 0xBEEF;
+                fe::uInt16 m_debugHeader = 0xBEEF;
 #endif
 
                 bool m_update;

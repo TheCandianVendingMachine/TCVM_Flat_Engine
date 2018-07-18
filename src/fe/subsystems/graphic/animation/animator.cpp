@@ -6,24 +6,24 @@
 #include <SFML/Graphics/VertexArray.hpp>
 
 void fe::animator::startUp()
-	{
-		m_animationActorPool.startUp(FE_MAX_GAME_OBJECTS);
-	}
+    {
+        m_animationActorPool.startUp(FE_MAX_GAME_OBJECTS);
+    }
 
 void fe::animator::shutDown()
-	{
-		m_animationActorPool.clear();
-	}
+    {
+        m_animationActorPool.clear();
+    }
 
 fe::animationActor *fe::animator::alloc(fe::renderObject *const object)
-	{
-		return m_animationActorPool.alloc(object);
-	}
+    {
+        return m_animationActorPool.alloc(object);
+    }
 
 void fe::animator::free(animationActor *actor)
-	{
-		m_animationActorPool.free(actor);
-	}
+    {
+        m_animationActorPool.free(actor);
+    }
 
 fe::Handle fe::animator::addAnimation(fe::Vector2<unsigned int> frameSize, fe::Vector2<unsigned int> animationSize, bool vertical, fe::Vector2<unsigned int> texturePosition)
     {

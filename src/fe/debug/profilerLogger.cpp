@@ -196,25 +196,25 @@ void fe::profilerLogger::profileDynamicData::start(const char *name)
             if (m_profileLogger->wantProfile(FE_STR(name)))
                 {
                     m_profileLogger->startProfile(name);
-			        m_startTime = fe::clock::getTimeSinceEpoch();
+                    m_startTime = fe::clock::getTimeSinceEpoch();
                     m_profile = true;
                 }
 
         #endif
-	}
+    }
 
 void fe::profilerLogger::profileDynamicData::end()
     {
         #if FE_PROFILE_RELEASE || _DEBUG
             if (m_profile)
                 {
-			        m_endTime = fe::clock::getTimeSinceEpoch();
-			        fe::time runtime = m_endTime - m_startTime;
+                    m_endTime = fe::clock::getTimeSinceEpoch();
+                    fe::time runtime = m_endTime - m_startTime;
                     m_profileLogger->endProfile(m_nameStr, runtime);
                     m_profileLogger->destroyProfile(*this);
                 }
         #endif
-	}
+    }
 
 void fe::profilerLogger::profileDynamicData::shutDown()
     {

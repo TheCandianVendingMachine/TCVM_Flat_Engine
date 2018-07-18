@@ -8,7 +8,7 @@ fe::animationActor::animationActor(fe::renderObject *const actor) :
     m_endFrame(0),
     m_startFrame(0),
     m_play(false),
-	m_lastCheckedTime(0)
+    m_lastCheckedTime(0)
     {
     }
 
@@ -75,7 +75,7 @@ unsigned int fe::animationActor::getStartFrame()
 void fe::animationActor::setCurrentFrame(unsigned int frame)
     {
         m_currentFrame = frame;
-		if (m_currentFrame > m_endFrame && m_endFrame != 0)
+        if (m_currentFrame > m_endFrame && m_endFrame != 0)
             {
                 setCurrentFrame(m_currentFrame % m_endFrame);
             }
@@ -99,8 +99,8 @@ void fe::animationActor::iterateFrame(int amount)
 void fe::animationActor::updateVerticies(fe::Vector2<unsigned int> offset, fe::Vector2<unsigned int> size)
     {
         m_actorVerticies->m_texCoords[0] = offset.x;
-		m_actorVerticies->m_texCoords[1] = offset.y;
+        m_actorVerticies->m_texCoords[1] = offset.y;
 
-		m_actorVerticies->m_texCoords[2] = size.x;
-		m_actorVerticies->m_texCoords[3] = size.y;
+        m_actorVerticies->m_texCoords[2] = size.x;
+        m_actorVerticies->m_texCoords[3] = size.y;
     }

@@ -27,7 +27,7 @@ namespace fe
                             fe::transformable m_drawMatrix;
 
                             dialogStates m_dialogState;
-							int m_graphNode;
+                            int m_graphNode;
                             bool m_killed;
                             bool m_draw;
 
@@ -62,16 +62,16 @@ namespace fe
 
                             FLAT_ENGINE_API fe::gui::dialog &operator=(dialog &rhs);
 
-							FLAT_ENGINE_API void setPosition(float x, float y, fe::gui::align alignment = align::MIDDLE);
-							FLAT_ENGINE_API void setPosition(fe::Vector2d pos, fe::gui::align alignment = align::MIDDLE);
-							// Set the window position in X/Y% across the attached dialog
-							FLAT_ENGINE_API void setWindowPosition(float x, float y, fe::gui::align alignment = align::MIDDLE);
-							FLAT_ENGINE_API void setWindowPosition(fe::Vector2d pos, fe::gui::align alignment = align::MIDDLE);
+                            FLAT_ENGINE_API void setPosition(float x, float y, fe::gui::align alignment = align::MIDDLE);
+                            FLAT_ENGINE_API void setPosition(fe::Vector2d pos, fe::gui::align alignment = align::MIDDLE);
+                            // Set the window position in X/Y% across the attached dialog
+                            FLAT_ENGINE_API void setWindowPosition(float x, float y, fe::gui::align alignment = align::MIDDLE);
+                            FLAT_ENGINE_API void setWindowPosition(fe::Vector2d pos, fe::gui::align alignment = align::MIDDLE);
 
-							FLAT_ENGINE_API virtual fe::lightVector2d getSize() const;
+                            FLAT_ENGINE_API virtual fe::lightVector2d getSize() const;
 
-							FLAT_ENGINE_API void setGraphNode(int node);
-							FLAT_ENGINE_API int getGraphNode();
+                            FLAT_ENGINE_API void setGraphNode(int node);
+                            FLAT_ENGINE_API int getGraphNode();
 
                     };
             }

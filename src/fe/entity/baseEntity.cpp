@@ -75,11 +75,11 @@ void fe::baseEntity::deinitialize(fe::gameWorld &world)
                 m_collisionBody = nullptr;
             }
 
-		if (m_enabledModulesEnum & entityModules::ANIMATION)
-			{
-				world.getEntityWorld().getAnimator().free(m_animationActor);
-				m_animationActor = nullptr;
-			}
+        if (m_enabledModulesEnum & entityModules::ANIMATION)
+            {
+                world.getEntityWorld().getAnimator().free(m_animationActor);
+                m_animationActor = nullptr;
+            }
 
         m_entityScriptObject->shutDown();
     }
@@ -135,10 +135,10 @@ void fe::baseEntity::enableDrawing(bool value)
                 m_renderObject->m_draw = value;
             }
 
-		if (m_enabledModulesEnum & entityModules::ANIMATION)
-			{
-				m_animationActor->play(value);
-			}
+        if (m_enabledModulesEnum & entityModules::ANIMATION)
+            {
+                m_animationActor->play(value);
+            }
     }
 
 void fe::baseEntity::enablePhysics(bool value)
@@ -343,9 +343,9 @@ fe::collider *fe::baseEntity::getCollider() const
     }
 
 fe::animationActor *fe::baseEntity::getActor() const
-	{
-		return m_animationActor;
-	}
+    {
+        return m_animationActor;
+    }
 
 fe::entityModules fe::baseEntity::getModules() const
     {
@@ -381,10 +381,10 @@ void fe::baseEntity::createModules(fe::baseGameState &currentState)
                 FE_LOG_WARNING("fe::baseEntity::m_collisionBody already allocated. Possible memory leak");
             }
 
-		if (m_animationActor)
-			{
-				FE_LOG_WARNING("fe::baseEntity::m_animationActor already allocated. Possible memory leak");
-			}
+        if (m_animationActor)
+            {
+                FE_LOG_WARNING("fe::baseEntity::m_animationActor already allocated. Possible memory leak");
+            }
 
         if (m_enabledModulesEnum & fe::entityModules::RENDER_OBJECT)
             {
@@ -407,14 +407,14 @@ void fe::baseEntity::createModules(fe::baseGameState &currentState)
                 m_collisionBody->m_owner = this;
             }
 
-		if (m_enabledModulesEnum & fe::entityModules::ANIMATION)
-			{
+        if (m_enabledModulesEnum & fe::entityModules::ANIMATION)
+            {
 #if _DEBUG
-				if (static_cast<fe::renderObject*>(m_renderObject)->m_debugHeader != 0xDEAD)
-					{
-						FE_LOG_ERROR("Entities current render type is TEXT and ANIMATION requires RENDER_OBJECT type");
-					}
+                if (static_cast<fe::renderObject*>(m_renderObject)->m_debugHeader != 0xDEAD)
+                    {
+                        FE_LOG_ERROR("Entities current render type is TEXT and ANIMATION requires RENDER_OBJECT type");
+                    }
 #endif
-				m_animationActor = currentState.getGameWorld().getEntityWorld().getAnimator().alloc(static_cast<fe::renderObject*>(m_renderObject));
-			}
+                m_animationActor = currentState.getGameWorld().getEntityWorld().getAnimator().alloc(static_cast<fe::renderObject*>(m_renderObject));
+            }
     }

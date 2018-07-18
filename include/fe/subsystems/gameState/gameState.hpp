@@ -33,8 +33,8 @@ namespace fe
         class baseGameState
             {
                 private:
-					std::vector<gui::dialog*> m_dialogs;
-					fe::gui::guiGraph m_guiGraph;
+                    std::vector<gui::dialog*> m_dialogs;
+                    fe::gui::guiGraph m_guiGraph;
                     fe::gameWorld m_gameWorld;
                     fe::entitySpawner m_entitySpawner;
                     fe::camera m_stateCamera;
@@ -47,7 +47,7 @@ namespace fe
                 public:
                     FLAT_ENGINE_API baseGameState() : m_gameWorld(this), m_paused(false) {}
 
-					FLAT_ENGINE_API int addDialog(fe::gui::dialog *panel, int connected = -1, int zPos = 0);
+                    FLAT_ENGINE_API int addDialog(fe::gui::dialog *panel, int connected = -1, int zPos = 0);
                     FLAT_ENGINE_API void removeDialog(fe::gui::dialog *panel);
 
                     // Run a function to check every single panel

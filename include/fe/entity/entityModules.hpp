@@ -12,7 +12,7 @@ namespace fe
                 RENDER_TEXT     = 1 << 1,
                 RIGID_BODY      = 1 << 2,
                 COLLISION_BODY  = 1 << 3,
-				ANIMATION		= 1 << 4,
+                ANIMATION        = 1 << 4,
             };
 
         inline constexpr entityModules operator | (entityModules lhs, entityModules rhs)

@@ -53,6 +53,6 @@ void fe::gui::text::setCharacterSize(unsigned int size)
     }
 
 unsigned int fe::gui::text::getCharacterSize() const
-	{
-		return m_renderText.getCharacterSize();
-	}
+    {
+        return m_renderText.getCharacterSize();
+    }

@@ -18,8 +18,8 @@ void fe::spriteBatch::add(fe::renderObject *entity, unsigned int &index)
         fe::lightVector2d transform3 = matrix.transformPoint({  entity->m_verticies[0],                             entity->m_verticies[1] + entity->m_verticies[3] });
         sf::Color entColour = sf::Color(entity->m_vertColour[0],entity->m_vertColour[1], entity->m_vertColour[2],   entity->m_vertColour[3]);
         fe::lightVector2d texCoord(entity->m_texCoords[0], entity->m_texCoords[1]);
-		float entSizeX = entity->m_texCoords[2];
-		float entSizeY = entity->m_texCoords[3];
+        float entSizeX = entity->m_texCoords[2];
+        float entSizeY = entity->m_texCoords[3];
 
         m_batch[index + 0].position.x = transform0.x;
         m_batch[index + 0].position.y = transform0.y;

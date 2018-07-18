@@ -5,8 +5,8 @@
 #include "fe/flatEngineExport.hpp"
 
 namespace fe
-	{
-		class scriptManager;
+    {
+        class scriptManager;
 
-		FLAT_ENGINE_API void compileLuaKeybinds(fe::scriptManager *manager);
-	}
+        FLAT_ENGINE_API void compileLuaKeybinds(fe::scriptManager *manager);
+    }

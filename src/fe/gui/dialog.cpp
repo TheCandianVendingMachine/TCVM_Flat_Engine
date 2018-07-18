@@ -67,124 +67,124 @@ fe::gui::dialog &fe::gui::dialog::operator=(dialog &rhs)
     }
 
 void fe::gui::dialog::setPosition(float x, float y, fe::gui::align alignment)
-	{
-		fe::lightVector2d alignPos(0.f, 0.f);
-		fe::lightVector2d size = getSize();
-		switch (alignment)
-			{
-				case fe::gui::align::MIDDLE:
-					alignPos = size / 2.f;
-					break;
-				case fe::gui::align::TOP_LEFT:
-					alignPos.x = 0.f;
-					alignPos.y = 0.f;
-					break;
-				case fe::gui::align::TOP_MIDDLE:
-					alignPos.x = size.x / 2.f;
-					alignPos.y = 0.f;
-					break;
-				case fe::gui::align::TOP_RIGHT:
-					alignPos.x = size.x;
-					alignPos.y = 0.f;
-					break;
-				case fe::gui::align::RIGHT:
-					alignPos.x = size.x;
-					alignPos.y = size.y / 2.f;
-					break;
-				case fe::gui::align::BOTTOM_RIGHT:
-					alignPos.x = size.x;
-					alignPos.y = size.y;
-					break;
-				case fe::gui::align::BOTTOM_MIDDLE:
-					alignPos.x = size.x / 2.f;
-					alignPos.y = size.y;
-					break;
-				case fe::gui::align::BOTTOM_LEFT:
-					alignPos.x = 0.f;
-					alignPos.y = size.y;
-					break;
-				case fe::gui::align::LEFT:
-					alignPos.x = 0.f;
-					alignPos.y = size.y / 2.f;
-					break;
-				default:
-					break;
-			}
+    {
+        fe::lightVector2d alignPos(0.f, 0.f);
+        fe::lightVector2d size = getSize();
+        switch (alignment)
+            {
+                case fe::gui::align::MIDDLE:
+                    alignPos = size / 2.f;
+                    break;
+                case fe::gui::align::TOP_LEFT:
+                    alignPos.x = 0.f;
+                    alignPos.y = 0.f;
+                    break;
+                case fe::gui::align::TOP_MIDDLE:
+                    alignPos.x = size.x / 2.f;
+                    alignPos.y = 0.f;
+                    break;
+                case fe::gui::align::TOP_RIGHT:
+                    alignPos.x = size.x;
+                    alignPos.y = 0.f;
+                    break;
+                case fe::gui::align::RIGHT:
+                    alignPos.x = size.x;
+                    alignPos.y = size.y / 2.f;
+                    break;
+                case fe::gui::align::BOTTOM_RIGHT:
+                    alignPos.x = size.x;
+                    alignPos.y = size.y;
+                    break;
+                case fe::gui::align::BOTTOM_MIDDLE:
+                    alignPos.x = size.x / 2.f;
+                    alignPos.y = size.y;
+                    break;
+                case fe::gui::align::BOTTOM_LEFT:
+                    alignPos.x = 0.f;
+                    alignPos.y = size.y;
+                    break;
+                case fe::gui::align::LEFT:
+                    alignPos.x = 0.f;
+                    alignPos.y = size.y / 2.f;
+                    break;
+                default:
+                    break;
+            }
 
-		fe::transformable::setPosition(x - alignPos.x, y - alignPos.y);
-	}
+        fe::transformable::setPosition(x - alignPos.x, y - alignPos.y);
+    }
 
 void fe::gui::dialog::setPosition(fe::Vector2d pos, fe::gui::align alignment)
-	{
-		setPosition(pos.x, pos.y, alignment);
-	}
+    {
+        setPosition(pos.x, pos.y, alignment);
+    }
 
 void fe::gui::dialog::setWindowPosition(float x, float y, fe::gui::align alignment)
-	{
-		fe::Vector2<unsigned int> windowSize = fe::engine::get().getWindowSize();
+    {
+        fe::Vector2<unsigned int> windowSize = fe::engine::get().getWindowSize();
 
-		fe::lightVector2d alignPos(0.f, 0.f);
-		fe::lightVector2d size = getSize();
-		switch (alignment)
-			{
-				case fe::gui::align::MIDDLE:
-					alignPos = size / 2.f;
-					break;
-				case fe::gui::align::TOP_LEFT:
-					alignPos.x = 0.f;
-					alignPos.y = 0.f;
-					break;
-				case fe::gui::align::TOP_MIDDLE:
-					alignPos.x = size.x / 2.f;
-					alignPos.y = 0.f;
-					break;
-				case fe::gui::align::TOP_RIGHT:
-					alignPos.x = size.x;
-					alignPos.y = 0.f;
-					break;
-				case fe::gui::align::RIGHT:
-					alignPos.x = size.x;
-					alignPos.y = size.y / 2.f;
-					break;
-				case fe::gui::align::BOTTOM_RIGHT:
-					alignPos.x = size.x;
-					alignPos.y = size.y;
-					break;
-				case fe::gui::align::BOTTOM_MIDDLE:
-					alignPos.x = size.x / 2.f;
-					alignPos.y = size.y;
-					break;
-				case fe::gui::align::BOTTOM_LEFT:
-					alignPos.x = 0.f;
-					alignPos.y = size.y;
-					break;
-				case fe::gui::align::LEFT:
-					alignPos.x = 0.f;
-					alignPos.y = size.y / 2.f;
-					break;
-				default:
-					break;
-			}
+        fe::lightVector2d alignPos(0.f, 0.f);
+        fe::lightVector2d size = getSize();
+        switch (alignment)
+            {
+                case fe::gui::align::MIDDLE:
+                    alignPos = size / 2.f;
+                    break;
+                case fe::gui::align::TOP_LEFT:
+                    alignPos.x = 0.f;
+                    alignPos.y = 0.f;
+                    break;
+                case fe::gui::align::TOP_MIDDLE:
+                    alignPos.x = size.x / 2.f;
+                    alignPos.y = 0.f;
+                    break;
+                case fe::gui::align::TOP_RIGHT:
+                    alignPos.x = size.x;
+                    alignPos.y = 0.f;
+                    break;
+                case fe::gui::align::RIGHT:
+                    alignPos.x = size.x;
+                    alignPos.y = size.y / 2.f;
+                    break;
+                case fe::gui::align::BOTTOM_RIGHT:
+                    alignPos.x = size.x;
+                    alignPos.y = size.y;
+                    break;
+                case fe::gui::align::BOTTOM_MIDDLE:
+                    alignPos.x = size.x / 2.f;
+                    alignPos.y = size.y;
+                    break;
+                case fe::gui::align::BOTTOM_LEFT:
+                    alignPos.x = 0.f;
+                    alignPos.y = size.y;
+                    break;
+                case fe::gui::align::LEFT:
+                    alignPos.x = 0.f;
+                    alignPos.y = size.y / 2.f;
+                    break;
+                default:
+                    break;
+            }
 
-		fe::transformable::setPosition((windowSize.x * x) - alignPos.x, (windowSize.y * y) - alignPos.y);
-	}
+        fe::transformable::setPosition((windowSize.x * x) - alignPos.x, (windowSize.y * y) - alignPos.y);
+    }
 
 void fe::gui::dialog::setWindowPosition(fe::Vector2d pos, fe::gui::align alignment)
-	{
-		setWindowPosition(pos.x, pos.y, alignment);
-	}
+    {
+        setWindowPosition(pos.x, pos.y, alignment);
+    }
 
 fe::lightVector2d fe::gui::dialog::getSize() const
-	{
-		return fe::lightVector2d(0.f, 0.f);
-	}
+    {
+        return fe::lightVector2d(0.f, 0.f);
+    }
 
 void fe::gui::dialog::setGraphNode(int node)
-	{
-		m_graphNode = node;
-	}
+    {
+        m_graphNode = node;
+    }
 
 int fe::gui::dialog::getGraphNode()
-	{
-		return m_graphNode;
-	}
+    {
+        return m_graphNode;
+    }

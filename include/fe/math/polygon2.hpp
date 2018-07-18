@@ -23,7 +23,7 @@ namespace fe
                 FLAT_ENGINE_API polygon2d(const std::initializer_list<fe::lightVector2d> &points);
 
                 FLAT_ENGINE_API void addPoint(fe::lightVector2d point);
-				FLAT_ENGINE_API void addPoint(float x, float y);
+                FLAT_ENGINE_API void addPoint(float x, float y);
                 FLAT_ENGINE_API void createPolygon(const std::initializer_list<fe::lightVector2d> &points);
                 FLAT_ENGINE_API void createPolygon();
 
