@@ -245,6 +245,14 @@ fe::prefabObject &fe::entitySpawner::createPrefab(const char *luaName)
                     }
             }
 
+        for (auto &value : luaTable)
+            {
+                if (value.second.get_type() == sol::type::function)
+                    {
+                        prefab.addUserFunction(luaName, value.first.as<std::string>().c_str());
+                    }
+            }
+
         m_prefabs[luaName] = prefab;
 
         return m_prefabs[luaName];

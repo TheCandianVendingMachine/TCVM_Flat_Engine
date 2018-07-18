@@ -50,6 +50,6 @@ namespace fe
                 fe::entityModules m_modules = fe::entityModules::NONE;
                 bool m_solid = true;
 
-                FLAT_ENGINE_API prefabObject &addUserFunction(const char *funcName);
+                FLAT_ENGINE_API prefabObject &addUserFunction(const char *luaName, const char *funcName);
             };
     }
