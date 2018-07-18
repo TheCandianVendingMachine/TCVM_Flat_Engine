@@ -257,7 +257,8 @@ void fe::engine::registerLua()
             "destroy", &scriptObject::scriptObjectDestroy,
             "getNormalForce", &scriptObject::scriptObjectGetNormalForce,
             "getForce", &scriptObject::scriptObjectGetForce,
-            "getVelocity", &scriptObject::scriptObjectGetVelocity
+            "getVelocity", &scriptObject::scriptObjectGetVelocity,
+            "setColour", &scriptObject::scriptObjectSetColour
         );
     }
 

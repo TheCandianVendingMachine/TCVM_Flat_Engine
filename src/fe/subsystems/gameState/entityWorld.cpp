@@ -34,7 +34,11 @@ void fe::entityWorld::startUp()
 
 void fe::entityWorld::preUpdate()
     {
-
+        while (!m_newEntities.empty())
+            {
+                m_newEntities.top()->onAdd(m_gameWorld);
+                m_newEntities.pop();
+            }
     }
 
 void fe::entityWorld::update(collisionWorld *collisionWorld, broadphaseAbstract *dynamicBroadphase)
@@ -99,7 +103,8 @@ fe::baseEntity *fe::entityWorld::addGameObject(fe::entityModules modules, fe::us
             }
 
         object->initialize(m_gameWorld, connected, data);
-        object->onAdd(m_gameWorld);
+
+        m_newEntities.push(object);
 
         return object;
     }

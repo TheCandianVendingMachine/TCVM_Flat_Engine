@@ -10,6 +10,7 @@
 #include "fe/entity/baseEntity.hpp"
 #include "fe/entity/entityModules.hpp"
 #include "fe/subsystems/graphic/animation/animator.hpp"
+#include <stack>
 
 namespace fe
     {
@@ -34,6 +35,7 @@ namespace fe
                         };
 
                     fe::poolAllocater<fe::baseEntity> m_entityAllocater;
+                    std::stack<fe::baseEntity*> m_newEntities;
 
                     fe::gameWorld &m_gameWorld;
                     fe::animator m_animator;

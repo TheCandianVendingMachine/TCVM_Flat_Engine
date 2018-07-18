@@ -29,6 +29,8 @@ namespace fe
 
                     FLAT_ENGINE_API void scriptObjectDestroy();
 
+                    FLAT_ENGINE_API void scriptObjectSetColour(int r, int g, int b, int a = 255);
+
                     FLAT_ENGINE_API fe::Vector2d scriptObjectGetVelocity();
                     FLAT_ENGINE_API fe::Vector2d scriptObjectGetNormalForce();
                     FLAT_ENGINE_API fe::Vector2d scriptObjectGetForce();

@@ -56,6 +56,11 @@ void fe::scriptObject::scriptObjectDestroy()
         m_entity->kill(true);
     }
 
+void fe::scriptObject::scriptObjectSetColour(int r, int g, int b, int a)
+    {
+        m_entity->setColour(sf::Color(r, g, b, a));
+    }
+
 fe::Vector2d fe::scriptObject::scriptObjectGetVelocity()
     {
         if (m_entity->getRigidBody())
