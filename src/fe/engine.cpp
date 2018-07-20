@@ -262,7 +262,8 @@ void fe::engine::registerLua()
             "moveToPosition", &scriptObject::scriptObjectMoveToPosition,
             "getSlowdownDistance", &scriptObject::scriptObjectGetSlowdownDistance,
             "setSlowdownDistance", &scriptObject::scriptObjectSetSlowdownDistance,
-            "hasArrived", &scriptObject::scriptObjectHasArrived
+            "hasArrived", &scriptObject::scriptObjectHasArrived,
+            "isTargeted", &scriptObject::scriptObjectIsTargeted
         );
     }
 

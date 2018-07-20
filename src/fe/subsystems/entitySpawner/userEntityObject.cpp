@@ -25,6 +25,7 @@ void fe::userEntityObject::startUp(unsigned int index)
 void fe::userEntityObject::shutDown()
     {
         fe::engine::get().getEventSender().unsubscribeAll(this);
+        m_active = false;
     }
 
 unsigned int fe::userEntityObject::index() const

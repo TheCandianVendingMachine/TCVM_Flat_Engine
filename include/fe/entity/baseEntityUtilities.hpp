@@ -32,6 +32,7 @@ namespace fe
                     FLAT_ENGINE_API void update();
 
                     FLAT_ENGINE_API bool getArrived() const;
+                    FLAT_ENGINE_API bool isTargeted() const;
 
             };
     }

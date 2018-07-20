@@ -73,3 +73,8 @@ bool fe::baseEntityUtilities::getArrived() const
     {
         return m_arrived;
     }
+
+bool fe::baseEntityUtilities::isTargeted() const
+    {
+        return m_targeted;
+    }

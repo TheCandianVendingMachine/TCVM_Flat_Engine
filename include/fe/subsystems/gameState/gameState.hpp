@@ -41,6 +41,8 @@ namespace fe
 
                     bool m_paused; // If state is paused no updates will occur
 
+                    friend class entityWorld;
+
                 protected:
                     virtual void drawExtra(sf::RenderTarget &app) {}
 

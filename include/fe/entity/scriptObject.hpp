@@ -41,6 +41,7 @@ namespace fe
                     FLAT_ENGINE_API void scriptObjectSetSlowdownDistance(float distance);
 
                     FLAT_ENGINE_API bool scriptObjectHasArrived();
+                    FLAT_ENGINE_API bool scriptObjectIsTargeted();
 
             };
     }

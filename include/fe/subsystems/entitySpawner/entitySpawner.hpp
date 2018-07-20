@@ -27,6 +27,7 @@ namespace fe
 
                     FLAT_ENGINE_API fe::prefabObject &createPrefab(const char *luaName);
                     FLAT_ENGINE_API fe::Handle spawn(const char *name);
+                    FLAT_ENGINE_API void despawn(fe::Handle object);
 
                     FLAT_ENGINE_API void getPrefabs(std::vector<std::string> &prefabs) const;
 

@@ -131,7 +131,7 @@ fe::Handle fe::baseGameState::addObject(const char *id)
 
 void fe::baseGameState::removeObject(fe::Handle ent)
     {
-        m_gameWorld.removeGameObject(ent);
+        m_entitySpawner.despawn(ent);
     }
 
 void fe::baseGameState::removeObject(fe::baseEntity *ent)

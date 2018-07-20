@@ -107,3 +107,8 @@ bool fe::scriptObject::scriptObjectHasArrived()
     {
         return m_entity->getUtilities().getArrived();
     }
+
+bool fe::scriptObject::scriptObjectIsTargeted()
+    {
+        return m_entity->getUtilities().isTargeted();
+    }

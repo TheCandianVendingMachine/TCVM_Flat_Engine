@@ -118,6 +118,7 @@ void fe::entityWorld::clearAllObjects()
 void fe::entityWorld::removeObject(fe::Handle handle)
     {
         getObject(handle)->onRemove(m_gameWorld);
+        m_gameWorld.getGameState().m_entitySpawner.despawn(handle);
         fe::baseEntity *entAtHandle = getObject(handle);
         fe::handleManager<fe::baseEntity*, FE_MAX_GAME_OBJECTS>::removeObject(handle);
         m_entityAllocater.free(entAtHandle);

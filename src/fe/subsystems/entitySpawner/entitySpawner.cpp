@@ -262,7 +262,18 @@ fe::Handle fe::entitySpawner::spawn(const char *luaName)
     {
         FE_ASSERT(m_world, "World is Nullptr");
         
-        fe::userEntityObject *object = &m_objects[m_maxObjectCount];
+        fe::userEntityObject *object = nullptr;
+        for (unsigned int i = 0; i < FE_MAX_GAME_OBJECTS; i++)
+            {
+                if (!m_objects[i].active())
+                    {
+                        object = &m_objects[i];
+                        object->startUp(i);
+                        break;
+                    }
+            }
+
+        FE_ASSERT(object, "userEntityObject is nullptr!");
 
         if (m_prefabs.find(luaName) == m_prefabs.end())
             {
@@ -337,6 +348,11 @@ fe::Handle fe::entitySpawner::spawn(const char *luaName)
         fe::engine::get().getEventSender().sendGlobal(createEvent);
 
         return objectHandle;
+    }
+
+void fe::entitySpawner::despawn(fe::Handle object)
+    {
+        m_objects[m_world->getObject(object)->getEntityObject()->index()].shutDown();
     }
 
 void fe::entitySpawner::getPrefabs(std::vector<std::string> &prefabs) const

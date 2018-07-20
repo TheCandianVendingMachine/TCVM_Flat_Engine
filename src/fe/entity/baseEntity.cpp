@@ -56,7 +56,7 @@ void fe::baseEntity::initialize(fe::gameWorld &world, int connected, const fe::f
 
 void fe::baseEntity::deinitialize(fe::gameWorld &world)
     {
-        enable(false);
+        //enable(false);
         if (m_enabledModulesEnum & entityModules::RENDER_OBJECT || m_enabledModulesEnum & entityModules::RENDER_TEXT)
             {
                 world.getSceneGraph().deleteSceneObject(m_renderObject);
@@ -97,6 +97,13 @@ void fe::baseEntity::onRemove(fe::gameWorld &world)
 void fe::baseEntity::enable(bool value)
     {
         m_enabled = value;
+
+#if _DEBUG
+        if (!m_enabled)
+            {
+                int i = 0;
+            }
+#endif
         
         enableDrawing(value);
         enablePhysics(value);
@@ -159,7 +166,7 @@ void fe::baseEntity::enableCollision(bool value)
 
 void fe::baseEntity::onDestroy(fe::baseGameState &state)
     {
-        
+        int i = 0;
     }
 
 void fe::baseEntity::update()
