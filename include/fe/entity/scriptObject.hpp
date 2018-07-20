@@ -35,5 +35,12 @@ namespace fe
                     FLAT_ENGINE_API fe::Vector2d scriptObjectGetNormalForce();
                     FLAT_ENGINE_API fe::Vector2d scriptObjectGetForce();
 
+                    FLAT_ENGINE_API void scriptObjectMoveToPosition(float x, float y);
+
+                    FLAT_ENGINE_API float scriptObjectGetSlowdownDistance();
+                    FLAT_ENGINE_API void scriptObjectSetSlowdownDistance(float distance);
+
+                    FLAT_ENGINE_API bool scriptObjectHasArrived();
+
             };
     }

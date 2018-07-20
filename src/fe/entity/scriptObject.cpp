@@ -87,3 +87,23 @@ fe::Vector2d fe::scriptObject::scriptObjectGetForce()
             }
         return fe::Vector2d();
     }
+
+void fe::scriptObject::scriptObjectMoveToPosition(float x, float y)
+    {
+        m_entity->getUtilities().moveToPosition(x, y);
+    }
+
+float fe::scriptObject::scriptObjectGetSlowdownDistance()
+    {
+        return m_entity->getUtilities().getSlowdownDistance();
+    }
+
+void fe::scriptObject::scriptObjectSetSlowdownDistance(float distance)
+    {
+        m_entity->getUtilities().setSlowdownDistance(distance);
+    }
+
+bool fe::scriptObject::scriptObjectHasArrived()
+    {
+        return m_entity->getUtilities().getArrived();
+    }

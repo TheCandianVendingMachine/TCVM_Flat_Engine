@@ -24,7 +24,7 @@ namespace fe
         class userEntityObject;
         class animationActor;
 
-        class baseEntity : public fe::guid, private fe::scriptObject
+        class baseEntity : public fe::guid, public fe::scriptObject
             {
                 protected:
                     fe::baseEntityUtilities m_baseEntityUtility;

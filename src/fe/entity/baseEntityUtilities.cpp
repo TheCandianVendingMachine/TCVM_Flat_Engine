@@ -7,7 +7,7 @@ fe::baseEntityUtilities::baseEntityUtilities(baseEntity *entity) :
     m_slowdownDistance(10.f),
     m_targetPosition(0.f, 0.f),
     m_targeted(false),
-    m_arrived(true)
+    m_arrived(false)
     {
     }
 

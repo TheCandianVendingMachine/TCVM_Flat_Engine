@@ -258,7 +258,11 @@ void fe::engine::registerLua()
             "getNormalForce", &scriptObject::scriptObjectGetNormalForce,
             "getForce", &scriptObject::scriptObjectGetForce,
             "getVelocity", &scriptObject::scriptObjectGetVelocity,
-            "setColour", &scriptObject::scriptObjectSetColour
+            "setColour", &scriptObject::scriptObjectSetColour,
+            "moveToPosition", &scriptObject::scriptObjectMoveToPosition,
+            "getSlowdownDistance", &scriptObject::scriptObjectGetSlowdownDistance,
+            "setSlowdownDistance", &scriptObject::scriptObjectSetSlowdownDistance,
+            "hasArrived", &scriptObject::scriptObjectHasArrived
         );
     }
 
