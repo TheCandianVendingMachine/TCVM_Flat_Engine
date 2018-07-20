@@ -15,6 +15,7 @@ fe::baseEntity::baseEntity(fe::entityModules modules, fe::userEntityObject *scri
     m_renderObject(nullptr),
     m_rigidBody(nullptr),
     m_collisionBody(nullptr),
+    m_animationActor(nullptr),
     m_moved(false),
     m_allocatedModules(false),
     m_static(staticObject),
