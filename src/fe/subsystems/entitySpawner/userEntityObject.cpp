@@ -87,6 +87,15 @@ decltype(auto) fe::userEntityObject::call(const std::string &functionName)
         return m_userFunctions[FE_STR(functionName.c_str())]->call();
     }
 
+decltype(auto) fe::userEntityObject::callIfAvaliable(const std::string &functionName)
+    {
+        if (m_userFunctions.find(FE_STR(functionName.c_str())) == m_userFunctions.end()) 
+            {
+                return m_userFunctions[FE_STR(functionName.c_str())]->call();
+            }
+        return m_userFunctions[0]->call();
+    }
+
 fe::userEntityObject &fe::userEntityObject::operator=(const fe::prefabObject &rhs)
     {
         m_onAdd =           rhs.m_onAdd;

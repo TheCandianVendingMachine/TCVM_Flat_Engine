@@ -47,7 +47,11 @@ namespace fe
 
                     template<typename ...Args>
                     decltype(auto) call(const std::string &functionName, Args &&...args);
-                    decltype(auto) call(const std::string &functionName);
+                    FLAT_ENGINE_API decltype(auto) call(const std::string &functionName);
+
+                    template<typename ...Args>
+                    decltype(auto) callIfAvaliable(const std::string &functionName, Args &&...args);
+                    FLAT_ENGINE_API decltype(auto) callIfAvaliable(const std::string &functionName);
 
                     FLAT_ENGINE_API userEntityObject &operator=(const fe::prefabObject &rhs);
             };
@@ -61,6 +65,16 @@ namespace fe
                         return m_userFunctions[0]->call();
                     }
 
-                return m_userFunctions[FE_STR(functionName.c_str())]->call(std::forward<Args>(args)...);
+                return m_userFunctions[FE_STR(functionName.c_str())]->call();
+            }
+
+        template<typename ...Args>
+        decltype(auto) userEntityObject::callIfAvaliable(const std::string & functionName, Args && ...args)
+            {
+                if (m_userFunctions.find(FE_STR(functionName.c_str())) != m_userFunctions.end()) 
+                    {
+                        return m_userFunctions[FE_STR(functionName.c_str())]->call(std::forward<Args>(args)...);
+                    }
+                return m_userFunctions[0]->call();
             }
     }
