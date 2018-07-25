@@ -69,11 +69,12 @@ namespace fe
             }
 
         template<typename ...Args>
-        decltype(auto) userEntityObject::callIfAvaliable(const std::string & functionName, Args && ...args)
+        decltype(auto) userEntityObject::callIfAvaliable(const std::string &functionName, Args && ...args)
             {
-                if (m_userFunctions.find(FE_STR(functionName.c_str())) != m_userFunctions.end()) 
+                fe::str str = FE_STR(functionName.c_str());
+                if (m_userFunctions.find(str) != m_userFunctions.end())
                     {
-                        return m_userFunctions[FE_STR(functionName.c_str())]->call(std::forward<Args>(args)...);
+                        return m_userFunctions[str]->call(std::forward<Args>(args)...);
                     }
                 return m_userFunctions[0]->call();
             }

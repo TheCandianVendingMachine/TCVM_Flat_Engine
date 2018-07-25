@@ -20,6 +20,7 @@ void fe::userEntityObject::startUp(unsigned int index)
     {
         m_index = index;
         m_active = true;
+        m_userFunctions[0] = &fe::engine::get().getScriptManager().getFunctionHandler().getLuaFunction("error_func");
     }
 
 void fe::userEntityObject::shutDown()
@@ -111,15 +112,6 @@ fe::userEntityObject &fe::userEntityObject::operator=(const fe::prefabObject &rh
             }
 
         m_userFunctions.insert(rhs.m_userFunctions.begin(), rhs.m_userFunctions.end());
-
-
-        sol::state_view(rhs.m_entityTable.lua_state()).script(
-R"(
-error_func = function()
-    return 0 
-end
-)");
-        m_userFunctions[0] = &fe::engine::get().getScriptManager().getFunctionHandler().getLuaFunction("error_func");
 
         return *this;
     }

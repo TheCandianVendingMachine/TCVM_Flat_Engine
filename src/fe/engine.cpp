@@ -211,6 +211,10 @@ void fe::engine::registerLua()
     size = { x = 0, y = 0 }
 })");
 
+        m_scriptManager->runLua(R"(error_func = function()
+    return 0 
+end)");
+
         fe::compileLuaKeybinds(m_scriptManager);
 
         m_scriptManager->getEnumHandler().registerEnum("gameEventArgumentType",
