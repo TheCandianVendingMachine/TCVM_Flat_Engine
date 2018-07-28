@@ -14,6 +14,7 @@ namespace fe
                     baseEntity *const m_baseEntity;
 
                     float m_slowdownDistance;
+                    float m_completionRadius;
                     fe::Vector2d m_targetPosition;
                     bool m_targeted;
 
@@ -28,6 +29,9 @@ namespace fe
                     FLAT_ENGINE_API void moveToPosition(float x, float y);
 
                     FLAT_ENGINE_API float getSlowdownDistance() const;
+
+                    FLAT_ENGINE_API void setCompletionRadius(float radius);
+                    FLAT_ENGINE_API float getCompletionRadius() const;
 
                     FLAT_ENGINE_API void update();
 

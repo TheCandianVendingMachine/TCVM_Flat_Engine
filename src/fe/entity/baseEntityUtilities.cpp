@@ -7,7 +7,8 @@ fe::baseEntityUtilities::baseEntityUtilities(baseEntity *entity) :
     m_slowdownDistance(10.f),
     m_targetPosition(0.f, 0.f),
     m_targeted(false),
-    m_arrived(false)
+    m_arrived(false),
+    m_completionRadius(1.f)
     {
     }
 
@@ -34,6 +35,16 @@ float fe::baseEntityUtilities::getSlowdownDistance() const
         return m_slowdownDistance;
     }
 
+void fe::baseEntityUtilities::setCompletionRadius(float radius)
+    {
+        m_completionRadius = radius;
+    }
+
+float fe::baseEntityUtilities::getCompletionRadius() const
+    {
+        return m_completionRadius;
+    }
+
 void fe::baseEntityUtilities::update()
     {
         if (m_targeted)
@@ -46,7 +57,7 @@ void fe::baseEntityUtilities::update()
                     {
                         fe::Vector2d targetLine = m_targetPosition - m_baseEntity->getPosition();
                         float distance = std::sqrt(targetLine.x * targetLine.x + targetLine.y * targetLine.y);
-                        if (distance > 1.f) // if its less than 1 pixel away the camera is at the position. Since we round to an integer there wont be any stutter
+                        if (distance > m_completionRadius) // if its less than the completion radius the ent is at the position. Since we round to an integer there wont be any stutter
                             {
                                 float maxSpeed = m_baseEntity->getRigidBody()->getMaxVelocity();
 
@@ -62,7 +73,7 @@ void fe::baseEntityUtilities::update()
                             {
                                 m_targeted = false;
                                 m_baseEntity->getRigidBody()->setVelocity(0.f, 0.f);
-                                m_baseEntity->setPosition(m_targetPosition);
+                                //m_baseEntity->setPosition(m_targetPosition);
                                 m_arrived = true;
                             }
                     }
