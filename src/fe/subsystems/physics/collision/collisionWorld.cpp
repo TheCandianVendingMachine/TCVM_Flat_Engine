@@ -273,8 +273,14 @@ void fe::collisionWorld::handleCollisions(const fe::broadphaseAbstract *broadpha
                                 fe::gameEvent collisionEventLeft(a->m_eventOnCollision, 2);
                                 collisionEventLeft.args[0].argType = fe::gameEventArgument::type::TYPE_VOIDP;
                                 collisionEventLeft.args[1].argType = fe::gameEventArgument::type::TYPE_VOIDP;
+                                collisionEventLeft.args[2].argType = fe::gameEventArgument::type::TYPE_UINT;
+                                collisionEventLeft.args[3].argType = fe::gameEventArgument::type::TYPE_UINT;
+
                                 collisionEventLeft.args[0].arg.TYPE_VOIDP = a;
                                 collisionEventLeft.args[1].arg.TYPE_VOIDP = b;
+                                collisionEventLeft.args[2].arg.TYPE_UINTEGER = a->m_collisionGroup;
+                                collisionEventLeft.args[3].arg.TYPE_UINTEGER = b->m_collisionGroup;
+
                                 fe::engine::get().getEventSender().sendEngineEvent(collisionEventLeft, a->m_eventOnCollision);
                             }
 
@@ -283,8 +289,13 @@ void fe::collisionWorld::handleCollisions(const fe::broadphaseAbstract *broadpha
                                 fe::gameEvent collisionEventLeft(b->m_eventOnCollision, 2);
                                 collisionEventLeft.args[0].argType = fe::gameEventArgument::type::TYPE_VOIDP;
                                 collisionEventLeft.args[1].argType = fe::gameEventArgument::type::TYPE_VOIDP;
+                                collisionEventLeft.args[2].argType = fe::gameEventArgument::type::TYPE_UINT;
+                                collisionEventLeft.args[3].argType = fe::gameEventArgument::type::TYPE_UINT;
+
                                 collisionEventLeft.args[0].arg.TYPE_VOIDP = b;
                                 collisionEventLeft.args[1].arg.TYPE_VOIDP = a;
+                                collisionEventLeft.args[2].arg.TYPE_UINTEGER = b->m_collisionGroup;
+                                collisionEventLeft.args[3].arg.TYPE_UINTEGER = a->m_collisionGroup;
                                 fe::engine::get().getEventSender().sendEngineEvent(collisionEventLeft, b->m_eventOnCollision);
                             }
                     }

@@ -226,6 +226,12 @@ void fe::baseEntity::updateModules()
                         m_positionY = m_renderObject->m_transform.getPosition().y;
                     }
             }
+
+        if (m_collisionBody)
+            {
+                m_collisionBody->m_aabb.m_globalPositionX += m_collisionBody->m_aabb.m_offsetX;
+                m_collisionBody->m_aabb.m_globalPositionX += m_collisionBody->m_aabb.m_offsetY;
+            }
     }
 
 void fe::baseEntity::setScriptObject(fe::userEntityObject *obj)

@@ -42,6 +42,7 @@ namespace fe
                 bool m_animationIsVertical = true;
                 fe::str m_collisionEvent = 0;
                 fe::str m_textureID = 0;
+                fe::str m_collisionGroup = 0;
                 int m_connected = -1;
                 int m_zPosition = 0;
                 float m_maxSpeed = 0.f;

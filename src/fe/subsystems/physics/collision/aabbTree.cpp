@@ -450,6 +450,7 @@ void fe::aabbTree::update(fe::collider *collider)
 
         FE_PROFILE("aabb_tree", "update_collider");
         int nodeIndex = int(collider->m_userData);
+
         if (!m_nodes[nodeIndex].m_fatAABB.contains(collider->m_aabb))
             {
                 remove(nodeIndex);

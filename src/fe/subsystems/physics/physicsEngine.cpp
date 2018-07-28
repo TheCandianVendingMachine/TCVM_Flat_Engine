@@ -19,9 +19,9 @@ void fe::physicsEngine::handleCollision(fe::collider *a, fe::collider *b, fe::co
         fe::Vector2d lineStart(aData.m_colliderPositionX, aData.m_colliderPositionY);
         fe::Vector2d lineEnd = lineStart + fe::lightVector2d(aData.m_normalX * 50, aData.m_normalY * 50);
 
-        FE_DEBUG_DRAW_LINE(lineStart.x, lineStart.y, lineEnd.x, lineEnd.y, sf::Color::White);
         if (aEnt && b->m_solid)
             {
+                FE_DEBUG_DRAW_LINE(lineStart.x, lineStart.y, lineEnd.x, lineEnd.y, sf::Color::White);
                 fe::rigidBody *aRigid = aEnt->getRigidBody();
                 if (aRigid)
                     {

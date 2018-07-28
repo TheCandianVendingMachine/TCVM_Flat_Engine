@@ -243,6 +243,11 @@ fe::prefabObject &fe::entitySpawner::createPrefab(const char *luaName)
                     {
                         prefab.m_onCollision = &fe::engine::get().getScriptManager().getFunctionHandler().getLuaFunction(std::string(luaName) + "/collisionBody", "on_collision");
                     }
+
+                if (collisionData["group"].get_type() == sol::type::number)
+                    {
+                        prefab.m_collisionGroup = FE_STR(collisionData["group"].get<std::string>().c_str());
+                    }
             }
 
         for (auto &value : luaTable)
@@ -297,6 +302,7 @@ fe::Handle fe::entitySpawner::spawn(const char *luaName)
                 entity->getCollider()->m_aabb.m_sizeY = prefab.m_colliderSize.y;
                 entity->getCollider()->m_eventOnCollision = prefab.m_collisionEvent;
                 entity->getCollider()->m_solid = prefab.m_solid;
+                entity->getCollider()->m_collisionGroup = prefab.m_collisionGroup;
                 if (prefab.m_onCollision) 
                     {
                         entity->getCollider()->m_collisionCallback = [prefab, entity](const fe::collisionData &data) { prefab.m_onCollision->call(static_cast<fe::scriptObject*>(entity), data); };
