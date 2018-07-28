@@ -182,6 +182,97 @@ void fe::collisionWorld::handleCollision(void *collider, fe::str event)
         static_cast<fe::collider*>(collider)->m_collisionCallback(a);
     }
 
+void fe::collisionWorld::cullCollisionPairs()
+    {
+        FE_ENGINE_PROFILE("collision_world", "cull_collision_pairs");
+        for (unsigned int i = 0; i < m_collisionPairIndex; i += 2)
+            {
+                for (unsigned int j = i + 2; j < m_collisionPairIndex; j += 2)
+                    {
+                        // If the collision pairs have the same data like this, then the colliders are flipped
+                        // and duplicate collider pairs exist
+                        if (m_collisionPairs[i + 0].collider == m_collisionPairs[j + 1].collider &&
+                            m_collisionPairs[i + 1].collider == m_collisionPairs[j + 0].collider)
+                            {
+                                m_collisionPairs[i + 0].collider = nullptr;
+                                m_collisionPairs[i + 1].collider = nullptr;
+                                break;
+                            }
+                    }
+            }
+        FE_END_PROFILE;
+    }
+
+void fe::collisionWorld::handleCollisionPairs()
+    {
+        FE_ENGINE_PROFILE("collision_world", "handle_collision_pairs");
+        for (unsigned int i = 0; i < m_collisionPairIndex; i += 2)
+            {
+                if (!m_collisionPairs[i + 0].collider || !m_collisionPairs[i + 1].collider)
+                    {
+                        continue;
+                    }
+                fe::collider *a = m_collisionPairs[i + 0].collider;
+                fe::collider *b = m_collisionPairs[i + 1].collider;
+
+                a->m_collisionCallback(m_collisionPairs[i + 0].data);
+                b->m_collisionCallback(m_collisionPairs[i + 1].data);
+
+                if (a->m_eventOnCollision != 0)
+                    {
+                        fe::gameEvent collisionEventLeft(a->m_eventOnCollision, 2);
+                        collisionEventLeft.args[0].argType = fe::gameEventArgument::type::TYPE_VOIDP;
+                        collisionEventLeft.args[1].argType = fe::gameEventArgument::type::TYPE_VOIDP;
+                        collisionEventLeft.args[2].argType = fe::gameEventArgument::type::TYPE_UINT;
+                        collisionEventLeft.args[3].argType = fe::gameEventArgument::type::TYPE_UINT;
+
+                        collisionEventLeft.args[0].arg.TYPE_VOIDP = a;
+                        collisionEventLeft.args[1].arg.TYPE_VOIDP = b;
+                        collisionEventLeft.args[2].arg.TYPE_UINTEGER = a->m_collisionGroup;
+                        collisionEventLeft.args[3].arg.TYPE_UINTEGER = b->m_collisionGroup;
+
+                        fe::engine::get().getEventSender().sendEngineEvent(collisionEventLeft, a->m_eventOnCollision);
+                    }
+
+                if (b->m_eventOnCollision != 0)
+                    {
+                        fe::gameEvent collisionEventLeft(b->m_eventOnCollision, 2);
+                        collisionEventLeft.args[0].argType = fe::gameEventArgument::type::TYPE_VOIDP;
+                        collisionEventLeft.args[1].argType = fe::gameEventArgument::type::TYPE_VOIDP;
+                        collisionEventLeft.args[2].argType = fe::gameEventArgument::type::TYPE_UINT;
+                        collisionEventLeft.args[3].argType = fe::gameEventArgument::type::TYPE_UINT;
+
+                        collisionEventLeft.args[0].arg.TYPE_VOIDP = b;
+                        collisionEventLeft.args[1].arg.TYPE_VOIDP = a;
+                        collisionEventLeft.args[2].arg.TYPE_UINTEGER = b->m_collisionGroup;
+                        collisionEventLeft.args[3].arg.TYPE_UINTEGER = a->m_collisionGroup;
+                        fe::engine::get().getEventSender().sendEngineEvent(collisionEventLeft, b->m_eventOnCollision);
+                    }
+            }
+        FE_END_PROFILE;
+    }
+
+void fe::collisionWorld::handlePointCollisions(const fe::broadphaseAbstract *broadphase)
+    {
+        FE_ENGINE_PROFILE("collision_world", "broadphase_compute_point_collision_partial");
+        for (unsigned int i = 0; i < m_maxPointIndex; i++)
+            {
+                handleCollision(broadphase->colliderAtPoint(m_pointCollision[i].position), m_pointCollision[i].event);
+            }
+        FE_END_PROFILE;
+    }
+
+void fe::collisionWorld::handlePointCollisions(const fe::broadphaseAbstract *broadphase0, const fe::broadphaseAbstract *broadphase1)
+    {
+        FE_ENGINE_PROFILE("collision_world", "broadphase_compute_point_collision_full");
+        for (unsigned int i = 0; i < m_maxPointIndex; i++)
+            {
+                handleCollision(broadphase0->colliderAtPoint(m_pointCollision[i].position), m_pointCollision[i].event);
+                handleCollision(broadphase1->colliderAtPoint(m_pointCollision[i].position), m_pointCollision[i].event);
+            }
+        FE_END_PROFILE;
+    }
+
 fe::collisionWorld::collisionWorld() : m_maxPointIndex(0), m_collisionPairIndex(0)
     {
     }
@@ -237,76 +328,9 @@ void fe::collisionWorld::handleCollisions(const fe::broadphaseAbstract *broadpha
                     }
                 FE_END_PROFILE;
 
-                FE_ENGINE_PROFILE("collision_world", "cull_collision_pairs");
-                for (unsigned int i = 0; i < m_collisionPairIndex; i += 2)
-                    {
-                        for (unsigned int j = i + 2; j < m_collisionPairIndex; j += 2)
-                            {
-                                // If the collision pairs have the same data like this, then the colliders are flipped
-                                // and duplicate collider pairs exist
-                                if (m_collisionPairs[i + 0].collider == m_collisionPairs[j + 1].collider &&
-                                    m_collisionPairs[i + 1].collider == m_collisionPairs[j + 0].collider)
-                                    {
-                                        m_collisionPairs[i + 0].collider = nullptr;
-                                        m_collisionPairs[i + 1].collider = nullptr;
-                                        break;
-                                    }
-                            }
-                    }
-                FE_END_PROFILE;
-
-                FE_ENGINE_PROFILE("collision_world", "broadphase_handle_collision_pairs_partial");
-                for (unsigned int i = 0; i < m_collisionPairIndex; i += 2)
-                    {
-                        if (!m_collisionPairs[i + 0].collider || !m_collisionPairs[i + 1].collider)
-                            {
-                                continue;
-                            }
-                        fe::collider *a = m_collisionPairs[i + 0].collider;
-                        fe::collider *b = m_collisionPairs[i + 1].collider;
-
-                        a->m_collisionCallback(m_collisionPairs[i + 0].data);
-                        b->m_collisionCallback(m_collisionPairs[i + 1].data);
-
-                        if (a->m_eventOnCollision != 0)
-                            {
-                                fe::gameEvent collisionEventLeft(a->m_eventOnCollision, 2);
-                                collisionEventLeft.args[0].argType = fe::gameEventArgument::type::TYPE_VOIDP;
-                                collisionEventLeft.args[1].argType = fe::gameEventArgument::type::TYPE_VOIDP;
-                                collisionEventLeft.args[2].argType = fe::gameEventArgument::type::TYPE_UINT;
-                                collisionEventLeft.args[3].argType = fe::gameEventArgument::type::TYPE_UINT;
-
-                                collisionEventLeft.args[0].arg.TYPE_VOIDP = a;
-                                collisionEventLeft.args[1].arg.TYPE_VOIDP = b;
-                                collisionEventLeft.args[2].arg.TYPE_UINTEGER = a->m_collisionGroup;
-                                collisionEventLeft.args[3].arg.TYPE_UINTEGER = b->m_collisionGroup;
-
-                                fe::engine::get().getEventSender().sendEngineEvent(collisionEventLeft, a->m_eventOnCollision);
-                            }
-
-                        if (b->m_eventOnCollision != 0)
-                            {
-                                fe::gameEvent collisionEventLeft(b->m_eventOnCollision, 2);
-                                collisionEventLeft.args[0].argType = fe::gameEventArgument::type::TYPE_VOIDP;
-                                collisionEventLeft.args[1].argType = fe::gameEventArgument::type::TYPE_VOIDP;
-                                collisionEventLeft.args[2].argType = fe::gameEventArgument::type::TYPE_UINT;
-                                collisionEventLeft.args[3].argType = fe::gameEventArgument::type::TYPE_UINT;
-
-                                collisionEventLeft.args[0].arg.TYPE_VOIDP = b;
-                                collisionEventLeft.args[1].arg.TYPE_VOIDP = a;
-                                collisionEventLeft.args[2].arg.TYPE_UINTEGER = b->m_collisionGroup;
-                                collisionEventLeft.args[3].arg.TYPE_UINTEGER = a->m_collisionGroup;
-                                fe::engine::get().getEventSender().sendEngineEvent(collisionEventLeft, b->m_eventOnCollision);
-                            }
-                    }
-                FE_END_PROFILE;
-
-                FE_ENGINE_PROFILE("collision_world", "broadphase_compute_point_collision_partial");
-                for (unsigned int i = 0; i < m_maxPointIndex; i++)
-                    {
-                        handleCollision(broadphase->colliderAtPoint(m_pointCollision[i].position), m_pointCollision[i].event);
-                    }
-                FE_END_PROFILE;
+                cullCollisionPairs();
+                handleCollisionPairs();
+                handlePointCollisions(broadphase);
 
             }
         m_collisionPairIndex = 0;
@@ -328,23 +352,22 @@ void fe::collisionWorld::handleCollisions(const fe::broadphaseAbstract *broadpha
                 FE_ENGINE_PROFILE("collision_world", "broadphase_compute_full");
                 for (unsigned int i = 0; i < m_collisionBodies.getObjectAllocCount(); i++)
                     {
-                        if (!m_collisionBodies.at(i)->m_static)
+                        auto body = m_collisionBodies.at(i);
+                        if (!m_collisionBodies.at(i)->m_static && m_collisionBodies.at(i)->m_moved && m_collisionBodies.at(i)->m_enabled)
                             {
-                                auto func = std::bind(static_cast<void(fe::collisionWorld::*)(void*, void*)>(&fe::collisionWorld::handleCollision), this, std::placeholders::_1, m_collisionBodies.at(i));
+                                auto func = [this, i](void *otherCollider) { handleCollision(m_collisionBodies.at(i), otherCollider); };
                                 broadphaseDynamic->colliderAABB(m_collisionBodies.at(i)->m_aabb, func);
                                 broadphaseStatic->colliderAABB(m_collisionBodies.at(i)->m_aabb, func);
+                                m_collisionBodies.at(i)->m_moved = false;
                             }
                     }
                 FE_END_PROFILE;
 
-                FE_ENGINE_PROFILE("collision_world", "broadphase_compute_point_collision_full");
-                for (unsigned int i = 0; i < m_maxPointIndex; i++)
-                    {
-                        handleCollision(broadphaseDynamic->colliderAtPoint(m_pointCollision[i].position), m_pointCollision[i].event);
-                        handleCollision(broadphaseStatic->colliderAtPoint(m_pointCollision[i].position), m_pointCollision[i].event);
-                    }
-                FE_END_PROFILE;
+                cullCollisionPairs();
+                handleCollisionPairs();
+                handlePointCollisions(broadphaseDynamic, broadphaseStatic);
             }
+        m_collisionPairIndex = 0;
         m_maxPointIndex = 0;
     }
 
