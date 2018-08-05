@@ -244,7 +244,7 @@ fe::prefabObject &fe::entitySpawner::createPrefab(const char *luaName)
                         prefab.m_onCollision = &fe::engine::get().getScriptManager().getFunctionHandler().getLuaFunction(std::string(luaName) + "/collisionBody", "on_collision");
                     }
 
-                if (collisionData["group"].get_type() == sol::type::number)
+                if (collisionData["group"].get_type() == sol::type::string)
                     {
                         prefab.m_collisionGroup = FE_STR(collisionData["group"].get<std::string>().c_str());
                     }

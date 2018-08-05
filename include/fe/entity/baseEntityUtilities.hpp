@@ -28,6 +28,8 @@ namespace fe
                     FLAT_ENGINE_API void moveToPosition(const fe::Vector2d position);
                     FLAT_ENGINE_API void moveToPosition(float x, float y);
 
+                    FLAT_ENGINE_API void stop();
+
                     FLAT_ENGINE_API float getSlowdownDistance() const;
 
                     FLAT_ENGINE_API void setCompletionRadius(float radius);

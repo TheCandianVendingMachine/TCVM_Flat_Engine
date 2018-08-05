@@ -30,6 +30,16 @@ void fe::baseEntityUtilities::moveToPosition(float x, float y)
         m_arrived = false;
     }
 
+void fe::baseEntityUtilities::stop()
+    {
+        if (m_baseEntity->getRigidBody())
+            {
+                m_targeted = false;
+                m_baseEntity->getRigidBody()->setVelocity(0.f, 0.f);
+                m_arrived = true;
+            }
+    }
+
 float fe::baseEntityUtilities::getSlowdownDistance() const
     {
         return m_slowdownDistance;
