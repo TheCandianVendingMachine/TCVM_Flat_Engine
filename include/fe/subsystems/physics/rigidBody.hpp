@@ -118,6 +118,16 @@ namespace fe
                             m_velocityX += (m_impulseX / m_mass) * deltaTime;
                             m_velocityY += (m_impulseY / m_mass) * deltaTime;
 
+                            if (std::abs(m_velocityX) < 0.0001f)
+                                {
+                                    m_velocityX = 0.f;
+                                }
+
+                            if (std::abs(m_velocityY) < 0.0001f)
+                                {
+                                    m_velocityY = 0.f;
+                                }
+
                             if (m_maxSpeed * m_maxSpeed < m_velocityX * m_velocityX)
                                 {
                                     m_velocityX *= std::sqrt((m_maxSpeed * m_maxSpeed) / (m_velocityX * m_velocityX));
