@@ -74,6 +74,18 @@ void fe::scriptManager::update()
             }
     }
 
+sol::table fe::scriptManager::getTable(const char *id)
+    {
+        try 
+            {
+                return m_luaState[id];
+            }
+        catch (std::exception &e)
+            {
+                FE_LOG_ERROR(e.what());
+            }
+    }
+
 sol::state &fe::scriptManager::getLuaState()
     {
         return m_luaState;

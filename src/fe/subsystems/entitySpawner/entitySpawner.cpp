@@ -21,7 +21,7 @@ void fe::entitySpawner::setWorld(fe::gameWorld *world)
 
 fe::prefabObject &fe::entitySpawner::createPrefab(const char *luaName)
     {
-        sol::table luaTable = fe::engine::get().getScriptManager().getLuaState()[luaName];
+        sol::table luaTable = fe::engine::get().getScriptManager().getTable(luaName);
         prefabObject prefab;
         prefab.m_entityTable = luaTable;
 
@@ -80,7 +80,7 @@ fe::prefabObject &fe::entitySpawner::createPrefab(const char *luaName)
         if (luaTable["sceneGraph"].get_type() == sol::type::table)
             {
                 // init scene graph
-                sol::table sceneGraphData = luaTable["sceneGraph"];
+                sol::table sceneGraphData = fe::engine::get().getScriptManager().getValueFromTable(luaTable, "sceneGraph");
                 if (sceneGraphData["renderType"].get<std::string>() == "font")
                     {
                         prefab.m_modules = prefab.m_modules | fe::entityModules::RENDER_TEXT;
@@ -185,7 +185,7 @@ fe::prefabObject &fe::entitySpawner::createPrefab(const char *luaName)
                 // init rigid body
                 prefab.m_modules = prefab.m_modules | fe::entityModules::RIGID_BODY;
 
-                sol::table rigidBodyData = luaTable["rigidBody"];
+                sol::table rigidBodyData = fe::engine::get().getScriptManager().getValueFromTable(luaTable, "rigidBody");
                 if (rigidBodyData["maxSpeed"].get_type() == sol::type::number)
                     {
                         prefab.m_maxSpeed = rigidBodyData["maxSpeed"].get<float>();
@@ -207,7 +207,7 @@ fe::prefabObject &fe::entitySpawner::createPrefab(const char *luaName)
                 // init collision body
                 prefab.m_modules = prefab.m_modules | fe::entityModules::COLLISION_BODY;
 
-                sol::table collisionData = luaTable["collisionBody"];
+                sol::table collisionData = fe::engine::get().getScriptManager().getValueFromTable(luaTable, "collisionBody");
                 if (collisionData["size"].get_type() == sol::type::table)
                     {
                         prefab.m_colliderSize.x = collisionData["size"]["x"].get<unsigned int>();

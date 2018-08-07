@@ -38,7 +38,22 @@ namespace fe
 
                     FLAT_ENGINE_API void update();
 
+                    inline decltype(auto) getValueFromTable(sol::table &table, const char *id);
+                    
+                    FLAT_ENGINE_API sol::table getTable(const char *id);
                     FLAT_ENGINE_API sol::state &getLuaState();
 
             };
+
+        decltype(auto) fe::scriptManager::getValueFromTable(sol::table &table, const char *id)
+            {
+                try
+                    {
+                        return table[id];
+                    }
+                catch (std::exception &e)
+                    {
+                        FE_LOG_ERROR(e.what());
+                    }
+            }
     }
