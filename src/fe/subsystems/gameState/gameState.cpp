@@ -9,6 +9,14 @@
 #include <algorithm>
 #include <SFML/Graphics/RenderWindow.hpp>
 
+fe::baseGameState::baseGameState() : 
+    m_gameWorld(this),
+    m_paused(false),
+    m_nextGameScreen(nullptr),
+    m_newScreenAvaliable(false)
+    {
+    }
+
 int fe::baseGameState::addDialog(fe::gui::dialog *panel, int connected, int zPos)
     {
         m_dialogs.push_back(panel);
@@ -41,7 +49,25 @@ void fe::baseGameState::handleEvents(const sf::Event &event)
 void fe::baseGameState::preUpdateDefined()
     {
         if (m_paused) return;
+        if (m_newScreenAvaliable)
+            {
+                if (m_currentScreen)
+                    {
+                        m_currentScreen->deinit();
+                    }
+
+                m_currentScreen.reset(m_nextGameScreen);
+                m_currentScreen->init();
+                m_newScreenAvaliable = false;
+            }
+
         preUpdate();
+
+        if (m_currentScreen)
+            {
+                m_currentScreen->preUpdate();
+            }
+
         m_gameWorld.preUpdate();
     }
 
@@ -60,6 +86,12 @@ void fe::baseGameState::postUpdateDefined()
         if (m_paused) return;
 
         m_gameWorld.postUpdate();
+
+        postUpdate();
+        if (m_currentScreen)
+            {
+                m_currentScreen->preUpdate();
+            }
 
         for (auto it = m_dialogs.begin(); it != m_dialogs.end();)
             {
@@ -94,6 +126,7 @@ void fe::baseGameState::updateCamera(float deltaTime, int iterations)
 void fe::baseGameState::preDrawDefined()
     {
         m_gameWorld.preDraw();
+        preDraw();
     }
 
 void fe::baseGameState::draw(sf::RenderTarget &app)

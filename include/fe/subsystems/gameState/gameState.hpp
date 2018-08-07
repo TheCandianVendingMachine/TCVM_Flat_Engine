@@ -9,9 +9,11 @@
 #include "gameWorld.hpp"
 #include "fe/subsystems/entitySpawner/entitySpawner.hpp"
 #include "fe/gui/guiGraph.hpp"
+#include "gameScreen.hpp"
 
 #include <vector>
 #include <queue>
+#include <memory>
 
 namespace sf
     {
@@ -33,6 +35,10 @@ namespace fe
         class baseGameState
             {
                 private:
+                    fe::baseGameScreen *m_nextGameScreen;
+                    bool m_newScreenAvaliable;
+                    std::unique_ptr<fe::baseGameScreen> m_currentScreen;
+
                     std::vector<gui::dialog*> m_dialogs;
                     fe::gui::guiGraph m_guiGraph;
                     fe::gameWorld m_gameWorld;
@@ -47,7 +53,7 @@ namespace fe
                     virtual void drawExtra(sf::RenderTarget &app) {}
 
                 public:
-                    FLAT_ENGINE_API baseGameState() : m_gameWorld(this), m_paused(false) {}
+                    FLAT_ENGINE_API baseGameState();
 
                     FLAT_ENGINE_API int addDialog(fe::gui::dialog *panel, int connected = -1, int zPos = 0);
                     FLAT_ENGINE_API void removeDialog(fe::gui::dialog *panel);

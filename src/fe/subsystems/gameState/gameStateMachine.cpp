@@ -179,7 +179,7 @@ void fe::gameStateMachine::preUpdate()
                 stateList *tail = m_endState->m_tail;
                 while (tail && tail->m_currentState && tail->m_options & stateOptions::UPDATE_UNDERNEATH)
                     {
-                        tail->m_currentState->preUpdate();
+                        tail->m_currentState->preUpdateDefined();
                         tail = tail->m_tail;
                     }
             }
@@ -225,13 +225,11 @@ void fe::gameStateMachine::postUpdate()
         FE_ENGINE_PROFILE("gameStateMachine", "postupdateUserState");
         if (m_endState && m_endState->m_currentState)
             {
-                m_endState->m_currentState->postUpdate();
                 m_endState->m_currentState->postUpdateDefined();
 
                 stateList *tail = m_endState->m_tail;
                 while (tail && tail->m_currentState && tail->m_options & stateOptions::UPDATE_UNDERNEATH)
                     {
-                        tail->m_currentState->postUpdate();
                         tail->m_currentState->postUpdateDefined();
                         tail = tail->m_tail;
                     }
@@ -258,14 +256,13 @@ void fe::gameStateMachine::preDraw()
         FE_ENGINE_PROFILE("gameStateMachine", "predrawUserState");
         if (m_endState && m_endState->m_currentState)
             {
-                m_endState->m_currentState->preDraw();
                 m_endState->m_currentState->preDrawDefined();
 
                 stateList *listTop = m_endState;
                 stateList *tail = m_endState->m_tail;
                 while (listTop->m_options & stateOptions::RENDER_OVERTOP && tail && tail->m_currentState)
                     {
-                        tail->m_currentState->preDraw();
+                        tail->m_currentState->preDrawDefined();
 
                         listTop = tail;
                         tail = tail->m_tail;
