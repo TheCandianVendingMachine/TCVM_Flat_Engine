@@ -167,7 +167,7 @@ void fe::engine::draw()
         FE_END_PROFILE
 
         FE_ENGINE_PROFILE("engine_draw", "window_clear")
-        m_renderer.getRenderWindow().clear(sf::Color::Black);
+        m_renderer.getRenderWindow().clear(m_clearColour);
         FE_END_PROFILE
 
         FE_ENGINE_PROFILE("engine_draw", "window_buf1_draw");
@@ -275,7 +275,8 @@ fe::engine::engine(const float updateRate) :
     m_logger(nullptr),
     m_deltaTime(updateRate),
     m_elapsedFrames(0),
-    m_shutDown(false)
+    m_shutDown(false),
+    m_clearColour(sf::Color::Black)
     {
         FE_ASSERT((m_instance == nullptr), "Engine instance already created!");
     }
@@ -720,6 +721,11 @@ void fe::engine::loadResources(const char *resourcesFile)
                             }
                     }
             }
+    }
+
+void fe::engine::setClearColour(sf::Color colour)
+    {
+        m_clearColour = colour;
     }
 
 fe::engine::~engine()

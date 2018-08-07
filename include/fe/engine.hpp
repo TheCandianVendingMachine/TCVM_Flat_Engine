@@ -9,6 +9,7 @@
 #include "math/random.hpp"
 #include "time/clock.hpp"
 #include "typeDefines.hpp"
+#include <SFML/Graphics/Color.hpp>
 
 namespace sf
     {
@@ -62,6 +63,8 @@ namespace fe
                     fe::scriptManager *m_scriptManager;
 
                     fe::camera m_defaultCamera;
+
+                    sf::Color m_clearColour;
 
                 private:
                     fe::clock m_fpsClock;
@@ -131,6 +134,8 @@ namespace fe
                     fe::resourceManager<sf::Texture>    *getResourceManager() const;
                     template<>
                     fe::resourceManager<sf::Font>       *getResourceManager() const;
+
+                    FLAT_ENGINE_API void setClearColour(sf::Color colour);
 
                     FLAT_ENGINE_API ~engine();
             };
