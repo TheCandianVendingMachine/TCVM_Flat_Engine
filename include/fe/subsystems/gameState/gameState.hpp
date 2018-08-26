@@ -1,6 +1,7 @@
 // gameState.hpp
 // a base class for all game states that exist
-#pragma once
+#pragma once
+
 #include "fe/flatEngineExport.hpp"
 #include "fe/subsystems/memory/memoryManager.hpp"
 #include "fe/debug/logger.hpp"
@@ -30,7 +31,6 @@ namespace fe
             }
 
         struct prefabObject;
-        class entityRep;
 
         class baseGameState
             {
@@ -91,10 +91,8 @@ namespace fe
                     FLAT_ENGINE_API void shutDown();
 
                     FLAT_ENGINE_API fe::Handle addObject(const char *id);
-                    FLAT_ENGINE_API fe::Handle addObject(const char *id, fe::entityRep *entity);
                     FLAT_ENGINE_API void removeObject(fe::Handle ent);
                     FLAT_ENGINE_API void removeObject(fe::baseEntity *ent);
-                    FLAT_ENGINE_API void removeObject(fe::entityRep *entity);
                     FLAT_ENGINE_API fe::baseEntity *getObject(fe::Handle handle) const;
                     FLAT_ENGINE_API void getAllObjects(std::vector<fe::baseEntity*> &entities);
                     FLAT_ENGINE_API fe::prefabObject &addPrefab(const char *name);
