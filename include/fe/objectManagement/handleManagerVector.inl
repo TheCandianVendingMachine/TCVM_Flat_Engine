@@ -84,6 +84,12 @@ fe::Handle fe::handleManager<T, 0>::addObject(T object)
 template<typename T>
 void fe::handleManager<T, 0>::removeObject(Handle handle)
     {
+        removeObject(handle, [](T*){});
+    }
+
+template<typename T>
+void fe::handleManager<T, 0>::removeObject(Handle handle, std::function<void(T*)> onRemoveFunc)
+    {
         if (handle < 0) 
             {
                 FE_LOG_WARNING("Invalid Handle");
@@ -94,6 +100,7 @@ void fe::handleManager<T, 0>::removeObject(Handle handle)
                 FE_LOG_WARNING("Handle out of range");
                 return;
             }
+        onRemoveFunc(&m_objects[m_handles[handle].handle]);
         onRemove(&m_objects[m_handles[handle].handle], m_handles[handle].handle);
         if (m_handles.begin() + handle < m_handles.end())
             {
@@ -124,9 +131,16 @@ bool fe::handleManager<T, 0>::handleActive(Handle handle)
 template<typename T>
 inline void fe::handleManager<T, 0>::clearAllObjects()
     {
+        clearAllObjects([](T*){});
+    }
+
+template<typename T>
+inline void fe::handleManager<T, 0>::clearAllObjects(std::function<void(T*)> onRemoveFunc)
+    {
         for (auto &obj : m_objects)
             {
                 onRemove(&obj, -1);
+                onRemoveFunc(&obj);
             }
         m_objects.clear();
         m_handles.clear();

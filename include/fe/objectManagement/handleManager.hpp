@@ -56,8 +56,10 @@ namespace fe
                     Handle addObject(T object);
                     Handle addObject(T object, Handle handle);
                     void removeObject(Handle handle);
+                    void removeObject(Handle handle, std::function<void(T*)> onRemoveFunc);
                     bool handleActive(Handle handle);
                     void clearAllObjects();
+                    void clearAllObjects(std::function<void(T*)> onRemoveFunc);
 
                     T getObject(Handle handle) const;
 
@@ -97,8 +99,10 @@ namespace fe
                     Handle addObject(T object);
                     Handle addObject(T object, Handle handle);
                     void removeObject(Handle handle);
+                    void removeObject(Handle handle, std::function<void(T*)> onRemoveFunc);
                     bool handleActive(Handle handle);
                     void clearAllObjects();
+                    void clearAllObjects(std::function<void(T*)> onRemoveFunc);
 
                     T getObject(Handle handle) const;
 
