@@ -1,6 +1,7 @@
 #include "fe/subsystems/gameState/gameState.hpp"
 #include "fe/debug/profiler.hpp"
 #include "fe/entity/baseEntity.hpp"
+#include "fe/entity/entityRep.hpp"
 #include "fe/engine.hpp"
 #include "fe/subsystems/graphic/camera.hpp"
 #include "fe/subsystems/gameState/gameWorld.hpp"
@@ -156,10 +157,17 @@ void fe::baseGameState::shutDown()
 
 fe::Handle fe::baseGameState::addObject(const char *id)
     {
-        fe::Handle entity= m_entitySpawner.spawn(id);
+        fe::Handle entity = m_entitySpawner.spawn(id);
         getObject(entity)->enablePhysics(!isPaused());
         getObject(entity)->enableCollision(!isPaused());
         return entity;
+    }
+
+fe::Handle fe::baseGameState::addObject(const char *id, fe::entityRep *entity)
+    {
+        fe::Handle handle = addObject(id);
+        entity->m_entity = getObject(handle);
+        return handle;
     }
 
 void fe::baseGameState::removeObject(fe::Handle ent)
@@ -170,6 +178,11 @@ void fe::baseGameState::removeObject(fe::Handle ent)
 void fe::baseGameState::removeObject(fe::baseEntity *ent)
     {
         ent->kill(true);
+    }
+
+void fe::baseGameState::removeObject(fe::entityRep *entity)
+    {
+        removeObject(entity->m_entity);
     }
 
 fe::baseEntity *fe::baseGameState::getObject(fe::Handle handle) const

@@ -17,6 +17,7 @@
 #include "fe/subsystems/scripting/scriptManager.hpp"
 #include "fe/subsystems/scripting/commonScriptFunctions.hpp"
 #include "fe/entity/scriptObject.hpp"
+#include "fe/entity/component/component.hpp"
 #include "fe/engineCompileHelper.hpp"
 
 #include "fe/feAssert.hpp"
@@ -269,6 +270,8 @@ end)");
             "hasArrived", &scriptObject::scriptObjectHasArrived,
             "isTargeted", &scriptObject::scriptObjectIsTargeted
         );
+
+        m_scriptManager->getUserTypeHandler().addCustomType<component>("entityComponent");
     }
 
 fe::engine::engine(const float updateRate) :
