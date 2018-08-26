@@ -1,7 +1,6 @@
 // animator.hpp
 // allows the subscription to a animation with options
-#pragma once
-#define FLAT_ENGINE_EXPORT
+#pragma once
 #include "fe/flatEngineExport.hpp"
 
 #include <unordered_map>

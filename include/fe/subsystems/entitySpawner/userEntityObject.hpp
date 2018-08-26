@@ -1,7 +1,6 @@
 // userEntityObject.hpp
 // A generic object that holds Lua functions that will be called on update
-#pragma once
-#define FLAT_ENGINE_EXPORT
+#pragma once
 #include "../../flatEngineExport.hpp"
 #include "../messaging/eventHandler.hpp"
 #include "../../typeDefines.hpp"

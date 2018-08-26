@@ -1,7 +1,6 @@
 // stackAllocater.hpp
 // Allows the user to allocate a specific amount of memory without having to allocaate each frame
-#pragma once
-#define FLAT_ENGINE_EXPORT
+#pragma once
 #include "../../flatEngineExport.hpp"
 #include "../../typeDefines.hpp"
 

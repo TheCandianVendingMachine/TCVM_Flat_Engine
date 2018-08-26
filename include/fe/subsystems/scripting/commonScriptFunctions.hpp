@@ -1,7 +1,6 @@
 // commonScriptFunctions.hpp
 // script functions that require a layer of abstraction in order to be utilized properly
-#pragma once
-#define FLAT_ENGINE_EXPORT
+#pragma once
 #include "../../flatEngineExport.hpp"
 #include <sol.hpp>
 #include <SFML/Window/Keyboard.hpp>

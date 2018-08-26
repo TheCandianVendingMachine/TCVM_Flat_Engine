@@ -1,7 +1,7 @@
 // logger.hpp
 // a logger to log events that happen in game. It is a singleton so any file in-game can access it
 #pragma once
-#define FLAT_ENGINE_EXPORT
+
 #include "../flatEngineExport.hpp"
 #include "../subsystems/threading/threadJob.hpp"
 #include "../time/clock.hpp"
@@ -64,13 +64,13 @@ namespace fe
 
                     // print a log to file
                     template<typename ...Args>
-                    FLAT_ENGINE_API void log(Args &&...args);
+                    void log(Args &&...args);
 
                     // print a log to console and file
                     template<typename ...Args>
-                    FLAT_ENGINE_API void logToConsole(Args &&...args);
+                    void logToConsole(Args &&...args);
 
-                    FLAT_ENGINE_API virtual ~logger() {}
+                    virtual ~logger() {}
 
             };
 

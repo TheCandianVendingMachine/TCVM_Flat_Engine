@@ -1,7 +1,6 @@
 // checkBox.hpp
 // A check box. Attaches to checkList to emulate check boxes
-#pragma once
-#define FLAT_ENGINE_EXPORT
+#pragma once
 #include "fe/flatEngineExport.hpp"
 #include "listButton.hpp"
 

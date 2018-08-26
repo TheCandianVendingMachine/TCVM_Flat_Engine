@@ -1,7 +1,6 @@
 // gameState.hpp
 // a base class for all game states that exist
-#pragma once
-#define FLAT_ENGINE_EXPORT
+#pragma once
 #include "fe/flatEngineExport.hpp"
 #include "fe/subsystems/memory/memoryManager.hpp"
 #include "fe/debug/logger.hpp"

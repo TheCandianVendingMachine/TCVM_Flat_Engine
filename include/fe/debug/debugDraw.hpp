@@ -1,7 +1,6 @@
 // debugDraw.hpp
 // A singleton-class to allow for drawing for debug purposes. Software Drawn, so all shapes are wireframes
-#pragma once
-#define FLAT_ENGINE_EXPORT
+#pragma once
 #include "../flatEngineExport.hpp"
 #include <SFML/Graphics/VertexArray.hpp>
 

@@ -1,7 +1,6 @@
 // listButton.hpp
 // A generic list button. Can set and toggle state
-#pragma once
-#define FLAT_ENGINE_EXPORT
+#pragma once
 #include "fe/flatEngineExport.hpp"
 #include "control.hpp"
 #include "fe/typeDefines.hpp"

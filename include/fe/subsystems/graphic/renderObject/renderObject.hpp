@@ -1,7 +1,6 @@
 // renderObject.hpp
 // an object that represents the coordinates for verticies to be rendered
-#pragma once
-#define FLAT_ENGINE_EXPORT
+#pragma once
 #include "../../../flatEngineExport.hpp"
 
 #include "../../physics/transformable.hpp"

@@ -1,7 +1,6 @@
 // physicsEngine.hpp
 // handles all physics.
-#pragma once
-#define FLAT_ENGINE_EXPORT
+#pragma once
 #include "../../flatEngineExport.hpp"
 #include "../../typeDefines.hpp"
 #include "../threading/threadJob.hpp"

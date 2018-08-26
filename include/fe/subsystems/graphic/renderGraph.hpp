@@ -1,7 +1,6 @@
 // renderGraph.hpp
 // A generic render graph. Loops through nodes, transforms them, and then renders them
-#pragma once
-#define FLAT_ENGINE_EXPORT
+#pragma once
 #include "fe/flatEngineExport.hpp"
 #include "fe/subsystems/physics/transformable.hpp"
 #include "fe/dataStructures/tree.hpp"

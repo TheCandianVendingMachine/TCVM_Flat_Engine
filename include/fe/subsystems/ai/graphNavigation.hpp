@@ -1,7 +1,6 @@
 // graphNavigation.hpp
 // Generates waypoints to navigate through a graph
-#pragma once
-#define FLAT_ENGINE_EXPORT
+#pragma once
 #include "../../flatEngineExport.hpp"
 #include <vector>
 

@@ -1,7 +1,6 @@
 // memoryManager.hpp
 // a sub-system that allocates a block of memory on startup to be used around the program
-#pragma once
-#define FLAT_ENGINE_EXPORT
+#pragma once
 #include "../../flatEngineExport.hpp"
 #include "../../typeDefines.hpp"
 #include "stackAllocater.hpp"

@@ -1,7 +1,6 @@
 // engineInit.hpp
 // The game engine. The main game loop and all of the systems associated with it
-#pragma once
-#define FLAT_ENGINE_EXPORT
+#pragma once
 #include "flatEngineExport.hpp"
 #include "subsystems/memory/memoryManager.hpp"
 #include "subsystems/graphic/renderer.hpp"

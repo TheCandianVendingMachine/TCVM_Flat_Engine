@@ -1,7 +1,6 @@
 // utilities.hpp
 // Utility objects and functions with no real place to call home
-#pragma once
-#define FLAT_ENGINE_EXPORT
+#pragma once
 #include "flatEngineExport.hpp"
 #include <utility>
 #include <vector>

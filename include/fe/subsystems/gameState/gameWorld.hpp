@@ -1,7 +1,6 @@
 // gameWorld.hpp
 // The game world. Contains all relavent classes that are required for a world to function. Pathfinding graph, scene graph, etc
-#pragma once
-#define FLAT_ENGINE_EXPORT
+#pragma once
 #include "../../flatEngineExport.hpp"
 #include <SFML/Graphics/RenderStates.hpp>
 #include "entityWorld.hpp"

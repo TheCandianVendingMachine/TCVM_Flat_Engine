@@ -1,7 +1,6 @@
 // tree.hpp
 // Generic tree structure
-#pragma once
-#define FLAT_ENGINE_EXPORT
+#pragma once
 #include "../flatEngineExport.hpp"
 #include "../objectManagement/handleManager.hpp"
 #include <memory>

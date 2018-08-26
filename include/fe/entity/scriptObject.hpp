@@ -1,7 +1,6 @@
 // scriptObject.hpp
 // A basic object that the scripting system uses to gain knowledge about objects
-#pragma once
-#define FLAT_ENGINE_EXPORT
+#pragma once
 #include "../flatEngineExport.hpp"
 #include "../math/Vector2.hpp"
 #include <sol.hpp>

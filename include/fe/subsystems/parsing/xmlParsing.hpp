@@ -1,7 +1,6 @@
 // xmlParsing.hpp
 // A set of functions to assist with XML parsing
-#pragma once
-#define FLAT_ENGINE_EXPORT
+#pragma once
 #include "../../flatEngineExport.hpp"
 
 #include <rapidxml.hpp>

@@ -1,7 +1,6 @@
 // graph.hpp
 // graph class. Is a basic graph
-#pragma once
-#define FLAT_ENGINE_EXPORT
+#pragma once
 #include "../../flatEngineExport.hpp"
 #include "node.hpp"
 #include "../../objectManagement/handleManager.hpp"

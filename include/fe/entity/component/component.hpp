@@ -1,7 +1,6 @@
 // component.hpp
 // A component base class for the entity. Allows users to implement functionality without having to modify the base class
-#pragma once
-#define FLAT_ENGINE_EXPORT
+#pragma once
 #include "fe/flatEngineExport.hpp"
 #include "fe/subsystems/scripting/scriptManager.hpp"
 #include "fe/subsystems/scripting/luaFunctionReference.hpp"

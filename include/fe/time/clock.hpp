@@ -1,7 +1,6 @@
 // clock.hpp
 // a high-res clock to be able to get the current time in seconds, milliseconds, microseconds
-#pragma once
-#define FLAT_ENGINE_EXPORT
+#pragma once
 #include "../flatEngineExport.hpp"
 #include "time.hpp"
 

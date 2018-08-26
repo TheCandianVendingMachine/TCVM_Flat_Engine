@@ -1,7 +1,6 @@
 // broadphaseAbstract.hpp
 // An abstract class to serve for the collision engine's broadphase collision detection
-#pragma once
-#define FLAT_ENGINE_EXPORT
+#pragma once
 #include "../../../flatEngineExport.hpp"
 
 #include <list>

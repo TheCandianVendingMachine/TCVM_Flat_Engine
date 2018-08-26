@@ -1,7 +1,6 @@
 // time.hpp
 // A class to store time values
-#pragma once
-#define FLAT_ENGINE_EXPORT
+#pragma once
 #include "../flatEngineExport.hpp"
 #include <cstdint>
 

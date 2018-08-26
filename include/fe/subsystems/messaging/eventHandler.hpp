@@ -1,7 +1,6 @@
 // eventHandler.hpp
 // allows this class to handle events
-#pragma once
-#define FLAT_ENGINE_EXPORT
+#pragma once
 #include "../../flatEngineExport.hpp"
 
 namespace fe

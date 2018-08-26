@@ -1,7 +1,6 @@
 // eventSender.hpp
 // This allows any part in a program to communicate with another part via messages
-#pragma once
-#define FLAT_ENGINE_EXPORT
+#pragma once
 #include "../../flatEngineExport.hpp"
 
 #include <vector>

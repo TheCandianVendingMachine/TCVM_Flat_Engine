@@ -1,7 +1,6 @@
 // polygon2.hpp
 // A general 2d polygon. Points are defined and can be iterated through
-#pragma once
-#define FLAT_ENGINE_EXPORT
+#pragma once
 #include "fe/flatEngineExport.hpp"
 #include "fe/math/Vector2.hpp"
 #include <vector>

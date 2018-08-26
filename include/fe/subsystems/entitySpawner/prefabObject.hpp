@@ -1,7 +1,6 @@
 // prefabObject.hpp
 // entity prefab object
-#pragma once
-#define FLAT_ENGINE_EXPORT
+#pragma once
 #include "fe/flatEngineExport.hpp"
 #include <unordered_map>
 #include "fe/objectManagement/str.hpp"

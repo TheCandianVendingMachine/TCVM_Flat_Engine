@@ -1,7 +1,6 @@
 // dialog.hpp
 // a dialog is a GUI container. A dialog can have something attached to it, and is the very base GUI class
-#pragma once
-#define FLAT_ENGINE_EXPORT
+#pragma once
 #include "fe/flatEngineExport.hpp"
 #include "fe/subsystems/messaging/eventHandler.hpp"
 #include "fe/subsystems/physics/transformable.hpp"

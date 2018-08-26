@@ -1,8 +1,7 @@
 // texturePacker.hpp
 // a texture packer. Takes input textures, appends them to an output one and returns a data package
 // Algorithm inspired from http://blackpawn.com/texts/lightmaps/default.html
-#pragma once
-#define FLAT_ENGINE_EXPORT
+#pragma once
 #include "../../flatEngineExport.hpp"
 
 #include <SFML/Graphics/Texture.hpp>

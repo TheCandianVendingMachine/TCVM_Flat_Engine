@@ -1,7 +1,6 @@
 // spriteBatch.hpp
 // a small sprite batch to lower amount of draw calls that happen
-#pragma once
-#define FLAT_ENGINE_EXPORT
+#pragma once
 #include "../../../flatEngineExport.hpp"
 #include "../../../typeDefines.hpp"
 #include "renderObject.hpp"

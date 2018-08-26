@@ -1,8 +1,7 @@
 // aabbTree.hpp
 // A broadphase algorithm that uses dynamic AABB's
 // Implementation taken from Box2d (https://github.com/erincatto/Box2D/blob/master/Box2D/Box2D/Collision/b2DynamicTree.cpp)
-#pragma once
-#define FLAT_ENGINE_EXPORT
+#pragma once
 #include "../../../flatEngineExport.hpp"
 #include "broadphaseAbstract.hpp"
 #include "collisionBounds.hpp"

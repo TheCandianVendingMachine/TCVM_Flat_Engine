@@ -1,7 +1,6 @@
 // control.hpp
 // Base class for all GUI controls. A control is a GUI element which the user can interact with (i.e, not windows)
-#pragma once
-#define FLAT_ENGINE_EXPORT
+#pragma once
 #include "fe/flatEngineExport.hpp"
 #include "fe/math/polygon2.hpp"
 #include "dialog.hpp"

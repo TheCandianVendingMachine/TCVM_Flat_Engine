@@ -1,7 +1,6 @@
 // baseGameScreen.hpp
 // A sub-state for the current "screen" of the game
-#pragma once
-#define FLAT_ENGINE_EXPORT
+#pragma once
 #include "fe/flatEngineExport.hpp"
 
 namespace fe
