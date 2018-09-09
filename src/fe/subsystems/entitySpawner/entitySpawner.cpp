@@ -250,6 +250,18 @@ fe::prefabObject &fe::entitySpawner::createPrefab(const char *luaName)
                     }
             }
 
+        if (luaTable["components"].get_type() == sol::type::table)
+            {
+                sol::table components = luaTable["components"];
+                for (auto &value : components)
+                    {
+                        if (value.second.get_type() == sol::type::table)
+                            {
+                                prefab.m_components.emplace_back(value.first.as<std::string>(), value.second.as<sol::table>());
+                            }
+                    }
+            }
+
         for (auto &value : luaTable)
             {
                 if (value.second.get_type() == sol::type::function)
@@ -293,6 +305,9 @@ fe::Handle fe::entitySpawner::spawn(const char *luaName)
 
         entity->setSize(prefab.m_size);
         entity->setColour(prefab.m_colour);
+
+        entity->setName(luaName);
+        entity->setEntityDefinition(prefab.m_entityTable);
 
         if (prefab.m_modules & fe::entityModules::COLLISION_BODY)
             {
@@ -344,8 +359,12 @@ fe::Handle fe::entitySpawner::spawn(const char *luaName)
                 entity->getRigidBody()->setFrictionCoefficient(prefab.m_frictionCoef);
             }
 
-        entity->setName(luaName);
-        entity->setEntityDefinition(prefab.m_entityTable);
+        for (auto &component : prefab.m_components)
+            {
+                std::string path = luaName + std::string("/components/") + component.first;
+                m_world->getComponentManager().initComponentLuaTable(component.first, path, component.second);
+                m_world->getComponentManager().addComponentToObject(entity, component.first);
+            }
 
         fe::gameEvent createEvent(FE_STR((std::string("spawn_") + luaName).c_str()), 1);
         createEvent.args[0].arg.TYPE_UINTEGER = objectHandle;

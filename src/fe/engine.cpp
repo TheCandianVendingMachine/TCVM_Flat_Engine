@@ -271,7 +271,7 @@ end)");
             "isTargeted", &scriptObject::scriptObjectIsTargeted
         );
 
-        m_scriptManager->getUserTypeHandler().addCustomType<component>("entityComponent");
+        m_scriptManager->getUserTypeHandler().addCustomType<componentBase>("entityComponent");
     }
 
 fe::engine::engine(const float updateRate) :
@@ -362,8 +362,11 @@ void fe::engine::shutDown()
         m_renderer.shutDown();
         m_debugDraw->shutDown();
         m_profileLogger->shutDown();
+
+        m_logger->swapFileBuffer();
         m_logger->shutDown();
         m_logger->~logger();
+
         m_threadPool->shutDown();
         m_memoryManager.shutDown();
     }
@@ -371,6 +374,15 @@ void fe::engine::shutDown()
 void fe::engine::close() const
     {
         getRenderer().getRenderWindow().close();
+    }
+
+void fe::engine::crash(const char *reason)
+    {
+        FE_LOG_ERROR("Engine has crashed!");
+        FE_LOG_ERROR(reason);
+        m_instance->close();
+        m_instance->shutDown();
+        std::quick_exit(0);
     }
 
 const fe::engine &fe::engine::get()

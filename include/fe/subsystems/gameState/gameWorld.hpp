@@ -1,15 +1,16 @@
 // gameWorld.hpp
 // The game world. Contains all relavent classes that are required for a world to function. Pathfinding graph, scene graph, etc
-#pragma once
-#include "../../flatEngineExport.hpp"
+#pragma once
+#include "fe/flatEngineExport.hpp"
 #include <SFML/Graphics/RenderStates.hpp>
 #include "entityWorld.hpp"
-#include "../graphic/renderObject/sceneGraph.hpp"
-#include "../graphic/tileMap.hpp"
-#include "../ai/graph.hpp"
-#include "../../entity/baseEntity.hpp"
-#include "../resourceManager/fontData.hpp"
-#include "../../entity/entityModules.hpp"
+#include "fe/subsystems/graphic/renderObject/sceneGraph.hpp"
+#include "fe/subsystems/graphic/tileMap.hpp"
+#include "fe/subsystems/ai/graph.hpp"
+#include "fe/entity/baseEntity.hpp"
+#include "fe/subsystems/resourceManager/fontData.hpp"
+#include "fe/entity/entityModules.hpp"
+#include "fe/entity/component/componentManager.hpp"
 
 namespace sf
     {
@@ -31,6 +32,7 @@ namespace fe
                     fe::tileMap m_tileMap;
                     fe::graph m_aiGraph;
                     fe::entityWorld m_entityWorld;
+                    fe::componentManager m_componentManager;
                     fe::broadphaseAbstract *m_dynamicBroadphase;
                     fe::broadphaseAbstract *m_staticBroadphase;
                     fe::serializerID *m_serializer;
@@ -60,6 +62,9 @@ namespace fe
 
                     FLAT_ENGINE_API const fe::graph &getAIGraph() const;
                     FLAT_ENGINE_API fe::graph &getAIGraph();
+
+                    FLAT_ENGINE_API const fe::componentManager &getComponentManager() const;
+                    FLAT_ENGINE_API fe::componentManager &getComponentManager();
 
                     FLAT_ENGINE_API void preUpdate();
                     FLAT_ENGINE_API void update(collisionWorld *collisionWorld);

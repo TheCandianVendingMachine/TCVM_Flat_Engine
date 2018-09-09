@@ -1,45 +1,13 @@
 #include "fe/entity/component/component.hpp"
-#include "fe/entity/baseEntity.hpp"
-#include "fe/subsystems/scripting/scriptManager.hpp"
 
-void fe::component::engineOnAdd(fe::baseEntity *ent)
+bool fe::componentBase::isInitialized() const
     {
-        if (m_onAdd)
-            {
-                m_onAdd->call(this, static_cast<fe::scriptObject*>(ent));
-            }
-        onAdd(ent);
+        return m_initialized;
     }
 
-void fe::component::engineOnRemove(fe::baseEntity *ent)
+void fe::componentBase::engineInitLuaValues(sol::table table, const char *componentName)
     {
-        if (m_onRemove)
-            {
-                m_onRemove->call(this, static_cast<fe::scriptObject*>(ent));
-            }
-        onRemove(ent);
-    }
-
-void fe::component::engineUpdate(fe::baseEntity *ent)
-    {
-        if (m_update)
-            {
-                m_update->call(this, static_cast<fe::scriptObject*>(ent));
-            }
-        update(ent);
-    }
-
-void fe::component::engineFixedUpdate(fe::baseEntity *ent, float deltaTime)
-    {
-        if (m_fixedUpdate)
-            {
-                m_fixedUpdate->call(this, static_cast<fe::scriptObject*>(ent), deltaTime);
-            }
-        fixedUpdate(ent, deltaTime);
-    }
-
-void fe::component::engineInitLuaValues(sol::table table, const char *componentName)
-    {
+        m_initialized = true;
         if (table["onAdd"].get_type() == sol::type::function)
             {
                 m_onAdd = &fe::engine::get().getScriptManager().getFunctionHandler().getLuaFunction(componentName, "onAdd");
@@ -57,7 +25,7 @@ void fe::component::engineInitLuaValues(sol::table table, const char *componentN
 
         if (table["fixedUpdate"].get_type() == sol::type::function)
             {
-                m_fixedUpdate = &fe::engine::get().getScriptManager().getFunctionHandler().getLuaFunction(componentName, "onRemove");
+                m_fixedUpdate = &fe::engine::get().getScriptManager().getFunctionHandler().getLuaFunction(componentName, "fixedUpdate");
             }
 
         initLuaValues(table, componentName);

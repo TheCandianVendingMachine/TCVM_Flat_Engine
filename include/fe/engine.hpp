@@ -1,6 +1,7 @@
 // engineInit.hpp
 // The game engine. The main game loop and all of the systems associated with it
-#pragma once
+#pragma once
+
 #include "flatEngineExport.hpp"
 #include "subsystems/memory/memoryManager.hpp"
 #include "subsystems/graphic/renderer.hpp"
@@ -98,6 +99,7 @@ namespace fe
                     FLAT_ENGINE_API void shutDown();
 
                     FLAT_ENGINE_API void close() const;
+                    FLAT_ENGINE_API static void crash(const char *reason);
 
                     FLAT_ENGINE_API static const engine &get();
 

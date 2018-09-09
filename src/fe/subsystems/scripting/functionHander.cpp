@@ -1,15 +1,25 @@
 #include "fe/subsystems/scripting/functionHander.hpp"
 #include "fe/utility/splitString.hpp"
+#include "fe/engine.hpp"
 
 sol::table fe::functionHandler::getTableFromPath(const std::string &path)
     {
         std::vector<std::string> luaPathVector;
         fe::splitString(path.c_str(), '/', std::move(luaPathVector));
+        std::reverse(luaPathVector.begin(), luaPathVector.end());
 
         sol::table foundTable = m_state.globals();
         while (!luaPathVector.empty())
             {
-                foundTable = foundTable[luaPathVector.back()];
+                try 
+                    {
+                        foundTable = foundTable[luaPathVector.back()];
+                    }
+                catch (std::exception &e)
+                    {
+                        FE_LOG_ERROR("Is the Lua path correct? [", path, "]");
+                        fe::engine::crash(e.what());
+                    }
                 luaPathVector.pop_back();
             }
 

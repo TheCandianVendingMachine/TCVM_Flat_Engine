@@ -1,6 +1,7 @@
 // entityWorld.hpp
 // All entities in the world are stored in here. Manages addition, removal, and serializaiton
-#pragma once
+#pragma once
+
 #include "fe/flatEngineExport.hpp"
 #include "fe/objectManagement/handleManager.hpp"
 #include "fe/subsystems/serializer/serializable.hpp"

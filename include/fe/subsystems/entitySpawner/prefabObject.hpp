@@ -1,8 +1,9 @@
 // prefabObject.hpp
 // entity prefab object
-#pragma once
+#pragma once
 #include "fe/flatEngineExport.hpp"
 #include <unordered_map>
+#include <vector>
 #include "fe/objectManagement/str.hpp"
 #include "fe/math/Vector2.hpp"
 #include "fe/subsystems/resourceManager/fontData.hpp"
@@ -24,6 +25,8 @@ namespace fe
 
                 std::unordered_map<fe::str, fe::luaFunctionReference*> m_userFunctions;
                 std::unordered_map<fe::str, fe::luaFunctionReference*> m_events;
+
+                std::vector<std::pair<std::string, sol::table>> m_components;
 
                 fe::fontData m_font = fe::fontData();
                 sf::Color m_colour;

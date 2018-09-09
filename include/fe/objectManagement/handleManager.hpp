@@ -42,7 +42,6 @@ namespace fe
 
                 protected:
                     T m_objects[TObjectCount];
-                    const T *getObjects() const;
                     fe::Handle getHandle(T object);
 
                     virtual void onAdd(T *object, fe::Handle objectHandle) {}
@@ -62,6 +61,7 @@ namespace fe
                     void clearAllObjects(std::function<void(T*)> onRemoveFunc);
 
                     T getObject(Handle handle) const;
+                    const T *getObjects() const;
 
             };
 
@@ -87,7 +87,6 @@ namespace fe
 
                 protected:
                     std::vector<T> m_objects;
-                    const std::vector<T> &getObjects() const;
                     typename std::vector<T>::iterator removeHandle(Handle handle);
 
                     fe::Handle getHandle(T object);
@@ -105,6 +104,7 @@ namespace fe
                     void clearAllObjects(std::function<void(T*)> onRemoveFunc);
 
                     T getObject(Handle handle) const;
+                    const std::vector<T> &getObjects() const;
 
             };
 

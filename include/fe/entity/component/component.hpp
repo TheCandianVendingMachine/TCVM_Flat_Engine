@@ -1,53 +1,105 @@
 // component.hpp
 // A component base class for the entity. Allows users to implement functionality without having to modify the base class
-#pragma once
+#pragma once
 #include "fe/flatEngineExport.hpp"
 #include "fe/subsystems/scripting/scriptManager.hpp"
 #include "fe/subsystems/scripting/luaFunctionReference.hpp"
 #include "fe/engine.hpp"
+#include "fe/entity/baseEntity.hpp"
 #include <sol.hpp>
 #include <utility>
 
 namespace fe
     {
         class baseEntity;
-        class component
+
+        class componentBase
             {
-                private:
+                protected:
                     fe::luaFunctionReference *m_onAdd;
                     fe::luaFunctionReference *m_onRemove;
                     fe::luaFunctionReference *m_update;
                     fe::luaFunctionReference *m_fixedUpdate;
 
-                protected:
-                    virtual void onAdd(fe::baseEntity *ent) {}
-                    virtual void onRemove(fe::baseEntity *ent) {}
-                    virtual void update(fe::baseEntity *ent) {}
-                    virtual void fixedUpdate(fe::baseEntity *ent, float deltaTime) {}
+                    bool m_initialized;
 
                     virtual void initLuaValues(sol::table table, const char *componentName) {}
 
                 public:
-                    template<typename TObj, typename ...Constructors, typename ...Args>
-                    component(const std::string &name, Args &&...args);
-
-                    FLAT_ENGINE_API void engineOnAdd(fe::baseEntity *ent);
-                    FLAT_ENGINE_API void engineOnRemove(fe::baseEntity *ent);
-                    FLAT_ENGINE_API void engineUpdate(fe::baseEntity *ent);
-                    FLAT_ENGINE_API void engineFixedUpdate(fe::baseEntity *ent, float deltaTime);
-
+                    FLAT_ENGINE_API bool isInitialized() const;
                     FLAT_ENGINE_API void engineInitLuaValues(sol::table table, const char *componentName);
 
+                    virtual void engineOnAdd(fe::baseEntity *ent) {}
+                    virtual void engineOnRemove(fe::baseEntity *ent) {}
+                    virtual void engineUpdate() {}
+                    virtual void engineFixedUpdate(float deltaTime) {}
             };
-        template<typename TObj, typename ...Constructors, typename ...Args>
-        component::component(const std::string &name, Args && ...args) :
-            m_onAdd(nullptr),
-            m_onRemove(nullptr),
-            m_update(nullptr),
-            m_fixedUpdate(nullptr)
+
+        template<typename TObj>
+        class component : public componentBase
             {
-                // we assume that this class has already been defined in-engine
-                fe::engine::get().getScriptManager().getUserTypeHandler().addCustomType<TObj, Constructors...>(name, sol::base_classes, sol::bases<component>(), std::forward<Args>(args)...);
+                protected:
+                    virtual void onAdd(fe::baseEntity *ent) {}
+                    virtual void onRemove(fe::baseEntity *ent) {}
+                    virtual void update() {}
+                    virtual void fixedUpdate(float deltaTime) {}
+
+                public:
+                    template<typename ...Args>
+                    component(const std::string &name, Args &&...args);
+
+                    void engineOnAdd(fe::baseEntity *ent);
+                    void engineOnRemove(fe::baseEntity *ent);
+                    void engineUpdate();
+                    void engineFixedUpdate(float deltaTime);
+
+            };
+
+        template<typename TObj>
+        inline void fe::component<TObj>::engineOnAdd(fe::baseEntity *ent)
+            {
+                if (m_onAdd)
+                    {
+                        m_onAdd->call(static_cast<TObj*>(this), static_cast<fe::scriptObject*>(ent));
+                    }
+                onAdd(ent);
+            }
+
+        template<typename TObj>
+        inline void fe::component<TObj>::engineOnRemove(fe::baseEntity *ent)
+            {
+                if (m_onRemove)
+                    {
+                        m_onRemove->call(static_cast<TObj*>(this), static_cast<fe::scriptObject*>(ent));
+                    }
+                onRemove(ent);
+            }
+
+        template<typename TObj>
+        inline void fe::component<TObj>::engineUpdate()
+            {
+                if (m_update)
+                    {
+                        m_update->call(static_cast<TObj*>(this));
+                    }
+                update();
+            }
+
+        template<typename TObj>
+        inline void fe::component<TObj>::engineFixedUpdate(float deltaTime)
+            {
+                if (m_fixedUpdate)
+                    {
+                        m_fixedUpdate->call(static_cast<TObj*>(this), deltaTime);
+                    }
+                fixedUpdate(deltaTime);
+            }
+
+        template<typename TObj>
+        template<typename ...Args>
+        inline component<TObj>::component(const std::string &name, Args &&...args)
+            {
+                fe::engine::get().getScriptManager().getUserTypeHandler().addCustomType<TObj>(name, sol::base_classes, sol::bases<component>(), std::forward<Args>(args)...);
             }
     }
 

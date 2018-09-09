@@ -94,6 +94,16 @@ fe::graph &fe::gameWorld::getAIGraph()
         return m_aiGraph;
     }
 
+const fe::componentManager &fe::gameWorld::getComponentManager() const
+    {
+        return m_componentManager;
+    }
+
+fe::componentManager &fe::gameWorld::getComponentManager()
+    {
+        return m_componentManager;
+    }
+
 void fe::gameWorld::preUpdate()
     {
         FE_ENGINE_PROFILE("game_world", "entity_pre_update");
@@ -105,6 +115,7 @@ void fe::gameWorld::update(collisionWorld *collisionWorld)
     {
         FE_ENGINE_PROFILE("game_world", "entity_update");
         m_entityWorld.update(collisionWorld, m_dynamicBroadphase);
+        m_componentManager.update();
         FE_END_PROFILE;
     }
 
@@ -112,6 +123,7 @@ void fe::gameWorld::fixedUpdate(float deltaTime)
     {
         FE_ENGINE_PROFILE("game_world", "entity_fixed_update");
         m_entityWorld.fixedUpdate(deltaTime);
+        m_componentManager.fixedUpdate(deltaTime);
         FE_END_PROFILE;
     }
 

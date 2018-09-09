@@ -1,6 +1,6 @@
 // entity.hpp
 // base class for all entities in the game world. All objects taht are on scene are defined as an entity
-#pragma once
+#pragma once
 #include "../flatEngineExport.hpp"
 #include "../typeDefines.hpp"
 #include "../objectManagement/guid.hpp"
@@ -10,8 +10,11 @@
 #include "scriptObject.hpp"
 #include "entityModules.hpp"
 #include "baseEntityUtilities.hpp"
+#include <unordered_map>
 #include <SFML/Graphics/Color.hpp>
 #include <string>
+#include <vector>
+#include <utility>
 
 namespace fe
     {
@@ -32,6 +35,9 @@ namespace fe
                     fe::animationActor *m_animationActor;
                     fe::rigidBody *m_rigidBody;
                     fe::collider *m_collisionBody;
+
+                    // Component handle and whether or not its enabled
+                    std::vector<std::pair<fe::Handle, bool>> m_components;
 
                     fe::userEntityObject *m_entityScriptObject; // object that handles updating per fe::baseEntity::update
 
@@ -117,6 +123,12 @@ namespace fe
                     FLAT_ENGINE_API fe::baseEntityUtilities &getUtilities();
 
                     FLAT_ENGINE_API void createModules(fe::baseGameState &currentState);
+
+                    FLAT_ENGINE_API void addComponent(fe::Handle handle);
+                    FLAT_ENGINE_API void removeComponent(fe::Handle handle);
+                    FLAT_ENGINE_API void enableComponent(fe::Handle handle, bool value);
+                    FLAT_ENGINE_API bool isComponentEnabled(fe::Handle handle) const;
+                    FLAT_ENGINE_API const std::vector<std::pair<fe::Handle, bool>> &getAllComponents() const;
 
             };
     }

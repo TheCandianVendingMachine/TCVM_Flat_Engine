@@ -432,3 +432,38 @@ void fe::baseEntity::createModules(fe::baseGameState &currentState)
                 m_animationActor = currentState.getGameWorld().getEntityWorld().getAnimator().alloc(static_cast<fe::renderObject*>(m_renderObject));
             }
     }
+
+void fe::baseEntity::addComponent(fe::Handle handle)
+    {
+        m_components.emplace_back(handle, true);
+    }
+
+void fe::baseEntity::removeComponent(fe::Handle handle)
+    {
+        m_components.erase(std::find_if(m_components.begin(), m_components.end(), [handle](std::pair<fe::Handle, bool> value) { return value.first == handle; }), m_components.end());
+    }
+
+void fe::baseEntity::enableComponent(fe::Handle handle, bool value)
+    {
+        auto it = std::find_if(m_components.begin(), m_components.end(), [handle](std::pair<fe::Handle, bool> value) { return value.first == handle; });
+        if (it != m_components.end())
+            {
+                it->second = value;
+            }
+    }
+
+const std::vector<std::pair<fe::Handle, bool>> &fe::baseEntity::getAllComponents() const
+    {
+        return m_components;
+    }
+
+bool fe::baseEntity::isComponentEnabled(fe::Handle handle) const
+    {
+        bool enabled = false;
+        auto it = std::find_if(m_components.begin(), m_components.end(), [handle](std::pair<fe::Handle, bool> value) { return value.first == handle; });
+        if (it != m_components.end())
+            {
+                enabled = it->second;
+            }
+        return enabled;
+    }

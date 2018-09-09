@@ -1,6 +1,6 @@
 // entitySpawner.hpp
 // Allows the spawning of entities from an external Lua file
-#pragma once
+#pragma once
 #include "../../flatEngineExport.hpp"
 #include "../../typeDefines.hpp"
 #include "userEntityObject.hpp"

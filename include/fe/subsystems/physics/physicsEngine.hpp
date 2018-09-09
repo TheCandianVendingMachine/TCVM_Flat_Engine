@@ -1,6 +1,6 @@
 // physicsEngine.hpp
 // handles all physics.
-#pragma once
+#pragma once
 #include "../../flatEngineExport.hpp"
 #include "../../typeDefines.hpp"
 #include "../threading/threadJob.hpp"
@@ -12,7 +12,7 @@
 
 namespace fe
     {
-        class collider;
+        struct collider;
 
         class physicsEngine : public fe::eventHandler
             {
