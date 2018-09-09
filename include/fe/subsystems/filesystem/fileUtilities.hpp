@@ -1,6 +1,6 @@
 // fileUtilities.hpp
 // Utilities to help with navigating directories
-#pragma once
+#pragma once
 #include "../../flatEngineExport.hpp"
 #include <vector>
 #include <string>

@@ -1,6 +1,6 @@
 // functionHandler.hpp
 // Handles the registration of functions
-#pragma once
+#pragma once
 #include "../../flatEngineExport.hpp"
 #include "../../objectManagement/str.hpp"
 #include "../../typeDefines.hpp"

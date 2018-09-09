@@ -1,6 +1,6 @@
 // enumHandler.hpp
 // handles the addition of enums into code.
-#pragma once
+#pragma once
 #include "../../flatEngineExport.hpp"
 #include <sol.hpp>
 

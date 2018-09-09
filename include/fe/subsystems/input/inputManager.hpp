@@ -1,6 +1,6 @@
 // inputManager.hpp
 // Manages all inputs. Allows any class to see if a certain input was pressed
-#pragma once
+#pragma once
 #include "../../flatEngineExport.hpp"
 #include "../../objectManagement/handleManager.hpp"
 #include "input.hpp"

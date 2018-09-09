@@ -1,6 +1,6 @@
 // userTypeHandler.hpp
 // Creates a user-friendly interface for Sol 2's user type system
-#pragma once
+#pragma once
 #include "../../flatEngineExport.hpp"
 #include <sol.hpp>
 #include <string>

@@ -1,6 +1,6 @@
 // rigidBody.hpp
 // Simple rigid body. Can move
-#pragma once
+#pragma once
 #include "../../flatEngineExport.hpp"
 #include "../../math/Vector2.hpp"
 #include "../serializer/serializable.hpp"

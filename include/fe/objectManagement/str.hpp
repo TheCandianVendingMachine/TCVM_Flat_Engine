@@ -1,6 +1,6 @@
 // string.hpp
 // a hashed-string. Used for GUID's since it takes up no memory, can be compared quickly, and is easy to store
-#pragma once
+#pragma once
 #include "../flatEngineExport.hpp"
 #include "../debug/logger.hpp"
 #include "../typeDefines.hpp"

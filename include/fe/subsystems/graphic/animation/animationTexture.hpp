@@ -1,6 +1,6 @@
 // animationTexture.hpp
 // an object that holds data relavent to animation textures
-#pragma once
+#pragma once
 #include "fe/flatEngineExport.hpp"
 #include "fe/math/Vector2.hpp"
 #include <utility>

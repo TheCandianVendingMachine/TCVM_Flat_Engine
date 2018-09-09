@@ -1,6 +1,6 @@
 // slider.hpp
 // A GUI control which allows for the user to slide the control and get the percentage slid
-#pragma once
+#pragma once
 #include "fe/flatEngineExport.hpp"
 #include "control.hpp"
 #include "fe/math/Vector2.hpp"

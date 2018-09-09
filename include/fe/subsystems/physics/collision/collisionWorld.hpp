@@ -1,6 +1,6 @@
 // collisionWorld.hpp
 // Represents the world the colliders live in
-#pragma once
+#pragma once
 #include "../../../flatEngineExport.hpp"
 #include "../../../typeDefines.hpp"
 #include "../../memory/poolAllocater.hpp"

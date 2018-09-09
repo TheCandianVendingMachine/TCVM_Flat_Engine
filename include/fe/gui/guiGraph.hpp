@@ -1,6 +1,6 @@
 // guiGraph.hpp
 // A scene graph for GUI elements
-#pragma once
+#pragma once
 #include "fe/flatEngineExport.hpp"
 #include "fe/subsystems/graphic/renderGraph.hpp"
 #include <vector>

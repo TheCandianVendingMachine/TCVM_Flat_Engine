@@ -1,6 +1,6 @@
 // camera.hpp
 // A camera in the game world
-#pragma once
+#pragma once
 #include "../../flatEngineExport.hpp"
 #include <SFML/Graphics/View.hpp>
 #include "../../math/Vector2.hpp"

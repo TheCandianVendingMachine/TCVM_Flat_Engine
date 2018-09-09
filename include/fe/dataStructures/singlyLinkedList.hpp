@@ -1,6 +1,6 @@
 // singlyLinkedList.hpp
 // A singly linked list data structure
-#pragma once
+#pragma once
 #include "../flatEngineExport.hpp"
 
 namespace fe

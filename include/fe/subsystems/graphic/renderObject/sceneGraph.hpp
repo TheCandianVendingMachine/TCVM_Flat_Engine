@@ -1,6 +1,6 @@
 // sceneGraph.hpp
 // a graph for the scene. Contains all objects, and manages their positions
-#pragma once
+#pragma once
 #include "../../../flatEngineExport.hpp"
 #include "../../../typeDefines.hpp"
 #include "../../memory/poolAllocater.hpp"

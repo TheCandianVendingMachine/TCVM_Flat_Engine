@@ -1,6 +1,6 @@
 // text.hpp
 // A static text control. Does nothing but render text
-#pragma once
+#pragma once
 #include "fe/flatEngineExport.hpp"
 #include "control.hpp"
 #include "fe/subsystems/resourceManager/fontData.hpp"

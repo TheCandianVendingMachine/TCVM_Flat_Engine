@@ -1,6 +1,6 @@
 // localizationStorage.hpp
 // All text that is localized is stored here. Contains std::unordered_map with a string and a map containing languages/text
-#pragma once
+#pragma once
 #define COMPILE_FULL_STACK false
 
 #include "../flatEngineExport.hpp"

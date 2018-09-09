@@ -1,6 +1,6 @@
 // gameEvent.hpp
 // a struct containing message data
-#pragma once
+#pragma once
 #include "../../flatEngineExport.hpp"
 #include "../../typeDefines.hpp"
 

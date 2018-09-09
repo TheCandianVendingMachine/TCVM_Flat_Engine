@@ -1,6 +1,6 @@
 // matrix.hpp
 // A 2d matrix to allow for easy transformations
-#pragma once
+#pragma once
 #include "../flatEngineExport.hpp"
 #include "Vector2.hpp"
 #include <cstring>

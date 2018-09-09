@@ -1,6 +1,6 @@
 // splitString.hpp
 // splits a string into a vector
-#pragma once
+#pragma once
 #include "fe/flatEngineExport.hpp"
 
 #include <vector>

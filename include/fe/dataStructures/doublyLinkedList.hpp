@@ -1,6 +1,6 @@
 // doublyLinkedList.hpp
 // A doubly linked list data structure
-#pragma once
+#pragma once
 #include "../flatEngineExport.hpp"
 
 namespace fe

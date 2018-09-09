@@ -1,6 +1,6 @@
 // profilerData.hpp
 // The data which the profiler gained.
-#pragma once
+#pragma once
 #include "fe/flatEngineExport.hpp"
 #include "fe/time/time.hpp"
 #include "fe/typeDefines.hpp"

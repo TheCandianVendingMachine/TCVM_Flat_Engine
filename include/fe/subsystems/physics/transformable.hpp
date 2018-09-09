@@ -1,6 +1,6 @@
 // transformable.hpp
 // a class that will allow objects to be able to be moved when rendered
-#pragma once
+#pragma once
 #include "../../flatEngineExport.hpp"
 #include "../../math/matrix.hpp"
 #include "../../math/Vector2.hpp"

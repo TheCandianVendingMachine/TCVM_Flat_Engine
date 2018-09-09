@@ -1,7 +1,7 @@
 // serializerID
 // Allows the user to serialize data to a stream with IDs to
 // get and set data easily
-#pragma once
+#pragma once
 #include "../../flatEngineExport.hpp"
 #include "../../utilities.hpp"
 #include "../../debug/logger.hpp"

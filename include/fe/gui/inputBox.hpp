@@ -1,6 +1,6 @@
 // inputBox.hpp
 // A box that when selected the user can type into
-#pragma once
+#pragma once
 #include "fe/flatEngineExport.hpp"
 #include "fe/gui/control.hpp"
 #include "fe/gui/text.hpp"

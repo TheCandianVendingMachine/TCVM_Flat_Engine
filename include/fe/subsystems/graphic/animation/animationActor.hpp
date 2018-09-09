@@ -1,6 +1,6 @@
 // animationActor.hpp
 // Iterates through the animation. Requires you to inject a fe::renderObject to interate
-#pragma once
+#pragma once
 #include "fe/flatEngineExport.hpp"
 #include "fe/math/Vector2.hpp"
 #include "fe/time/time.hpp"

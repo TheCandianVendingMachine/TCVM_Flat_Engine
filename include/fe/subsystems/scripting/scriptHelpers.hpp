@@ -1,6 +1,6 @@
 // scriptHelpers.hpp
 // Helpers for common script functions
-#pragma once
+#pragma once
 #include "../../flatEngineExport.hpp"
 #include <string>
 #include <sol.hpp>

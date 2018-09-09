@@ -1,6 +1,6 @@
 // gameStateMachine.hpp
 // the FSM for the game states
-#pragma once
+#pragma once
 #include "../../flatEngineExport.hpp"
 #include "../memory/stackAllocater.hpp"
 #include <tuple>

@@ -1,6 +1,6 @@
 // baseEntityUtilities.hpp
 // utilities for entities to use in order to move or other such things
-#pragma once
+#pragma once
 #include <fe/flatEngineExport.hpp>
 #include <fe/math/Vector2.hpp>
 

@@ -1,6 +1,6 @@
 // renderer.hpp
 // A wrapper for rendering content with sf::RenderWindow. Takes in a sf::Drawable and draws
-#pragma once
+#pragma once
 #include "../../flatEngineExport.hpp"
 #include "../../math/Vector2.hpp"
 #include "../serializer/serializerID.hpp"

@@ -1,6 +1,6 @@
 // feAssert.hpp
 // defines a assert Macro to assert a value, and print a message through the logger
-#pragma once
+#pragma once
 #include "debug/logger.hpp"
 #include <assert.h>
 

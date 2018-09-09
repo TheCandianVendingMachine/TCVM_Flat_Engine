@@ -1,6 +1,6 @@
 // checkList.hpp
 // A button which allows multiple selections to be selected.
-#pragma once
+#pragma once
 #include "fe/flatEngineExport.hpp"
 #include "fe/gui/control.hpp"
 #include "fe/math/polygon2.hpp"

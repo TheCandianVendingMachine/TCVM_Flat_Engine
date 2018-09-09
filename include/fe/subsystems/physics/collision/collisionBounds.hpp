@@ -1,6 +1,6 @@
 // collisionBounds.hpp
 // A group of structs that represent different types of bounds
-#pragma once
+#pragma once
 #include "../../../flatEngineExport.hpp"
 #include "../../serializer/serializable.hpp"
 

@@ -1,6 +1,6 @@
 // node.hpp
 // AI node for pathfinding
-#pragma once
+#pragma once
 #include "../../flatEngineExport.hpp"
 #include "../serializer/serializable.hpp"
 #include "../../typeDefines.hpp"

@@ -1,6 +1,6 @@
 // dynamicMemoryAllocater.hpp
 // Allows for dynamically allocated memory. Will be used in FE_NEW.cpp to allocate for the engine
-#pragma once
+#pragma once
 #include "../../flatEngineExport.hpp"
 #include "../../typeDefines.hpp"
 #include "../../dataStructures/singlyLinkedList.hpp"

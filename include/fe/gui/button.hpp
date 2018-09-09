@@ -1,6 +1,6 @@
 // button.hpp
 // A basic button. When pressed an event is sent
-#pragma once
+#pragma once
 #include "fe/flatEngineExport.hpp"
 #include "control.hpp"
 #include "fe/typeDefines.hpp"

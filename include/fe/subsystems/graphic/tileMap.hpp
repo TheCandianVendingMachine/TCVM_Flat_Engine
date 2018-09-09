@@ -1,6 +1,6 @@
 // tileMap.hpp
 // a tile map. Allows the user to load a tileset and draw tiles
-#pragma once
+#pragma once
 #include "../../flatEngineExport.hpp"
 #include "../../objectManagement/str.hpp"
 #include "../../objectManagement/handleManager.hpp"

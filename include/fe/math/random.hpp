@@ -1,6 +1,6 @@
 // random.hpp
 // allows for easy randomization of items
-#pragma once
+#pragma once
 #include "../flatEngineExport.hpp"
 #include <random>
 
