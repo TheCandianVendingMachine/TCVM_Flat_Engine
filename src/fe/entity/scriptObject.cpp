@@ -1,6 +1,7 @@
 #include "fe/entity/scriptObject.hpp"
 #include "fe/entity/baseEntity.hpp"
 #include "fe/subsystems/physics/rigidBody.hpp"
+#include "fe/subsystems/graphic/renderObject/renderObject.hpp"
 
 fe::scriptObject::scriptObject(baseEntity *obj) :
     m_entity(obj)
@@ -84,6 +85,15 @@ fe::Vector2d fe::scriptObject::scriptObjectGetForce()
         if (m_entity->getRigidBody())
             {
                 return m_entity->getRigidBody()->getForce();
+            }
+        return fe::Vector2d();
+    }
+
+fe::Vector2d fe::scriptObject::scriptObjectGetDirection()
+    {
+        if (m_entity->getRigidBody())
+            {
+                return m_entity->getRigidBody()->getDirection();
             }
         return fe::Vector2d();
     }

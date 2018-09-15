@@ -2,9 +2,11 @@
 // a group of threads that takes in jobs, and works on them
 #pragma once
 #include <deque>
+#include <queue>
 #include <thread>
 #include <utility>
 #include <chrono>
+#include <mutex>
 #include "threadJob.hpp"
 
 namespace fe
@@ -16,7 +18,9 @@ namespace fe
                     struct threadObj
                         {
                             std::thread m_thread;
+                            std::mutex m_jobLock;
                             std::deque<threadJob*> m_jobs;
+                            std::queue<threadJob*> m_queuedJobs;
                             unsigned int m_jobCount;
 
                             bool m_running;
@@ -53,9 +57,10 @@ namespace fe
         template<unsigned int threadCount>
         void threadPool<threadCount>::addJob(threadJob &job)
             {
-                if (!job.m_active) return;
+                if (job.m_active) return;
+                job.m_active = true;
                 threadObj *selected = &m_pool[0];
-                for (unsigned int i = 1; i < 4; i++)
+                for (unsigned int i = 1; i < threadCount; i++)
                     {
                         if (m_pool[i].m_jobCount < selected->m_jobCount)
                             {
@@ -91,7 +96,9 @@ namespace fe
         template<unsigned int threadCount>
         void threadPool<threadCount>::threadObj::runJob(threadJob *newJob)
             {
-                m_jobs.push_back(newJob);
+                m_jobLock.lock();
+                m_queuedJobs.push(newJob);
+                m_jobLock.unlock();
                 m_jobCount++;
             }
 
@@ -101,10 +108,21 @@ namespace fe
                 while (m_running)
                     {
                         // wait for a job
-                        while (m_jobs.empty()) 
+                        while (m_jobs.empty() && m_queuedJobs.empty()) 
                             {
                                 if (!m_running) return; 
                                 std::this_thread::sleep_for(std::chrono::microseconds(1)); 
+                            }
+
+                        if (!m_queuedJobs.empty())
+                            {
+                                m_jobLock.lock();
+                                while (!m_queuedJobs.empty())
+                                    {
+                                        m_jobs.push_back(m_queuedJobs.front());
+                                        m_queuedJobs.pop();
+                                    }
+                                m_jobLock.unlock();
                             }
 
                         for (auto it = m_jobs.begin(); it != m_jobs.end();)
@@ -112,6 +130,7 @@ namespace fe
                                 auto job = (*it);
                                 if (job->execute())
                                     {
+                                        job->m_active = false;
                                         job->m_done = true;
                                         it = m_jobs.erase(it);
                                     }
@@ -119,7 +138,7 @@ namespace fe
                                     {
                                         ++it;
                                     }
-                            }          
+                            }    
                     }
             }
     }

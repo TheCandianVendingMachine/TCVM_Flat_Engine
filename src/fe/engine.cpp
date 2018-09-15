@@ -263,6 +263,7 @@ end)");
             "getNormalForce", &scriptObject::scriptObjectGetNormalForce,
             "getForce", &scriptObject::scriptObjectGetForce,
             "getVelocity", &scriptObject::scriptObjectGetVelocity,
+            "getDirection", &scriptObject::scriptObjectGetDirection,
             "setColour", &scriptObject::scriptObjectSetColour,
             "moveToPosition", &scriptObject::scriptObjectMoveToPosition,
             "getSlowdownDistance", &scriptObject::scriptObjectGetSlowdownDistance,

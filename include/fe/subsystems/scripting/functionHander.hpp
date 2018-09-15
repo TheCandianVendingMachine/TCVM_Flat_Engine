@@ -25,7 +25,7 @@ namespace fe
                     FLAT_ENGINE_API functionHandler(sol::state &state);
 
                     template<typename ...Functions, typename T>
-                    void registerCPPObjectFunction(const std::string &functionName, T &objRef, Functions &&...funcs);
+                    void registerCPPObjectFunction(const std::string &functionName, T *objRef, Functions &&...funcs);
                     template<typename ...Functions>
                     void registerCPPFunction(const std::string &functionName, Functions &&...funcs);
 
@@ -42,7 +42,7 @@ namespace fe
             };
 
         template<typename ...Functions, typename T>
-        void functionHandler::registerCPPObjectFunction(const std::string &functionName, T &objRef, Functions &&...funcs)
+        void functionHandler::registerCPPObjectFunction(const std::string &functionName, T *objRef, Functions &&...funcs)
             {
                 m_state.set_function(functionName, fe::imp::getFunctionOverload(std::forward<Functions>(funcs)...), objRef);
             }
