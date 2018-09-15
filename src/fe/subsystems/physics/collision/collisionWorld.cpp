@@ -12,6 +12,7 @@
 void fe::collisionWorld::handleCollision(fe::collider *a, fe::collider *b)
     {
         FE_ENGINE_PROFILE("collision_world", "collision_check");
+        if (a == b) return;
         fe::AABB *first = static_cast<fe::AABB*>(&a->m_aabb);
         fe::AABB *second = static_cast<fe::AABB*>(&b->m_aabb);
 
@@ -152,12 +153,6 @@ void fe::collisionWorld::handleCollision(fe::collider *a, fe::collider *b)
                 m_collisionPairIndex += 2;
             }
         FE_END_PROFILE;
-    }
-
-void fe::collisionWorld::handleCollision(void *leftCollider, void *rightCollider)
-    {
-        if (leftCollider == rightCollider) return;
-        handleCollision(static_cast<fe::collider*>(leftCollider), static_cast<fe::collider*>(rightCollider));
     }
 
 void fe::collisionWorld::handleCollision(void *collider, fe::str event)
@@ -322,7 +317,7 @@ void fe::collisionWorld::handleCollisions(const fe::broadphaseAbstract *broadpha
                         auto body = m_collisionBodies.at(i);
                         if (!m_collisionBodies.at(i)->m_static && m_collisionBodies.at(i)->m_moved && m_collisionBodies.at(i)->m_enabled)
                             {
-                                broadphase->colliderAABB(m_collisionBodies.at(i)->m_aabb, [this, i] (void *otherCollider) { handleCollision(m_collisionBodies.at(i), otherCollider); });
+                                broadphase->colliderAABB(m_collisionBodies.at(i)->m_aabb, [this, i] (fe::collider *otherCollider) { handleCollision(m_collisionBodies.at(i), otherCollider); });
                             }
                         m_collisionBodies.at(i)->m_moved = false;
                     }
@@ -355,7 +350,7 @@ void fe::collisionWorld::handleCollisions(const fe::broadphaseAbstract *broadpha
                         auto body = m_collisionBodies.at(i);
                         if (!m_collisionBodies.at(i)->m_static && m_collisionBodies.at(i)->m_moved && m_collisionBodies.at(i)->m_enabled)
                             {
-                                auto func = [this, i](void *otherCollider) { handleCollision(m_collisionBodies.at(i), otherCollider); };
+                                auto func = [this, i](fe::collider *otherCollider) { handleCollision(m_collisionBodies.at(i), otherCollider); };
                                 broadphaseDynamic->colliderAABB(m_collisionBodies.at(i)->m_aabb, func);
                                 broadphaseStatic->colliderAABB(m_collisionBodies.at(i)->m_aabb, func);
                                 m_collisionBodies.at(i)->m_moved = false;

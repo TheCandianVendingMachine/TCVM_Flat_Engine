@@ -31,7 +31,6 @@ namespace fe
                     unsigned int m_collisionPairIndex;
 
                     FLAT_ENGINE_API void handleCollision(fe::collider *a, fe::collider *b);
-                    FLAT_ENGINE_API void handleCollision(void *leftCollider, void *rightCollider);
                     FLAT_ENGINE_API void handleCollision(void *collider, fe::str event); // point collision
 
                     FLAT_ENGINE_API void cullCollisionPairs();

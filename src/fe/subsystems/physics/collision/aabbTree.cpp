@@ -1,5 +1,6 @@
 #include "fe/subsystems/physics/collision/aabbTree.hpp"
 #include "fe/subsystems/physics/collision/collisionBody.hpp"
+#include "fe/subsystems/physics/collision/aabbTests.hpp"
 
 #include "fe/debug/debugDraw.hpp"
 #include "fe/debug/profiler.hpp"
@@ -355,7 +356,7 @@ void *fe::aabbTree::pointCollideBranch(float x, float y, int branch) const
             {
                 return nullptr;
             }
-        if (m_nodes[branch].m_fatAABB.contains(x, y))
+        if (fe::contains(m_nodes[branch].m_fatAABB, x, y))
             {
                 if (m_nodes[branch].isLeaf())
                     {
@@ -369,22 +370,6 @@ void *fe::aabbTree::pointCollideBranch(float x, float y, int branch) const
                     }
             }
         return nullptr;
-    }
-
-void fe::aabbTree::AABBCollideBranch(fe::AABB &testAABB, std::function<void(void*)> callback, int branch) const
-    {
-        if (m_nodes[branch].m_fatAABB.intersects(testAABB))
-            {
-                if (m_nodes[branch].isLeaf())
-                    {
-                        callback(m_nodes[branch].m_userData);
-                    }
-                else
-                    {
-                        AABBCollideBranch(testAABB, callback, m_nodes[branch].m_left);
-                        AABBCollideBranch(testAABB, callback, m_nodes[branch].m_right);
-                    }
-            }
     }
 
 fe::aabbTree::aabbTree() : m_base(treeNode::Null), m_fatness(5.f)
@@ -451,7 +436,7 @@ void fe::aabbTree::update(fe::collider *collider)
         FE_PROFILE("aabb_tree", "update_collider");
         int nodeIndex = int(collider->m_userData);
 
-        if (!m_nodes[nodeIndex].m_fatAABB.contains(collider->m_aabb))
+        if (!fe::contains(m_nodes[nodeIndex].m_fatAABB, collider->m_aabb))
             {
                 remove(nodeIndex);
                 treeNode *currentNode = &m_nodes[nodeIndex];
@@ -464,9 +449,9 @@ void fe::aabbTree::update(fe::collider *collider)
         FE_END_PROFILE;
     }
 
-void fe::aabbTree::colliderAABB(fe::AABB &testAABB, std::function<void(void*)> callback) const
+void fe::aabbTree::colliderAABB(fe::AABB &testAABB, std::function<void(fe::collider*)> callback) const
     {
-        void *colliderCallbacks[FE_MAX_GAME_OBJECTS];
+        fe::collider *colliderCallbacks[FE_MAX_GAME_OBJECTS];
         int colliderCallbackIndex = 0;
         FE_ENGINE_PROFILE("aabb_tree", "test_aabb_against_tree");
         int stack[(FE_MAX_GAME_OBJECTS * 2) - 1];
@@ -478,7 +463,7 @@ void fe::aabbTree::colliderAABB(fe::AABB &testAABB, std::function<void(void*)> c
                 iteration++;
                 int currentNode = stack[stackTop - 1];
                 stackTop--;
-                if (currentNode >= 0 && m_nodes[currentNode].m_fatAABB.intersects(testAABB))
+                if (currentNode >= 0 && fe::intersects(m_nodes[currentNode].m_fatAABB, testAABB))
                     {
                         if (m_nodes[currentNode].isLeaf())
                             {
@@ -511,6 +496,65 @@ void *fe::aabbTree::colliderAtPoint(float x, float y) const
 
 fe::raycastResult fe::aabbTree::raycast(float x, float y, float dirX, float dirY) const
     {
+        FE_ENGINE_PROFILE("aabb_tree", "test_ray_against_tree");
+        int stack[(FE_MAX_GAME_OBJECTS * 2) - 1];
+        int stackTop = 0;
+        stack[stackTop++] = m_base;
+        int iteration = 0;
+        while (stackTop > 0)
+            {
+                iteration++;
+                int currentNode = stack[stackTop - 1];
+                stackTop--;
+                fe::raycastResult result = fe::rayIntersects(m_nodes[currentNode].m_fatAABB, x, y, dirX, dirY);
+                if (currentNode >= 0 && result.m_hit)
+                    {
+                        if (m_nodes[currentNode].isLeaf())
+                            {
+                                return fe::rayIntersects(m_nodes[currentNode].m_userData->m_aabb, x, y, dirX, dirY);
+                            }
+                        else
+                            {
+                                stack[stackTop++] = m_nodes[currentNode].m_left;
+                                stack[stackTop++] = m_nodes[currentNode].m_right;
+                            }
+                    }
+
+            }
+        FE_END_PROFILE;
+
+        return fe::raycastResult();
+    }
+
+fe::raycastResult fe::aabbTree::linecast(float x0, float y0, float x1, float y1) const
+    {
+        FE_ENGINE_PROFILE("aabb_tree", "test_line_against_tree");
+        int stack[(FE_MAX_GAME_OBJECTS * 2) - 1];
+        int stackTop = 0;
+        stack[stackTop++] = m_base;
+        int iteration = 0;
+        while (stackTop > 0)
+            {
+                iteration++;
+                int currentNode = stack[stackTop - 1];
+                stackTop--;
+                fe::raycastResult result = fe::lineIntersects(m_nodes[currentNode].m_fatAABB, x0, y0, x1, y1);
+                if (currentNode >= 0 && result.m_hit)
+                    {
+                        if (m_nodes[currentNode].isLeaf())
+                            {
+                                return fe::lineIntersects(m_nodes[currentNode].m_userData->m_aabb, x0, y0, x1, y1);
+                            }
+                        else
+                            {
+                                stack[stackTop++] = m_nodes[currentNode].m_left;
+                                stack[stackTop++] = m_nodes[currentNode].m_right;
+                            }
+                    }
+
+            }
+        FE_END_PROFILE;
+
         return fe::raycastResult();
     }
 

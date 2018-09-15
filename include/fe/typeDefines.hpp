@@ -70,4 +70,6 @@ namespace fe
             using uIntPtr = uInt32;
         #endif
 
+        static constexpr float FE_EPSILON = 0.0001f;
+
     }

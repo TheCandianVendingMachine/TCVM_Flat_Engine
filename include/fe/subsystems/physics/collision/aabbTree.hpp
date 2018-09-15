@@ -30,7 +30,7 @@ namespace fe
                                     int m_right = -1;
                                 };
 
-                            void *m_userData;
+                            fe::collider *m_userData;
 
                             int m_height;
 
@@ -52,7 +52,6 @@ namespace fe
                     FLAT_ENGINE_API int balance(int node);
 
                     FLAT_ENGINE_API void *pointCollideBranch(float x, float y, int branch) const;
-                    [[deprecated("Now using iterative version")]] FLAT_ENGINE_API void AABBCollideBranch(fe::AABB &testAABB, std::function<void(void*)> callback, int branch) const;
 
                     friend class collisionWorld;
 
@@ -70,13 +69,15 @@ namespace fe
                     // Updates all colliders in the broadphase algorithm
                     FLAT_ENGINE_API void update(fe::collider *collider);
 
-                    FLAT_ENGINE_API void colliderAABB(fe::AABB &testAABB, std::function<void(void*)> callback) const;
+                    FLAT_ENGINE_API void colliderAABB(fe::AABB &testAABB, std::function<void(fe::collider*)> callback) const;
 
                     // Returns the collider that is at the point
                     FLAT_ENGINE_API void *colliderAtPoint(float x, float y) const;
 
                     // Casts a ray and tests against the broadphase algorithm
                     FLAT_ENGINE_API fe::raycastResult raycast(float x, float y, float dirX, float dirY) const;
+
+                    FLAT_ENGINE_API fe::raycastResult linecast(float x0, float y0, float x1, float y1) const;
 
                     FLAT_ENGINE_API void debugDraw();
 

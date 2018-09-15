@@ -31,7 +31,7 @@ namespace fe
                     virtual void update(fe::collider *collider) = 0;
 
                     // Returns user data containing what is needed to resolve the query
-                    virtual void colliderAABB(fe::AABB &testAABB, std::function<void(void*)> callback) const = 0;
+                    virtual void colliderAABB(fe::AABB &testAABB, std::function<void(fe::collider*)> callback) const = 0;
 
                     // Returns the collider that is at the point
                     virtual void *colliderAtPoint(float x, float y) const = 0;
@@ -43,9 +43,16 @@ namespace fe
                     // Casts a ray and tests against the broadphase algorithm
                     virtual raycastResult raycast(float x, float y, float dirX, float dirY) const = 0;
                     // Casts a ray and tests against the broadphase algorithm
-                    inline raycastResult raycast(fe::Vector2d &origin, fe::Vector2d &direction) const { return raycast(origin.x, origin.y, direction.x, direction.y); }
+                    inline raycastResult raycast(const fe::Vector2d &origin, const fe::Vector2d &direction) const { return raycast(origin.x, origin.y, direction.x, direction.y); }
                     // Casts a ray and tests against the broadphase algorithm
-                    inline raycastResult raycast(fe::lightVector2d &origin, fe::lightVector2d &direction) const { return raycast(origin.x, origin.y, direction.x, direction.y); }
+                    inline raycastResult raycast(const fe::lightVector2d &origin, const fe::lightVector2d &direction) const { return raycast(origin.x, origin.y, direction.x, direction.y); }
+
+                    // Casts a ray and tests against the broadphase algorithm
+                    virtual raycastResult linecast(float x0, float y0, float x1, float y1) const = 0;
+                    // Casts a ray and tests against the broadphase algorithm
+                    inline raycastResult linecast(const fe::Vector2d &start, const fe::Vector2d &end) const { return linecast(start.x, start.y, end.x, end.y); }
+                    // Casts a ray and tests against the broadphase algorithm
+                    inline raycastResult linecast(const fe::lightVector2d &start, const fe::lightVector2d &end) const { return linecast(start.x, start.y, end.x, end.y); }
 
                     virtual void debugDraw() {}
 
