@@ -41,18 +41,18 @@ namespace fe
                     inline void *colliderAtPoint(const fe::lightVector2d &point) const { return colliderAtPoint(point.x, point.y); }
 
                     // Casts a ray and tests against the broadphase algorithm
-                    virtual raycastResult raycast(float x, float y, float dirX, float dirY) const = 0;
+                    virtual raycastResult raycast(float x, float y, float dirX, float dirY, fe::str ignoreGroup) const = 0;
                     // Casts a ray and tests against the broadphase algorithm
-                    inline raycastResult raycast(const fe::Vector2d &origin, const fe::Vector2d &direction) const { return raycast(origin.x, origin.y, direction.x, direction.y); }
+                    inline raycastResult raycast(const fe::Vector2d &origin, const fe::Vector2d &direction, fe::str ignoreGroup) const { return raycast(origin.x, origin.y, direction.x, direction.y, ignoreGroup); }
                     // Casts a ray and tests against the broadphase algorithm
-                    inline raycastResult raycast(const fe::lightVector2d &origin, const fe::lightVector2d &direction) const { return raycast(origin.x, origin.y, direction.x, direction.y); }
+                    inline raycastResult raycast(const fe::lightVector2d &origin, const fe::lightVector2d &direction, fe::str ignoreGroup) const { return raycast(origin.x, origin.y, direction.x, direction.y, ignoreGroup); }
 
                     // Casts a ray and tests against the broadphase algorithm
-                    virtual raycastResult linecast(float x0, float y0, float x1, float y1) const = 0;
+                    virtual raycastResult linecast(float x0, float y0, float x1, float y1, fe::str ignoreGroup) const = 0;
                     // Casts a ray and tests against the broadphase algorithm
-                    inline raycastResult linecast(const fe::Vector2d &start, const fe::Vector2d &end) const { return linecast(start.x, start.y, end.x, end.y); }
+                    inline raycastResult linecast(const fe::Vector2d &start, const fe::Vector2d &end, fe::str ignoreGroup) const { return linecast(start.x, start.y, end.x, end.y, ignoreGroup); }
                     // Casts a ray and tests against the broadphase algorithm
-                    inline raycastResult linecast(const fe::lightVector2d &start, const fe::lightVector2d &end) const { return linecast(start.x, start.y, end.x, end.y); }
+                    inline raycastResult linecast(const fe::lightVector2d &start, const fe::lightVector2d &end, fe::str ignoreGroup) const { return linecast(start.x, start.y, end.x, end.y, ignoreGroup); }
 
                     virtual void debugDraw() {}
 

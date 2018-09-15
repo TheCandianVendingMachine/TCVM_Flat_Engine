@@ -75,9 +75,9 @@ namespace fe
                     FLAT_ENGINE_API void *colliderAtPoint(float x, float y) const;
 
                     // Casts a ray and tests against the broadphase algorithm
-                    FLAT_ENGINE_API fe::raycastResult raycast(float x, float y, float dirX, float dirY) const;
+                    FLAT_ENGINE_API fe::raycastResult raycast(float x, float y, float dirX, float dirY, fe::str ignoreGroup) const;
 
-                    FLAT_ENGINE_API fe::raycastResult linecast(float x0, float y0, float x1, float y1) const;
+                    FLAT_ENGINE_API fe::raycastResult linecast(float x0, float y0, float x1, float y1, fe::str ignoreGroup) const;
 
                     FLAT_ENGINE_API void debugDraw();
 

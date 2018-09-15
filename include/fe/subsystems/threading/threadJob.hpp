@@ -10,8 +10,8 @@ namespace fe
                 // Runs a function that the thread executes
                 // If this returns false, the thread will run again
                 virtual bool execute() = 0;
-                bool m_done;
-                bool m_active;
+                bool m_done = false;
+                bool m_active = false;
             };
 
         struct threadFunction : threadJob

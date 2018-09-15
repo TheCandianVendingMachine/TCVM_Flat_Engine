@@ -494,7 +494,7 @@ void *fe::aabbTree::colliderAtPoint(float x, float y) const
         return static_cast<fe::aabbTree::treeNode*>(branch)->m_userData;
     }
 
-fe::raycastResult fe::aabbTree::raycast(float x, float y, float dirX, float dirY) const
+fe::raycastResult fe::aabbTree::raycast(float x, float y, float dirX, float dirY, fe::str ignoreGroup) const
     {
         FE_ENGINE_PROFILE("aabb_tree", "test_ray_against_tree");
         int stack[(FE_MAX_GAME_OBJECTS * 2) - 1];
@@ -511,7 +511,12 @@ fe::raycastResult fe::aabbTree::raycast(float x, float y, float dirX, float dirY
                     {
                         if (m_nodes[currentNode].isLeaf())
                             {
-                                return fe::rayIntersects(m_nodes[currentNode].m_userData->m_aabb, x, y, dirX, dirY);
+                                if (m_nodes[currentNode].m_userData->m_collisionGroup != ignoreGroup)
+                                    {
+                                        fe::raycastResult ray = fe::lineIntersects(m_nodes[currentNode].m_userData->m_aabb, x, y, dirX, dirY);
+                                        ray.m_colliderHit = m_nodes[currentNode].m_userData;
+                                        return ray;
+                                    }
                             }
                         else
                             {
@@ -526,7 +531,7 @@ fe::raycastResult fe::aabbTree::raycast(float x, float y, float dirX, float dirY
         return fe::raycastResult();
     }
 
-fe::raycastResult fe::aabbTree::linecast(float x0, float y0, float x1, float y1) const
+fe::raycastResult fe::aabbTree::linecast(float x0, float y0, float x1, float y1, fe::str ignoreGroup) const
     {
         FE_ENGINE_PROFILE("aabb_tree", "test_line_against_tree");
         int stack[(FE_MAX_GAME_OBJECTS * 2) - 1];
@@ -543,7 +548,12 @@ fe::raycastResult fe::aabbTree::linecast(float x0, float y0, float x1, float y1)
                     {
                         if (m_nodes[currentNode].isLeaf())
                             {
-                                return fe::lineIntersects(m_nodes[currentNode].m_userData->m_aabb, x0, y0, x1, y1);
+                                if (m_nodes[currentNode].m_userData->m_collisionGroup != ignoreGroup)
+                                    {
+                                        fe::raycastResult ray = fe::lineIntersects(m_nodes[currentNode].m_userData->m_aabb, x, y, dirX, dirY);
+                                        ray.m_colliderHit = m_nodes[currentNode].m_userData;
+                                        return ray;
+                                    }
                             }
                         else
                             {
