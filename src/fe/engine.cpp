@@ -235,13 +235,13 @@ end)");
 
         // Register Objects
         m_scriptManager->getUserTypeHandler().addCustomType<fe::Vector2d>(
-            "lightVector2",
+            "vector2",
             "x", &Vector2d::x,
             "y", &Vector2d::y
         );
 
         m_scriptManager->getUserTypeHandler().addCustomType<fe::lightVector2d>(
-            "Vector2",
+            "lightVector2",
             "x", &lightVector2d::x,
             "y", &lightVector2d::y
         );
@@ -270,8 +270,6 @@ end)");
             "hasArrived", &scriptObject::scriptObjectHasArrived,
             "isTargeted", &scriptObject::scriptObjectIsTargeted
         );
-
-        m_scriptManager->getUserTypeHandler().addCustomType<componentBase>("entityComponent");
     }
 
 fe::engine::engine(const float updateRate) :

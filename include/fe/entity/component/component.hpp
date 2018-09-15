@@ -20,6 +20,7 @@ namespace fe
                     fe::luaFunctionReference *m_onRemove;
                     fe::luaFunctionReference *m_update;
                     fe::luaFunctionReference *m_fixedUpdate;
+                    fe::baseEntity *m_owner;
 
                     bool m_initialized;
 
@@ -28,6 +29,8 @@ namespace fe
                 public:
                     FLAT_ENGINE_API bool isInitialized() const;
                     FLAT_ENGINE_API void engineInitLuaValues(sol::table table, const char *componentName);
+
+                    FLAT_ENGINE_API fe::scriptObject *getOwner();
 
                     virtual void engineOnAdd(fe::baseEntity *ent) {}
                     virtual void engineOnRemove(fe::baseEntity *ent) {}
@@ -62,6 +65,7 @@ namespace fe
                     {
                         m_onAdd->call(static_cast<TObj*>(this), static_cast<fe::scriptObject*>(ent));
                     }
+                m_owner = ent;
                 onAdd(ent);
             }
 
@@ -99,7 +103,9 @@ namespace fe
         template<typename ...Args>
         inline component<TObj>::component(const std::string &name, Args &&...args)
             {
-                fe::engine::get().getScriptManager().getUserTypeHandler().addCustomType<TObj>(name, sol::base_classes, sol::bases<component>(), std::forward<Args>(args)...);
+                fe::engine::get().getScriptManager().getUserTypeHandler().addCustomType<TObj>(name, sol::base_classes, sol::bases<component>(),
+                    "getOwner", &TObj::getOwner,
+                std::forward<Args>(args)...);
             }
     }
 

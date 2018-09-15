@@ -30,3 +30,8 @@ void fe::componentBase::engineInitLuaValues(sol::table table, const char *compon
 
         initLuaValues(table, componentName);
     }
+
+fe::scriptObject *fe::componentBase::getOwner()
+    {
+        return m_owner;
+    }

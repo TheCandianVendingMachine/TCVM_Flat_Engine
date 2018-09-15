@@ -550,7 +550,7 @@ fe::raycastResult fe::aabbTree::linecast(float x0, float y0, float x1, float y1,
                             {
                                 if (m_nodes[currentNode].m_userData->m_collisionGroup != ignoreGroup)
                                     {
-                                        fe::raycastResult ray = fe::lineIntersects(m_nodes[currentNode].m_userData->m_aabb, x, y, dirX, dirY);
+                                        fe::raycastResult ray = fe::lineIntersects(m_nodes[currentNode].m_userData->m_aabb, x0, y0, x1, y1);
                                         ray.m_colliderHit = m_nodes[currentNode].m_userData;
                                         return ray;
                                     }

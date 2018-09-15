@@ -10,14 +10,14 @@ namespace fe
         namespace imp
             {
                 template<typename Function>
-                decltype(auto) getFunctionOverload(Function &func);
+                Function &getFunctionOverload(Function &&func);
                 template<typename ...Functions>
                 decltype(auto) getFunctionOverload(Functions &&...funcs);
             }
     }
 
 template<typename Function>
-decltype(auto) fe::imp::getFunctionOverload(Function &func)
+Function &fe::imp::getFunctionOverload(Function &&func)
     {
         return func;
     }

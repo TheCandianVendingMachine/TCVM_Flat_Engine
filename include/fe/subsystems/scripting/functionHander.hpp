@@ -24,13 +24,8 @@ namespace fe
                 public:
                     FLAT_ENGINE_API functionHandler(sol::state &state);
 
-                    template<typename Function, typename T>
-                    void registerCPPObjectFunction(const std::string &functionName, T objRef, Function &func);
                     template<typename ...Functions, typename T>
-                    void registerCPPObjectFunction(const std::string &functionName, T objRef, Functions &&...funcs);
-
-                    template<typename Function>
-                    void registerCPPFunction(const std::string &functionName, Function &func);
+                    void registerCPPObjectFunction(const std::string &functionName, T &objRef, Functions &&...funcs);
                     template<typename ...Functions>
                     void registerCPPFunction(const std::string &functionName, Functions &&...funcs);
 
@@ -46,22 +41,10 @@ namespace fe
 
             };
 
-        template<typename Function, typename T>
-        void functionHandler::registerCPPObjectFunction(const std::string &functionName, T objRef, Function &func)
-            {
-                m_state.set_function(functionName, fe::imp::getFunctionOverload(func), objRef);
-            }
-
         template<typename ...Functions, typename T>
-        void functionHandler::registerCPPObjectFunction(const std::string &functionName, T objRef, Functions &&...funcs)
+        void functionHandler::registerCPPObjectFunction(const std::string &functionName, T &objRef, Functions &&...funcs)
             {
                 m_state.set_function(functionName, fe::imp::getFunctionOverload(std::forward<Functions>(funcs)...), objRef);
-            }
-
-        template<typename Function>
-        void functionHandler::registerCPPFunction(const std::string &functionName, Function &func)
-            {
-                m_state.set_function(functionName, fe::imp::getFunctionOverload(func));
             }
 
         template<typename ...Functions>
