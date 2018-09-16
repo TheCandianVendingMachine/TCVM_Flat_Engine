@@ -9,28 +9,23 @@ void fe::particleBatch::reset(unsigned int size)
 
 void fe::particleBatch::update(unsigned int index, float x, float y, float radius, sf::Color colour)
     {
-        if ((index * 4) >= m_verticies.size())
-            {
-                m_verticies.resize((index + 1) * 4);
-            }
-
-        m_verticies[(index * 4) + 0].position.x = x - radius;
-        m_verticies[(index * 4) + 0].position.y = y - radius;
+        m_verticies.data()[(index * 4) + 0].position.x = x - radius;
+        m_verticies.data()[(index * 4) + 0].position.y = y - radius;
         
-        m_verticies[(index * 4) + 1].position.x = x + radius;
-        m_verticies[(index * 4) + 1].position.y = y - radius;
+        m_verticies.data()[(index * 4) + 1].position.x = x + radius;
+        m_verticies.data()[(index * 4) + 1].position.y = y - radius;
         
-        m_verticies[(index * 4) + 2].position.x = x + radius;
-        m_verticies[(index * 4) + 2].position.y = y + radius;
+        m_verticies.data()[(index * 4) + 2].position.x = x + radius;
+        m_verticies.data()[(index * 4) + 2].position.y = y + radius;
 
-        m_verticies[(index * 4) + 3].position.x = x - radius;
-        m_verticies[(index * 4) + 3].position.y = y + radius;
+        m_verticies.data()[(index * 4) + 3].position.x = x - radius;
+        m_verticies.data()[(index * 4) + 3].position.y = y + radius;
 
 
-        m_verticies[(index * 4) + 0].color = colour;
-        m_verticies[(index * 4) + 1].color = colour;
-        m_verticies[(index * 4) + 2].color = colour;
-        m_verticies[(index * 4) + 3].color = colour;
+        m_verticies.data()[(index * 4) + 0].color = colour;
+        m_verticies.data()[(index * 4) + 1].color = colour;
+        m_verticies.data()[(index * 4) + 2].color = colour;
+        m_verticies.data()[(index * 4) + 3].color = colour;
 
         m_maxIndex = std::max(m_maxIndex, index);
     }

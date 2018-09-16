@@ -44,7 +44,6 @@ namespace fe
                     struct particleCollisionData
                         {
                             particle m_particle; // actual particle index
-                            unsigned int m_size = 0; // how many indicies until you hit the end
                             bool m_collider = false; // whether or not this is the one being tested
 
                             particleCollisionData(particle p) : m_particle(p) {}
@@ -73,7 +72,6 @@ namespace fe
 
                     fe::particleBatch m_batch;
 
-                    FLAT_ENGINE_API void determinePossibleCollisions(particle particle, particleNode *node, const fe::circle *boundsData, const unsigned int *collisionParticlesData);
                     FLAT_ENGINE_API void sortParticles(const fe::circle *boundsData, const unsigned int *collisionParticlesData);
                     FLAT_ENGINE_API void broadphase(const unsigned int *collisionParticlesData, const int *collisionGroupData, const fe::circle *boundsData);
 
