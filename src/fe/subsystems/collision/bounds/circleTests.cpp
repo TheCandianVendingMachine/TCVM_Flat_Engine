@@ -125,5 +125,5 @@ fe::Vector2d fe::closestPoint(const fe::circle &a, float x, float y)
         fe::Vector2d pc = point - center;
 
         // c + (r / ||p - c||) * (p - c)
-        return center + ((a.m_radius / pc.magnitude()) * pc);
+        return center + (pc * (a.m_radius / pc.magnitude()));
     }
