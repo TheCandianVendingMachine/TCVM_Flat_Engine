@@ -1,14 +1,14 @@
 // collisionWorld.hpp
 // Represents the world the colliders live in
 #pragma once
-#include "../../../flatEngineExport.hpp"
-#include "../../../typeDefines.hpp"
-#include "../../memory/poolAllocater.hpp"
-#include "../../threading/threadJob.hpp"
+#include "fe/flatEngineExport.hpp"
+#include "fe/typeDefines.hpp"
+#include "fe/subsystems/memory/poolAllocater.hpp"
+#include "fe/subsystems/threading/threadJob.hpp"
 #include "collisionBody.hpp"
 #include "collisionData.hpp"
 #include "broadphaseAbstract.hpp"
-#include "../../../math/Vector2.hpp"
+#include "fe/math/Vector2.hpp"
 
 namespace fe
     {

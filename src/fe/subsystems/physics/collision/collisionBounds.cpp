@@ -1,4 +1,4 @@
-#include "fe/subsystems/physics/collision/collisionBounds.hpp"
+#include "fe/subsystems/collision/collisionBounds.hpp"
 #include "fe/subsystems/serializer/serializerID.hpp"
 #include <algorithm>
 

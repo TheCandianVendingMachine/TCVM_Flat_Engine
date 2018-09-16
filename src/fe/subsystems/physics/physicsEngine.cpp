@@ -1,7 +1,7 @@
 #include "fe/subsystems/physics/physicsEngine.hpp"
 #include "fe/subsystems/messaging/gameEvent.hpp"
 #include "fe/subsystems/messaging/eventSender.hpp"
-#include "fe/subsystems/physics/collision/collisionBody.hpp"
+#include "fe/subsystems/collision/collisionBody.hpp"
 #include "fe/subsystems/threading/threadPool.hpp"
 #include "fe/typeDefines.hpp"
 #include "fe/math/Vector2.hpp"

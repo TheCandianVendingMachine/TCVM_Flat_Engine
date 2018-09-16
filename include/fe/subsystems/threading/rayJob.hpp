@@ -5,7 +5,7 @@
 #include "fe/subsystems/threading/threadJob.hpp"
 #include "fe/math/Vector2.hpp"
 #include "fe/objectManagement/str.hpp"
-#include "fe/subsystems/physics/collision/raycastResult.hpp"
+#include "fe/subsystems/collision/raycastResult.hpp"
 
 namespace fe
     {

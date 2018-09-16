@@ -1,5 +1,5 @@
-#include "fe/subsystems/physics/collision/collisionWorld.hpp"
-#include "fe/subsystems/physics/collision/aabbTree.hpp"
+#include "fe/subsystems/collision/collisionWorld.hpp"
+#include "fe/subsystems/collision/aabbTree.hpp"
 #include "fe/debug/profiler.hpp"
 #include "fe/engine.hpp"
 #include "fe/subsystems/threading/threadPool.hpp"

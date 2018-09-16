@@ -1,14 +1,14 @@
 // broadphaseAbstract.hpp
 // An abstract class to serve for the collision engine's broadphase collision detection
 #pragma once
-#include "../../../flatEngineExport.hpp"
+#include "fe/flatEngineExport.hpp"
 
 #include <list>
 #include <utility>
 #include <functional>
 #include "raycastResult.hpp"
-#include "../../../math/Vector2.hpp"
-#include "../../../typeDefines.hpp"
+#include "fe/math/Vector2.hpp"
+#include "fe/typeDefines.hpp"
 
 namespace fe
     {

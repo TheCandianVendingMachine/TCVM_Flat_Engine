@@ -46,10 +46,10 @@ set(FE_SRC
         fe/subsystems/messaging/eventSender.cpp
         fe/subsystems/messaging/gameEvent.cpp
         fe/subsystems/parsing/xmlParsing.cpp
-        fe/subsystems/physics/collision/aabbTree.cpp
-        fe/subsystems/physics/collision/broadphaseAbstract.cpp
-        fe/subsystems/physics/collision/collisionBounds.cpp
-        fe/subsystems/physics/collision/collisionWorld.cpp
+        fe/subsystems/collision/aabbTree.cpp
+        fe/subsystems/collision/broadphaseAbstract.cpp
+        fe/subsystems/collision/collisionBounds.cpp
+        fe/subsystems/collision/collisionWorld.cpp
         fe/subsystems/physics/physicsEngine.cpp
         fe/subsystems/physics/rigidBody.cpp
         fe/subsystems/physics/transformable.cpp

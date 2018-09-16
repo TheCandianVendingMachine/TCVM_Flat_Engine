@@ -5,7 +5,7 @@
 #include "fe/subsystems/input/inputManager.hpp"
 #include "fe/subsystems/resourceManager/resourceManager.hpp"
 #include "fe/subsystems/physics/physicsEngine.hpp"
-#include "fe/subsystems/physics/collision/collisionWorld.hpp"
+#include "fe/subsystems/collision/collisionWorld.hpp"
 #include "fe/subsystems/threading/threadPool.hpp"
 #include "fe/subsystems/threading/threadJob.hpp"
 #include "fe/localization/localizationStorage.hpp"

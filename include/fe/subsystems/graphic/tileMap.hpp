@@ -1,13 +1,13 @@
 // tileMap.hpp
 // a tile map. Allows the user to load a tileset and draw tiles
 #pragma once
-#include "../../flatEngineExport.hpp"
-#include "../../objectManagement/str.hpp"
-#include "../../objectManagement/handleManager.hpp"
-#include "../../math/Vector2.hpp"
-#include "../serializer/serializable.hpp"
-#include "../../objectManagement/guid.hpp"
-#include "../physics/collision/collisionBody.hpp"
+#include "fe/flatEngineExport.hpp"
+#include "fe/objectManagement/str.hpp"
+#include "fe/objectManagement/handleManager.hpp"
+#include "fe/math/Vector2.hpp"
+#include "fe/subsystems/serializer/serializable.hpp"
+#include "fe/objectManagement/guid.hpp"
+#include "fe/subsystems/collision/collisionBody.hpp"
 #include <SFML/Graphics/VertexArray.hpp>
 #include <vector>
 

@@ -1,5 +1,5 @@
-#include "fe/subsystems/physics/collision/aabbTests.hpp"
-#include "fe/subsystems/physics/collision/collisionBounds.hpp"
+#include "fe/subsystems/collision/aabbTests.hpp"
+#include "fe/subsystems/collision/collisionBounds.hpp"
 #include "fe/typeDefines.hpp"
 #include "fe/math/Vector2.hpp"
 #include <limits>

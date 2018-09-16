@@ -4,7 +4,7 @@
 #include "fe/engine.hpp"
 #include "fe/subsystems/graphic/camera.hpp"
 #include "fe/subsystems/gameState/gameWorld.hpp"
-#include "fe/subsystems/physics/collision/broadphaseAbstract.hpp"
+#include "fe/subsystems/collision/broadphaseAbstract.hpp"
 #include "fe/gui/dialog.hpp"
 #include <algorithm>
 #include <SFML/Graphics/RenderWindow.hpp>

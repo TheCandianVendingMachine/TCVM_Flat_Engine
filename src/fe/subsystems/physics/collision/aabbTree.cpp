@@ -1,6 +1,6 @@
-#include "fe/subsystems/physics/collision/aabbTree.hpp"
-#include "fe/subsystems/physics/collision/collisionBody.hpp"
-#include "fe/subsystems/physics/collision/aabbTests.hpp"
+#include "fe/subsystems/collision/aabbTree.hpp"
+#include "fe/subsystems/collision/collisionBody.hpp"
+#include "fe/subsystems/collision/aabbTests.hpp"
 
 #include "fe/debug/debugDraw.hpp"
 #include "fe/debug/profiler.hpp"

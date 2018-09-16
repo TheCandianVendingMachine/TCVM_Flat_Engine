@@ -1,4 +1,4 @@
-#include "fe/subsystems/physics/collision/broadphaseAbstract.hpp"
+#include "fe/subsystems/collision/broadphaseAbstract.hpp"
 
 void fe::broadphaseAbstract::debugMode(bool value)
     {

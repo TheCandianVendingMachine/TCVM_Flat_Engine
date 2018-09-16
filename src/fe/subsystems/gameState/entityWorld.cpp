@@ -1,8 +1,8 @@
 #include "fe/subsystems/gameState/entityWorld.hpp"
 #include "fe/subsystems/gameState/gameState.hpp"
 #include "fe/entity/baseEntity.hpp"
-#include "fe/subsystems/physics/collision/broadphaseAbstract.hpp"
-#include "fe/subsystems/physics/collision/collisionWorld.hpp"
+#include "fe/subsystems/collision/broadphaseAbstract.hpp"
+#include "fe/subsystems/collision/collisionWorld.hpp"
 #include "fe/subsystems/serializer/serializerID.hpp"
 #include "fe/subsystems/entitySpawner/entitySpawner.hpp"
 

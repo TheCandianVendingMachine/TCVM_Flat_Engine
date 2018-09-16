@@ -1,14 +1,14 @@
 // physicsEngine.hpp
 // handles all physics.
 #pragma once
-#include "../../flatEngineExport.hpp"
-#include "../../typeDefines.hpp"
-#include "../threading/threadJob.hpp"
+#include "fe/flatEngineExport.hpp"
+#include "fe/typeDefines.hpp"
+#include "fe/subsystems/threading/threadJob.hpp"
 #include "rigidBody.hpp"
-#include "../memory/poolAllocater.hpp"
-#include "../../math/Vector3.hpp"
-#include "../messaging/eventHandler.hpp"
-#include "collision/collisionData.hpp"
+#include "fe/subsystems/memory/poolAllocater.hpp"
+#include "fe/math/Vector3.hpp"
+#include "fe/subsystems/messaging/eventHandler.hpp"
+#include "fe/subsystems/collision/collisionData.hpp"
 
 namespace fe
     {

@@ -5,7 +5,7 @@
 #include "fe/engine.hpp"
 #include "fe/subsystems/graphic/renderObject/sceneGraph.hpp"
 #include "fe/subsystems/physics/physicsEngine.hpp"
-#include "fe/subsystems/physics/collision/collisionWorld.hpp"
+#include "fe/subsystems/collision/collisionWorld.hpp"
 #include "fe/subsystems/serializer/serializerID.hpp"
 #include "fe/subsystems/entitySpawner/userEntityObject.hpp"
 

@@ -1,8 +1,8 @@
 // collisionBounds.hpp
 // A group of structs that represent different types of bounds
 #pragma once
-#include "../../../flatEngineExport.hpp"
-#include "../../serializer/serializable.hpp"
+#include "fe/flatEngineExport.hpp"
+#include "fe/subsystems/serializer/serializable.hpp"
 
 namespace fe
     {

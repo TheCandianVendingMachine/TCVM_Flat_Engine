@@ -2,10 +2,10 @@
 // A broadphase algorithm that uses dynamic AABB's
 // Implementation taken from Box2d (https://github.com/erincatto/Box2D/blob/master/Box2D/Box2D/Collision/b2DynamicTree.cpp)
 #pragma once
-#include "../../../flatEngineExport.hpp"
+#include "fe/flatEngineExport.hpp"
 #include "broadphaseAbstract.hpp"
 #include "collisionBounds.hpp"
-#include "../../memory/poolAllocater.hpp"
+#include "fe/subsystems/memory/poolAllocater.hpp"
 #include <stack>
 
 namespace fe
