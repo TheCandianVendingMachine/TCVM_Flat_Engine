@@ -174,6 +174,7 @@ namespace fe
         template<typename T>
         typename fe::doublyLinkedList<T>::node *doublyLinkedList<T>::at(int index) const
             {
+                if (index >= m_size) return nullptr;
                 doublyLinkedList::node *node = m_head;
                 while (index-- > 0)
                     {
