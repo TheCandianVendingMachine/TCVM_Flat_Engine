@@ -37,6 +37,19 @@ namespace fe
                             float m_radius;
                             fe::particleFlags m_flags;
                         };
+
+                    // Collision data for particles to compute collision pairs
+                    // Vector looks like:
+                    // [(0, 4, true), (1, 0, false), (2, 0, false), (3, 0, false), (4, 0, true)]
+                    struct particleCollisionData
+                        {
+                            particle m_particle; // actual particle index
+                            unsigned int m_size = 0; // how many indicies until you hit the end
+                            bool m_collider = false; // whether or not this is the one being tested
+
+                            particleCollisionData(particle p) : m_particle(p) {}
+                        };
+
                     std::queue<particleData> m_queuedParticles;
 
 
@@ -53,17 +66,16 @@ namespace fe
 
                     unsigned int m_totalParticles;
 
-                    std::unordered_map<particle, std::vector<particle>> m_collisionPairs;
-                    std::unordered_map<particle, std::vector<particle>> m_potentialCollisions;
+                    std::vector<particleCollisionData> m_collisionPairs;
 
                     fe::doublyLinkedList<fe::particleGroup> m_collisionGroups;
                     fe::doublyLinkedList<fe::particleGroup> m_groupList;
 
                     fe::particleBatch m_batch;
 
-                    FLAT_ENGINE_API void determinePossibleCollisions(particle particle, particleNode *node);
-                    FLAT_ENGINE_API void sortParticles();
-                    FLAT_ENGINE_API void broadphase();
+                    FLAT_ENGINE_API void determinePossibleCollisions(particle particle, particleNode *node, const fe::circle *boundsData, const unsigned int *collisionParticlesData);
+                    FLAT_ENGINE_API void sortParticles(const fe::circle *boundsData, const unsigned int *collisionParticlesData);
+                    FLAT_ENGINE_API void broadphase(const unsigned int *collisionParticlesData, const int *collisionGroupData, const fe::circle *boundsData);
 
                 public:
                     FLAT_ENGINE_API void startUp();
