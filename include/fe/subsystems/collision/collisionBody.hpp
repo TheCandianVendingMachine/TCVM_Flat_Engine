@@ -2,7 +2,7 @@
 // Multiple collision bodies that exist.
 #pragma once
 #include "collisionData.hpp"
-#include "collisionBounds.hpp"
+#include "bounds/AABB.hpp"
 #include "fe/math/Vector2.hpp"
 #include "fe/typeDefines.hpp"
 #include "fe/subsystems/serializer/serializable.hpp"
@@ -17,7 +17,7 @@ namespace fe
                 fe::str m_eventOnCollision = 0;
                 fe::str m_collisionGroup;
 
-                AABB m_aabb;
+                fe::AABB m_aabb;
                 void *m_userData; // any additional data that needs to be stored
                 void *m_metaData; // Memory that the user can use to store meta-data pertaining to the collider
                 void *m_owner; // owner of the collider

@@ -16,16 +16,4 @@ namespace fe
                 virtual void serialize(fe::serializerID &serializer) const = 0;
                 virtual void deserialize(fe::serializerID &serializer) = 0;
             };
-
-        struct AABB : public collisionBounds
-            {
-                float m_sizeX = 0.f;
-                float m_sizeY = 0.f;
-                FLAT_ENGINE_API fe::AABB merge(const fe::AABB &other);
-                FLAT_ENGINE_API float volume() const;
-                FLAT_ENGINE_API float perimeter() const;
-
-                FLAT_ENGINE_API void serialize(fe::serializerID &serializer) const;
-                FLAT_ENGINE_API void deserialize(fe::serializerID &serializer);
-            };
     }

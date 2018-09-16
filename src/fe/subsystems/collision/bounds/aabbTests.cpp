@@ -1,28 +1,28 @@
-#include "fe/subsystems/collision/aabbTests.hpp"
-#include "fe/subsystems/collision/collisionBounds.hpp"
+#include "fe/subsystems/collision/bounds/aabbTests.hpp"
+#include "fe/subsystems/collision/bounds/AABB.hpp"
 #include "fe/typeDefines.hpp"
 #include "fe/math/Vector2.hpp"
 #include <limits>
 #include <algorithm>
 
-bool fe::intersects(const AABB &a, AABB &b)
+bool fe::intersects(const fe::AABB &a, const fe::AABB &b)
     {
         return  !((a.m_globalPositionX + a.m_sizeX < b.m_globalPositionX || a.m_globalPositionX > b.m_globalPositionX + b.m_sizeX) ||
                   (a.m_globalPositionY + a.m_sizeY < b.m_globalPositionY || a.m_globalPositionY > b.m_globalPositionY + b.m_sizeY));
     }
 
-bool fe::contains(const AABB &a, const AABB &b)
+bool fe::contains(const fe::AABB &a, const fe::AABB &b)
     {
         return  (b.m_globalPositionX >= a.m_globalPositionX && b.m_globalPositionX + b.m_sizeX <= a.m_globalPositionX + a.m_sizeX) &&
                 (b.m_globalPositionY >= a.m_globalPositionY && b.m_globalPositionY + b.m_sizeY <= a.m_globalPositionY + a.m_sizeY);
     }
 
-bool fe::contains(const AABB &a, float x, float y)
+bool fe::contains(const fe::AABB &a, float x, float y)
     {
         return x >= a.m_globalPositionX && y >= a.m_globalPositionY && x < a.m_globalPositionX + a.m_sizeX && y < a.m_globalPositionY + a.m_sizeY;
     }
 
-fe::raycastResult fe::rayIntersects(const AABB &a, float x, float y, float dirX, float dirY)
+fe::raycastResult fe::rayIntersects(const fe::AABB &a, float x, float y, float dirX, float dirY)
     {
         fe::raycastResult result;
         result.m_hit = false;
@@ -102,7 +102,7 @@ fe::raycastResult fe::rayIntersects(const AABB &a, float x, float y, float dirX,
         return result;
     }
 
-fe::raycastResult fe::lineIntersects(const AABB &a, float x0, float y0, float x1, float y1)
+fe::raycastResult fe::lineIntersects(const fe::AABB &a, float x0, float y0, float x1, float y1)
     {
         fe::raycastResult result;
         result.m_hit = false;
