@@ -137,3 +137,17 @@ fe::raycastResult fe::lineIntersects(const fe::AABB &a, float x0, float y0, floa
         result.m_positionY = 0.f;
         return result;
     }
+
+fe::Vector2d fe::closestPoint(const fe::AABB& a, float x, float y)
+    {
+        fe::lightVector2d min(a.m_globalPositionX + a.m_offsetX, a.m_globalPositionY + a.m_offsetY);
+        fe::lightVector2d max = min + fe::lightVector2d(a.m_sizeX, a.m_sizeY);
+
+        x = std::max(x, min.x);
+        x = std::min(x, max.x);
+
+        y = std::max(y, min.y);
+        y = std::min(y, max.y);
+
+        return fe::Vector2d(x, y);
+    }

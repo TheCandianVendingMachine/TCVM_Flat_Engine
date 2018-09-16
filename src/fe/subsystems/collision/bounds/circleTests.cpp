@@ -116,3 +116,14 @@ fe::raycastResult fe::lineIntersects(const fe::circle &a, float x0, float y0, fl
 
         return result;
     }
+
+fe::Vector2d fe::closestPoint(const fe::circle &a, float x, float y)
+    {
+        fe::Vector2d center(a.m_globalPositionX + a.m_offsetX, a.m_globalPositionY + a.m_offsetY);
+        fe::Vector2d point(x, y);
+
+        fe::Vector2d pc = point - center;
+
+        // c + (r / ||p - c||) * (p - c)
+        return center + ((a.m_radius / pc.magnitude()) * pc);
+    }
