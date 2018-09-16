@@ -59,7 +59,6 @@ namespace fe
                     std::vector<fe::particleFlags> m_particleFlags;
                     std::vector<fe::time> m_deathTime;
                     std::vector<sf::Color> m_colour;
-                    std::vector<int> m_particleCollisionGroup; // current collision group of the particle data = index in m_collisionGroups
                     std::vector<particle> m_collisionParticles;
                     std::vector<particle> m_particles;
 
@@ -67,13 +66,13 @@ namespace fe
 
                     std::vector<particleCollisionData> m_collisionPairs;
 
-                    fe::doublyLinkedList<fe::particleGroup> m_collisionGroups;
+                    std::vector<fe::particleGroup> m_collisionGroups;
                     fe::doublyLinkedList<fe::particleGroup> m_groupList;
 
                     fe::particleBatch m_batch;
 
                     FLAT_ENGINE_API void sortParticles(const fe::circle *boundsData, const unsigned int *collisionParticlesData);
-                    FLAT_ENGINE_API void broadphase(const unsigned int *collisionParticlesData, const int *collisionGroupData, const fe::circle *boundsData);
+                    FLAT_ENGINE_API void broadphase(const unsigned int *collisionParticlesData, const fe::circle *boundsData);
 
                 public:
                     FLAT_ENGINE_API void startUp();

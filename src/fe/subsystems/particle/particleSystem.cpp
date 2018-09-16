@@ -23,19 +23,16 @@ void fe::particleSystem::sortParticles(const fe::circle *boundsData, const unsig
         unsigned int index = 0;
         for (unsigned int i = 0; i < m_collisionParticles.size(); i++)
             {   
-                m_particleCollisionGroup[collisionParticlesData[i]] = index;
-
                 if (i == m_collisionParticles.size() - 1)
                     {
-                        particleNode *node = m_collisionGroups.at(index);
                         group.m_lastIndex = i;
-                        if (node) 
+                        if (index < m_collisionGroups.size()) 
                             {
-                                node->m_data = group;
+                                m_collisionGroups.data()[index] = group;
                             }
                         else 
                             {
-                                m_collisionGroups.insert(group);
+                                m_collisionGroups.emplace_back(group);
                             }
                         break;
                     }
@@ -45,26 +42,39 @@ void fe::particleSystem::sortParticles(const fe::circle *boundsData, const unsig
                 if (floorA != floorB)
                     {
                         group.m_lastIndex = i;
-                        particleNode *node = m_collisionGroups.at(index++);
-                        if (node) 
+                        if (index < m_collisionGroups.size())
                             {
-                                node->m_data = group;
+                                m_collisionGroups.data()[index++] = group;
                             }
                         else 
                             {
-                                m_collisionGroups.insert(group);
+                                m_collisionGroups.emplace_back(group);
                             }
                         group.m_firstIndex = i + 1;
                     }
             }
     }
 
-void fe::particleSystem::broadphase(const unsigned int *collisionParticlesData, const int *collisionGroupData, const fe::circle *boundsData)
+void fe::particleSystem::broadphase(const unsigned int *collisionParticlesData, const fe::circle *boundsData)
     {
+        fe::particleGroup *collisionGroupData = m_collisionGroups.data();
         for (unsigned int i = 0; i < m_collisionGroups.size(); i++)
             {
-                particleNode *node = m_collisionGroups.at(i);
-                for (unsigned int x = node->m_data.m_firstIndex; x <= node->m_data.m_lastIndex; x++)
+                fe::particleGroup &node = m_collisionGroups.data()[i];
+                // Since this data is contigious in memory we can guarentee that a constant iteration will not fuck up
+                unsigned int firstIndex = node.m_firstIndex;
+                unsigned int lastIndex = node.m_lastIndex;
+
+                if (i > 0)
+                    {
+                        firstIndex = collisionGroupData[i - 1].m_firstIndex;
+                    }
+                if (i < m_collisionGroups.size() - 1)
+                    {
+                        lastIndex = collisionGroupData[i + 1].m_lastIndex;
+                    }
+
+                for (unsigned int x = node.m_firstIndex; x <= node.m_lastIndex; x++)
                     {
                         particle particle = collisionParticlesData[x];
                         if (m_particleFlags.data()[particle] & fe::particleFlags::IGNORE_COLLISIONS)
@@ -80,22 +90,9 @@ void fe::particleSystem::broadphase(const unsigned int *collisionParticlesData, 
                         // Calculate the diamter * 2 for a simple broadphase check. If the particles X position is within the 2diamter distance it is close enough to potentially collide
                         float particleA2Diameter = 4.f * boundsData[particle].m_radius;
 
-                        // Since this data is contigious in memory we can guarentee that a constant iteration will not fuck up
-                        unsigned int firstIndex = node->m_data.m_firstIndex;
-                        unsigned int lastIndex = node->m_data.m_lastIndex;
-
-                        if (node->m_prev)
+                        for (unsigned int y = firstIndex; y <= lastIndex; y++)
                             {
-                                firstIndex = node->m_prev->m_data.m_firstIndex;
-                            }
-                        if (node->m_next)
-                            {
-                                lastIndex = node->m_next->m_data.m_lastIndex;
-                            }
-
-                        for (unsigned int i = firstIndex; i <= lastIndex; i++)
-                            {
-                                unsigned int particleB = collisionParticlesData[i];
+                                unsigned int particleB = collisionParticlesData[y];
                                 float posBX = boundsData[particleB].m_globalPositionX;
                                 float posBY = boundsData[particleB].m_globalPositionY;
 
@@ -116,7 +113,7 @@ void fe::particleSystem::startUp()
         fe::particleGroup group;
         group.m_firstIndex = 0;
         group.m_lastIndex = 0;
-        m_collisionGroups.insert(group);
+        m_collisionGroups.emplace_back(group);
         m_totalParticles = 0;
     }
 
@@ -130,23 +127,21 @@ void fe::particleSystem::determineCollisionPairs()
     {
         m_collisionPairs.clear();
         const unsigned int *collisionParticlesData = m_collisionParticles.data();
-        const int *collisionGroupData = m_particleCollisionGroup.data();
         const fe::circle *boundsData = m_particleBounds.data();
 
         sortParticles(boundsData, collisionParticlesData);
-        broadphase(collisionParticlesData, collisionGroupData, boundsData);
+        broadphase(collisionParticlesData, boundsData);
 
-        auto itOrig = m_collisionPairs.begin();
-        particle itOrigParticle = itOrig->m_particle;
-        for (auto it = itOrig + 1; it != m_collisionPairs.end();)
+        particle itOrigParticle = m_collisionPairs.begin()->m_particle;
+        for (auto it = m_collisionPairs.begin() + 1; it != m_collisionPairs.end();)
             {
                 if (it->m_collider)
                     {
-                        itOrig = it;
-                        itOrigParticle = itOrig->m_particle;
+                        itOrigParticle = it->m_particle;
                     }
 
-                if (!fe::intersects(boundsData[itOrigParticle], boundsData[it->m_particle]))
+                if (!fe::intersects(boundsData[itOrigParticle], boundsData[it->m_particle]) ||
+                    ((it + 1) != m_collisionPairs.end() && it->m_collider && (it + 1)->m_collider))
                     {
                         it = m_collisionPairs.erase(it);
                     }
@@ -199,11 +194,11 @@ void fe::particleSystem::preUpdate(fe::time currentTime)
                 particle p = (*it);
                 if (currentTime > m_deathTime[p])
                     {
-                        m_particleFlags[p] = static_cast<fe::particleFlags>(m_particleFlags[p] | fe::particleFlags::KILLED);
+                        m_particleFlags.data()[p] = static_cast<fe::particleFlags>(m_particleFlags.data()[p] | fe::particleFlags::KILLED);
                     }
 
 
-                if (m_particleFlags[p] & fe::particleFlags::KILLED)
+                if (m_particleFlags.data()[p] & fe::particleFlags::KILLED)
                     {
                         m_particleVelocities.erase(m_particleVelocities.begin() + p);
                         m_particleBounds.erase(m_particleBounds.begin() + p);
@@ -228,7 +223,6 @@ void fe::particleSystem::preUpdate(fe::time currentTime)
         if (updateBatch)
             {
                 m_batch.reset(m_totalParticles);
-                m_particleCollisionGroup.resize(m_totalParticles);
             }
     }
 
