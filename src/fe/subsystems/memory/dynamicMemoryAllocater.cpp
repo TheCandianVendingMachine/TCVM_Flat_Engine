@@ -47,7 +47,7 @@ bool fe::dynamicMemoryAllocater::debug()
 
 fe::dynamicMemoryAllocater::dynamicMemoryAllocater(const fe::uInt8 chunkSize) : m_memoryBuffer(nullptr), CHUNK_SIZE(chunkSize), m_startedUp(false)
     {
-        FE_ASSERT(CHUNK_SIZE > FREE_BLOCK_SIZE, "Chunk Size is too small");
+        FE_ASSERT(CHUNK_SIZE >= FREE_BLOCK_SIZE, "Chunk Size is too small");
     }
 
 void fe::dynamicMemoryAllocater::startUp(fe::uInt8 *buffer, const fe::uInt64 size)
