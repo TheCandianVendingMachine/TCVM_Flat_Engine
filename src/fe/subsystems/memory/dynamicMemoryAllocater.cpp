@@ -168,7 +168,7 @@ void fe::dynamicMemoryAllocater::free(void *memory)
 void fe::dynamicMemoryAllocater::clear()
     {
         std::memset(m_memoryBuffer, 0, m_totalSize);
-        m_freeList.clear(false);
+        m_freeList.clear();
         listNode *base = new(m_memoryBuffer) listNode();
         base->m_data.m_blockSize = m_totalSize - FREE_BLOCK_SIZE;
         base->m_next = nullptr;

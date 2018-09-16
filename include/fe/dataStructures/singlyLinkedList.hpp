@@ -13,6 +13,8 @@ namespace fe
                         {
                             T m_data = T();
                             node *m_next = nullptr;
+                            // Internal flag only
+                            bool m_alloc = false;
                         };
 
                 private:
@@ -34,7 +36,7 @@ namespace fe
                     void remove(node *node);
 
                     // Clears the linked list of all nodes
-                    void clear(bool dealloc = true);
+                    void clear();
 
                     node *head() const;
 
@@ -47,6 +49,7 @@ namespace fe
         void singlyLinkedList<T>::insert(T data)
             {
                 node *newNode = new node;
+                newNode->m_alloc = true;
                 newNode->m_data = data;
                 newNode->m_next = nullptr;
                 insert(newNode);
@@ -135,16 +138,16 @@ namespace fe
             }
 
         template<typename T>
-        void singlyLinkedList<T>::clear(bool dealloc)
+        void singlyLinkedList<T>::clear()
             {
-                if (dealloc)
+                while (m_head)
                     {
-                        while (m_head)
+                        node *next = m_head->m_next;
+                        if (m_head->m_alloc)
                             {
-                                node *next = m_head->m_next;
                                 delete m_head;
-                                m_head = next;
                             }
+                        m_head = next;
                     }
                 m_head = nullptr;
             }
