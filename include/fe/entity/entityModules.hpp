@@ -20,7 +20,7 @@ namespace fe
                 return static_cast<entityModules>(static_cast<std::int16_t>(lhs) | static_cast<std::int16_t>(rhs));
             }
 
-        inline constexpr int16_t operator & (entityModules lhs, entityModules rhs)
+        inline constexpr std::int16_t operator & (entityModules lhs, entityModules rhs)
             {
                 return static_cast<std::int16_t>(lhs) & static_cast<std::int16_t>(rhs);
             }

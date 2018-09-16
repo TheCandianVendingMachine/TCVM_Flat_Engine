@@ -6,10 +6,18 @@
 #include "fe/math/Vector2.hpp"
 #include "fe/dataStructures/doublyLinkedList.hpp"
 #include "fe/subsystems/collision/bounds/circle.hpp"
+#include "fe/time/time.hpp"
 #include "particleFlags.hpp"
 #include "particleGroup.hpp"
+#include "particleBatch.hpp"
 #include <vector>
 #include <unordered_map>
+#include <queue>
+
+namespace sf
+    {
+        class RenderTarget;
+    }
 
 namespace fe
     {
@@ -19,18 +27,31 @@ namespace fe
                     using particleNode = fe::doublyLinkedList<fe::particleGroup>::node;
                     using particle = unsigned int;
                     
+                    // basic particle data used for spawning new particles
+                    struct particleData
+                        {
+                            fe::time m_deathTime;
+                            fe::Vector2d m_velocity;
+                            fe::Vector2d m_position;
+                            sf::Color m_colour;
+                            float m_radius;
+                            fe::particleFlags m_flags;
+                        };
+                    std::queue<particleData> m_queuedParticles;
+
 
                     // Inline arrays that define a particle.
-                    // Particles are defined as just having a position, velocity, boundary, and a flag
-                    std::vector<fe::Vector2d> m_particlePositions;
+                    // Particles are defined as just having a velocity, boundary, and a flag
                     std::vector<fe::Vector2d> m_particleVelocities;
                     std::vector<fe::circle> m_particleBounds;
                     std::vector<fe::particleFlags> m_particleFlags;
+                    std::vector<fe::time> m_deathTime;
+                    std::vector<sf::Color> m_colour;
                     std::vector<int> m_particleCollisionGroup; // current collision group of the particle data = index in m_collisionGroups
+                    std::vector<particle> m_collisionParticles;
                     std::vector<particle> m_particles;
 
                     unsigned int m_totalParticles;
-                    unsigned int m_activeParticles;
 
                     std::unordered_map<particle, std::vector<particle>> m_collisionPairs;
                     std::unordered_map<particle, std::vector<particle>> m_potentialCollisions;
@@ -38,17 +59,25 @@ namespace fe
                     fe::doublyLinkedList<fe::particleGroup> m_collisionGroups;
                     fe::doublyLinkedList<fe::particleGroup> m_groupList;
 
-                    void determinePossibleCollisions(particle particle, particleNode *node);
-                    void sortParticles();
-                    void broadphase();
+                    fe::particleBatch m_batch;
+
+                    FLAT_ENGINE_API void determinePossibleCollisions(particle particle, particleNode *node);
+                    FLAT_ENGINE_API void sortParticles();
+                    FLAT_ENGINE_API void broadphase();
 
                 public:
-                    void startUp();
-                    void shutDown();
-                    void determineCollisionPairs();
-                    void fixedUpdate(float dt);
+                    FLAT_ENGINE_API void startUp();
+                    FLAT_ENGINE_API void shutDown();
+                    FLAT_ENGINE_API void determineCollisionPairs();
+                    FLAT_ENGINE_API void preUpdate(fe::time currentTime);
+                    FLAT_ENGINE_API void fixedUpdate(float dt);
 
-                    unsigned int getTotalParticles() const;
+                    FLAT_ENGINE_API void queueParticles(fe::time lifetime, fe::particleFlags flags, sf::Color colour, float particleRadius, unsigned int count, fe::Vector2d position, float speed, float arc, float heading);
+                    FLAT_ENGINE_API void queueParticles(fe::time lifetime, fe::particleFlags flags, sf::Color colour, float particleRadius, unsigned int count, fe::Vector2d position, float radius, float speed, float arc, float heading);
+
+                    FLAT_ENGINE_API void draw(sf::RenderTarget &target);
+
+                    FLAT_ENGINE_API unsigned int getTotalParticles() const;
 
             };
     }

@@ -44,7 +44,7 @@ namespace fe
                     node *head() const;
 
                     // Returns node at index
-                    node *at(int index) const;
+                    node *at(unsigned int index) const;
 
                     unsigned int size() const;
 
@@ -172,7 +172,7 @@ namespace fe
             }
 
         template<typename T>
-        typename fe::doublyLinkedList<T>::node *doublyLinkedList<T>::at(int index) const
+        typename fe::doublyLinkedList<T>::node *doublyLinkedList<T>::at(unsigned int index) const
             {
                 if (index >= m_size) return nullptr;
                 doublyLinkedList::node *node = m_head;
