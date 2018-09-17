@@ -76,7 +76,7 @@ void fe::baseGameState::updateDefined(collisionWorld *collisionWorld)
         if (m_paused) return;
 
         update();
-        FE_PROFILE("game_state", "game_world_update");
+        FE_ENGINE_PROFILE("game_state", "game_world_update");
         m_gameWorld.update(collisionWorld);
         FE_END_PROFILE;
     }

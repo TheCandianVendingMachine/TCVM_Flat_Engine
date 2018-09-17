@@ -106,7 +106,7 @@ void fe::renderGraph::draw(sf::RenderTarget &window)
         states.texture = getRenderTexture();
 
         unsigned int index = 0;
-        FE_PROFILE("render_graph", "graph_draw");
+        FE_ENGINE_PROFILE("render_graph", "graph_draw");
         std::memset(nodeStack, 0, FE_MAX_GAME_OBJECTS + FE_MAX_TEXT_OBJECTS + FE_MAX_Z_ORDER);
         stackTop = 0;
         nodeStack[stackTop++] = m_baseNode;
