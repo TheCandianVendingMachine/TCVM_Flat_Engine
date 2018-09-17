@@ -5,41 +5,23 @@
 #include <algorithm>
 #include <cmath>
 
-void fe::particleSystem::sortParticles(const fe::circle *boundsData, const unsigned int *collisionParticlesData)
+void fe::particleSystem::sortParticles(const fe::circle *boundsData, const unsigned int *collisionParticlesData, const int *floorData)
     {
-        std::sort(m_collisionParticles.begin(), m_collisionParticles.end(), [boundsData](unsigned int a, unsigned int b) {
-            int floorA = static_cast<int>(std::floorf(boundsData[a].m_globalPositionY / (2.f * boundsData[a].m_radius)));
-            int floorB = static_cast<int>(std::floorf(boundsData[b].m_globalPositionY / (2.f * boundsData[b].m_radius)));
-            if (floorA == floorB)
+        std::sort(m_collisionParticles.begin(), m_collisionParticles.end(), [boundsData, floorData](unsigned int a, unsigned int b) {
+            if (floorData[a] == floorData[b])
                 {
                     // if particles have same positions the left-most particle gets closer to the top of the list
                     return boundsData[a].m_globalPositionX < boundsData[b].m_globalPositionX;
                 }
-            return floorA < floorB;
+            return floorData[a] < floorData[b];
         });
         
         fe::particleGroup group;
         group.m_firstIndex = 0;
         unsigned int index = 0;
-        for (unsigned int i = 0; i < m_collisionParticles.size(); i++)
-            {   
-                if (i == m_collisionParticles.size() - 1)
-                    {
-                        group.m_lastIndex = i;
-                        if (index < m_collisionGroups.size()) 
-                            {
-                                m_collisionGroups.data()[index] = group;
-                            }
-                        else 
-                            {
-                                m_collisionGroups.emplace_back(group);
-                            }
-                        break;
-                    }
-
-                int floorA = static_cast<int>(std::floorf(boundsData[collisionParticlesData[i + 0]].m_globalPositionY / (2.f * boundsData[collisionParticlesData[i + 0]].m_radius)));
-                int floorB = static_cast<int>(std::floorf(boundsData[collisionParticlesData[i + 1]].m_globalPositionY / (2.f * boundsData[collisionParticlesData[i + 1]].m_radius)));
-                if (floorA != floorB)
+        for (unsigned int i = 0; i < m_collisionParticles.size() - 1; i++)
+            {
+                if (floorData[collisionParticlesData[i + 0]] != floorData[collisionParticlesData[i + 1]])
                     {
                         group.m_lastIndex = i;
                         if (index < m_collisionGroups.size())
@@ -53,6 +35,9 @@ void fe::particleSystem::sortParticles(const fe::circle *boundsData, const unsig
                         group.m_firstIndex = i + 1;
                     }
             }
+
+        group.m_lastIndex = m_collisionParticles.size() - 1;
+        m_collisionGroups.data()[index] = group;
     }
 
 void fe::particleSystem::broadphase(const unsigned int *collisionParticlesData, const fe::circle *boundsData)
@@ -82,8 +67,15 @@ void fe::particleSystem::broadphase(const unsigned int *collisionParticlesData, 
                                 continue;
                             }
 
-                        m_collisionPairs.emplace_back(particle);
-                        m_collisionPairs.back().m_collider = true;
+                        if (m_collisionPairIndex < m_collisionPairs.size())
+                            {
+                                m_collisionPairs.data()[m_collisionPairIndex] = particle;
+                            }
+                        else 
+                            {
+                                m_collisionPairs.emplace_back(particle);
+                            }
+                        m_collisionPairs.data()[m_collisionPairIndex++].m_collider = true;
 
                         float posAX = boundsData[particle].m_globalPositionX;
                         float posAY = boundsData[particle].m_globalPositionY;
@@ -101,7 +93,15 @@ void fe::particleSystem::broadphase(const unsigned int *collisionParticlesData, 
                                     (posBX > posAX || posBY > posAY))
                                     {
                                         // potential collision
-                                        m_collisionPairs.emplace_back(particleB);
+                                        if (m_collisionPairIndex < m_collisionPairs.size())
+                                            {
+                                                m_collisionPairs.data()[m_collisionPairIndex] = particleB;
+                                            }
+                                        else 
+                                            {
+                                                m_collisionPairs.emplace_back(particleB);
+                                            }
+                                        m_collisionPairIndex++;
                                     }
                             }
                     }
@@ -115,6 +115,9 @@ void fe::particleSystem::startUp()
         group.m_lastIndex = 0;
         m_collisionGroups.emplace_back(group);
         m_totalParticles = 0;
+
+        m_collisionPairIndex = 0;
+        m_collisionPairEndIndex = 0;
     }
 
 void fe::particleSystem::shutDown()
@@ -125,43 +128,29 @@ void fe::particleSystem::shutDown()
 
 void fe::particleSystem::determineCollisionPairs()
     {
-        m_collisionPairs.clear();
         const unsigned int *collisionParticlesData = m_collisionParticles.data();
         const fe::circle *boundsData = m_particleBounds.data();
 
-        sortParticles(boundsData, collisionParticlesData);
+        sortParticles(boundsData, collisionParticlesData, m_particleFloor.data());
         broadphase(collisionParticlesData, boundsData);
 
+        m_collisionPairEndIndex = std::max(m_collisionPairEndIndex, m_collisionPairIndex);
+
         particle itOrigParticle = m_collisionPairs.begin()->m_particle;
-        for (auto it = m_collisionPairs.begin() + 1; it != m_collisionPairs.end();)
+        for (auto it = m_collisionPairs.begin() + 1; it != (m_collisionPairs.begin() + m_collisionPairEndIndex); ++it)
             {
                 if (it->m_collider)
                     {
                         itOrigParticle = it->m_particle;
                     }
 
-                if (!fe::intersects(boundsData[itOrigParticle], boundsData[it->m_particle]) ||
-                    ((it + 1) != m_collisionPairs.end() && it->m_collider && (it + 1)->m_collider))
+                if (!fe::intersects(boundsData[itOrigParticle], boundsData[it->m_particle]))
                     {
-                        it = m_collisionPairs.erase(it);
-                    }
-                else
-                    {
-                        ++it;
+                        it->m_collided = false;
                     }
             }
 
-        for (auto it = m_collisionPairs.begin(); (it + 1) != m_collisionPairs.end();)
-            {
-                if (it->m_collider && (it + 1)->m_collider)
-                    {
-                        it = m_collisionPairs.erase(it);
-                    }
-                else
-                    {
-                        ++it;
-                    }
-            }
+        m_collisionPairIndex = 0;
     }
 
 void fe::particleSystem::preUpdate(fe::time currentTime)
@@ -180,18 +169,17 @@ void fe::particleSystem::preUpdate(fe::time currentTime)
                 m_particleFlags.emplace_back(p.m_flags);
                 m_deathTime.emplace_back(p.m_deathTime);
                 m_colour.emplace_back(p.m_colour);
+                m_particleFloor.emplace_back(static_cast<int>(std::floorf(m_particleBounds.data()[m_totalParticles].m_globalPositionY / (2.f * m_particleBounds.data()[m_totalParticles].m_radius))));
 
-                m_collisionParticles.emplace_back(m_totalParticles);
-                m_particles.emplace_back(m_totalParticles++);
+                m_collisionParticles.emplace_back(m_totalParticles++);
                 m_queuedParticles.pop();
                 updateBatch = true;
             }
 
         unsigned int indexDifference = 0;
-        for (auto it = m_particles.begin(); it != m_particles.end();)
+        for (unsigned int i = 0; i < m_totalParticles;)
             {
-                (*it) -= indexDifference;
-                particle p = (*it);
+                particle p = i - indexDifference;
                 if (currentTime > m_deathTime[p])
                     {
                         m_particleFlags.data()[p] = static_cast<fe::particleFlags>(m_particleFlags.data()[p] | fe::particleFlags::KILLED);
@@ -205,18 +193,18 @@ void fe::particleSystem::preUpdate(fe::time currentTime)
                         m_particleFlags.erase(m_particleFlags.begin() + p);
                         m_deathTime.erase(m_deathTime.begin() + p);
                         m_colour.erase(m_colour.begin() + p);
+                        m_particleFloor.erase(m_particleFloor.begin() + p);
 
                         auto cIt = std::find(m_collisionParticles.begin(), m_collisionParticles.end(), p + indexDifference);
                         m_collisionParticles.erase(cIt);
                         indexDifference++;
 
-                        it = m_particles.erase(it);
                         m_totalParticles--;
                         updateBatch = true;
                     }
                 else
                     {
-                        ++it;
+                        ++i;
                     }
             }
 
@@ -228,6 +216,10 @@ void fe::particleSystem::preUpdate(fe::time currentTime)
 
 void fe::particleSystem::fixedUpdate(float dt)
     {
+        /*for (unsigned int i = 0; i < m_totalParticles; i++)
+            {
+                m_particleFloor.data()[i] = static_cast<int>(std::floorf(m_particleBounds.data()[i].m_globalPositionY / (2.f * m_particleBounds.data()[i].m_radius)));
+            }*/
     }
 
 void fe::particleSystem::queueParticles(fe::time lifetime, fe::particleFlags flags, sf::Color colour, float particleRadius, unsigned int count, fe::Vector2d position, float speed, float arc, float heading)

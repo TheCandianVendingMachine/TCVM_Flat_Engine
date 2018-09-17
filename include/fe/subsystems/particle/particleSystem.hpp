@@ -45,6 +45,7 @@ namespace fe
                         {
                             particle m_particle; // actual particle index
                             bool m_collider = false; // whether or not this is the one being tested
+                            bool m_collided = true; // whether or not the particle actually collides with the test
 
                             particleCollisionData(particle p) : m_particle(p) {}
                         };
@@ -60,18 +61,20 @@ namespace fe
                     std::vector<fe::time> m_deathTime;
                     std::vector<sf::Color> m_colour;
                     std::vector<particle> m_collisionParticles;
-                    std::vector<particle> m_particles;
+                    std::vector<int> m_particleFloor;
 
                     unsigned int m_totalParticles;
 
                     std::vector<particleCollisionData> m_collisionPairs;
+                    unsigned int m_collisionPairEndIndex; // optimization to keep data in the vector if we can
+                    unsigned int m_collisionPairIndex; // current position in the collision pair vector
 
                     std::vector<fe::particleGroup> m_collisionGroups;
                     fe::doublyLinkedList<fe::particleGroup> m_groupList;
 
                     fe::particleBatch m_batch;
 
-                    FLAT_ENGINE_API void sortParticles(const fe::circle *boundsData, const unsigned int *collisionParticlesData);
+                    FLAT_ENGINE_API void sortParticles(const fe::circle *boundsData, const unsigned int *collisionParticlesData, const int *floorData);
                     FLAT_ENGINE_API void broadphase(const unsigned int *collisionParticlesData, const fe::circle *boundsData);
 
                 public:
