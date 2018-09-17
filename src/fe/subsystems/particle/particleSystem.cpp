@@ -8,15 +8,13 @@
 
 void fe::particleSystem::sortParticles(const fe::circle *boundsData, const unsigned int *collisionParticlesData, const int *floorData)
     {
+        FE_ENGINE_PROFILE("particle_sort", "inplace_sort");
         std::sort(m_collisionParticles.begin(), m_collisionParticles.end(), [boundsData, floorData](unsigned int a, unsigned int b) {
-            if (floorData[a] == floorData[b])
-                {
-                    // if particles have same positions the left-most particle gets closer to the top of the list
-                    return boundsData[a].m_globalPositionX < boundsData[b].m_globalPositionX;
-                }
-            return floorData[a] < floorData[b];
+            return floorData[a] < floorData[b] || (floorData[a] == floorData[b] && boundsData[a].m_globalPositionX < boundsData[b].m_globalPositionX);
         });
+        FE_END_PROFILE;
         
+        FE_ENGINE_PROFILE("particle_sort", "determine_groups");
         fe::particleGroup group;
         group.m_firstIndex = 0;
         unsigned int index = 0;
@@ -39,6 +37,7 @@ void fe::particleSystem::sortParticles(const fe::circle *boundsData, const unsig
 
         group.m_lastIndex = m_collisionParticles.size() - 1;
         m_collisionGroups.data()[index] = group;
+        FE_END_PROFILE;
     }
 
 void fe::particleSystem::broadphase(const unsigned int *collisionParticlesData, const fe::circle *boundsData)
@@ -86,7 +85,13 @@ void fe::particleSystem::broadphase(const unsigned int *collisionParticlesData, 
                                         float posBX = boundsData[particleB].m_globalPositionX;
                                         float posBY = boundsData[particleB].m_globalPositionY;
 
+                                        // casting to an int has substantial performance improvements with no optimizations however
+                                        // when optimizations are enabled performance is hindered by this casting
+                                    #if _DEBUG
                                         if (std::abs(static_cast<int>(posBX - posAX)) < particleA2Diameter &&
+                                    #else
+                                        if (std::abs(posBX - posAX) < particleA2Diameter &&
+                                    #endif
                                             // only consider particles to the right or the bottom of the particle to avoid duplicate collision pairs
                                             (posBX > posAX || posBY > posAY))
                                             {
@@ -142,15 +147,16 @@ void fe::particleSystem::determineCollisionPairs()
 
         FE_ENGINE_PROFILE("particle", "cull_pairs");
         particle itOrigParticle = 0;
-        for (auto it = m_collisionPairs.begin(); it != (m_collisionPairs.begin() + m_collisionPairEndIndex); ++it)
+        for (unsigned int i = 0; i < m_collisionPairEndIndex; i++)
             {
-                if (it->m_collider)
+                particleCollisionData &data = m_collisionPairs[i];
+                if (data.m_collider)
                     {
-                        itOrigParticle = it->m_particle;
+                        itOrigParticle = data.m_particle;
                     }
-                else if (!fe::intersects(boundsData[itOrigParticle], boundsData[it->m_particle]))
+                else if (!fe::intersects(boundsData[itOrigParticle], boundsData[data.m_particle]))
                     {
-                        it->m_collided = false;
+                        data.m_collided = false;
                     }
             }
 
@@ -201,8 +207,7 @@ void fe::particleSystem::preUpdate(fe::time currentTime)
                         m_colour.erase(m_colour.begin() + p);
                         m_particleFloor.erase(m_particleFloor.begin() + p);
 
-                        auto cIt = std::find(m_collisionParticles.begin(), m_collisionParticles.end(), p + indexDifference);
-                        m_collisionParticles.erase(cIt);
+                        m_collisionParticles.erase(std::find(m_collisionParticles.begin(), m_collisionParticles.end(), p + indexDifference));
                         indexDifference++;
 
                         m_totalParticles--;

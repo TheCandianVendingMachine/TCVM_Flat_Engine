@@ -4,7 +4,7 @@
 #define FE_IS_ENGINE true // Defined only if engine exists. Useful if writing potentially modular classes
 
 #ifndef FE_PROFILE_ENGINE
-    #define FE_PROFILE_ENGINE false
+    #define FE_PROFILE_ENGINE true
 #endif
 
 #ifndef FE_OUTPUT_PROFILE_RESULTS
