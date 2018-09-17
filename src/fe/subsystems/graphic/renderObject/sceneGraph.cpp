@@ -108,7 +108,7 @@ void fe::sceneGraph::draw(sf::RenderTarget &window)
         states.texture = &fe::engine::get().getResourceManager<sf::Texture>()->get();
 
         unsigned int index = 0;
-        FE_PROFILE("scene_graph", "graph_draw");
+        FE_ENGINE_PROFILE("scene_graph", "graph_draw");
         if (m_renderObjects.getObjectAllocCount() <= m_maxObjectsUntilThread || true) 
             {
                 int nodeStack[FE_MAX_GAME_OBJECTS + FE_MAX_TEXT_OBJECTS + FE_MAX_Z_ORDER];

@@ -26,7 +26,7 @@ void fe::aabbTree::debugDrawAABB(int node)
 
 void fe::aabbTree::freeNode(int node)
     {
-        FE_PROFILE("aabb_tree", "free_node");
+        FE_ENGINE_PROFILE("aabb_tree", "free_node");
         m_nodes[node].m_next = m_freeList;
         m_nodes[node].m_height = -1;
         m_freeList = node;
@@ -35,7 +35,7 @@ void fe::aabbTree::freeNode(int node)
 
 int fe::aabbTree::allocateNode()
     {
-        FE_PROFILE("aabb_tree", "allocate_node");
+        FE_ENGINE_PROFILE("aabb_tree", "allocate_node");
         FE_ASSERT(m_freeList != treeNode::Null, "Free-List of nodes is empty");
 
         int nodeId = m_freeList;
@@ -51,7 +51,7 @@ int fe::aabbTree::allocateNode()
 
 void fe::aabbTree::insert(int node)
     {
-        FE_PROFILE("aabb_tree", "insert_index");
+        FE_ENGINE_PROFILE("aabb_tree", "insert_index");
         if (m_base == treeNode::Null)
             {
                 m_base = node;
@@ -224,7 +224,7 @@ void fe::aabbTree::remove(int node)
 
 int fe::aabbTree::balance(int node)
     {
-        FE_PROFILE("aabb_tree", "balance_tree");
+        FE_ENGINE_PROFILE("aabb_tree", "balance_tree");
         treeNode *a = &m_nodes[node];
         if (a->isLeaf() || a->m_height < 2)
             {
@@ -423,7 +423,7 @@ void fe::aabbTree::add(fe::collider *collider)
 void fe::aabbTree::remove(fe::collider *collider)
     {
         if (!collider) return;
-        FE_PROFILE("aabb_tree", "remove_collider");
+        FE_ENGINE_PROFILE("aabb_tree", "remove_collider");
         remove(int(collider->m_userData));
         collider->m_userData = nullptr;
         FE_END_PROFILE;
@@ -433,7 +433,7 @@ void fe::aabbTree::update(fe::collider *collider)
     {
         if (!collider->m_enabled) return;
 
-        FE_PROFILE("aabb_tree", "update_collider");
+        FE_ENGINE_PROFILE("aabb_tree", "update_collider");
         int nodeIndex = int(collider->m_userData);
 
         if (!fe::contains(m_nodes[nodeIndex].m_fatAABB, collider->m_aabb))

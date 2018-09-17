@@ -2,6 +2,7 @@
 #include "fe/subsystems/collision/bounds/circleTests.hpp"
 #include "fe/math/random.hpp"
 #include "fe/engine.hpp"
+#include "fe/debug/profiler.hpp"
 #include <algorithm>
 #include <cmath>
 
@@ -62,46 +63,44 @@ void fe::particleSystem::broadphase(const unsigned int *collisionParticlesData, 
                 for (unsigned int x = node.m_firstIndex; x <= node.m_lastIndex; x++)
                     {
                         particle particle = collisionParticlesData[x];
-                        if (m_particleFlags.data()[particle] & fe::particleFlags::IGNORE_COLLISIONS)
+                        if (!(m_particleFlags.data()[particle] & fe::particleFlags::IGNORE_COLLISIONS))
                             {
-                                continue;
-                            }
-
-                        if (m_collisionPairIndex < m_collisionPairs.size())
-                            {
-                                m_collisionPairs.data()[m_collisionPairIndex] = particle;
-                            }
-                        else 
-                            {
-                                m_collisionPairs.emplace_back(particle);
-                            }
-                        m_collisionPairs.data()[m_collisionPairIndex++].m_collider = true;
-
-                        float posAX = boundsData[particle].m_globalPositionX;
-                        float posAY = boundsData[particle].m_globalPositionY;
-                        // Calculate the diamter * 2 for a simple broadphase check. If the particles X position is within the 2diamter distance it is close enough to potentially collide
-                        float particleA2Diameter = 4.f * boundsData[particle].m_radius;
-
-                        for (unsigned int y = firstIndex; y <= lastIndex; y++)
-                            {
-                                unsigned int particleB = collisionParticlesData[y];
-                                float posBX = boundsData[particleB].m_globalPositionX;
-                                float posBY = boundsData[particleB].m_globalPositionY;
-
-                                if (std::abs(posBX - posAX) < particleA2Diameter &&
-                                    // only consider particles to the right or the bottom of the particle to avoid duplicate collision pairs
-                                    (posBX > posAX || posBY > posAY))
+                                if (m_collisionPairIndex < m_collisionPairs.size())
                                     {
-                                        // potential collision
-                                        if (m_collisionPairIndex < m_collisionPairs.size())
+                                        m_collisionPairs.data()[m_collisionPairIndex] = particle;
+                                    }
+                                else 
+                                    {
+                                        m_collisionPairs.emplace_back(particle);
+                                    }
+                                m_collisionPairs.data()[m_collisionPairIndex++].m_collider = true;
+
+                                float posAX = boundsData[particle].m_globalPositionX;
+                                float posAY = boundsData[particle].m_globalPositionY;
+                                // Calculate the diamter * 2 for a simple broadphase check. If the particles X position is within the 2diamter distance it is close enough to potentially collide
+                                float particleA2Diameter = 4.f * boundsData[particle].m_radius;
+
+                                for (unsigned int y = firstIndex; y <= lastIndex; y++)
+                                    {
+                                        unsigned int particleB = collisionParticlesData[y];
+                                        float posBX = boundsData[particleB].m_globalPositionX;
+                                        float posBY = boundsData[particleB].m_globalPositionY;
+
+                                        if (std::abs(static_cast<int>(posBX - posAX)) < particleA2Diameter &&
+                                            // only consider particles to the right or the bottom of the particle to avoid duplicate collision pairs
+                                            (posBX > posAX || posBY > posAY))
                                             {
-                                                m_collisionPairs.data()[m_collisionPairIndex] = particleB;
+                                                // potential collision
+                                                if (m_collisionPairIndex < m_collisionPairs.size())
+                                                    {
+                                                        m_collisionPairs.data()[m_collisionPairIndex] = particleB;
+                                                    }
+                                                else 
+                                                    {
+                                                        m_collisionPairs.emplace_back(particleB);
+                                                    }
+                                                m_collisionPairIndex++;
                                             }
-                                        else 
-                                            {
-                                                m_collisionPairs.emplace_back(particleB);
-                                            }
-                                        m_collisionPairIndex++;
                                     }
                             }
                     }
@@ -128,29 +127,36 @@ void fe::particleSystem::shutDown()
 
 void fe::particleSystem::determineCollisionPairs()
     {
+        FE_ENGINE_PROFILE("particle", "determine_collision_pairs");
         const unsigned int *collisionParticlesData = m_collisionParticles.data();
         const fe::circle *boundsData = m_particleBounds.data();
 
+        FE_ENGINE_PROFILE("particle", "sort_particles");
         sortParticles(boundsData, collisionParticlesData, m_particleFloor.data());
+        FE_END_PROFILE;
+        FE_ENGINE_PROFILE("particle", "broadphase");
         broadphase(collisionParticlesData, boundsData);
+        FE_END_PROFILE;
 
         m_collisionPairEndIndex = std::max(m_collisionPairEndIndex, m_collisionPairIndex);
 
-        particle itOrigParticle = m_collisionPairs.begin()->m_particle;
-        for (auto it = m_collisionPairs.begin() + 1; it != (m_collisionPairs.begin() + m_collisionPairEndIndex); ++it)
+        FE_ENGINE_PROFILE("particle", "cull_pairs");
+        particle itOrigParticle = 0;
+        for (auto it = m_collisionPairs.begin(); it != (m_collisionPairs.begin() + m_collisionPairEndIndex); ++it)
             {
                 if (it->m_collider)
                     {
                         itOrigParticle = it->m_particle;
                     }
-
-                if (!fe::intersects(boundsData[itOrigParticle], boundsData[it->m_particle]))
+                else if (!fe::intersects(boundsData[itOrigParticle], boundsData[it->m_particle]))
                     {
                         it->m_collided = false;
                     }
             }
 
+        FE_END_PROFILE;
         m_collisionPairIndex = 0;
+        FE_END_PROFILE;
     }
 
 void fe::particleSystem::preUpdate(fe::time currentTime)
