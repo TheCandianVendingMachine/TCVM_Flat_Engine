@@ -56,6 +56,7 @@ namespace fe
                     // Inline arrays that define a particle.
                     // Particles are defined as just having a velocity, boundary, and a flag
                     std::vector<float> m_particleWeightSum;
+                    std::vector<float> m_particlePressure;
                     std::vector<fe::Vector2d> m_particleVelocities;
                     std::vector<fe::circle> m_particleBounds;
                     std::vector<fe::particleFlags> m_particleFlags;

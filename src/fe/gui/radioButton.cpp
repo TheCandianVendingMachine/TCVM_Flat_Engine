@@ -6,7 +6,7 @@
 
 fe::lightVector2d fe::gui::radioButton::getCirclePoint(unsigned int index, float radius) const
     {
-        static constexpr float pi = 3.14159f;
+        constexpr float pi = 3.14159f;
 
         float angle = (index * 2.f) * (pi / m_points) - (pi / 2.f);
 

@@ -188,6 +188,7 @@ void fe::particleSystem::preUpdate(fe::time currentTime)
                     }
             }
 
+        FE_ENGINE_PROFILE("particle_deletion", "killed");
         for (int i = (m_totalParticles - 1); i >= 0; i--)
             {
                 if (m_particleFlags.data()[i] & fe::particleFlags::KILLED)
@@ -206,6 +207,33 @@ void fe::particleSystem::preUpdate(fe::time currentTime)
                         updateBatch = true;
                     }
             }
+        FE_END_PROFILE;
+
+        const particleCollisionData *collisionPairData = m_collisionPairs.data();
+        FE_ENGINE_PROFILE("particle_sim", "collision_pair_solutions");
+        particle p = 0;
+        for (unsigned int i = 0; i < m_collisionPairs.size(); i++)
+            {
+                int j = i;
+                p = collisionPairData[j].m_particle;
+                while (!collisionPairData[i].m_collider)
+                    {
+                        m_particleWeightSum[p] += m_particleWeight * static_cast<int>(collisionPairData[i].m_collided);
+                        i++;
+                    }
+            }
+        FE_END_PROFILE;
+
+        FE_ENGINE_PROFILE("particle_sim", "pressure_calculation");
+        constexpr float weightCoef = 1.f;
+        constexpr float weightAvg = 1.f;
+        float *particleWeightSumData = m_particleWeightSum.data();
+        float *particlePressureData = m_particlePressure.data();
+        for (unsigned int i = 0; i < m_particleWeightSum.size(); i++)
+            {
+                particlePressureData[i] = std::max(0.f, weightCoef * (particleWeightSumData[i] - weightAvg));
+            }
+        FE_END_PROFILE;
 
         if (updateBatch)
             {
@@ -218,7 +246,6 @@ void fe::particleSystem::fixedUpdate(float dt)
         fe::circle *boundsData = m_particleBounds.data();
         fe::Vector2d *velocityData = m_particleVelocities.data();
         int *particleFloorData = m_particleFloor.data();
-        const particleCollisionData *particleCollisionData = m_collisionPairs.data();
 
         FE_ENGINE_PROFILE("particle_sim", "velocity_update");
         for (unsigned int i = 0; i < m_totalParticles; i++)
@@ -238,7 +265,7 @@ void fe::particleSystem::queueParticles(fe::time lifetime, fe::particleFlags fla
 
 void fe::particleSystem::queueParticles(fe::time lifetime, fe::particleFlags flags, sf::Color colour, float particleRadius, unsigned int count, fe::Vector2d position, float radius, float speed, float arc, float heading)
     {
-        static constexpr float degToRad = 3.14159f / 180.f;
+        constexpr float degToRad = 3.14159f / 180.f;
 
         float fov = arc / 2;
         arc = arc * degToRad;

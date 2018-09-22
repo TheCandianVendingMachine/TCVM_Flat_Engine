@@ -45,8 +45,8 @@ void fe::debugDraw::addSquare(int xSize, int ySize, int xPos, int yPos, sf::Colo
 
 void fe::debugDraw::addCircle(int radius, int xPos, int yPos, sf::Color colour)
     {
-        static constexpr int points = 50;
-        static constexpr float pi = 3.14159f;
+        constexpr int points = 50;
+        constexpr float pi = 3.14159f;
 
         FE_ENGINE_PROFILE("debug_draw", "add_circle");
         for (unsigned int i = 0; i <= points; i++)
