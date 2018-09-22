@@ -67,7 +67,9 @@ namespace fe
                     std::vector<particle> m_collisionParticles;
                     std::vector<int> m_particleFloor;
 
-                    const float m_particleWeight = 1.f;
+                    float m_particleWeight;
+                    float m_weightAverage;
+                    float m_repulsionCoefficient;
 
                     unsigned int m_totalParticles;
 
@@ -87,7 +89,12 @@ namespace fe
                     FLAT_ENGINE_API void shutDown();
                     FLAT_ENGINE_API void determineCollisionPairs();
                     FLAT_ENGINE_API void preUpdate(fe::time currentTime);
+                    FLAT_ENGINE_API void update();
                     FLAT_ENGINE_API void fixedUpdate(float dt);
+
+                    FLAT_ENGINE_API void setParticleWeight(float weight);
+                    FLAT_ENGINE_API void setAverageWeightUntilRepulsion(float weight);
+                    FLAT_ENGINE_API void setRepulsionCoefficient(float coef);
 
                     FLAT_ENGINE_API void queueParticles(fe::time lifetime, fe::particleFlags flags, sf::Color colour, float particleRadius, unsigned int count, fe::Vector2d position, float speed, float arc, float heading);
                     FLAT_ENGINE_API void queueParticles(fe::time lifetime, fe::particleFlags flags, sf::Color colour, float particleRadius, unsigned int count, fe::Vector2d position, float radius, float speed, float arc, float heading);

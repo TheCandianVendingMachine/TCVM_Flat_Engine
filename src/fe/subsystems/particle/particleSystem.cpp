@@ -104,12 +104,11 @@ void fe::particleSystem::broadphase(const unsigned int *collisionParticlesData, 
 
 void fe::particleSystem::startUp()
     {
-        fe::particleGroup group;
-        group.m_firstIndex = 0;
-        group.m_lastIndex = 0;
         m_totalParticles = 0;
-
         m_collisionPairIndex = 0;
+        m_repulsionCoefficient = 1.f;
+        m_weightAverage = 0.1f;
+        m_particleWeight = 5.f;
     }
 
 void fe::particleSystem::shutDown()
@@ -144,6 +143,17 @@ void fe::particleSystem::determineCollisionPairs()
                 else if (!fe::intersects(boundsData[itOrigParticle], boundsData[data.m_particle]))
                     {
                         data.m_collided = false;
+                    }
+                else
+                    {
+                        float diffX = boundsData[data.m_particle].m_globalPositionX - boundsData[itOrigParticle].m_globalPositionX;
+                        float diffY = boundsData[data.m_particle].m_globalPositionY - boundsData[itOrigParticle].m_globalPositionY;
+                        float diamter = boundsData[data.m_particle].m_radius + boundsData[itOrigParticle].m_radius;
+                        float distance = std::sqrt(diffX * diffX + diffY * diffY);
+
+                        data.m_relativePositionX = diffX / distance;
+                        data.m_relativePositionY = diffY / distance;
+                        data.m_overlap = 1 - (distance / diamter);
                     }
             }
 
@@ -207,28 +217,28 @@ void fe::particleSystem::preUpdate(fe::time currentTime)
             }
         FE_END_PROFILE;
 
+        if (updateBatch)
+            {
+                m_batch.reset(m_totalParticles);
+            }
+    }
+
+void fe::particleSystem::update()
+    {
         FE_ENGINE_PROFILE("particle_sim", "collision_pair_solutions");
         particleCollisionData *collisionPairData = m_collisionPairs.data();
-        constexpr float weightCoef = 1.f;
-        constexpr float weightAvg = 1.f;
         for (unsigned int i = 0; i < m_collisionPairs.size(); i++)
             {
                 int j = i;
-                particle p = collisionPairData[j].m_particle;
                 float weightSum = 0.f;
                 while (!collisionPairData[i].m_collider)
                     {
                         weightSum += collisionPairData[i].m_overlap * static_cast<int>(collisionPairData[i].m_collided);
                         i++;
                     }
-                collisionPairData[j].m_pressure = std::max(0.f, weightCoef * (weightSum - weightAvg));
+                collisionPairData[j].m_pressure = std::max(0.f, m_particleWeight * (weightSum - m_weightAverage));
             }
         FE_END_PROFILE;
-
-        if (updateBatch)
-            {
-                m_batch.reset(m_totalParticles);
-            }
     }
 
 void fe::particleSystem::fixedUpdate(float dt)
@@ -239,8 +249,6 @@ void fe::particleSystem::fixedUpdate(float dt)
 
         const particleCollisionData *collisionPairData = m_collisionPairs.data();
 
-        const float repulsionCoef = 1.f;
-
         FE_ENGINE_PROFILE("particle_sim", "apply_pressure");
         for (unsigned int i = 0; i < m_collisionPairs.size(); i++)
             {
@@ -249,10 +257,11 @@ void fe::particleSystem::fixedUpdate(float dt)
                 fe::Vector2d velocity = velocityData[p];
                 while (!collisionPairData[i].m_collider)
                     {
-                        fe::Vector2d relativeOverlap(collisionPairData[j].m_relativePositionX, collisionPairData[j].m_relativePositionY);
-                        velocity = velocity + repulsionCoef * dt * (collisionPairData[i].m_pressure + collisionPairData[j].m_pressure) * collisionPairData[j].m_overlap * relativeOverlap;
+                        fe::Vector2d relativeOverlap(collisionPairData[i].m_relativePositionX, collisionPairData[i].m_relativePositionY);
+                        velocity = velocity + dt * m_repulsionCoefficient * (collisionPairData[i].m_pressure + collisionPairData[j].m_pressure) * collisionPairData[i].m_overlap * relativeOverlap;
                         i++;
                     }
+                velocityData[p] = velocity;
             }
         FE_END_PROFILE;
 
@@ -265,6 +274,21 @@ void fe::particleSystem::fixedUpdate(float dt)
                 particleFloorData[i] = static_cast<int>(std::floorf(boundsData[i].m_globalPositionY / (2.f * boundsData[i].m_radius)));
             }
         FE_END_PROFILE;
+    }
+
+void fe::particleSystem::setParticleWeight(float weight)
+    {
+        m_particleWeight = weight;
+    }
+
+void fe::particleSystem::setAverageWeightUntilRepulsion(float weight)
+    {
+        m_weightAverage = weight;
+    }
+
+void fe::particleSystem::setRepulsionCoefficient(float coef)
+    {
+        m_repulsionCoefficient = coef;
     }
 
 void fe::particleSystem::queueParticles(fe::time lifetime, fe::particleFlags flags, sf::Color colour, float particleRadius, unsigned int count, fe::Vector2d position, float speed, float arc, float heading)
