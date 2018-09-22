@@ -40,7 +40,7 @@ namespace fe
 
                     // Collision data for particles to compute collision pairs
                     // Vector looks like:
-                    // [(0, 4, true), (1, 0, false), (2, 0, false), (3, 0, false), (4, 0, true)]
+                    // [(0, true, false), (1, false, false), (2, false, false), (3, false, false), (4, false, true)]
                     struct particleCollisionData
                         {
                             particle m_particle; // actual particle index
@@ -55,6 +55,7 @@ namespace fe
 
                     // Inline arrays that define a particle.
                     // Particles are defined as just having a velocity, boundary, and a flag
+                    std::vector<float> m_particleWeightSum;
                     std::vector<fe::Vector2d> m_particleVelocities;
                     std::vector<fe::circle> m_particleBounds;
                     std::vector<fe::particleFlags> m_particleFlags;
@@ -63,10 +64,11 @@ namespace fe
                     std::vector<particle> m_collisionParticles;
                     std::vector<int> m_particleFloor;
 
+                    const float m_particleWeight = 1.f;
+
                     unsigned int m_totalParticles;
 
                     std::vector<particleCollisionData> m_collisionPairs;
-                    unsigned int m_collisionPairEndIndex; // optimization to keep data in the vector if we can
                     unsigned int m_collisionPairIndex; // current position in the collision pair vector
 
                     std::vector<fe::particleGroup> m_collisionGroups;
