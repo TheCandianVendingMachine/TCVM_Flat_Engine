@@ -46,6 +46,10 @@ namespace fe
                             particle m_particle; // actual particle index
                             bool m_collider = false; // whether or not this is the one being tested
                             bool m_collided = true; // whether or not the particle actually collides with the test
+                            float m_relativePositionX = 0.f;
+                            float m_relativePositionY = 0.f;
+                            float m_overlap = 0.f; // only relavent if m_collider = false AND m_collided = true
+                            float m_pressure = 0.f; // only relavent if m_collider is true
 
                             particleCollisionData(particle p) : m_particle(p) {}
                         };
@@ -55,8 +59,6 @@ namespace fe
 
                     // Inline arrays that define a particle.
                     // Particles are defined as just having a velocity, boundary, and a flag
-                    std::vector<float> m_particleWeightSum;
-                    std::vector<float> m_particlePressure;
                     std::vector<fe::Vector2d> m_particleVelocities;
                     std::vector<fe::circle> m_particleBounds;
                     std::vector<fe::particleFlags> m_particleFlags;

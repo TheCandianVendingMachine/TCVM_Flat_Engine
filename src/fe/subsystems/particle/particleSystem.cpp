@@ -169,7 +169,6 @@ void fe::particleSystem::preUpdate(fe::time currentTime)
                 m_deathTime.emplace_back(p.m_deathTime);
                 m_colour.emplace_back(p.m_colour);
                 m_particleFloor.emplace_back(static_cast<int>(std::floorf(m_particleBounds.data()[m_totalParticles].m_globalPositionY / (2.f * m_particleBounds.data()[m_totalParticles].m_radius))));
-                m_particleWeightSum.emplace_back(0.f);
 
                 if (!(p.m_flags & fe::particleFlags::IGNORE_COLLISIONS))
                     {
@@ -199,7 +198,6 @@ void fe::particleSystem::preUpdate(fe::time currentTime)
                         m_deathTime.erase(m_deathTime.begin() + i);
                         m_colour.erase(m_colour.begin() + i);
                         m_particleFloor.erase(m_particleFloor.begin() + i);
-                        m_particleWeightSum.erase(m_particleWeightSum.begin() + i);
 
                         m_collisionParticles.erase(std::remove(m_collisionParticles.begin(), m_collisionParticles.end(), i), m_collisionParticles.end());
 
@@ -209,29 +207,21 @@ void fe::particleSystem::preUpdate(fe::time currentTime)
             }
         FE_END_PROFILE;
 
-        const particleCollisionData *collisionPairData = m_collisionPairs.data();
         FE_ENGINE_PROFILE("particle_sim", "collision_pair_solutions");
-        particle p = 0;
+        particleCollisionData *collisionPairData = m_collisionPairs.data();
+        constexpr float weightCoef = 1.f;
+        constexpr float weightAvg = 1.f;
         for (unsigned int i = 0; i < m_collisionPairs.size(); i++)
             {
                 int j = i;
-                p = collisionPairData[j].m_particle;
+                particle p = collisionPairData[j].m_particle;
+                float weightSum = 0.f;
                 while (!collisionPairData[i].m_collider)
                     {
-                        m_particleWeightSum[p] += m_particleWeight * static_cast<int>(collisionPairData[i].m_collided);
+                        weightSum += collisionPairData[i].m_overlap * static_cast<int>(collisionPairData[i].m_collided);
                         i++;
                     }
-            }
-        FE_END_PROFILE;
-
-        FE_ENGINE_PROFILE("particle_sim", "pressure_calculation");
-        constexpr float weightCoef = 1.f;
-        constexpr float weightAvg = 1.f;
-        float *particleWeightSumData = m_particleWeightSum.data();
-        float *particlePressureData = m_particlePressure.data();
-        for (unsigned int i = 0; i < m_particleWeightSum.size(); i++)
-            {
-                particlePressureData[i] = std::max(0.f, weightCoef * (particleWeightSumData[i] - weightAvg));
+                collisionPairData[j].m_pressure = std::max(0.f, weightCoef * (weightSum - weightAvg));
             }
         FE_END_PROFILE;
 
@@ -246,6 +236,25 @@ void fe::particleSystem::fixedUpdate(float dt)
         fe::circle *boundsData = m_particleBounds.data();
         fe::Vector2d *velocityData = m_particleVelocities.data();
         int *particleFloorData = m_particleFloor.data();
+
+        const particleCollisionData *collisionPairData = m_collisionPairs.data();
+
+        const float repulsionCoef = 1.f;
+
+        FE_ENGINE_PROFILE("particle_sim", "apply_pressure");
+        for (unsigned int i = 0; i < m_collisionPairs.size(); i++)
+            {
+                int j = i;
+                particle p = collisionPairData[j].m_particle;
+                fe::Vector2d velocity = velocityData[p];
+                while (!collisionPairData[i].m_collider)
+                    {
+                        fe::Vector2d relativeOverlap(collisionPairData[j].m_relativePositionX, collisionPairData[j].m_relativePositionY);
+                        velocity = velocity + repulsionCoef * dt * (collisionPairData[i].m_pressure + collisionPairData[j].m_pressure) * collisionPairData[j].m_overlap * relativeOverlap;
+                        i++;
+                    }
+            }
+        FE_END_PROFILE;
 
         FE_ENGINE_PROFILE("particle_sim", "velocity_update");
         for (unsigned int i = 0; i < m_totalParticles; i++)

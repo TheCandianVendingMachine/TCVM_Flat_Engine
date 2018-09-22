@@ -6,20 +6,8 @@
 
 namespace fe
     {
-        template <typename dataType>
-        struct Vector2;
-        template <typename T>
+        template<typename dataType>
         struct lightVector2;
-
-        template<typename dataType, typename vectorType>
-        Vector2<dataType> operator*(const dataType &lhs, Vector2<vectorType> &rhs);
-        template<typename dataType, typename vectorType>
-        Vector2<dataType> operator/(const dataType &lhs, Vector2<vectorType> &rhs);
-
-        template<typename dataType, typename vectorType>
-        void operator*=(const dataType &lhs, Vector2<vectorType> &rhs);
-        template<typename dataType, typename vectorType>
-        void operator/=(const dataType &lhs, Vector2<vectorType> &rhs);
 
         template <typename dataType>
         struct Vector2
@@ -65,11 +53,15 @@ namespace fe
                 void operator*=(const dataType &rhs){ x *= rhs; y *= rhs; }
                 void operator/=(const dataType &rhs){ x /= rhs; y /= rhs; }
 
-                friend Vector2<dataType> operator*(const dataType &lhs, Vector2<dataType> &rhs);
-                friend Vector2<dataType> operator/(const dataType &lhs, Vector2<dataType> &rhs);
+                friend fe::Vector2<dataType> operator*(const dataType &lhs, Vector2<dataType> &rhs)
+                    {
+                        return rhs * lhs;
+                    }
 
-                friend void operator*=(const dataType &lhs, Vector2<dataType> &rhs);
-                friend void operator/=(const dataType &lhs, Vector2<dataType> &rhs);
+                friend fe::Vector2<dataType> operator/(const dataType &lhs, Vector2<dataType> &rhs) 
+                    {
+                        return rhs * lhs;
+                    }
 
                 float magnitude() const { return std::sqrt(x * x + y * y); }
                 float magnitudeSqr() const { return x * x + y * y; }
@@ -113,30 +105,6 @@ namespace fe
                 sf::Vector2<dataType> convertToSfVec2() { return sf::Vector2<dataType>(x, y); };
 
             };
-
-        template<typename dataType, typename vectorType>
-        Vector2<dataType> fe::operator*(const dataType &lhs, Vector2<vectorType> &rhs)
-            {
-                return rhs * lhs;
-            }
-
-        template<typename dataType, typename vectorType>
-        Vector2<dataType> fe::operator/(const dataType &lhs, Vector2<vectorType> &rhs)
-            {
-                return rhs / lhs;
-            }
-
-        template<typename dataType, typename vectorType>
-        void fe::operator*=(const dataType &lhs, Vector2<vectorType> &rhs)
-            {
-                rhs *= lhs;
-            }
-
-        template<typename dataType, typename vectorType>
-        void fe::operator/=(const dataType &lhs, Vector2<vectorType> &rhs)
-            {
-                rhs /= lhs;
-            }
 
         // External functions that are useful for Vector operations
         template<typename dataType>
