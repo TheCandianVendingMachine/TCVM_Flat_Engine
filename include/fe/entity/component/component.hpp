@@ -24,11 +24,11 @@ namespace fe
 
                     bool m_initialized;
 
-                    virtual void initLuaValues(sol::table table, const char *componentName) {}
+                    virtual void initLuaValues(sol::table table, const char *componentPath, const char *entName) {}
 
                 public:
                     FLAT_ENGINE_API bool isInitialized() const;
-                    FLAT_ENGINE_API void engineInitLuaValues(sol::table table, const char *componentName);
+                    FLAT_ENGINE_API void engineInitLuaValues(sol::table table, const char *componentPath, const char *entName);
 
                     FLAT_ENGINE_API fe::scriptObject *getOwner();
 
@@ -36,6 +36,7 @@ namespace fe
                     virtual void engineOnRemove(fe::baseEntity *ent) {}
                     virtual void engineUpdate() {}
                     virtual void engineFixedUpdate(float deltaTime) {}
+
             };
 
         template<typename TObj>

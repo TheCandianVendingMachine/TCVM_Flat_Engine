@@ -5,18 +5,22 @@ void fe::componentManager::startUp()
     {
     }
 
-void fe::componentManager::addComponentToObject(fe::baseEntity *ent, const std::string &name)
+void fe::componentManager::addComponentToObject(fe::baseEntity *ent, const std::string &entName, const std::string &compName, const std::string &compLuaPath, sol::table table)
     {
-        fe::str str = FE_STR(name.c_str());
+        fe::str str = FE_STR(compName.c_str());
         if (m_componentLookupTable.find(str) != m_componentLookupTable.end())
             {
-                ent->addComponent(m_componentLookupTable[str]);
-                m_components.getObject(m_componentLookupTable[str])->engineOnAdd(ent);
-                FE_LOG_DEBUG("Added component [", name, "] to entity [", ent->getName(), "]");
+                fe::Handle compHandle = m_components.addObject(m_componentLookupTable[str]->create());
+                
+                m_components.getObject(compHandle)->engineInitLuaValues(table, compLuaPath.c_str(), entName.c_str());
+                m_components.getObject(compHandle)->engineOnAdd(ent);
+
+                ent->addComponent(compHandle);
+                FE_LOG_DEBUG("Added component [", compName, "] to entity [", ent->getName(), "]");
             }
         else
             {
-                FE_LOG_ERROR("Component with name [", name, "] does not exist");
+                FE_LOG_ERROR("Component with name [", compName, "] does not exist");
             }
     }
 
@@ -25,23 +29,6 @@ void fe::componentManager::removeComponentFromObject(fe::baseEntity *ent, fe::Ha
         m_components.getObject(handle)->engineOnRemove(ent);
         ent->removeComponent(handle);
         FE_LOG_DEBUG("Removed component with handle [", handle, "] from entity [", ent->getName(), "]");
-    }
-
-void fe::componentManager::initComponentLuaTable(const std::string &name, const std::string &path, sol::table table)
-    {
-        fe::str str = FE_STR(name.c_str());
-        if (m_componentLookupTable.find(str) != m_componentLookupTable.end())
-            {
-                fe::componentBase *comp = m_components.getObject(m_componentLookupTable[str]);
-                if (!comp->isInitialized()) 
-                    {
-                        comp->engineInitLuaValues(table, path.c_str());
-                    }
-            }
-        else
-            {
-                FE_LOG_ERROR("[", name, "] does not exist in lookup table -- cannot init Lua table");
-            }
     }
 
 void fe::componentManager::update()
@@ -63,4 +50,9 @@ void fe::componentManager::fixedUpdate(float deltaTime)
 void fe::componentManager::shutDown()
     {
         m_components.clearAllObjects([](componentBase **c) { delete *c; *c = nullptr; });
+        for (auto &proxy : m_componentLookupTable)
+            {
+                delete proxy.second;
+                proxy.second = nullptr;
+            }
     }

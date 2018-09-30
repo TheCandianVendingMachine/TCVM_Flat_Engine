@@ -369,8 +369,7 @@ fe::Handle fe::entitySpawner::spawn(const char *luaName)
         for (auto &component : prefab.m_components)
             {
                 std::string path = luaName + std::string("/components/") + component.first;
-                m_world->getComponentManager().initComponentLuaTable(component.first, path, component.second);
-                m_world->getComponentManager().addComponentToObject(entity, component.first);
+                m_world->getComponentManager().addComponentToObject(entity, luaName, component.first, path, component.second);
             }
 
         fe::gameEvent createEvent(FE_STR((std::string("spawn_") + luaName).c_str()), 1);
