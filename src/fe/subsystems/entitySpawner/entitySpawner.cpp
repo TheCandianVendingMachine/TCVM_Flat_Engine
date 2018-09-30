@@ -116,7 +116,13 @@ fe::prefabObject &fe::entitySpawner::createPrefab(const char *luaName)
                                 prefab.m_textureOffset.y = 0;
                             }
 
-                        sf::Vector2u textureSize = fe::engine::get().getResourceManager<sf::Texture>()->getTexture(prefab.m_textureID)->getSize();
+                        sf::Texture *tex = fe::engine::get().getResourceManager<sf::Texture>()->getTexture(prefab.m_textureID);
+                        if (!tex)
+                            {
+                                std::string reason = "Entity texture is invalid! Ent='" + std::string(luaName) + "'";
+                                fe::engine::crash(reason.c_str());
+                            }
+                        sf::Vector2u textureSize = tex->getSize();
                         prefab.m_textureSize.x = textureSize.x;
                         prefab.m_textureSize.y = textureSize.y;
                         if (sceneGraphData["size"].get_type() == sol::type::table)
@@ -349,6 +355,7 @@ fe::Handle fe::entitySpawner::spawn(const char *luaName)
                         entity->getActor()->setStartFrame(prefab.m_animationStartFrame);
                         entity->getActor()->setEndFrame(prefab.m_animationEndFrame);
                         entity->getActor()->setFrameSpeed(prefab.m_animationFrameSpeed);
+                        entity->getActor()->play(false);
                     }
             }
 

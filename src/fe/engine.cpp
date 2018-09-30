@@ -234,13 +234,13 @@ end)");
         m_scriptManager->getFunctionHandler().registerCPPFunction("sendEvent", &fe::sendEvent);
 
         // Register Objects
-        m_scriptManager->getUserTypeHandler().addCustomType<fe::Vector2d>(
+        m_scriptManager->getUserTypeHandler().addCustomType<fe::Vector2d, fe::Vector2d(), fe::Vector2d(float, float)>(
             "vector2",
             "x", &Vector2d::x,
             "y", &Vector2d::y
         );
 
-        m_scriptManager->getUserTypeHandler().addCustomType<fe::lightVector2d>(
+        m_scriptManager->getUserTypeHandler().addCustomType<fe::lightVector2d, fe::lightVector2d(), fe::lightVector2d(float, float)>(
             "lightVector2",
             "x", &lightVector2d::x,
             "y", &lightVector2d::y

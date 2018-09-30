@@ -497,6 +497,12 @@ void *fe::aabbTree::colliderAtPoint(float x, float y) const
 fe::raycastResult fe::aabbTree::raycast(float x, float y, float dirX, float dirY, fe::str ignoreGroup) const
     {
         FE_ENGINE_PROFILE("aabb_tree", "test_ray_against_tree");
+
+        if (m_debug)
+            {
+                FE_DEBUG_DRAW_LINE(x, y, x + (dirX * 100.f), y + (dirY * 100.f), sf::Color::Red);
+            }
+        
         int stack[(FE_MAX_GAME_OBJECTS * 2) - 1];
         int stackTop = 0;
         stack[stackTop++] = m_base;
@@ -534,6 +540,12 @@ fe::raycastResult fe::aabbTree::raycast(float x, float y, float dirX, float dirY
 fe::raycastResult fe::aabbTree::linecast(float x0, float y0, float x1, float y1, fe::str ignoreGroup) const
     {
         FE_ENGINE_PROFILE("aabb_tree", "test_line_against_tree");
+
+        if (m_debug)
+            {
+                FE_DEBUG_DRAW_LINE(x0, y0, x1, y1, sf::Color::Red);
+            }
+
         int stack[(FE_MAX_GAME_OBJECTS * 2) - 1];
         int stackTop = 0;
         stack[stackTop++] = m_base;
