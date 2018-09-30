@@ -1,9 +1,10 @@
 // guid.hpp
 // a Global Unique IDentifier
 #pragma once
-#include "../typeDefines.hpp"
-#include "../time/clock.hpp"
-#include "../math/random.hpp"
+#include "fe/typeDefines.hpp"
+#include "fe/time/clock.hpp"
+#include "fe/math/random.hpp"
+#include <limits>
 
 namespace fe
     {

@@ -96,8 +96,8 @@ namespace fe
                     FLAT_ENGINE_API void setAverageWeightUntilRepulsion(float weight);
                     FLAT_ENGINE_API void setRepulsionCoefficient(float coef);
 
-                    FLAT_ENGINE_API void queueParticles(fe::time lifetime, fe::particleFlags flags, sf::Color colour, float particleRadius, unsigned int count, fe::Vector2d position, float speed, float arc, float heading);
-                    FLAT_ENGINE_API void queueParticles(fe::time lifetime, fe::particleFlags flags, sf::Color colour, float particleRadius, unsigned int count, fe::Vector2d position, float radius, float speed, float arc, float heading);
+                    FLAT_ENGINE_API void queueParticles(fe::time lifetimeMin, fe::time lifetimeMax, fe::particleFlags flags, sf::Color colour, float particleRadius, unsigned int count, fe::Vector2d position, float speed, float arc, float heading);
+                    FLAT_ENGINE_API void queueParticles(fe::time lifetimeMin, fe::time lifetimeMax, fe::particleFlags flags, sf::Color colour, float particleRadius, unsigned int count, fe::Vector2d position, float radius, float speed, float arc, float heading);
 
                     FLAT_ENGINE_API void draw(sf::RenderTarget &target);
 

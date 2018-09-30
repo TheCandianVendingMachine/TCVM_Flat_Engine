@@ -11,6 +11,8 @@
 #include "fe/gui/guiGraph.hpp"
 #include "gameScreen.hpp"
 
+#include "fe/subsystems/particle/particleSystem.hpp"
+
 #include <vector>
 #include <queue>
 #include <memory>
@@ -44,6 +46,7 @@ namespace fe
                     fe::gameWorld m_gameWorld;
                     fe::entitySpawner m_entitySpawner;
                     fe::camera m_stateCamera;
+                    fe::particleSystem m_particleSystem;
 
                     bool m_paused; // If state is paused no updates will occur
 
@@ -57,10 +60,6 @@ namespace fe
 
                     FLAT_ENGINE_API int addDialog(fe::gui::dialog *panel, int connected = -1, int zPos = 0);
                     FLAT_ENGINE_API void removeDialog(fe::gui::dialog *panel);
-
-                    // Run a function to check every single panel
-                    template<typename Func>
-                    bool forEachPanel(Func func);
 
                     FLAT_ENGINE_API void startUp();
                     FLAT_ENGINE_API virtual void init() {}
@@ -98,6 +97,9 @@ namespace fe
                     FLAT_ENGINE_API fe::prefabObject &addPrefab(const char *name);
                     FLAT_ENGINE_API void getPrefabs(std::vector<std::string> &prefabs) const;
 
+                    FLAT_ENGINE_API const fe::particleSystem &getParticleSystem() const;
+                    FLAT_ENGINE_API fe::particleSystem &getParticleSystem();
+
                     FLAT_ENGINE_API const fe::gameWorld &getGameWorld() const;
                     FLAT_ENGINE_API fe::gameWorld &getGameWorld();
 
@@ -110,17 +112,4 @@ namespace fe
 
                     FLAT_ENGINE_API virtual ~baseGameState();
             };
-
-        template<typename Func>
-        bool baseGameState::forEachPanel(Func func)
-            {
-                for (auto &panel : m_guiPanels)
-                    {
-                        if (!func(panel))
-                            {
-                                return false;
-                            }
-                    }
-                return true;
-            }
     }

@@ -3,6 +3,7 @@
 #pragma once
 #include "../flatEngineExport.hpp"
 #include <random>
+#include <limits>
 
 namespace fe
     {
@@ -24,10 +25,6 @@ namespace fe
                     FLAT_ENGINE_API static random &get();
                     template<typename T>
                     T generate(T min, T max);
-                    template<>
-                    int generate(int min, int max);
-                    template<>
-                    unsigned int generate(unsigned int min, unsigned int max);
 
             };
 
@@ -39,31 +36,17 @@ namespace fe
                         m_randomizer.seed(m_seed);
                     }
 
-                std::uniform_real_distribution<T> dist(min, max);
-                return dist(m_randomizer);
-            }
-
-        template<>
-        inline int random::generate(int min, int max)
-            {
-                if (m_hasSeed)
+                if constexpr (std::is_floating_point<T>::value) 
                     {
-                        m_randomizer.seed(m_seed);
+                        std::uniform_real_distribution<T> dist(min, max);
+                        return dist(m_randomizer);
+                    }
+                else if constexpr(std::numeric_limits<T>::is_integer)
+                    {
+                        std::uniform_int_distribution<T> dist(min, max);
+                        return dist(m_randomizer);
                     }
 
-                std::uniform_int_distribution<int> dist(min, max);
-                return dist(m_randomizer);
-            }
-
-        template<>
-        inline unsigned int random::generate(unsigned int min, unsigned int max)
-            {
-                if (m_hasSeed)
-                    {
-                        m_randomizer.seed(m_seed);
-                    }
-
-                std::uniform_int_distribution<unsigned int> dist(min, max);
-                return dist(m_randomizer);
+                return T();
             }
     }

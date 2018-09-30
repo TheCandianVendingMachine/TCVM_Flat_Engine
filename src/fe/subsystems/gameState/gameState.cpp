@@ -34,6 +34,7 @@ void fe::baseGameState::startUp()
         m_gameWorld.startUp();
         setCamera(std::move(fe::engine::get().getDefaultCamera()));
         m_entitySpawner.setWorld(&m_gameWorld);
+        m_particleSystem.startUp();
     }
 
 void fe::baseGameState::handleEvents(const sf::Event &event)
@@ -69,6 +70,7 @@ void fe::baseGameState::preUpdateDefined()
             }
 
         m_gameWorld.preUpdate();
+        m_particleSystem.preUpdate(fe::engine::get().getElapsedGameTime());
     }
 
 void fe::baseGameState::updateDefined(collisionWorld *collisionWorld)
@@ -79,6 +81,8 @@ void fe::baseGameState::updateDefined(collisionWorld *collisionWorld)
         FE_ENGINE_PROFILE("game_state", "game_world_update");
         m_gameWorld.update(collisionWorld);
         FE_END_PROFILE;
+        m_particleSystem.determineCollisionPairs();
+        m_particleSystem.update();
     }
 
 void fe::baseGameState::postUpdateDefined()
@@ -112,6 +116,7 @@ void fe::baseGameState::fixedUpdateDefined(float deltaTime)
     {
         fixedUpdate(deltaTime);
         m_gameWorld.fixedUpdate(deltaTime);
+        m_particleSystem.fixedUpdate(deltaTime);
     }
 
 void fe::baseGameState::updateCamera(float deltaTime, int iterations)
@@ -146,12 +151,15 @@ void fe::baseGameState::draw(sf::RenderTarget &app)
         m_guiGraph.draw(app);
         //app.setView(currentView);
         FE_END_PROFILE
+
+        m_particleSystem.draw(app);
     }
 
 void fe::baseGameState::shutDown()
     {
         m_gameWorld.shutDown();
         m_guiGraph.shutDown();
+        m_particleSystem.shutDown();
     }
 
 fe::Handle fe::baseGameState::addObject(const char *id)
@@ -190,6 +198,16 @@ fe::prefabObject &fe::baseGameState::addPrefab(const char *name)
 void fe::baseGameState::getPrefabs(std::vector<std::string> &prefabs) const
     {
         m_entitySpawner.getPrefabs(prefabs);
+    }
+
+const fe::particleSystem &fe::baseGameState::getParticleSystem() const
+    {
+        return m_particleSystem;
+    }
+
+fe::particleSystem &fe::baseGameState::getParticleSystem()
+    {
+        return m_particleSystem;
     }
 
 const fe::gameWorld &fe::baseGameState::getGameWorld() const

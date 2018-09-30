@@ -291,12 +291,12 @@ void fe::particleSystem::setRepulsionCoefficient(float coef)
         m_repulsionCoefficient = coef;
     }
 
-void fe::particleSystem::queueParticles(fe::time lifetime, fe::particleFlags flags, sf::Color colour, float particleRadius, unsigned int count, fe::Vector2d position, float speed, float arc, float heading)
+void fe::particleSystem::queueParticles(fe::time lifetimeMin, fe::time lifetimeMax, fe::particleFlags flags, sf::Color colour, float particleRadius, unsigned int count, fe::Vector2d position, float speed, float arc, float heading)
     {
-        queueParticles(lifetime, flags, colour, particleRadius, count, position, 0.f, speed, arc, heading);
+        queueParticles(lifetimeMin, lifetimeMax, flags, colour, particleRadius, count, position, 0.f, speed, arc, heading);
     }
 
-void fe::particleSystem::queueParticles(fe::time lifetime, fe::particleFlags flags, sf::Color colour, float particleRadius, unsigned int count, fe::Vector2d position, float radius, float speed, float arc, float heading)
+void fe::particleSystem::queueParticles(fe::time lifetimeMin, fe::time lifetimeMax, fe::particleFlags flags, sf::Color colour, float particleRadius, unsigned int count, fe::Vector2d position, float radius, float speed, float arc, float heading)
     {
         constexpr float degToRad = 3.14159f / 180.f;
 
@@ -311,7 +311,7 @@ void fe::particleSystem::queueParticles(fe::time lifetime, fe::particleFlags fla
                 p.m_position.x += fe::random::get().generate(-radius, radius);
                 p.m_position.y += fe::random::get().generate(-radius, radius);
 
-                p.m_deathTime = fe::engine::get().getElapsedGameTime() + lifetime;
+                p.m_deathTime = fe::engine::get().getElapsedGameTime() + fe::microseconds(fe::random::get().generate(static_cast<fe::uInt64>(lifetimeMin.asMicroseconds()), static_cast<fe::uInt64>(lifetimeMax.asMicroseconds())));
                 p.m_radius = particleRadius;
                 p.m_flags = flags;
                 p.m_colour = colour;
