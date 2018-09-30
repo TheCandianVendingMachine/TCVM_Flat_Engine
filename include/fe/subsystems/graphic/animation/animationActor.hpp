@@ -21,6 +21,7 @@ namespace fe
                     unsigned int m_currentFrame;
 
                     bool m_play;
+                    bool m_needsUpdate;
 
                 public:
                     FLAT_ENGINE_API animationActor(fe::renderObject *const actor);

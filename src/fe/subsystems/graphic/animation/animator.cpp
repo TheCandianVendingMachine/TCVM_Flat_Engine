@@ -69,7 +69,11 @@ void fe::animator::updateTextures()
                             {
                                 auto textureOffset = texture.getTexture(actor);
                                 actor->updateVerticies(textureOffset.first, textureOffset.second);
-                                actor->iterateFrame(1);
+
+                                if (actor->isPlaying()) 
+                                    {
+                                        actor->iterateFrame(1);
+                                    }
                             }
                     }
             }

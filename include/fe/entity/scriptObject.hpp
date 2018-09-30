@@ -44,5 +44,7 @@ namespace fe
                     FLAT_ENGINE_API bool scriptObjectHasArrived();
                     FLAT_ENGINE_API bool scriptObjectIsTargeted();
 
+                    FLAT_ENGINE_API void scriptObjectSetAnimationFrame(unsigned int frame);
+
             };
     }

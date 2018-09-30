@@ -2,6 +2,7 @@
 #include "fe/entity/baseEntity.hpp"
 #include "fe/subsystems/physics/rigidBody.hpp"
 #include "fe/subsystems/graphic/renderObject/renderObject.hpp"
+#include "fe/subsystems/graphic/animation/animationActor.hpp"
 
 fe::scriptObject::scriptObject(baseEntity *obj) :
     m_entity(obj)
@@ -121,4 +122,12 @@ bool fe::scriptObject::scriptObjectHasArrived()
 bool fe::scriptObject::scriptObjectIsTargeted()
     {
         return m_entity->getUtilities().isTargeted();
+    }
+
+void fe::scriptObject::scriptObjectSetAnimationFrame(unsigned int frame)
+    {
+        if (m_entity->getActor())
+            {
+                m_entity->getActor()->setCurrentFrame(frame);
+            }
     }

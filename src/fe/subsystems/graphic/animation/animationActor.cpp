@@ -32,14 +32,15 @@ bool fe::animationActor::isPlaying() const
 
 bool fe::animationActor::needsUpdate(fe::time elapsedTime)
     {
-        if (!m_play) return false;
-
-        bool update = (int)(m_animationFrameSpeed - (elapsedTime - m_lastCheckedTime).asMilliseconds()) <= 0;
-        if (update) 
+        if (m_play) 
             {
-                m_lastCheckedTime = elapsedTime;
+                m_needsUpdate = (int)(m_animationFrameSpeed - (elapsedTime - m_lastCheckedTime).asMilliseconds()) <= 0;
+                if (m_needsUpdate)
+                    {
+                        m_lastCheckedTime = elapsedTime;
+                    }
             }
-        return update;
+        return m_needsUpdate;
     }
 
 void fe::animationActor::setFrameSpeed(unsigned int animationSpeed)
@@ -84,6 +85,7 @@ void fe::animationActor::setCurrentFrame(unsigned int frame)
             {
                 setCurrentFrame(m_startFrame);
             }
+        m_needsUpdate = true;
     }
 
 unsigned int fe::animationActor::getCurrentFrame() const
@@ -98,6 +100,7 @@ void fe::animationActor::iterateFrame(int amount)
 
 void fe::animationActor::updateVerticies(fe::Vector2<unsigned int> offset, fe::Vector2<unsigned int> size)
     {
+        m_needsUpdate = false;
         m_actorVerticies->m_texCoords[0] = offset.x;
         m_actorVerticies->m_texCoords[1] = offset.y;
 

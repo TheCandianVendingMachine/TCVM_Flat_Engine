@@ -269,7 +269,8 @@ end)");
             "getSlowdownDistance", &scriptObject::scriptObjectGetSlowdownDistance,
             "setSlowdownDistance", &scriptObject::scriptObjectSetSlowdownDistance,
             "hasArrived", &scriptObject::scriptObjectHasArrived,
-            "isTargeted", &scriptObject::scriptObjectIsTargeted
+            "isTargeted", &scriptObject::scriptObjectIsTargeted,
+            "setAnimationFrame", &scriptObject::scriptObjectSetAnimationFrame
         );
     }
 
