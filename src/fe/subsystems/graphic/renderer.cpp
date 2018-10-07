@@ -8,7 +8,7 @@ void fe::renderer::startUp()
     {
         m_renderWindowMarker = fe::memoryManager::get().getStackAllocater().getMarker();
         m_renderWindow = new(fe::memoryManager::get().getStackAllocater().alloc(sizeof(sf::RenderWindow))) sf::RenderWindow;
-        m_windowSettings = new(fe::memoryManager::get().getStackAllocater().alloc(sizeof(fe::serializerID))) fe::serializerID;
+        m_windowSettings = new(fe::memoryManager::get().getStackAllocater().alloc(sizeof(fe::serializerID))) fe::serializerID();
 
         m_settings.m_windowSize.x = 1280;
         m_settings.m_windowSize.y = 720;
