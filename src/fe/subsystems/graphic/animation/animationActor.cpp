@@ -37,20 +37,32 @@ bool fe::animationActor::isPlaying() const
         return m_play;
     }
 
-bool fe::animationActor::needsUpdate() const
+bool fe::animationActor::isPlayingSequence() const
     {
-        return m_needsUpdate && m_playingSequence && !m_doneSequence;
+        return m_playingSequence && !m_doneSequence;
     }
 
-void fe::animationActor::update(const fe::animationTexture &texture, fe::time elapsedTime)
+void fe::animationActor::updateTime(const fe::animationTexture &texture, fe::time elapsedTime)
     {
-        const fe::animationFrame &sequenceFrame = texture.getAnimationSequence(m_currentAnimationSequence)[m_currentSequenceFrame];
-        m_needsUpdate = (sequenceFrame.m_time - (elapsedTime - m_lastCheckedTime)) <= 0;
+        fe::time timeTillNextFrame = texture.getAnimationSequence(m_currentAnimationSequence)[m_currentSequenceFrame].m_time;
+        m_needsUpdate = (timeTillNextFrame - (elapsedTime - m_lastCheckedTime)) <= 0;
         if (m_needsUpdate)
             {
                 m_lastCheckedTime = elapsedTime;
-                m_doneSequence = (m_currentSequenceFrame + 1) >= texture.getAnimationSequence(m_currentAnimationSequence).size();
             }
+    }
+
+bool fe::animationActor::needsUpdate() const
+    {
+        return m_needsUpdate;
+    }
+
+void fe::animationActor::update(const fe::animationTexture &texture)
+    {
+        const fe::animationFrame &sequenceFrame = texture.getAnimationSequence(m_currentAnimationSequence)[m_currentSequenceFrame];
+        
+        m_doneSequence = (m_currentSequenceFrame + 1) >= texture.getAnimationSequence(m_currentAnimationSequence).size();
+        m_playingSequence = !m_doneSequence;
         m_currentFrame = sequenceFrame.m_frame;
         m_currentSequenceFrame++;
     }

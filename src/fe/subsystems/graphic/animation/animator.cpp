@@ -69,11 +69,15 @@ void fe::animator::updateTextures()
                 fe::animationTexture *texture = getObject(animation.first);
                 for (auto &actor : animation.second)
                     {
-                        if (actor->isPlaying() && actor->needsUpdate())
+                        if (actor->isPlaying() && actor->isPlayingSequence())
                             {
-                                actor->update(*texture, m_elapsedTime.getTime());
-                                auto textureOffset = texture->getTexture(actor->getCurrentFrame().x, actor->getCurrentFrame().y);
-                                actor->updateVerticies(textureOffset.first, textureOffset.second);
+                                actor->updateTime(*texture, m_elapsedTime.getTime());
+                                if (actor->needsUpdate())
+                                    {
+                                        actor->update(*texture);
+                                        auto textureOffset = texture->getTexture(actor->getCurrentFrame().x, actor->getCurrentFrame().y);
+                                        actor->updateVerticies(textureOffset.first, textureOffset.second);
+                                    }
                             }
                     }
             }

@@ -122,17 +122,16 @@ inline void fe::handleManager<T, TObjectCount>::clearAllObjects(std::function<vo
     }
 
 template<typename T, unsigned int objectCount>
-template<typename TType = std::remove_pointer<T>::type>
-TType *fe::handleManager<T, objectCount>::getObject(Handle handle) const
+typename std::remove_pointer<T>::type *fe::handleManager<T, objectCount>::getObject(Handle handle) const
     {
         if (handle < 0) return T();
-        if constexpr(std::is_pointer<T>::value) 
+        if constexpr (std::is_pointer<T>::value) 
             {
                 return m_objects[m_handles[handle].handle];
             }
         else
             {
-                return &m_objects[m_handles[handle].handle];
+                return const_cast<T*>(&m_objects[m_handles[handle].handle]);
             }
         return nullptr;
     }

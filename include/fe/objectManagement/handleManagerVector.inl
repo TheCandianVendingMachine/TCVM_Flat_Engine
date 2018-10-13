@@ -148,8 +148,7 @@ inline void fe::handleManager<T, 0>::clearAllObjects(std::function<void(T*)> onR
     }
 
 template<typename T>
-template<typename TType = std::remove_pointer<T>::type>
-TType *fe::handleManager<T, 0>::getObject(Handle handle) const
+typename std::remove_pointer<T>::type *fe::handleManager<T, 0>::getObject(Handle handle) const
     {
         if (handle >= m_handles.size())
             {

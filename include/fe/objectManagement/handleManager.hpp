@@ -61,8 +61,7 @@ namespace fe
                     void clearAllObjects();
                     void clearAllObjects(std::function<void(T*)> onRemoveFunc);
 
-                    template<typename TType = std::remove_pointer<T>::type>
-                    TType *getObject(Handle handle) const;
+                    typename std::remove_pointer<T>::type *getObject(Handle handle) const;
                     const T *getObjects() const;
 
             };
@@ -105,8 +104,7 @@ namespace fe
                     void clearAllObjects();
                     void clearAllObjects(std::function<void(T*)> onRemoveFunc);
 
-                    template<typename TType = typename std::remove_pointer<T>::type>
-                    TType *getObject(Handle handle) const;
+                    typename std::remove_pointer<T>::type *getObject(Handle handle) const;
                     const std::vector<T> &getObjects() const;
 
             };

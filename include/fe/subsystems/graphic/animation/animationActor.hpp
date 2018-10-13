@@ -34,9 +34,12 @@ namespace fe
                     FLAT_ENGINE_API void stop();
                     FLAT_ENGINE_API bool isPlaying() const;
 
+                    FLAT_ENGINE_API bool isPlayingSequence() const;
+
                     // If the actor needs to update its texture this will return true
+                    FLAT_ENGINE_API void updateTime(const fe::animationTexture &texture, fe::time elapsedTime);
                     FLAT_ENGINE_API bool needsUpdate() const;
-                    FLAT_ENGINE_API void update(const fe::animationTexture &texture, fe::time elapsedTime);
+                    FLAT_ENGINE_API void update(const fe::animationTexture &texture);
 
                     // Set how long it takes a frame to iterate in milliseconds
                     FLAT_ENGINE_API void setFrameSpeed(unsigned int animationSpeed);

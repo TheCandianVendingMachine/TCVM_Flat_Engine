@@ -30,7 +30,7 @@ namespace fe
                 fe::transformable m_tempTransform;
                 RENDER_OBJECT_TYPE m_type;
                 int m_vertColour[4];  // r, g, b, a
-                float m_texCoords[4]; // x, y, w, h
+                unsigned int m_texCoords[4]; // x, y, w, h
                 int m_graphNode = -1;
                 int m_zPosition;
                 bool m_draw = true;
