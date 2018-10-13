@@ -24,18 +24,18 @@ fe::time::time(const fe::time &&time)
         m_time = std::forward<const long long>(time.m_time);
     }
 
-double fe::time::asSeconds()
+double fe::time::asSeconds() const
     {
         // 0.000001 = 1e-6
         return static_cast<double>(m_time) / 1000000;
     }
 
-int32_t fe::time::asMilliseconds()
+int32_t fe::time::asMilliseconds() const
     {
         return static_cast<int32_t>(m_time) / 1000;
     }
 
-int64_t fe::time::asMicroseconds()
+int64_t fe::time::asMicroseconds() const
     {
         return m_time;
     }

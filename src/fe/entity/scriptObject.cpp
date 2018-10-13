@@ -128,6 +128,6 @@ void fe::scriptObject::scriptObjectSetAnimationFrame(unsigned int frame)
     {
         if (m_entity->getActor())
             {
-                m_entity->getActor()->setCurrentFrame(frame);
+                //m_entity->getActor()->setCurrentFrame(frame);
             }
     }

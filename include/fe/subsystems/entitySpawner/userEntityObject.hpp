@@ -1,11 +1,12 @@
 // userEntityObject.hpp
 // A generic object that holds Lua functions that will be called on update
 #pragma once
-#include "../../flatEngineExport.hpp"
-#include "../messaging/eventHandler.hpp"
-#include "../../typeDefines.hpp"
-#include "../../objectManagement/str.hpp"
-#include "../scripting/luaFunctionReference.hpp"
+#include "fe/flatEngineExport.hpp"
+#include "fe/debug/logger.hpp"
+#include "fe/subsystems/messaging/eventHandler.hpp"
+#include "fe/typeDefines.hpp"
+#include "fe/objectManagement/str.hpp"
+#include "fe/subsystems/scripting/luaFunctionReference.hpp"
 #include <unordered_map>
 
 namespace fe

@@ -7,6 +7,9 @@
 #include "fe/subsystems/scripting/scriptManager.hpp"
 #include "fe/subsystems/resourceManager/resourceManager.hpp"
 #include "fe/subsystems/messaging/eventSender.hpp"
+#include "fe/subsystems/graphic/animation/animationFrame.hpp"
+#include "fe/time/time.hpp"
+#include <vector>
 
 fe::entitySpawner::entitySpawner() : 
     m_world(nullptr),
@@ -146,42 +149,62 @@ fe::prefabObject &fe::entitySpawner::createPrefab(const char *luaName)
                         sol::table animationData = sceneGraphData["animation"];
                         prefab.m_modules = prefab.m_modules | fe::entityModules::ANIMATION;
 
+                        fe::Vector2<unsigned int> frameSize;
+                        fe::Vector2<unsigned int> totalSize;
+                        fe::Vector2<unsigned int> textureOffset;
+
                         if (animationData["frameSize"].get_type() == sol::type::table)
                             {
-                                prefab.m_animationFrameSize.x = animationData["frameSize"]["x"].get<unsigned int>();
-                                prefab.m_animationFrameSize.y = animationData["frameSize"]["y"].get<unsigned int>();
+                                frameSize.x = animationData["frameSize"]["x"].get<unsigned int>();
+                                frameSize.y = animationData["frameSize"]["y"].get<unsigned int>();
                             }
 
                         if (animationData["totalSize"].get_type() == sol::type::table)
                             {
-                                prefab.m_animationTotalSize.x = animationData["totalSize"]["x"].get<unsigned int>();
-                                prefab.m_animationTotalSize.x = animationData["totalSize"]["y"].get<unsigned int>();
+                                totalSize.x = animationData["totalSize"]["x"].get<unsigned int>();
+                                totalSize.y = animationData["totalSize"]["y"].get<unsigned int>();
                             }
 
                         if (animationData["textureOffset"].get_type() == sol::type::table)
                             {
-                                prefab.m_animationTextureOffset.x = animationData["textureOffset"]["x"].get<unsigned int>();
-                                prefab.m_animationTextureOffset.x = animationData["textureOffset"]["y"].get<unsigned int>();
+                                textureOffset.x = animationData["textureOffset"]["x"].get<unsigned int>();
+                                textureOffset.y = animationData["textureOffset"]["y"].get<unsigned int>();
                             }
 
-                        if (animationData["vertical"].get_type() == sol::type::boolean)
-                            {
-                                prefab.m_animationIsVertical = animationData["vertical"].get<bool>();
-                            }
+                        fe::Handle animation = m_world->getEntityWorld().getAnimator().addAnimation(frameSize, totalSize, textureOffset);
+                        prefab.m_animationHandle = animation;
 
-                        if (animationData["startFrame"].get_type() == sol::type::number)
+                        if (animationData["sequences"].get_type() == sol::type::table)
                             {
-                                prefab.m_animationStartFrame = animationData["startFrame"].get<unsigned int>();
-                            }
+                                sol::table sequences = animationData["sequences"];
 
-                        if (animationData["endFrame"].get_type() == sol::type::number)
-                            {
-                                prefab.m_animationEndFrame = animationData["endFrame"].get<unsigned int>();
-                            }
+                                for (auto &sequence : sequences)
+                                    {
+                                        if (sequence.second.get_type() == sol::type::table)
+                                            {
+                                                sol::table frames = sequence.second;
+                                                std::vector<fe::animationFrame> frameVector;
 
-                        if (animationData["frameSpeed"].get_type() == sol::type::number)
-                            {
-                                prefab.m_animationFrameSpeed = animationData["frameSpeed"].get<unsigned int>();
+                                                fe::Vector2<unsigned int> frameCoord;
+
+                                                for (auto &frame : frames)
+                                                    {
+                                                        if (frame.second.get_type() == sol::type::table)
+                                                            {
+                                                                auto coordTable = sol::table(frame.second);
+                                                                
+                                                                frameCoord.x = coordTable[1].get<unsigned int>();
+                                                                frameCoord.y = coordTable[2].get<unsigned int>();
+                                                            }
+                                                        else
+                                                            {
+                                                                frameVector.emplace_back(frameCoord, fe::milliseconds(frame.second.as<unsigned int>()));
+                                                            }
+                                                    }
+
+                                                m_world->getEntityWorld().getAnimator().addAnimationSequence(animation, FE_STR(sequence.first.as<std::string>().c_str()), frameVector);
+                                            }
+                                    }
                             }
                     }
             }
@@ -344,18 +367,7 @@ fe::Handle fe::entitySpawner::spawn(const char *luaName)
 
                 if (prefab.m_modules & fe::entityModules::ANIMATION)
                     {
-                        fe::lightVector2<unsigned int> frameSize = prefab.m_animationFrameSize;
-                        fe::lightVector2<unsigned int> totalSize = prefab.m_animationTotalSize;
-                        fe::lightVector2<unsigned int> textureOffset = offset + prefab.m_animationTextureOffset;
-                        bool vertical = prefab.m_animationIsVertical;
-
-                        fe::Handle animation = m_world->getEntityWorld().getAnimator().addAnimation(frameSize, totalSize, vertical, textureOffset);
-                        m_world->getEntityWorld().getAnimator().subscribe(entity->getActor(), animation);
-
-                        entity->getActor()->setStartFrame(prefab.m_animationStartFrame);
-                        entity->getActor()->setEndFrame(prefab.m_animationEndFrame);
-                        entity->getActor()->setFrameSpeed(prefab.m_animationFrameSpeed);
-                        entity->getActor()->play(false);
+                        m_world->getEntityWorld().getAnimator().subscribe(entity->getActor(), prefab.m_animationHandle);
                     }
             }
 

@@ -1,6 +1,7 @@
-#include "handleManager.hpp"
 // handleManagerVector.inl
 // defines for the vector version of the handle manager
+#include "handleManager.hpp"
+#include <functional>
 template<typename T>
 inline const std::vector<T> &fe::handleManager<T, 0>::getObjects() const
     {
@@ -147,12 +148,13 @@ inline void fe::handleManager<T, 0>::clearAllObjects(std::function<void(T*)> onR
     }
 
 template<typename T>
-T fe::handleManager<T, 0>::getObject(Handle handle) const
+template<typename TType = std::remove_pointer<T>::type>
+TType *fe::handleManager<T, 0>::getObject(Handle handle) const
     {
         if (handle >= m_handles.size())
             {
                 FE_LOG_WARNING("Cannot retrieve object with handle \"", handle, "\"");
-                return T();
+                return nullptr;
             }
         else if (!m_handles[handle].active)
             {
@@ -160,9 +162,17 @@ T fe::handleManager<T, 0>::getObject(Handle handle) const
                 if (m_handles[handle].handle < 0)
                     {
                         FE_LOG_ERROR("Error: Handle", handle, "Attempting to get hidden-handle of < 0");
-                        return T();
+                        return nullptr;
                     }
             }
 
-        return m_objects[m_handles[handle].handle];
+        if constexpr (std::is_pointer<T>::value) 
+            {
+                return m_objects[m_handles[handle].handle];
+            }
+        else
+            {
+                return const_cast<T*>(&m_objects[m_handles[handle].handle]);
+            }
+        return nullptr;
     }

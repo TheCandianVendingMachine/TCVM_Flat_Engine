@@ -35,13 +35,7 @@ namespace fe
                 fe::lightVector2d m_colliderPosition;
                 fe::lightVector2<unsigned int> m_textureOffset;
                 fe::lightVector2<unsigned int> m_textureSize;
-                fe::lightVector2<unsigned int> m_animationFrameSize;
-                fe::lightVector2<unsigned int> m_animationTotalSize;
-                fe::lightVector2<unsigned int> m_animationTextureOffset;
-                unsigned int m_animationStartFrame = 0;
-                unsigned int m_animationEndFrame = 0;
-                unsigned int m_animationFrameSpeed = 0;
-                bool m_animationIsVertical = true;
+                fe::Handle m_animationHandle;
                 fe::str m_collisionEvent = 0;
                 fe::str m_textureID = 0;
                 fe::str m_collisionGroup = 0;

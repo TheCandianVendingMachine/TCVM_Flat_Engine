@@ -111,7 +111,7 @@ namespace fe
         template<typename T>
         void serializerID::write(const std::string &id, T &data)
             {
-                write(id, std::forward<T>(data));
+                m_writer->write(id, toString(data));
             }
 
         template<typename T>
@@ -123,7 +123,7 @@ namespace fe
         template<typename T>
         void serializerID::writeList(const std::string &id, T &data)
             {
-                writeList(id, std::forward<T>(data));
+                m_writer->writeList(id, toString(data));
             }
 
         template<typename T>

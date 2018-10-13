@@ -1,4 +1,5 @@
 #include "fe/subsystems/scripting/scriptManager.hpp"
+#include "fe/debug/logger.hpp"
 #include "fe/math/Vector2.hpp"
 #include "fe/subsystems/filesystem/fileUtilities.hpp"
 

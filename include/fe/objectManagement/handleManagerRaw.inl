@@ -1,6 +1,7 @@
 // handleManagerRaw.inl
 // defines the raw array version of the handle manager
 #include <algorithm>
+#include <functional>
 #include "handleManager.hpp"
 template<typename T, unsigned int objectCount>
 fe::handleManager<T, objectCount>::handleManager()
@@ -121,8 +122,17 @@ inline void fe::handleManager<T, TObjectCount>::clearAllObjects(std::function<vo
     }
 
 template<typename T, unsigned int objectCount>
-T fe::handleManager<T, objectCount>::getObject(Handle handle) const
+template<typename TType = std::remove_pointer<T>::type>
+TType *fe::handleManager<T, objectCount>::getObject(Handle handle) const
     {
         if (handle < 0) return T();
-        return m_objects[m_handles[handle].handle];
+        if constexpr(std::is_pointer<T>::value) 
+            {
+                return m_objects[m_handles[handle].handle];
+            }
+        else
+            {
+                return &m_objects[m_handles[handle].handle];
+            }
+        return nullptr;
     }

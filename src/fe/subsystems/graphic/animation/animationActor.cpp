@@ -1,14 +1,16 @@
 #include "fe/subsystems/graphic/animation/animationActor.hpp"
+#include "fe/subsystems/graphic/animation/animationTexture.hpp"
 #include "fe/subsystems/graphic/renderObject/renderObject.hpp"
 
 fe::animationActor::animationActor(fe::renderObject *const actor) :
     m_actorVerticies(actor),
-    m_animationFrameSpeed(0),
-    m_currentFrame(0),
-    m_endFrame(0),
-    m_startFrame(0),
     m_play(false),
-    m_lastCheckedTime(0)
+    m_lastCheckedTime(0),
+    m_currentFrame(0, 0),
+    m_currentAnimationSequence(0),
+    m_currentSequenceFrame(0),
+    m_playingSequence(false),
+    m_doneSequence(true)
     {
     }
 
@@ -25,77 +27,53 @@ void fe::animationActor::play(bool value)
             }
     }
 
+void fe::animationActor::stop()
+    {
+        m_playingSequence = false;
+    }
+
 bool fe::animationActor::isPlaying() const
     {
         return m_play;
     }
 
-bool fe::animationActor::needsUpdate(fe::time elapsedTime)
+bool fe::animationActor::needsUpdate() const
     {
-        if (m_play) 
+        return m_needsUpdate && m_playingSequence && !m_doneSequence;
+    }
+
+void fe::animationActor::update(const fe::animationTexture &texture, fe::time elapsedTime)
+    {
+        const fe::animationFrame &sequenceFrame = texture.getAnimationSequence(m_currentAnimationSequence)[m_currentSequenceFrame];
+        m_needsUpdate = (sequenceFrame.m_time - (elapsedTime - m_lastCheckedTime)) <= 0;
+        if (m_needsUpdate)
             {
-                m_needsUpdate = (int)(m_animationFrameSpeed - (elapsedTime - m_lastCheckedTime).asMilliseconds()) <= 0;
-                if (m_needsUpdate)
-                    {
-                        m_lastCheckedTime = elapsedTime;
-                    }
+                m_lastCheckedTime = elapsedTime;
+                m_doneSequence = (m_currentSequenceFrame + 1) >= texture.getAnimationSequence(m_currentAnimationSequence).size();
             }
-        return m_needsUpdate;
+        m_currentFrame = sequenceFrame.m_frame;
+        m_currentSequenceFrame++;
     }
 
 void fe::animationActor::setFrameSpeed(unsigned int animationSpeed)
     {
-        m_animationFrameSpeed = animationSpeed;
     }
 
 unsigned int fe::animationActor::getFrameSpeed() const
     {
-        return m_animationFrameSpeed;
+        return 0;
     }
 
-void fe::animationActor::setEndFrame(unsigned int maxFrames)
+void fe::animationActor::setCurrentFrame(unsigned int x, unsigned int y)
     {
-        m_endFrame = maxFrames;
-    }
-
-unsigned int fe::animationActor::getEndFrame()
-    {
-        return m_endFrame;
-    }
-
-void fe::animationActor::setStartFrame(unsigned int frame)
-    {
-        m_startFrame = frame;
-    }
-
-unsigned int fe::animationActor::getStartFrame()
-    {
-        return m_startFrame;
-    }
-
-void fe::animationActor::setCurrentFrame(unsigned int frame)
-    {
-        m_currentFrame = frame;
-        if (m_currentFrame > m_endFrame && m_endFrame != 0)
-            {
-                setCurrentFrame(m_currentFrame % m_endFrame);
-            }
-        
-        if (m_currentFrame < m_startFrame)
-            {
-                setCurrentFrame(m_startFrame);
-            }
+        m_currentFrame.x = x;
+        m_currentFrame.y = y;
         m_needsUpdate = true;
     }
 
-unsigned int fe::animationActor::getCurrentFrame() const
+fe::Vector2<unsigned int> fe::animationActor::getCurrentFrame() const
     {
         return m_currentFrame;
-    }
-
-void fe::animationActor::iterateFrame(int amount)
-    {
-        setCurrentFrame(m_currentFrame + amount);
     }
 
 void fe::animationActor::updateVerticies(fe::Vector2<unsigned int> offset, fe::Vector2<unsigned int> size)
@@ -106,4 +84,13 @@ void fe::animationActor::updateVerticies(fe::Vector2<unsigned int> offset, fe::V
 
         m_actorVerticies->m_texCoords[2] = size.x;
         m_actorVerticies->m_texCoords[3] = size.y;
+    }
+
+void fe::animationActor::playSequence(fe::str sequence)
+    {
+        m_currentAnimationSequence = sequence;
+        m_doneSequence = false;
+        m_playingSequence = true;
+        m_needsUpdate = true;
+        m_currentSequenceFrame = 0;
     }

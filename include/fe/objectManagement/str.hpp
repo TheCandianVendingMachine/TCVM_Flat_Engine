@@ -1,13 +1,24 @@
 // string.hpp
 // a hashed-string. Used for GUID's since it takes up no memory, can be compared quickly, and is easy to store
 #pragma once
-#include "../flatEngineExport.hpp"
-#include "../debug/logger.hpp"
-#include "../typeDefines.hpp"
+#include "fe/flatEngineExport.hpp"
+#include "fe/typeDefines.hpp"
+#include <unordered_map>
+#include <string>
 
 namespace fe
     {
-        
+    #if _DEBUG
+        namespace impl
+            {
+                struct debugString
+                    {
+                        std::unordered_map<fe::str, std::string> strs;
+                    };
+                FLAT_ENGINE_API extern fe::impl::debugString g_debugStrings;
+            }
+    #endif
+
         constexpr fe::str hash(const char *input, unsigned int hash)
             {
                 fe::uInt64 index = 0;
@@ -15,15 +26,25 @@ namespace fe
                     {
                         hash *= (33 ^ (fe::str)(input[index++])) + 1;
                     }
-
                 return hash;
             }
+
+#if _DEBUG
         // implicitely calls the hash with the magic number "5381"
-        constexpr fe::str hashImpl(const char *input)
+        inline const fe::str hashImpl(const char *input)
             {
-                return hash(input, 5381);
+                fe::str h = hash(input, 5381);
+                fe::impl::g_debugStrings.strs[h] = input;
+                return h;
             }
+#endif
     }
 
 // Creates a GUID based on the input string
-#define FE_STR(input) fe::hashImpl(input)
+#if _DEBUG
+    #define FE_STR(input) fe::hashImpl(input)
+    #define FE_GET_STR(hash) fe::impl::g_debugStrings.strs[hash]
+#else
+    #define FE_STR(input) fe::hash(input, 5381)
+    #define FE_GET_STR(hash) "DEBUG STRINGS UNAVALIABLE"
+#endif

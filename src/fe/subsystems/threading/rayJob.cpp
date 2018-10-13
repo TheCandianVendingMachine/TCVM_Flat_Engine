@@ -1,5 +1,4 @@
 #include "fe/subsystems/threading/rayJob.hpp"
-#include "fe/engine.hpp"
 #include "fe/subsystems/collision/broadphaseAbstract.hpp"
 
 bool fe::rayJob::execute()

@@ -18,9 +18,9 @@ namespace fe
                     FLAT_ENGINE_API time(const fe::time &time);
                     FLAT_ENGINE_API time(const fe::time &&time);
 
-                    FLAT_ENGINE_API double asSeconds();
-                    FLAT_ENGINE_API int32_t asMilliseconds();
-                    FLAT_ENGINE_API int64_t asMicroseconds();
+                    FLAT_ENGINE_API double asSeconds() const;
+                    FLAT_ENGINE_API int32_t asMilliseconds() const;
+                    FLAT_ENGINE_API int64_t asMicroseconds() const;
 
                     FLAT_ENGINE_API fe::time operator+(const fe::time &rhs) const;
                     FLAT_ENGINE_API fe::time operator-(const fe::time & rhs) const;

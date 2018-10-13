@@ -6,6 +6,7 @@
 #include <iterator>
 #include <vector>
 #include <algorithm>
+#include <type_traits>
 #include <tuple>
 
 namespace fe
@@ -60,7 +61,8 @@ namespace fe
                     void clearAllObjects();
                     void clearAllObjects(std::function<void(T*)> onRemoveFunc);
 
-                    T getObject(Handle handle) const;
+                    template<typename TType = std::remove_pointer<T>::type>
+                    TType *getObject(Handle handle) const;
                     const T *getObjects() const;
 
             };
@@ -103,7 +105,8 @@ namespace fe
                     void clearAllObjects();
                     void clearAllObjects(std::function<void(T*)> onRemoveFunc);
 
-                    T getObject(Handle handle) const;
+                    template<typename TType = typename std::remove_pointer<T>::type>
+                    TType *getObject(Handle handle) const;
                     const std::vector<T> &getObjects() const;
 
             };

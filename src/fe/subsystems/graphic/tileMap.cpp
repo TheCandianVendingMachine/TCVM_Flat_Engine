@@ -110,7 +110,7 @@ const fe::imp::tile *fe::tileMap::getPrefabTile(fe::str tileID) const
 
 const fe::imp::tileWorld &fe::tileMap::getPlacedTile(fe::Handle handle) const
     {
-        return getObject(handle);
+        return *getObject(handle);
     }
 
 fe::Vector2<unsigned int> fe::tileMap::getTileTextureOffset(fe::str tileID) const
@@ -175,7 +175,7 @@ fe::Handle fe::tileMap::add(fe::Vector2d position, fe::str tileId)
 
 fe::imp::tileWorld fe::tileMap::get(fe::Handle handle)
     {
-        return getObject(handle);
+        return *getObject(handle);
     }
 
 void fe::tileMap::remove(fe::Handle handle)

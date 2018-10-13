@@ -25,9 +25,9 @@ void fe::animator::free(animationActor *actor)
         m_animationActorPool.free(actor);
     }
 
-fe::Handle fe::animator::addAnimation(fe::Vector2<unsigned int> frameSize, fe::Vector2<unsigned int> animationSize, bool vertical, fe::Vector2<unsigned int> texturePosition)
+fe::Handle fe::animator::addAnimation(fe::Vector2<unsigned int> frameSize, fe::Vector2<unsigned int> animationSize, fe::Vector2<unsigned int> texturePosition)
     {
-        return addObject(animationTexture(frameSize, texturePosition, animationSize, vertical));
+        return addObject(animationTexture(frameSize, texturePosition, animationSize));
     }
 
 void fe::animator::removeAnimation(fe::Handle handle)
@@ -36,12 +36,16 @@ void fe::animator::removeAnimation(fe::Handle handle)
         removeObject(handle);
     }
 
+void fe::animator::addAnimationSequence(fe::Handle handle, fe::str id, std::vector<fe::animationFrame> &frames)
+    {
+        getObject(handle)->createAnimationSequence(id, frames);
+    }
+
 void fe::animator::subscribe(animationActor *actor, fe::Handle animation)
     {
         m_actors[animation].push_back(actor);
-        auto textureOffset = getObject(animation).getTexture(actor);
+        auto textureOffset = getObject(animation)->getTexture(0, 0);
         actor->updateVerticies(textureOffset.first, textureOffset.second);
-        actor->setCurrentFrame(0);
     }
 
 void fe::animator::unsubscribe(animationActor *actor, fe::Handle animation)
@@ -62,18 +66,14 @@ void fe::animator::updateTextures()
     {
         for (auto &animation : m_actors)
             {
-                auto texture = getObject(animation.first);
+                fe::animationTexture *texture = getObject(animation.first);
                 for (auto &actor : animation.second)
                     {
-                        if (actor->needsUpdate(m_elapsedTime.getTime()))
+                        if (actor->isPlaying() && actor->needsUpdate())
                             {
-                                auto textureOffset = texture.getTexture(actor);
+                                actor->update(*texture, m_elapsedTime.getTime());
+                                auto textureOffset = texture->getTexture(actor->getCurrentFrame().x, actor->getCurrentFrame().y);
                                 actor->updateVerticies(textureOffset.first, textureOffset.second);
-
-                                if (actor->isPlaying()) 
-                                    {
-                                        actor->iterateFrame(1);
-                                    }
                             }
                     }
             }

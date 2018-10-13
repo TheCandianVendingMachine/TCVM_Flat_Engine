@@ -1,7 +1,8 @@
 // scriptManager.hpp
 // Manages the scripting subsystem. Handles addition of script values, getting of script values, running scripts and loading scripts
 #pragma once
-#include "../../flatEngineExport.hpp"
+#include "fe/flatEngineExport.hpp"
+#include "fe/debug/logger.hpp"
 #include "functionHander.hpp"
 #include "userTypeHandler.hpp"
 #include "enumHandler.hpp"
