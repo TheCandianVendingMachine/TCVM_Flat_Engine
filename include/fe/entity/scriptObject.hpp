@@ -44,7 +44,8 @@ namespace fe
                     FLAT_ENGINE_API bool scriptObjectHasArrived();
                     FLAT_ENGINE_API bool scriptObjectIsTargeted();
 
-                    FLAT_ENGINE_API void scriptObjectSetAnimationFrame(unsigned int frame);
+                    FLAT_ENGINE_API void scriptObjectSetAnimationFrame(unsigned int x, unsigned int y);
+                    FLAT_ENGINE_API void scriptObjectPlayAnimationSequence(const char *sequence);
 
             };
     }

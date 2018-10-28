@@ -3,6 +3,7 @@
 #include "fe/subsystems/physics/rigidBody.hpp"
 #include "fe/subsystems/graphic/renderObject/renderObject.hpp"
 #include "fe/subsystems/graphic/animation/animationActor.hpp"
+#include "fe/objectManagement/str.hpp"
 
 fe::scriptObject::scriptObject(baseEntity *obj) :
     m_entity(obj)
@@ -124,10 +125,19 @@ bool fe::scriptObject::scriptObjectIsTargeted()
         return m_entity->getUtilities().isTargeted();
     }
 
-void fe::scriptObject::scriptObjectSetAnimationFrame(unsigned int frame)
+void fe::scriptObject::scriptObjectSetAnimationFrame(unsigned int x, unsigned int y)
     {
         if (m_entity->getActor())
             {
-                //m_entity->getActor()->setCurrentFrame(frame);
+                m_entity->getActor()->setCurrentFrame(x, y);
             }
     }
+
+void fe::scriptObject::scriptObjectPlayAnimationSequence(const char *sequence)
+    {
+        if (m_entity->getActor())
+            {
+                m_entity->getActor()->playSequence(FE_STR(sequence));
+            }
+    }
+
