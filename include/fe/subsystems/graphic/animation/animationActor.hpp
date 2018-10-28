@@ -14,7 +14,8 @@ namespace fe
             {
                 private:
                     fe::renderObject *const m_actorVerticies;
-                    fe::time m_lastCheckedTime;
+                    fe::time m_currentTime;
+                    fe::time m_startTime;
                     fe::time m_pauseTime;
 
                     fe::str m_currentAnimationSequence;
@@ -23,9 +24,9 @@ namespace fe
                     fe::Vector2<unsigned int> m_currentFrame;
 
                     bool m_play;            // whether or not the sequence is paused
-                    bool m_needsUpdate;     // if the sequence needs to iterate current texture
                     bool m_playingSequence; // whether or not a sequence has been selected
                     bool m_doneSequence;    // if the sequence has concluded
+                    bool m_updateFrame;
 
                 public:
                     FLAT_ENGINE_API animationActor(fe::renderObject *const actor);
@@ -37,9 +38,7 @@ namespace fe
                     FLAT_ENGINE_API bool isPlayingSequence() const;
 
                     // If the actor needs to update its texture this will return true
-                    FLAT_ENGINE_API void updateTime(const fe::animationTexture &texture, fe::time elapsedTime);
-                    FLAT_ENGINE_API bool needsUpdate() const;
-                    FLAT_ENGINE_API void update(const fe::animationTexture &texture);
+                    FLAT_ENGINE_API void update(fe::animationTexture &texture, fe::time elapsedTime);
 
                     // Set how long it takes a frame to iterate in milliseconds
                     FLAT_ENGINE_API void setFrameSpeed(unsigned int animationSpeed);

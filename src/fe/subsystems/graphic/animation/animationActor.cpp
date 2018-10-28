@@ -5,7 +5,7 @@
 fe::animationActor::animationActor(fe::renderObject *const actor) :
     m_actorVerticies(actor),
     m_play(false),
-    m_lastCheckedTime(0),
+    m_currentTime(0),
     m_currentFrame(0, 0),
     m_currentAnimationSequence(0),
     m_currentSequenceFrame(0),
@@ -17,14 +17,6 @@ fe::animationActor::animationActor(fe::renderObject *const actor) :
 void fe::animationActor::play(bool value)
     {
         m_play = value;
-        if (!m_play)
-            {
-                m_pauseTime = fe::clock::getTimeSinceEpoch();
-            }
-        else if (m_pauseTime > 0)
-            {
-                m_lastCheckedTime += fe::clock::getTimeSinceEpoch() - m_pauseTime;
-            }
     }
 
 void fe::animationActor::stop()
@@ -42,29 +34,27 @@ bool fe::animationActor::isPlayingSequence() const
         return m_playingSequence && !m_doneSequence;
     }
 
-void fe::animationActor::updateTime(const fe::animationTexture &texture, fe::time elapsedTime)
+void fe::animationActor::update(fe::animationTexture &texture, fe::time elapsedTime)
     {
-        fe::time timeTillNextFrame = texture.getAnimationSequence(m_currentAnimationSequence)[m_currentSequenceFrame].m_time;
-        m_needsUpdate = (timeTillNextFrame - (elapsedTime - m_lastCheckedTime)) <= 0;
-        if (m_needsUpdate)
+        m_currentTime = elapsedTime;
+        if (m_play && isPlayingSequence())
             {
-                m_lastCheckedTime = elapsedTime;
+                if ((texture.getAnimationSequence(m_currentAnimationSequence)[m_currentSequenceFrame].m_time + m_startTime - m_currentTime) <= 0)
+                    {
+                        m_doneSequence = (m_currentSequenceFrame + 1) >= texture.getAnimationSequence(m_currentAnimationSequence).size();
+                        m_playingSequence = !m_doneSequence;
+                        m_updateFrame = m_playingSequence;
+                        m_currentSequenceFrame++;
+                    }
+
+                if (m_updateFrame) 
+                    {
+                        m_currentFrame = texture.getAnimationSequence(m_currentAnimationSequence)[m_currentSequenceFrame].m_frame;
+                        auto textureOffset = texture.getTexture(m_currentFrame.x, m_currentFrame.y);
+                        updateVerticies(textureOffset.first, textureOffset.second);
+                        m_updateFrame = false;
+                    }
             }
-    }
-
-bool fe::animationActor::needsUpdate() const
-    {
-        return m_needsUpdate;
-    }
-
-void fe::animationActor::update(const fe::animationTexture &texture)
-    {
-        const fe::animationFrame &sequenceFrame = texture.getAnimationSequence(m_currentAnimationSequence)[m_currentSequenceFrame];
-        
-        m_doneSequence = (m_currentSequenceFrame + 1) >= texture.getAnimationSequence(m_currentAnimationSequence).size();
-        m_playingSequence = !m_doneSequence;
-        m_currentFrame = sequenceFrame.m_frame;
-        m_currentSequenceFrame++;
     }
 
 void fe::animationActor::setFrameSpeed(unsigned int animationSpeed)
@@ -80,7 +70,6 @@ void fe::animationActor::setCurrentFrame(unsigned int x, unsigned int y)
     {
         m_currentFrame.x = x;
         m_currentFrame.y = y;
-        m_needsUpdate = true;
     }
 
 fe::Vector2<unsigned int> fe::animationActor::getCurrentFrame() const
@@ -90,7 +79,6 @@ fe::Vector2<unsigned int> fe::animationActor::getCurrentFrame() const
 
 void fe::animationActor::updateVerticies(fe::Vector2<unsigned int> offset, fe::Vector2<unsigned int> size)
     {
-        m_needsUpdate = false;
         m_actorVerticies->m_texCoords[0] = offset.x;
         m_actorVerticies->m_texCoords[1] = offset.y;
 
@@ -103,6 +91,7 @@ void fe::animationActor::playSequence(fe::str sequence)
         m_currentAnimationSequence = sequence;
         m_doneSequence = false;
         m_playingSequence = true;
-        m_needsUpdate = true;
         m_currentSequenceFrame = 0;
+        m_startTime = m_currentTime;
+        m_updateFrame = true;
     }
