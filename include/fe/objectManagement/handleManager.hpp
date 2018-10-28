@@ -96,6 +96,8 @@ namespace fe
                     virtual void onRemove(T *object, fe::Handle objectHandle) {}
 
                 public:
+                    inline unsigned int objectCount() { return m_handles.size(); }
+
                     Handle addObject(T object);
                     Handle addObject(T object, Handle handle);
                     void removeObject(Handle handle);

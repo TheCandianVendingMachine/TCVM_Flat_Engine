@@ -141,3 +141,21 @@ void fe::scriptObject::scriptObjectPlayAnimationSequence(const char *sequence)
             }
     }
 
+bool fe::scriptObject::scriptObjectAnimationPlayingSequence() const
+    {
+        if (m_entity->getActor())
+            {
+                return m_entity->getActor()->isPlayingSequence();
+            }
+        return false;
+    }
+
+bool fe::scriptObject::scriptObjectAnimationPlaying() const
+    {
+        if(m_entity->getActor())
+            {
+                return m_entity->getActor()->isPlaying();
+            }
+        return false;
+    }
+

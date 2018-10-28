@@ -94,7 +94,7 @@ void fe::baseGameState::postUpdateDefined()
         postUpdate();
         if (m_currentScreen)
             {
-                m_currentScreen->preUpdate();
+                m_currentScreen->postUpdate();
             }
 
         for (auto it = m_dialogs.begin(); it != m_dialogs.end();)

@@ -46,6 +46,8 @@ namespace fe
 
                     FLAT_ENGINE_API void scriptObjectSetAnimationFrame(unsigned int x, unsigned int y);
                     FLAT_ENGINE_API void scriptObjectPlayAnimationSequence(const char *sequence);
+                    FLAT_ENGINE_API bool scriptObjectAnimationPlayingSequence() const;
+                    FLAT_ENGINE_API bool scriptObjectAnimationPlaying() const;
 
             };
     }

@@ -35,6 +35,7 @@ namespace fe
 
                     FLAT_ENGINE_API void update();
                     FLAT_ENGINE_API void fixedUpdate(float deltaTime);
+                    FLAT_ENGINE_API void postUpdate();
 
                     FLAT_ENGINE_API void shutDown();
 

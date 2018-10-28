@@ -130,6 +130,7 @@ void fe::gameWorld::fixedUpdate(float deltaTime)
 void fe::gameWorld::postUpdate()
     {
         FE_ENGINE_PROFILE("game_world", "entity_post_update");
+        m_componentManager.postUpdate();
         m_entityWorld.postUpdate();
         FE_END_PROFILE;
     }

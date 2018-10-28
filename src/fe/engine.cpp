@@ -271,7 +271,9 @@ end)");
             "hasArrived", &scriptObject::scriptObjectHasArrived,
             "isTargeted", &scriptObject::scriptObjectIsTargeted,
             "setFrame", &scriptObject::scriptObjectSetAnimationFrame,
-            "playAnimation", &scriptObject::scriptObjectPlayAnimationSequence
+            "playAnimation", &scriptObject::scriptObjectPlayAnimationSequence,
+            "animationPlaying", &scriptObject::scriptObjectAnimationPlaying,
+            "sequencePlaying", &scriptObject::scriptObjectAnimationPlayingSequence
         );
     }
 

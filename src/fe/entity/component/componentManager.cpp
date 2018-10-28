@@ -47,6 +47,22 @@ void fe::componentManager::fixedUpdate(float deltaTime)
             }
     }
 
+void fe::componentManager::postUpdate()
+    {
+        for (unsigned int i = 0; i < m_components.objectCount(); i++)
+            {
+                if (m_components.handleActive(i))
+                    {
+                        fe::baseEntity *entOwner = m_components.getObject(i)->getOwner()->getBaseEntity();
+                        if (entOwner->isKilled())
+                            {
+                                removeComponentFromObject(entOwner, i);
+                                m_components.removeObject(i);
+                            }
+                    }
+            }
+    }
+
 void fe::componentManager::shutDown()
     {
         m_components.clearAllObjects([](componentBase **c) { delete *c; *c = nullptr; });
