@@ -17,6 +17,8 @@ void fe::renderer::startUp()
         m_settings.m_fullscreen = false;
 
         m_settings.m_fps = 0;
+
+        FE_LOG("Renderer started up without issue");
     }
 
 void fe::renderer::shutDown()
@@ -34,6 +36,7 @@ void fe::renderer::shutDown()
             }
 
         FE_FREE_STACK("RendererDealloc", m_renderWindowMarker);
+        FE_LOG("Renderer shut down");
     }
 
 void fe::renderer::save() const

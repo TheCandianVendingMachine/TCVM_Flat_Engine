@@ -99,6 +99,8 @@ void fe::inputManager::startUp()
             {
                 m_instance = this;
             }
+
+        FE_LOG("Input manager started up");
     }
 
 void fe::inputManager::shutDown()

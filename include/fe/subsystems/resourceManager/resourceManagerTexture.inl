@@ -1,10 +1,13 @@
 inline fe::resourceManager<sf::Texture>::resourceManager()
     {
+        FE_LOG("Texture manager started up");
         m_packed.createTexture();
+        FE_LOG("Texture created with size [", m_packed.getTexture().getSize().x, m_packed.getTexture().getSize().y, "]");
     }
 
 inline sf::Texture *fe::resourceManager<sf::Texture>::load(const char* filepath, const char* id)
     {
+        FE_LOG_DEBUG("Loading texture [", filepath, "] with id [", id, "]");
         sf::Texture *resource = getTexture(id);
         if (resource)
             {
@@ -18,6 +21,7 @@ inline sf::Texture *fe::resourceManager<sf::Texture>::load(const char* filepath,
 
                 m_textures.push_back(added);
                 m_packed.addTexture(*added, id);
+                FE_LOG_DEBUG("Added texture");
                 return added;
             }
         else

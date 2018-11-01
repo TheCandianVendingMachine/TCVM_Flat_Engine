@@ -345,6 +345,8 @@ void fe::engine::startUp(fe::uInt64 totalMemory, fe::uInt64 stackMemory, fe::uIn
                 m_defaultCamera.setPosition(getWindowSize() / 2.f);
 
                 registerLua();
+
+                FE_LOG("Engine startup complete");
                 
             }
     }
@@ -491,7 +493,8 @@ void fe::engine::loadResources(const char *resourcesFile)
                 TEXTURE,
                 AUDIO,
                 FONT,
-                SCRIPT
+                SCRIPT,
+                COUNT
             };
 
         std::ifstream in(resourcesFile);
@@ -711,17 +714,22 @@ void fe::engine::loadResources(const char *resourcesFile)
                 fe::getAllFilesInDirectory((currentPath + "/" + file), std::move(extensions), allFiles);
             }
 
+        const char *resourceEnumText[COUNT] = { "ERROR TYPE", "TEXTURE", "AUDIO", "FONT", "SCRIPT" };
+
         for (auto &possibleResource : allFiles)
             {
                 std::string file = fe::getFileFromDirectory(possibleResource);
-                if (synonymTypes[fe::getFileExtension(possibleResource)] == SCRIPT)
+                resourceTypes synonym = synonymTypes[fe::getFileExtension(possibleResource)];
+
+                FE_LOG("Loaded [", resourceEnumText[synonym], "] file [", file, "]");
+                if (synonym == SCRIPT)
                     {
                         getScriptManager().runFile(possibleResource);
                     }
 
                 if (resources.find(file) != resources.end())
                     {
-                        switch (synonymTypes[fe::getFileExtension(possibleResource)])
+                        switch (synonym)
                             {
                                 case ERROR_TYPE:
                                     FE_LOG_WARNING("\\" + file + "\"is not an acceptable file type");
