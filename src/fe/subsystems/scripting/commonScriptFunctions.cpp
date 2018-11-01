@@ -64,3 +64,19 @@ void fe::breakToDebugger()
     {
         __debugbreak();
     }
+
+fe::scriptObject *fe::getEntityByString(const char *string)
+    {
+        std::vector<fe::baseEntity*> entities;
+        fe::engine::get().getCurrentState().getGameWorld().getEntityWorld().getAllObjects(entities);
+
+        for (auto &ent : entities)
+            {
+                if (ent->getName() == string)
+                    {
+                        return ent;
+                    }
+            }
+
+        return nullptr;
+    }

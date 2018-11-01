@@ -24,7 +24,7 @@ void fe::entitySpawner::setWorld(fe::gameWorld *world)
 
 fe::prefabObject &fe::entitySpawner::createPrefab(const char *luaName)
     {
-        sol::table luaTable = fe::engine::get().getScriptManager().getTable(luaName);
+        sol::table luaTable = fe::engine::get().getScriptManager().getTableHandler().getTable(luaName);
         prefabObject prefab;
         prefab.m_entityTable = luaTable;
 

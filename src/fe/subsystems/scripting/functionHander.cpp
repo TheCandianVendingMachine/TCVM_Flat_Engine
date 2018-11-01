@@ -1,30 +1,6 @@
 #include "fe/subsystems/scripting/functionHander.hpp"
-#include "fe/utility/splitString.hpp"
 #include "fe/engine.hpp"
 
-sol::table fe::functionHandler::getTableFromPath(const std::string &path)
-    {
-        std::vector<std::string> luaPathVector;
-        fe::splitString(path.c_str(), '/', std::move(luaPathVector));
-        std::reverse(luaPathVector.begin(), luaPathVector.end());
-
-        sol::table foundTable = m_state.globals();
-        while (!luaPathVector.empty())
-            {
-                try 
-                    {
-                        foundTable = foundTable[luaPathVector.back()];
-                    }
-                catch (std::exception &e)
-                    {
-                        FE_LOG_ERROR("Is the Lua path correct? [", path, "]");
-                        fe::engine::crash(e.what());
-                    }
-                luaPathVector.pop_back();
-            }
-
-        return foundTable;
-    }
 
 fe::functionHandler::functionHandler(sol::state &state) : m_state(state)
     {
@@ -40,7 +16,7 @@ void fe::functionHandler::reloadAllLuaFunctions()
 
 void fe::functionHandler::reloadLuaFunction(fe::luaFunctionReference &function)
     {
-        function.m_function = getTableFromPath(function.m_luaPathName)[function.m_functionName];
+        function.m_function = fe::imp::getTableFromPath(function.m_luaPathName, m_state)[function.m_functionName];
     }
 
 fe::luaFunctionReference &fe::functionHandler::getLuaFunction(const std::string &functionName)
@@ -56,7 +32,7 @@ fe::luaFunctionReference &fe::functionHandler::getLuaFunction(const std::string 
 
         if (func == m_registeredFunctions.end())
             {
-                m_registeredFunctions.emplace_back(new fe::luaFunctionReference(getTableFromPath(luaPathName)[functionName], luaPathName, functionName, *this));
+                m_registeredFunctions.emplace_back(new fe::luaFunctionReference(fe::imp::getTableFromPath(luaPathName, m_state)[functionName], luaPathName, functionName, *this));
             }
 
         reloadLuaFunction(*m_registeredFunctions.back());

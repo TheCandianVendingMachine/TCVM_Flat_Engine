@@ -1,7 +1,6 @@
 // luaFunctionReference.hpp
 // A reference to a Lua function. Used instead of and is a wrapper for sol::protected_function
 #pragma once
-
 #include "fe/flatEngineExport.hpp"
 #include "fe/typeDefines.hpp"
 

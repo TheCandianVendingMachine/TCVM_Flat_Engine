@@ -1,9 +1,9 @@
 // functionHandler.hpp
 // Handles the registration of functions
 #pragma once
-#include "../../flatEngineExport.hpp"
-#include "../../objectManagement/str.hpp"
-#include "../../typeDefines.hpp"
+#include "fe/flatEngineExport.hpp"
+#include "fe/objectManagement/str.hpp"
+#include "fe/typeDefines.hpp"
 #include <string>
 #include <sol.hpp>
 #include <vector>
@@ -18,8 +18,6 @@ namespace fe
                 private:
                     sol::state &m_state;
                     std::vector<fe::luaFunctionReference*> m_registeredFunctions;
-
-                    FLAT_ENGINE_API sol::table getTableFromPath(const std::string &path);
 
                 public:
                     FLAT_ENGINE_API functionHandler(sol::state &state);

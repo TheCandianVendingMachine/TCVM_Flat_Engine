@@ -6,7 +6,8 @@
 fe::scriptManager::scriptManager() :
     m_functionHandler(m_luaState),
     m_userTypeHandler(m_luaState),
-    m_enumHandler(m_luaState)
+    m_enumHandler(m_luaState),
+    m_tableHandler(m_luaState)
     {
     }
 
@@ -52,6 +53,11 @@ fe::userTypeHandler &fe::scriptManager::getUserTypeHandler()
         return m_userTypeHandler;
     }
 
+fe::tableHandler &fe::scriptManager::getTableHandler()
+    {
+        return m_tableHandler;
+    }
+
 fe::enumHandler &fe::scriptManager::getEnumHandler()
     {
         return m_enumHandler;
@@ -72,18 +78,6 @@ void fe::scriptManager::update()
         if (needLuaUpdate)
             {
                 m_functionHandler.reloadAllLuaFunctions();
-            }
-    }
-
-sol::table fe::scriptManager::getTable(const char *id)
-    {
-        try 
-            {
-                return m_luaState[id];
-            }
-        catch (std::exception &e)
-            {
-                FE_LOG_ERROR(e.what());
             }
     }
 

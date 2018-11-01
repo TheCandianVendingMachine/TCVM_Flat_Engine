@@ -16,4 +16,6 @@ namespace fe
         FLAT_ENGINE_API void setCameraPosition(float x, float y);
         FLAT_ENGINE_API void sendEvent(const char *eventID, sol::variadic_args args);
         FLAT_ENGINE_API void breakToDebugger();
+
+        FLAT_ENGINE_API fe::scriptObject *getEntityByString(const char *string);
     }

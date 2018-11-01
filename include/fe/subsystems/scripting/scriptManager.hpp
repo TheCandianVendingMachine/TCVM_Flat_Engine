@@ -6,6 +6,7 @@
 #include "functionHander.hpp"
 #include "userTypeHandler.hpp"
 #include "enumHandler.hpp"
+#include "tableHandler.hpp"
 #include <sol.hpp>
 #include <string>
 #include <vector>
@@ -19,6 +20,7 @@ namespace fe
 
                     fe::functionHandler m_functionHandler;
                     fe::userTypeHandler m_userTypeHandler;
+                    fe::tableHandler m_tableHandler;
                     fe::enumHandler m_enumHandler;
 
                     std::vector<std::string> m_luaFiles;
@@ -34,13 +36,13 @@ namespace fe
 
                     FLAT_ENGINE_API fe::functionHandler &getFunctionHandler();
                     FLAT_ENGINE_API fe::userTypeHandler &getUserTypeHandler();
+                    FLAT_ENGINE_API fe::tableHandler &getTableHandler();
                     FLAT_ENGINE_API fe::enumHandler &getEnumHandler();
 
                     FLAT_ENGINE_API void update();
 
                     inline decltype(auto) getValueFromTable(sol::table &table, const char *id);
                     
-                    FLAT_ENGINE_API sol::table getTable(const char *id);
                     FLAT_ENGINE_API sol::state &getLuaState();
 
             };

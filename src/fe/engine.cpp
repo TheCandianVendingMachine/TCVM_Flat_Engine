@@ -202,6 +202,7 @@ void fe::engine::calcFPS()
 
 void fe::engine::registerLua()
     {
+        FE_LOG("Loading CPP functions into Lua");
         // Initialize a basic entity types in Lua
         m_scriptManager->runLua(R"(squareEntity = {
     sceneGraph = {
@@ -232,6 +233,7 @@ end)");
         m_scriptManager->getFunctionHandler().registerCPPFunction("setCameraPosition", &fe::setCameraPosition);
         m_scriptManager->getFunctionHandler().registerCPPFunction("breakToDebugger", &fe::breakToDebugger);
         m_scriptManager->getFunctionHandler().registerCPPFunction("sendEvent", &fe::sendEvent);
+        m_scriptManager->getFunctionHandler().registerCPPFunction("getEntityByString", &fe::getEntityByString);
 
         // Register Objects
         m_scriptManager->getUserTypeHandler().addCustomType<fe::Vector2d, fe::Vector2d(), fe::Vector2d(float, float)>(
@@ -275,6 +277,8 @@ end)");
             "animationPlaying", &scriptObject::scriptObjectAnimationPlaying,
             "sequencePlaying", &scriptObject::scriptObjectAnimationPlayingSequence
         );
+
+        FE_LOG("Loaded all CPP files into Lua");
     }
 
 fe::engine::engine(const float updateRate) :

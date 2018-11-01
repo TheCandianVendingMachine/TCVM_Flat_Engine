@@ -1,7 +1,7 @@
 // scriptHelpers.hpp
 // Helpers for common script functions
 #pragma once
-#include "../../flatEngineExport.hpp"
+#include "fe/flatEngineExport.hpp"
 #include <string>
 #include <sol.hpp>
 
@@ -13,6 +13,9 @@ namespace fe
                 Function &getFunctionOverload(Function &&func);
                 template<typename ...Functions>
                 decltype(auto) getFunctionOverload(Functions &&...funcs);
+
+                FLAT_ENGINE_API sol::table getTableFromPath(const std::string &path, sol::state &state);
+
             }
     }
 
