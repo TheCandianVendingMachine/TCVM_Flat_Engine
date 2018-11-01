@@ -26,6 +26,7 @@ set(FE_SRC
        fe/math/matrix.cpp
        fe/math/polygon2.cpp
        fe/math/random.cpp
+       fe/objectManagement/str.cpp
        fe/subsystems/ai/graph.cpp
        fe/subsystems/ai/graphNavigation.cpp
        fe/subsystems/collision/aabbTree.cpp
@@ -74,8 +75,11 @@ set(FE_SRC
        fe/subsystems/scripting/enumHandler.cpp
        fe/subsystems/scripting/functionHander.cpp
        fe/subsystems/scripting/luaFunctionReference.cpp
+       fe/subsystems/scripting/scriptHelpers.cpp
        fe/subsystems/scripting/scriptManager.cpp
+       fe/subsystems/scripting/tableHandler.cpp
        fe/subsystems/scripting/userTypeHandler.cpp
+       fe/subsystems/serializer/feDataWriter.cpp
        fe/subsystems/serializer/serializerID.cpp
        fe/subsystems/threading/rayJob.cpp
        fe/time/clock.cpp
