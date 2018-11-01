@@ -1,26 +1,18 @@
 #include "fe/entity/component/componentManager.hpp"
 #include "fe/entity/baseEntity.hpp"
-#include "fe/engine.hpp"
-#include "fe/subsystems/scripting/scriptManager.hpp"
-
-fe::componentBase *fe::componentManager::getComponentFromScriptObject(fe::scriptObject *ent, const char *compName) const
-    {
-        return getComponentFromObject(ent->getBaseEntity(), compName);
-    }
 
 void fe::componentManager::startUp()
     {
-        fe::engine::get().getScriptManager().getFunctionHandler().registerCPPObjectFunction("getComponentFromEntity", this, &fe::componentManager::getComponentFromScriptObject);
     }
 
-void fe::componentManager::addComponentToObject(fe::baseEntity *ent, const char *entName, const char *compName, const char *compLuaPath, sol::table table)
+void fe::componentManager::addComponentToObject(fe::baseEntity *ent, const std::string &entName, const std::string &compName, const std::string &compLuaPath, sol::table table)
     {
-        fe::str str = FE_STR(compName);
+        fe::str str = FE_STR(compName.c_str());
         if (m_componentLookupTable.find(str) != m_componentLookupTable.end())
             {
                 fe::Handle compHandle = m_components.addObject(m_componentLookupTable[str]->create());
                 
-                m_components.getObject(compHandle)->engineInitLuaValues(table, compLuaPath, entName);
+                m_components.getObject(compHandle)->engineInitLuaValues(table, compLuaPath.c_str(), entName.c_str());
                 m_components.getObject(compHandle)->engineOnAdd(ent);
 
                 ent->addComponent(compHandle);
@@ -30,20 +22,6 @@ void fe::componentManager::addComponentToObject(fe::baseEntity *ent, const char 
             {
                 FE_LOG_ERROR("Component with name [", compName, "] does not exist");
             }
-    }
-
-fe::componentBase *fe::componentManager::getComponentFromObject(fe::baseEntity *ent, const char *compName) const
-    {
-        fe::str lookingStr = FE_STR(compName);
-        for (auto &compPair : ent->getAllComponents())
-            {
-                if (m_components.getObject(compPair.first)->getID() == lookingStr)
-                    {
-                        return m_components.getObject(compPair.first);
-                    }
-            }
-
-        return nullptr;
     }
 
 void fe::componentManager::removeComponentFromObject(fe::baseEntity *ent, fe::Handle handle)

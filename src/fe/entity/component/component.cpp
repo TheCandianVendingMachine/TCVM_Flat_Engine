@@ -35,8 +35,3 @@ fe::scriptObject *fe::componentBase::getOwner()
     {
         return m_owner;
     }
-
-fe::str fe::componentBase::getID() const
-    {
-        return m_id;
-    }

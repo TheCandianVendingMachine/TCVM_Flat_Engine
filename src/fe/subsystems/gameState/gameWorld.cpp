@@ -21,7 +21,6 @@ void fe::gameWorld::startUp()
         m_dynamicBroadphase = nullptr;
         m_staticBroadphase = nullptr;
         m_serializer = new fe::serializerID();
-        m_componentManager.startUp();
     }
 
 void fe::gameWorld::shutDown()
