@@ -25,6 +25,11 @@ std::string fe::scriptObject::scriptObjectGetName()
         return m_entity->getName();
     }
 
+void fe::scriptObject::scriptObjectSetVelocity(fe::Vector2d velocity)
+    {
+        scriptObjectSetVelocity(velocity.x, velocity.y);
+    }
+
 void fe::scriptObject::scriptObjectSetVelocity(float x, float y)
     {
         if (m_entity->getRigidBody())
@@ -33,12 +38,22 @@ void fe::scriptObject::scriptObjectSetVelocity(float x, float y)
             }
     }
 
+void fe::scriptObject::scriptObjectSetForce(fe::Vector2d force)
+    {
+        scriptObjectSetForce(force.x, force.y);
+    }
+
 void fe::scriptObject::scriptObjectSetForce(float x, float y)
     {
         if (m_entity->getRigidBody())
             {
                 m_entity->getRigidBody()->setForce(x, y);
             }
+    }
+
+void fe::scriptObject::scriptObjectApplyForce(fe::Vector2d force)
+    {
+        scriptObjectApplyForce(force.x, force.y);
     }
 
 void fe::scriptObject::scriptObjectApplyForce(float x, float y)
@@ -98,6 +113,11 @@ fe::Vector2d fe::scriptObject::scriptObjectGetDirection()
                 return m_entity->getRigidBody()->getDirection();
             }
         return fe::Vector2d();
+    }
+
+void fe::scriptObject::scriptObjectMoveToPosition(fe::Vector2d pos)
+    {
+        scriptObjectMoveToPosition(pos.x, pos.y);
     }
 
 void fe::scriptObject::scriptObjectMoveToPosition(float x, float y)

@@ -21,9 +21,15 @@ namespace fe
 
                     FLAT_ENGINE_API std::string scriptObjectGetName();
 
+                    FLAT_ENGINE_API void scriptObjectSetVelocity(fe::Vector2d velocity);
                     FLAT_ENGINE_API void scriptObjectSetVelocity(float x, float y);
-                    FLAT_ENGINE_API void scriptObjectSetForce(float x, float y);
+
+                    FLAT_ENGINE_API void scriptObjectSetForce(fe::Vector2d force);
+                    FLAT_ENGINE_API void scriptObjectSetForce(float x, float y)
+                        ;
+                    FLAT_ENGINE_API void scriptObjectApplyForce(fe::Vector2d force);
                     FLAT_ENGINE_API void scriptObjectApplyForce(float x, float y);
+
                     FLAT_ENGINE_API fe::Vector2d scriptObjectGetPosition();
 
                     FLAT_ENGINE_API void scriptObjectDestroy();
@@ -36,6 +42,7 @@ namespace fe
 
                     FLAT_ENGINE_API fe::Vector2d scriptObjectGetDirection();
 
+                    FLAT_ENGINE_API void scriptObjectMoveToPosition(fe::Vector2d pos);
                     FLAT_ENGINE_API void scriptObjectMoveToPosition(float x, float y);
 
                     FLAT_ENGINE_API float scriptObjectGetSlowdownDistance();
