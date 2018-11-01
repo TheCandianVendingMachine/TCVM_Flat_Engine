@@ -152,7 +152,7 @@ void fe::physicsEngine::simulateForces(float deltaTime, unsigned int iterations)
                         float forceX = m_gravityForceX;
                         float forceY = m_gravityForceY;
 
-                        const float frictionVelocityReduction = m_frictionImpulse * body->getFrictionCoefficient();
+                        const float frictionVelocityReduction = body->getFrictionCoefficient();
                         float frictionForceX = 0.f;
                         float frictionForceY = 0.f;
 
