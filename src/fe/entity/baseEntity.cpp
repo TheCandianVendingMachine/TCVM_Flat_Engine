@@ -230,7 +230,7 @@ void fe::baseEntity::updateModules()
         if (m_collisionBody)
             {
                 m_collisionBody->m_aabb.m_globalPositionX += m_collisionBody->m_aabb.m_offsetX;
-                m_collisionBody->m_aabb.m_globalPositionX += m_collisionBody->m_aabb.m_offsetY;
+                m_collisionBody->m_aabb.m_globalPositionY += m_collisionBody->m_aabb.m_offsetY;
             }
     }
 
@@ -302,6 +302,21 @@ void fe::baseEntity::setSize(fe::Vector2d size)
 void fe::baseEntity::setSize(fe::lightVector2d size)
     {
         setSize(size.x, size.y);
+    }
+
+void fe::baseEntity::setRotation(float degree)
+    {
+        if (m_renderObject)
+            {
+                m_renderObject->m_transform.setRotation(degree * (3.14159f / 180.f));
+            }
+
+        m_rotation = degree;
+    }
+
+float fe::baseEntity::getRotation() const
+    {
+        return m_rotation;
     }
 
 void fe::baseEntity::setColour(const sf::Color colour)

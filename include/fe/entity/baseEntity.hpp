@@ -52,6 +52,7 @@ namespace fe
                     float m_positionY;
                     float m_sizeX;
                     float m_sizeY;
+                    float m_rotation;
                     sf::Color m_colour;
 
                     bool m_killEntity;
@@ -103,6 +104,9 @@ namespace fe
                     FLAT_ENGINE_API void setSize(float x, float y);
                     FLAT_ENGINE_API void setSize(fe::Vector2d size);
                     FLAT_ENGINE_API void setSize(fe::lightVector2d size);
+
+                    FLAT_ENGINE_API void setRotation(float degree);
+                    FLAT_ENGINE_API float getRotation() const;
 
                     FLAT_ENGINE_API void setColour(const sf::Color colour);
 

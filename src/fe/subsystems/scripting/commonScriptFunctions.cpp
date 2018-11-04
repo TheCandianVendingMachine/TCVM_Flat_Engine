@@ -65,6 +65,11 @@ void fe::breakToDebugger()
         __debugbreak();
     }
 
+fe::Vector2d fe::getWindowSize()
+    {
+        return fe::engine::get().getWindowSize();
+    }
+
 fe::scriptObject *fe::getEntityByString(const char *string)
     {
         std::vector<fe::baseEntity*> entities;

@@ -3,6 +3,7 @@
 #include "fe/subsystems/physics/rigidBody.hpp"
 #include "fe/subsystems/graphic/renderObject/renderObject.hpp"
 #include "fe/subsystems/graphic/animation/animationActor.hpp"
+#include "fe/subsystems/collision/collisionBody.hpp"
 #include "fe/objectManagement/str.hpp"
 
 fe::scriptObject::scriptObject(baseEntity *obj) :
@@ -18,6 +19,20 @@ void fe::scriptObject::setEntityDefinition(sol::table table)
 fe::baseEntity *fe::scriptObject::getBaseEntity() const
     {
         return m_entity;
+    }
+
+void fe::scriptObject::scriptObjectSetOrigin(float x, float y)
+    {
+        if (m_entity->getRenderObject())
+            {
+                m_entity->getRenderObject()->m_transform.setOrigin(x, y);
+            }
+
+        if (m_entity->getCollider())
+            {
+                m_entity->getCollider()->m_aabb.m_offsetX = -x;
+                m_entity->getCollider()->m_aabb.m_offsetY = -y;
+            }
     }
 
 std::string fe::scriptObject::scriptObjectGetName()
@@ -67,6 +82,26 @@ void fe::scriptObject::scriptObjectApplyForce(float x, float y)
 fe::Vector2d fe::scriptObject::scriptObjectGetPosition()
     {
         return m_entity->getPosition();
+    }
+
+void fe::scriptObject::scriptObjectSetPosition(fe::Vector2d pos)
+    {
+        scriptObjectSetPosition(pos.x, pos.y);
+    }
+
+void fe::scriptObject::scriptObjectSetPosition(float x, float y)
+    {
+        m_entity->setPosition(x, y);
+    }
+
+void fe::scriptObject::scriptObjectSetRotation(float degree)
+    {
+        m_entity->setRotation(degree);
+    }
+
+float fe::scriptObject::scriptObjectGetRotation()
+    {
+        return m_entity->getRotation();
     }
 
 void fe::scriptObject::scriptObjectDestroy()

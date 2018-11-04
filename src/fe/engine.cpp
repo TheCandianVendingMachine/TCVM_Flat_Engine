@@ -234,6 +234,7 @@ end)");
         m_scriptManager->getFunctionHandler().registerCPPFunction("breakToDebugger", &fe::breakToDebugger);
         m_scriptManager->getFunctionHandler().registerCPPFunction("sendEvent", &fe::sendEvent);
         m_scriptManager->getFunctionHandler().registerCPPFunction("getEntityByString", &fe::getEntityByString);
+        m_scriptManager->getFunctionHandler().registerCPPFunction("getWindowSize", &fe::getWindowSize);
 
         // Register Objects
         m_scriptManager->getUserTypeHandler().addCustomType<fe::Vector2d, fe::Vector2d(), fe::Vector2d(float, float)>(
@@ -259,8 +260,12 @@ end)");
             "getName", &scriptObject::scriptObjectGetName,
             "setForce", sol::overload(sol::resolve<void(float, float)>(&scriptObject::scriptObjectSetForce), sol::resolve<void(fe::Vector2d)>(&scriptObject::scriptObjectSetForce)),
             "setVelocity", sol::overload(sol::resolve<void(float, float)>(&scriptObject::scriptObjectSetVelocity), sol::resolve<void(fe::Vector2d)>(&scriptObject::scriptObjectSetVelocity)),
+            "setOrigin", &scriptObject::scriptObjectSetOrigin,
             "applyForce", sol::overload(sol::resolve<void(float, float)>(&scriptObject::scriptObjectApplyForce), sol::resolve<void(fe::Vector2d)>(&scriptObject::scriptObjectApplyForce)),
             "getPosition", &scriptObject::scriptObjectGetPosition,
+            "setPosition", sol::overload(sol::resolve<void(float, float)>(&scriptObject::scriptObjectSetPosition), sol::resolve<void(fe::Vector2d)>(&scriptObject::scriptObjectSetPosition)),
+            "setRotation", &scriptObject::scriptObjectSetRotation,
+            "getRotation", &scriptObject::scriptObjectGetRotation,
             "destroy", &scriptObject::scriptObjectDestroy,
             "getNormalForce", &scriptObject::scriptObjectGetNormalForce,
             "getForce", &scriptObject::scriptObjectGetForce,
