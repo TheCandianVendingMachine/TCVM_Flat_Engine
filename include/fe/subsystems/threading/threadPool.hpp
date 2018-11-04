@@ -69,6 +69,7 @@ namespace fe
                     }
 
                 job.m_done = false;
+                job.m_started = true;
                 selected->runJob(&job);
             }
 
@@ -76,7 +77,8 @@ namespace fe
         template<unsigned int threadCount>
         void threadPool<threadCount>::waitFor(threadJob &job)
             {
-                while (!job.m_done && job.m_active) {}
+                while (!job.isDone()) {}
+                job.m_started = false;
             }
 
         template<unsigned int threadCount>
@@ -128,7 +130,7 @@ namespace fe
                         for (auto it = m_jobs.begin(); it != m_jobs.end();)
                             {
                                 auto job = (*it);
-                                if (job->execute())
+                                if (job->execute() || job->isDone())
                                     {
                                         job->m_active = false;
                                         job->m_done = true;

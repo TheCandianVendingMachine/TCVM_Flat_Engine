@@ -5,7 +5,7 @@ bool fe::rayJob::execute()
     {
         if (!m_broadphase) return true;
         m_result = m_broadphase->raycast(m_origin, m_direction, m_ignoreGroup);
-        true;
+        return true;
     }
 
 fe::rayJob::rayJob(fe::Vector2d origin, fe::Vector2d dir, fe::str ignoreGroup) :

@@ -1,6 +1,7 @@
 // threadJob.hpp
 // A abstract struct that allows the user to create custom jobs
 #pragma once
+#include "fe/flatEngineExport.hpp"
 #include <functional>
 
 namespace fe
@@ -12,6 +13,8 @@ namespace fe
                 virtual bool execute() = 0;
                 bool m_done = false;
                 bool m_active = false;
+                bool m_started = false;
+                FLAT_ENGINE_API bool isDone() const;
             };
 
         struct threadFunction : threadJob
