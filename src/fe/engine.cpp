@@ -240,7 +240,21 @@ end)");
         m_scriptManager->getUserTypeHandler().addCustomType<fe::Vector2d, fe::Vector2d(), fe::Vector2d(float, float)>(
             "vector2",
             "x", &Vector2d::x,
-            "y", &Vector2d::y
+            "y", &Vector2d::y,
+            sol::meta_function::multiplication, static_cast<fe::Vector2d(fe::Vector2d::*)(const float&) const>(&Vector2d::operator*),
+            sol::meta_function::division, static_cast<fe::Vector2d(fe::Vector2d::*)(const float&) const> (&Vector2d::operator/),
+            sol::meta_function::addition, static_cast<fe::Vector2d(fe::Vector2d::*)(const fe::Vector2d&) const> (&Vector2d::operator+),
+            sol::meta_function::subtraction, static_cast<fe::Vector2d(fe::Vector2d::*)(const fe::Vector2d&) const>(&fe::Vector2d::operator-),
+            sol::meta_function::unary_minus, static_cast<fe::Vector2d(fe::Vector2d::*)() const>(&fe::Vector2d::operator-),
+            "magnitude", &fe::Vector2d::magnitude,
+            "magnitudeSqr", &fe::Vector2d::magnitudeSqr,
+            "normalize", &fe::Vector2d::normalize,
+            "clamp", &fe::Vector2d::clamp,
+            "abs", &fe::Vector2d::abs,
+            "normal", &fe::Vector2d::normal,
+            "dot", &fe::Vector2d::dot,
+            "cross", &fe::Vector2d::cross,
+            "project", &fe::Vector2d::project
         );
 
         m_scriptManager->getUserTypeHandler().addCustomType<fe::lightVector2d, fe::lightVector2d(), fe::lightVector2d(float, float)>(
