@@ -79,7 +79,7 @@ namespace fe
                 Vector2<dataType> clamp(float max)
                     {
                         // max^2 / (x^2 + y^2) = 2 * Modifier
-                        if (max * max > x * x + y * y) return *this;
+                        if (max * max >= x * x + y * y) return *this;
                         float modifier = std::sqrt((max * max) / (x * x + y * y));
                         return modifier < 1.f ? fe::Vector2d(x * modifier, y * modifier) : *this;
                     }
