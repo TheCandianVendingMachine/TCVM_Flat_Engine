@@ -149,28 +149,48 @@ void fe::physicsEngine::simulateForces(float deltaTime, unsigned int iterations)
                     }    
                 else if (body->getEnabled())
                     {
-                        float forceX = m_gravityForceX;
-                        float forceY = m_gravityForceY;
+                        float bodyMass = body->getMass();
 
-                        const float frictionVelocityReduction = body->getFrictionCoefficient();
-                        float frictionForceX = 0.f;
-                        float frictionForceY = 0.f;
+                        const float frictionCoef = body->getFrictionCoefficient();
+                        float frictionForceX = frictionCoef * body->getNormalForceY();
+                        float frictionForceY = frictionCoef * body->getNormalForceX();
+                        float frictionForceZ = frictionCoef * m_gravityForceZ;
 
-                        if (abs(body->getMass() * body->getNormalForceX()) > 0.f || abs(body->getMass() * m_gravityForceZ) > 0.f)
-                            {
-                                frictionForceY = (frictionVelocityReduction * body->getMass()) * -fe::signOf(body->getVelocityY());
-                            }
-
-                        if (abs(body->getMass() * body->getNormalForceY()) > 0.f || abs(body->getMass() * m_gravityForceZ) > 0.f)
-                            {
-                                frictionForceX = (frictionVelocityReduction * body->getMass()) * -fe::signOf(body->getVelocityX());
-                            }
-
-                        forceX += frictionForceX;
-                        forceY += frictionForceY;
+                        float forceX = 0.f;
+                        float forceY = 0.f;
+                        fe::lightVector2d frictionForceZVec(0, 0);
+                        fe::Vector2d bodyVelocityNormal(0, 0);
 
                         for (unsigned int j = 0; j < iterations; j++)
                             {
+                                //bodyVelocityNormal = ;
+                                float bodyVelocityX = body->getVelocityX();
+                                float bodyVelocityY = body->getVelocityY();
+
+                                forceX = m_gravityForceX + frictionForceX * fe::signOf(bodyVelocityX);
+                                forceY = m_gravityForceY + frictionForceY * fe::signOf(bodyVelocityY);
+
+                                frictionForceZVec = -body->getVelocity().normalize() * frictionForceZ;
+                                forceX += frictionForceZVec.x;
+                                forceY += frictionForceZVec.y;
+
+                                // (Old - New) because we are reducing velocity so the old velocity will be lower
+                                if (std::abs(bodyVelocityX) - std::abs(bodyVelocityX + ((forceX / bodyMass) * deltaTime)) < 0.f)
+                                    {
+                                        // flipped X via friction
+                                        // a = (f/m)
+                                        // a = -v
+                                        // -v = f/m
+                                        // -vm = f
+                                        forceX = -bodyVelocityX * bodyMass;
+                                    }
+
+                                if (std::abs(bodyVelocityY) - std::abs(bodyVelocityY + ((forceY / bodyMass) * deltaTime)) < 0.f)
+                                    {
+                                        // flipped Y via friction
+                                        forceY = -bodyVelocityY * bodyMass;
+                                    }
+
                                 body->applyForce(forceX, forceY);
                                 body->update(deltaTime);
                             }

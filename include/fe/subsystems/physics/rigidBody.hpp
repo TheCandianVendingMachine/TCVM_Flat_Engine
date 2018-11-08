@@ -1,10 +1,11 @@
 // rigidBody.hpp
 // Simple rigid body. Can move
 #pragma once
-#include "../../flatEngineExport.hpp"
-#include "../../math/Vector2.hpp"
-#include "../serializer/serializable.hpp"
+#include "fe/flatEngineExport.hpp"
+#include "fe/math/Vector2.hpp"
+#include "fe/subsystems/serializer/serializable.hpp"
 #include "transformable.hpp"
+#include "fe/typeDefines.hpp"
 
 namespace fe
     {
@@ -117,12 +118,12 @@ namespace fe
                             m_velocityX += (m_impulseX / m_mass) * deltaTime;
                             m_velocityY += (m_impulseY / m_mass) * deltaTime;
 
-                            if (std::abs(m_velocityX) < 0.0001f)
+                            if (std::abs(m_velocityX) < fe::FE_EPSILON)
                                 {
                                     m_velocityX = 0.f;
                                 }
 
-                            if (std::abs(m_velocityY) < 0.0001f)
+                            if (std::abs(m_velocityY) < fe::FE_EPSILON)
                                 {
                                     m_velocityY = 0.f;
                                 }
