@@ -178,17 +178,18 @@ void fe::physicsEngine::simulateForces(float deltaTime, unsigned int iterations)
                                 if (std::abs(bodyVelocityX) - std::abs(bodyVelocityX + ((forceX / bodyMass) * deltaTime)) < 0.f)
                                     {
                                         // flipped X via friction
-                                        // a = (f/m)
+                                        // a = (f/m)*d
                                         // a = -v
-                                        // -v = f/m
-                                        // -vm = f
-                                        forceX = -bodyVelocityX * bodyMass;
+                                        // -v = (f/m)*d
+                                        // (-v/d) = f/m
+                                        // (-v/d)*m = f
+                                        forceX = (-bodyVelocityX / deltaTime) * bodyMass;
                                     }
 
                                 if (std::abs(bodyVelocityY) - std::abs(bodyVelocityY + ((forceY / bodyMass) * deltaTime)) < 0.f)
                                     {
                                         // flipped Y via friction
-                                        forceY = -bodyVelocityY * bodyMass;
+                                        forceY = (-bodyVelocityY / deltaTime) * bodyMass;
                                     }
 
                                 body->applyForce(forceX, forceY);
