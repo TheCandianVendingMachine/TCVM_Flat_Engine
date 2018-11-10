@@ -30,6 +30,9 @@ namespace fe
                     template<typename T>
                     void setComponentProxy(const std::string &name);
 
+                    template<typename T>
+                    T *getComponent(const char *id, fe::baseEntity *entity) const;
+
                     FLAT_ENGINE_API void addComponentToObject(fe::baseEntity *ent, const std::string &entName, const std::string &compName, const std::string &compLuaPath, sol::table table);
                     FLAT_ENGINE_API void removeComponentFromObject(fe::baseEntity *ent, fe::Handle handle);
 
@@ -48,5 +51,24 @@ namespace fe
                 FE_ASSERT(m_componentLookupTable.find(FE_STR(name.c_str())) == m_componentLookupTable.end(), "Component already exists in table");
 
                 m_componentLookupTable[FE_STR(name.c_str())] = new componentProxy<T>;
+            }
+
+        template<typename T>
+        T *componentManager::getComponent(const char *id, fe::baseEntity *entity) const
+            {
+                static_assert(std::is_base_of<component<T>, T>::value, "Component cast does not have base of fe::component");
+
+                fe::str idStr = FE_STR(id);
+
+                for (auto &compPair : entity->getAllComponents())
+                    {
+                        fe::componentBase *comp = m_components.getObject(compPair.first);
+                        if (comp->getID() == idStr)
+                            {
+                                return static_cast<T*>(comp);
+                            }
+                    }
+
+                return nullptr;
             }
     }

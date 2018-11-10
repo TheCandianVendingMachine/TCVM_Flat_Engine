@@ -1,5 +1,10 @@
 #include "fe/entity/component/component.hpp"
 
+fe::componentBase::componentBase(const char *str) :
+    m_id(FE_STR(str))
+    {
+    }
+
 bool fe::componentBase::isInitialized() const
     {
         return m_initialized;
@@ -34,4 +39,9 @@ void fe::componentBase::engineInitLuaValues(sol::table table, const char *compon
 fe::scriptObject *fe::componentBase::getOwner()
     {
         return m_owner;
+    }
+
+fe::str fe::componentBase::getID() const
+    {
+        return m_id;
     }

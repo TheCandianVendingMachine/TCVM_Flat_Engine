@@ -46,6 +46,7 @@ namespace fe
                     {
                         return m_function.call(std::forward<Args>(args)...);
                     }
+                return decltype(m_function.call(std::forward<Args>(args)...))();
             }
 
         template<typename ...Args>

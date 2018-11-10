@@ -16,6 +16,7 @@ namespace fe
         class componentBase
             {
                 protected:
+                    fe::str m_id;
                     fe::luaFunctionReference *m_onAdd;
                     fe::luaFunctionReference *m_onRemove;
                     fe::luaFunctionReference *m_update;
@@ -27,10 +28,13 @@ namespace fe
                     virtual void initLuaValues(sol::table table, const char *componentPath, const char *entName) {}
 
                 public:
+                    FLAT_ENGINE_API componentBase(const char *str);
+
                     FLAT_ENGINE_API bool isInitialized() const;
                     FLAT_ENGINE_API void engineInitLuaValues(sol::table table, const char *componentPath, const char *entName);
 
                     FLAT_ENGINE_API fe::scriptObject *getOwner();
+                    FLAT_ENGINE_API fe::str getID() const;
 
                     virtual void engineOnAdd(fe::baseEntity *ent) {}
                     virtual void engineOnRemove(fe::baseEntity *ent) {}
@@ -102,7 +106,8 @@ namespace fe
 
         template<typename TObj>
         template<typename ...Args>
-        inline component<TObj>::component(const std::string &name, Args &&...args)
+        inline component<TObj>::component(const std::string &name, Args &&...args) :
+            componentBase(name.c_str())
             {
                 fe::engine::get().getScriptManager().getUserTypeHandler().addCustomType<TObj>(name, sol::base_classes, sol::bases<component>(),
                     "getOwner", &TObj::getOwner,
