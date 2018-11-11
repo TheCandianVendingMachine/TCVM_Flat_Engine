@@ -12,7 +12,7 @@
 void fe::collisionWorld::handleCollision(fe::collider *a, fe::collider *b)
     {
         FE_ENGINE_PROFILE("collision_world", "collision_check");
-        if (a == b) return;
+        if (a == b || !a || !b) return;
         fe::AABB *first = static_cast<fe::AABB*>(&a->m_aabb);
         fe::AABB *second = static_cast<fe::AABB*>(&b->m_aabb);
 

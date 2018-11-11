@@ -61,6 +61,8 @@ namespace fe
                     FLAT_ENGINE_API int addDialog(fe::gui::dialog *panel, int connected = -1, int zPos = 0);
                     FLAT_ENGINE_API void removeDialog(fe::gui::dialog *panel);
 
+                    FLAT_ENGINE_API void changeScreen(fe::baseGameScreen *newScreen);
+
                     FLAT_ENGINE_API void startUp();
                     FLAT_ENGINE_API virtual void init() {}
 

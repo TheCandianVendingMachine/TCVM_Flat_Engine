@@ -28,6 +28,12 @@ void fe::baseGameState::removeDialog(fe::gui::dialog *panel)
         panel->kill();
     }
 
+void fe::baseGameState::changeScreen(fe::baseGameScreen *newScreen)
+    {
+        m_nextGameScreen = newScreen;
+        m_newScreenAvaliable = true;
+    }
+
 void fe::baseGameState::startUp()
     {
         m_guiGraph.startUp();
@@ -58,6 +64,7 @@ void fe::baseGameState::preUpdateDefined()
                     }
 
                 m_currentScreen.reset(m_nextGameScreen);
+                m_currentScreen->setState(this);
                 m_currentScreen->init();
                 m_newScreenAvaliable = false;
             }
