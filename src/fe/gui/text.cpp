@@ -10,7 +10,7 @@ void fe::gui::text::drawDialogText(sf::RenderTarget &target, const fe::transform
         m_renderText.setFillColor(getDrawColour());
 
         sf::RenderStates s;
-        s.transform.translate(target.mapPixelToCoords(sf::Vector2i(0, 0)));
+        s.transform.translate(target.mapPixelToCoords(sf::Vector2i(getPosition().convertToSfVec2())));
         s.transform.scale(drawMatrix.getScale().x, drawMatrix.getScale().y);
         s.transform.rotate(drawMatrix.getRotation() * 180.f / 3.14159f);
         target.draw(m_renderText, s);
