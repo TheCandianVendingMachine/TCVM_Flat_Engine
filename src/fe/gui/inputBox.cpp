@@ -138,11 +138,11 @@ void fe::gui::inputBox::onStateChange(dialogStates previous, dialogStates next)
             }
     }
 
-void fe::gui::inputBox::drawDialogElements(sf::RenderTarget &target, const fe::matrix3d &drawMatrix)
+void fe::gui::inputBox::drawDialogElements(sf::RenderTarget &target, const fe::transformable &drawMatrix)
     {
         //FE_DEBUG_DRAW_SQUARE(m_textBounds.x, m_textBounds.y, m_text.getPosition().x + getPosition().x, m_text.getPosition().y + getPosition().y, sf::Color::Red);
-        drawPolygon(m_textContainer, drawMatrix, getDrawColour());
-        draw(target);
+        drawPolygon(m_textContainer, const_cast<fe::transformable&>(drawMatrix).getMatrix(), getDrawColour());
+        drawToScreen(target, drawMatrix);
     }
 
 fe::gui::inputBox::inputBox(const sf::Font *const font, fe::gui::inputBoxModes mode) :

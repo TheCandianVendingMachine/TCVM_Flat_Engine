@@ -41,11 +41,11 @@ void fe::gui::button::onStateChange(dialogStates previous, dialogStates next)
             }
     }
 
-void fe::gui::button::drawDialogElements(sf::RenderTarget &target, const fe::matrix3d &drawMatrix)
+void fe::gui::button::drawDialogElements(sf::RenderTarget &target, const fe::transformable &drawMatrix)
     {
         FE_ENGINE_PROFILE("gui_button", "draw");
-        drawPolygon(getControlPolygon(), drawMatrix, getDrawColour());
-        draw(target);
+        drawPolygon(getControlPolygon(), const_cast<fe::transformable&>(drawMatrix).getMatrix(), getDrawColour());
+        drawToScreen(target, drawMatrix);
         FE_END_PROFILE;
     }
 

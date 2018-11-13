@@ -12,7 +12,7 @@ namespace fe
                         class dialogProxy : public fe::gui::dialog
                             {
                                 private:
-                                    void drawDialogElements(sf::RenderTarget &target, const fe::matrix3d &drawMatrix) {}
+                                    void drawDialogElements(sf::RenderTarget &target, const fe::transformable &drawMatrix) {}
                                     void drawDialogText(sf::RenderTarget &target, const fe::transformable &drawMatrix) {}
 
                                     void onStateChange(dialogStates previous, dialogStates next) {}

@@ -60,7 +60,7 @@ namespace fe
                             FLAT_ENGINE_API void handleASCII(char c);
                             FLAT_ENGINE_API void handleWindowEvent(const sf::Event &event) override;
                             FLAT_ENGINE_API void onStateChange(dialogStates previous, dialogStates next) override;
-                            FLAT_ENGINE_API void drawDialogElements(sf::RenderTarget &target, const fe::matrix3d &drawMatrix) override;
+                            FLAT_ENGINE_API void drawDialogElements(sf::RenderTarget &target, const fe::transformable &drawMatrix) override;
 
                         public:
                             FLAT_ENGINE_API inputBox(const sf::Font *const font, fe::gui::inputBoxModes mode = fe::gui::inputBoxModes::NONE);

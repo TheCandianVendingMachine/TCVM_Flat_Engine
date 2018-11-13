@@ -2,16 +2,16 @@
 #include "fe/debug/logger.hpp"
 #include <SFML/Window/Event.hpp>
 
-void fe::gui::slider::drawDialogElements(sf::RenderTarget &target, const fe::matrix3d &drawMatrix)
+void fe::gui::slider::drawDialogElements(sf::RenderTarget &target, const fe::transformable &drawMatrix)
     {
-        drawPolygon(m_sliderContainer, drawMatrix, getDrawColour());
+        drawPolygon(m_sliderContainer, const_cast<fe::transformable&>(drawMatrix).getMatrix(), getDrawColour());
 
-        fe::matrix3d tempTransform = drawMatrix;
+        fe::matrix3d tempTransform = const_cast<fe::transformable&>(drawMatrix).getMatrix();
         tempTransform.translate(m_sliderPosition);
         setControlOffset(m_sliderPosition);
         drawPolygon(getControlPolygon(), tempTransform, m_sliderColour);
 
-        draw(target);
+        drawToScreen(target, drawMatrix);
     }
 
 void fe::gui::slider::onStateChange(dialogStates previous, dialogStates next)

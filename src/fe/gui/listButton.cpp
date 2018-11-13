@@ -35,15 +35,15 @@ void fe::gui::listButton::onStateChange(dialogStates previous, dialogStates next
         m_buttonState = nextState;
     }
 
-void fe::gui::listButton::drawDialogElements(sf::RenderTarget &target, const fe::matrix3d &drawMatrix)
+void fe::gui::listButton::drawDialogElements(sf::RenderTarget &target, const fe::transformable &drawMatrix)
     {
         FE_ENGINE_PROFILE("gui_list_button", "draw");
         //drawPolygon(getControlPolygon(), target, drawMatrix, getDrawColour());
-        drawPolygon(m_outline, drawMatrix, getDrawColour());
+        drawPolygon(m_outline, const_cast<fe::transformable&>(drawMatrix).getMatrix(), getDrawColour());
 
         if (m_buttonState > buttonState::NONE)
             {
-                fe::matrix3d checkMatrix = drawMatrix;
+                fe::matrix3d checkMatrix = const_cast<fe::transformable&>(drawMatrix).getMatrix();
                 checkMatrix.translate(fe::lightVector2d(m_outlineWidth, m_outlineWidth));
 
                 sf::Color drawColour = getDrawColour();
@@ -55,7 +55,7 @@ void fe::gui::listButton::drawDialogElements(sf::RenderTarget &target, const fe:
                 drawPolygon(m_mark, checkMatrix, drawColour);
             }
 
-        draw(target);
+        drawToScreen(target, drawMatrix);
         FE_END_PROFILE;
     }
 

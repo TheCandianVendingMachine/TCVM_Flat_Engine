@@ -27,7 +27,7 @@ namespace fe
                             fe::lightVector2d m_boxPositionIncrement;
 
                             FLAT_ENGINE_API void onStateChange(dialogStates previous, dialogStates next) final;
-                            FLAT_ENGINE_API void drawDialogElements(sf::RenderTarget &target, const fe::matrix3d &drawMatrix) final;
+                            FLAT_ENGINE_API void drawDialogElements(sf::RenderTarget &target, const fe::transformable &drawMatrix) final;
 
                             FLAT_ENGINE_API void handleWindowEvent(const sf::Event &event);
 

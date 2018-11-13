@@ -37,7 +37,7 @@ namespace fe
 
                         protected:
                             FLAT_ENGINE_API void onStateChange(dialogStates previous, dialogStates next) final;
-                            FLAT_ENGINE_API void drawDialogElements(sf::RenderTarget &target, const fe::matrix3d &drawMatrix) final;
+                            FLAT_ENGINE_API void drawDialogElements(sf::RenderTarget &target, const fe::transformable &drawMatrix) final;
 
                             FLAT_ENGINE_API void addMarkPoint(float x, float y);
                             FLAT_ENGINE_API void addOutlinePoint(float x, float y);

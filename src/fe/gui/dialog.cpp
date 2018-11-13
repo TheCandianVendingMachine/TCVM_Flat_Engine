@@ -46,7 +46,7 @@ void fe::gui::dialog::draw(sf::RenderTarget &target, const fe::transformable &ma
         fe::transformable transform = matrix;
         transform.combine(m_drawMatrix);
         FE_ENGINE_PROFILE("gui_dialog", "draw_elements");
-        drawDialogElements(target, transform.getMatrix());
+        drawDialogElements(target, transform);
         FE_END_PROFILE;
 
         FE_ENGINE_PROFILE("gui_dialog", "draw_text");

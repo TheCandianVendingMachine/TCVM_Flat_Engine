@@ -11,15 +11,15 @@ void fe::gui::control::drawPolygon(fe::polygon2d &poly, const fe::matrix3d &draw
             {
                 if (m_vertexCount > m_verticies.size())
                     {
-                        m_verticies.emplace_back(fe::Vector2d(drawMatrix.transformPoint(std::move(poly.m_verticies[i][0]))).convertToSfVec2(), drawColour);
-                        m_verticies.emplace_back(fe::Vector2d(drawMatrix.transformPoint(std::move(poly.m_verticies[i][1]))).convertToSfVec2(), drawColour);
-                        m_verticies.emplace_back(fe::Vector2d(drawMatrix.transformPoint(std::move(poly.m_verticies[i][2]))).convertToSfVec2(), drawColour);
+                        m_verticies.emplace_back(poly.m_verticies[i][0].convertToSfVec2(), drawColour);
+                        m_verticies.emplace_back(poly.m_verticies[i][1].convertToSfVec2(), drawColour);
+                        m_verticies.emplace_back(poly.m_verticies[i][2].convertToSfVec2(), drawColour);
                     }
                 else
                     {
-                        m_verticies[m_activeVertexCount + 0].position = fe::Vector2d(drawMatrix.transformPoint(std::move(poly.m_verticies[i][0]))).convertToSfVec2();
-                        m_verticies[m_activeVertexCount + 1].position = fe::Vector2d(drawMatrix.transformPoint(std::move(poly.m_verticies[i][1]))).convertToSfVec2();
-                        m_verticies[m_activeVertexCount + 2].position = fe::Vector2d(drawMatrix.transformPoint(std::move(poly.m_verticies[i][2]))).convertToSfVec2();
+                        //m_verticies[m_activeVertexCount + 0].position = fe::Vector2d(drawMatrix.transformPoint(std::move(poly.m_verticies[i][0]))).convertToSfVec2();
+                        //m_verticies[m_activeVertexCount + 1].position = fe::Vector2d(drawMatrix.transformPoint(std::move(poly.m_verticies[i][1]))).convertToSfVec2();
+                        //m_verticies[m_activeVertexCount + 2].position = fe::Vector2d(drawMatrix.transformPoint(std::move(poly.m_verticies[i][2]))).convertToSfVec2();
 
                         m_verticies[m_activeVertexCount + 0].color = drawColour;
                         m_verticies[m_activeVertexCount + 1].color = drawColour;
@@ -31,10 +31,15 @@ void fe::gui::control::drawPolygon(fe::polygon2d &poly, const fe::matrix3d &draw
         FE_END_PROFILE;
     }
 
-void fe::gui::control::draw(sf::RenderTarget &target)
+void fe::gui::control::drawToScreen(sf::RenderTarget &target, const fe::transformable &drawMatrix)
     {
         FE_ENGINE_PROFILE("gui_control", "draw_to_app");
-        target.draw(m_verticies.data(), m_activeVertexCount, sf::PrimitiveType::Triangles);
+        sf::RenderStates s;
+        s.transform.translate(drawMatrix.getPosition().convertToSfVec2());
+        s.transform.scale(drawMatrix.getScale().x, drawMatrix.getScale().y);
+        s.transform.rotate(drawMatrix.getRotation() * 180.f / 3.14159f);
+
+        target.draw(m_verticies.data(), m_activeVertexCount, sf::PrimitiveType::Triangles, s);
         m_activeVertexCount = 0;
         m_vertexCount = 0;
         FE_END_PROFILE;

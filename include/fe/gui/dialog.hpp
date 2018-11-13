@@ -31,7 +31,7 @@ namespace fe
                             bool m_draw;
 
                         protected:
-                            virtual void drawDialogElements(sf::RenderTarget &target, const fe::matrix3d &drawMatrix) = 0;
+                            virtual void drawDialogElements(sf::RenderTarget &target, const fe::transformable &drawMatrix) = 0;
                             virtual void drawDialogText(sf::RenderTarget &target, const fe::transformable &drawMatrix) = 0;
 
                             virtual void onStateChange(dialogStates previous, dialogStates next) = 0;
