@@ -40,7 +40,7 @@ void fe::camera::setPosition(float x, float y)
     {
         m_position.x = x;
         m_position.y = y;
-        m_transform.setPosition(x, y);
+        //m_transform.setPosition(x, y);
     }
 
 void fe::camera::setVelocity(const fe::Vector2d velocity)
