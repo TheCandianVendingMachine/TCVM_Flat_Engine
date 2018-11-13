@@ -5,6 +5,11 @@ fe::baseGameState *const fe::baseGameScreen::getState() const
         return m_gameState;
     }
 
+fe::baseGameState *fe::baseGameScreen::getState()
+    {
+        return m_gameState;
+    }
+
 void fe::baseGameScreen::setState(baseGameState *state)
     {
         m_gameState = state;

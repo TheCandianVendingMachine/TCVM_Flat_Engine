@@ -28,6 +28,7 @@ void fe::camera::setSize(float x, float y)
         m_sizeBeforeZoom.x = x;
         m_sizeBeforeZoom.y = y;
         m_view.setSize({ (float)m_size.x, (float)m_size.y });
+        m_transform.setScale(1);
     }
 
 void fe::camera::setPosition(const fe::Vector2d position)
@@ -39,6 +40,7 @@ void fe::camera::setPosition(float x, float y)
     {
         m_position.x = x;
         m_position.y = y;
+        m_transform.setPosition(x, y);
     }
 
 void fe::camera::setVelocity(const fe::Vector2d velocity)
@@ -105,17 +107,18 @@ void fe::camera::move(float x, float y)
         setPosition(m_position.x + x, m_position.y + y);
     }
 
-void fe::camera::setZoom(int zoom)
+void fe::camera::setZoom(float zoom)
     {
         float zoomFactor = ((float)(zoom + 100) / 100.f);
         if (zoomFactor <= 0) return;
         m_view.setSize(m_sizeBeforeZoom.convertToSfVec2() * zoomFactor);
         m_zoom = zoom;
-        m_size.x = m_size.x * zoomFactor;
-        m_size.y = m_size.y * zoomFactor;
+        m_size.x = m_sizeBeforeZoom.x * zoomFactor;
+        m_size.y = m_sizeBeforeZoom.y * zoomFactor;
+        m_transform.setScale(zoomFactor);
     }
 
-void fe::camera::zoom(int zoom)
+void fe::camera::zoom(float zoom)
     {
         setZoom(getZoom() + zoom);
     }
@@ -192,6 +195,11 @@ void fe::camera::updateCamera(float dt)
 const sf::View &fe::camera::getView() const
     {
         return m_view;
+    }
+
+const fe::transformable &fe::camera::getMatrix()
+    {
+        return m_transform;
     }
 
 fe::camera &fe::camera::operator=(const fe::camera &rhs)

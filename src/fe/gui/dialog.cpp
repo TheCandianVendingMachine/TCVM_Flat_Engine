@@ -41,14 +41,16 @@ fe::gui::dialogStates fe::gui::dialog::getState() const
         return m_dialogState;
     }
 
-void fe::gui::dialog::draw(sf::RenderTarget &target)
+void fe::gui::dialog::draw(sf::RenderTarget &target, const fe::transformable &matrix)
     {
+        fe::transformable transform = matrix;
+        transform.combine(m_drawMatrix);
         FE_ENGINE_PROFILE("gui_dialog", "draw_elements");
-        drawDialogElements(target, m_drawMatrix.getMatrix());
+        drawDialogElements(target, transform.getMatrix());
         FE_END_PROFILE;
 
         FE_ENGINE_PROFILE("gui_dialog", "draw_text");
-        drawDialogText(target, m_drawMatrix);
+        drawDialogText(target, transform);
         FE_END_PROFILE;
     }
 

@@ -1,10 +1,11 @@
 // matrix.hpp
 // A 2d matrix to allow for easy transformations
 #pragma once
-#include "../flatEngineExport.hpp"
+#include "fe/flatEngineExport.hpp"
 #include "Vector2.hpp"
 #include <cstring>
 #include <cmath>
+#include <SFML/Graphics/Transform.hpp>
 
 // Converts the wanted degrees to radians
 constexpr float operator "" _Deg(long double degrees)
@@ -52,6 +53,7 @@ namespace fe
                 FLAT_ENGINE_API void combine(const matrix3d &rhs);
 
                 FLAT_ENGINE_API matrix3d transpose();
+                FLAT_ENGINE_API matrix3d inverse();
 
                 FLAT_ENGINE_API void translate(fe::lightVector2d &&translation);
                 FLAT_ENGINE_API void rotate(float radians);
@@ -69,6 +71,8 @@ namespace fe
 
                 // transforms the point such that (0, 0) is the matricies position
                 FLAT_ENGINE_API fe::lightVector2d transformPointToLocalSpace(const fe::lightVector2d &&point) const;
+
+                FLAT_ENGINE_API void setSFTransform(const sf::Transform &transform);
 
             };
     }

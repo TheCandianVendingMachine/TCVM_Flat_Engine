@@ -69,6 +69,11 @@ void fe::renderGraph::removeNodeFromGraph(int node)
 
 void fe::renderGraph::draw(sf::RenderTarget &window)
     {
+        draw(window, fe::transformable());
+    }
+
+void fe::renderGraph::draw(sf::RenderTarget &window, const fe::transformable &matrix)
+    {
         int nodeStack[FE_MAX_GAME_OBJECTS + FE_MAX_TEXT_OBJECTS + FE_MAX_Z_ORDER];
         unsigned int stackTop = 0;
         nodeStack[stackTop++] = m_baseNode;
@@ -125,7 +130,7 @@ void fe::renderGraph::draw(sf::RenderTarget &window)
                     {
                         if (node->m_userData)
                             {
-                                drawNode(node, window);
+                                drawNode(node, window, matrix);
                             }
                         FE_ENGINE_PROFILE("render_graph", "iterate_children");
                         for (auto &childIndex : node->m_children)

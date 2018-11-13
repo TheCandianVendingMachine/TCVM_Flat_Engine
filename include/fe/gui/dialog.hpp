@@ -55,7 +55,7 @@ namespace fe
                             virtual void handleEvent(const gameEvent &event) = 0;
                             virtual void handleEvent(const sf::Event &event) = 0;
 
-                            FLAT_ENGINE_API void draw(sf::RenderTarget &target);
+                            FLAT_ENGINE_API void draw(sf::RenderTarget &target, const fe::transformable &matrix);
 
                             FLAT_ENGINE_API fe::transformable &getDrawMatrix();
 

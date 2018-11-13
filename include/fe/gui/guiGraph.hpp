@@ -20,7 +20,7 @@ namespace fe
                             FLAT_ENGINE_API fe::transformable *getNodeTempTransform(fe::priv::node *node) final;
                             FLAT_ENGINE_API const sf::Texture *getRenderTexture() const final;
                             FLAT_ENGINE_API bool renderNode(fe::priv::node *node) const final;
-                            FLAT_ENGINE_API void drawNode(fe::priv::node *node, sf::RenderTarget &target) final;
+                            FLAT_ENGINE_API void drawNode(fe::priv::node *node, sf::RenderTarget &target, const fe::transformable &matrix) final;
 
                             FLAT_ENGINE_API void *createZOrderProxy() final;
 

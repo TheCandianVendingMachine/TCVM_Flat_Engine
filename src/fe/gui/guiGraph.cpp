@@ -31,11 +31,11 @@ bool fe::gui::guiGraph::renderNode(fe::priv::node *node) const
         return static_cast<fe::gui::dialog*>(node->m_userData)->isDrawn();
     }
 
-void fe::gui::guiGraph::drawNode(fe::priv::node *node, sf::RenderTarget &target)
+void fe::gui::guiGraph::drawNode(fe::priv::node *node, sf::RenderTarget &target, const fe::transformable &matrix)
     {
         FE_ENGINE_PROFILE("gui_graph", "draw_node");
-        fe::gui::dialog *dialog = static_cast<fe::gui::dialog*>(node->m_userData);
-        dialog->draw(target);
+        fe::gui::dialog *dialog = static_cast<fe::gui::dialog*>(node->m_userData);       
+        dialog->draw(target, matrix);
         FE_END_PROFILE;
     }
 

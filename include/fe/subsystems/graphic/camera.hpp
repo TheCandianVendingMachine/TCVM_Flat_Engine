@@ -1,9 +1,10 @@
 // camera.hpp
 // A camera in the game world
 #pragma once
-#include "../../flatEngineExport.hpp"
+#include "fe/flatEngineExport.hpp"
 #include <SFML/Graphics/View.hpp>
-#include "../../math/Vector2.hpp"
+#include "fe/math/Vector2.hpp"
+#include "fe/subsystems/physics/transformable.hpp"
 
 namespace sf
     {
@@ -16,6 +17,7 @@ namespace fe
             {
                 private:
                     sf::View m_view;
+                    fe::transformable m_transform;
 
                     fe::Vector2d m_position;
                     fe::Vector2d m_size;
@@ -58,8 +60,8 @@ namespace fe
                     FLAT_ENGINE_API void move(const fe::Vector2d position);
                     FLAT_ENGINE_API void move(float x, float y);
 
-                    FLAT_ENGINE_API void setZoom(int zoom);
-                    FLAT_ENGINE_API void zoom(int zoom);
+                    FLAT_ENGINE_API void setZoom(float zoom);
+                    FLAT_ENGINE_API void zoom(float zoom);
 
                     FLAT_ENGINE_API fe::Vector2d getSize() const;
                     FLAT_ENGINE_API fe::Vector2d getPosition() const;
@@ -71,6 +73,8 @@ namespace fe
 
                     FLAT_ENGINE_API void updateCamera(float dt);
                     FLAT_ENGINE_API const sf::View &getView() const;
+
+                    FLAT_ENGINE_API const fe::transformable &getMatrix();
 
                     FLAT_ENGINE_API camera &operator=(const camera &rhs);
             };

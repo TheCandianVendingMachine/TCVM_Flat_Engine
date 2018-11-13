@@ -13,6 +13,7 @@ namespace fe
 
                 protected:
                     FLAT_ENGINE_API baseGameState *const getState() const;
+                    FLAT_ENGINE_API baseGameState *getState();
 
                 public:
                     FLAT_ENGINE_API void setState(baseGameState *state);

@@ -38,7 +38,7 @@ namespace fe
                     virtual fe::transformable *getNodeTempTransform(fe::priv::node *node) = 0;
                     virtual const sf::Texture *getRenderTexture() const = 0;
                     virtual bool renderNode(fe::priv::node *node) const { return true; }
-                    virtual void drawNode(fe::priv::node *node, sf::RenderTarget &target) = 0;
+                    virtual void drawNode(fe::priv::node *node, sf::RenderTarget &target, const fe::transformable &matrix) = 0;
 
                     virtual void drawToScreen(sf::RenderTarget &target, sf::RenderStates states) = 0;
 
@@ -61,6 +61,7 @@ namespace fe
 
                     virtual void preDraw() = 0;
                     FLAT_ENGINE_API void draw(sf::RenderTarget &window);
+                    FLAT_ENGINE_API void draw(sf::RenderTarget &window, const fe::transformable &matrix);
 
                     FLAT_ENGINE_API void setZOrder(int node, int z);
                     FLAT_ENGINE_API void connect(int a, int b); // connects object with node A to node B

@@ -147,9 +147,22 @@ void fe::matrix3d::combine(const fe::matrix3d &rhs)
 
 fe::matrix3d fe::matrix3d::transpose()
     {
-        return matrix3d(values[0], values[3], values[6],
-                        values[1], values[4], values[7],
-                        values[2], values[5], values[8]);
+        return matrix3d(values[0], values[1], values[2],
+                        values[3], values[4], values[5],
+                        values[6], values[7], values[8]);
+    }
+
+fe::matrix3d fe::matrix3d::inverse()
+    {
+        fe::matrix3d detMatrix(
+            (values[4] * values[8]) - (values[5] * values[7]), -(values[3] * values[8]) - (values[5] * values[6]), (values[3] * values[7]) - (values[4] * values[6]),
+            -(values[1] * values[8]) - (values[2] * values[7]), (values[0] * values[8]) - (values[2] * values[6]), -(values[0] * values[7]) - (values[1] * values[6]),
+            (values[1] * values[5]) - (values[2] * values[4]), -(values[0] * values[5]) - (values[2] * values[3]), (values[0] * values[4]) - (values[1] * values[3])
+        );
+
+        float det = (values[0] * detMatrix[0]) + (values[1] * -detMatrix[1]) + (values[2] * detMatrix[2]);
+
+        return detMatrix.transpose() * det;
     }
 
 void fe::matrix3d::translate(fe::lightVector2d &&translation)
@@ -217,6 +230,22 @@ fe::lightVector2d fe::matrix3d::transformPointToLocalSpace(const fe::lightVector
         transformed = rotatePointToLocalSpace(std::forward<const fe::lightVector2d>(transformed));
 
         return transformed;
+    }
+
+void fe::matrix3d::setSFTransform(const sf::Transform &transform)
+    {
+        const float *matrix = transform.getMatrix();
+        values[0] = matrix[0];
+        values[1] = matrix[1];
+        values[2] = matrix[3];
+
+        values[3] = matrix[4];
+        values[4] = matrix[5];
+        values[5] = matrix[7];
+
+        values[6] = matrix[12];
+        values[7] = matrix[13];
+        values[8] = matrix[15];
     }
 
 fe::matrix3d operator*(float lhs, const fe::matrix3d &rhs)

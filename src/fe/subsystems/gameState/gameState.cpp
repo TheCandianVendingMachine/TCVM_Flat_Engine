@@ -155,10 +155,9 @@ void fe::baseGameState::draw(sf::RenderTarget &app)
         // Switch view to default engine view to allow drawing of gui in absolute terms. Near invisible for speed
         sf::View currentView = app.getView();
         //app.setView(fe::engine::get().getDefaultCamera().getView());
-        m_guiGraph.draw(app);
+        m_guiGraph.draw(app, m_stateCamera.getMatrix());
         //app.setView(currentView);
         FE_END_PROFILE
-
         m_particleSystem.draw(app);
     }
 
