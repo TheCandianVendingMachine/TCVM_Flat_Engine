@@ -14,6 +14,7 @@ namespace fe
                 private:
                     struct dataBlock 
                         {
+                            std::string m_title;
                             std::string m_id;
                             std::unordered_map<std::string, std::string> m_mappedData;
                             std::unordered_map<std::string, std::vector<std::string>> m_mappedListPrimitiveData;
@@ -36,11 +37,16 @@ namespace fe
                     const std::unique_ptr<dataBlock> m_baseDataBlock;
                     std::stack<dataBlock*> m_currentBlock; // current block we are writing to
 
+                    bool m_firstRead;
+                    std::vector<std::unique_ptr<dataBlock>> *m_wantedData;
+
                     FLAT_ENGINE_API void interpretData(const char *dataBlock);
 
                 public:
                     FLAT_ENGINE_API feDataWriter();
                     FLAT_ENGINE_API ~feDataWriter();
+
+                    FLAT_ENGINE_API void setTitle(const std::string &title);
 
                     FLAT_ENGINE_API void startObject(const std::string &id);
                     FLAT_ENGINE_API void startObjectList(const std::string &id);

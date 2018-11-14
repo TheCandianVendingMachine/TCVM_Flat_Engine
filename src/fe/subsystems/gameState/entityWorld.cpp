@@ -146,12 +146,13 @@ void fe::entityWorld::serialize(fe::serializerID &serializer)
             {
                 if (m_objects[i])
                     {
-                        entityRepresentation entity;
+                        entityRepresentation entity(m_gameWorld);
                         entity.m_enabled = m_objects[i]->getEnabled();
                         entity.m_handle = m_objects[i]->getHandle();
                         entity.m_name = m_objects[i]->getName();
                         entity.m_positionX = m_objects[i]->getPosition().x;
                         entity.m_positionY = m_objects[i]->getPosition().y;
+                        entity.m_components = m_objects[i]->getAllComponents();
 
                         serializer.writeObjectList("entities", entity);
                     }
@@ -163,15 +164,8 @@ void fe::entityWorld::deserialize(fe::serializerID &serializer)
         clearAllObjects();
         while (serializer.listHasItems("entities"))
             {
-                entityRepresentation entity;
+                entityRepresentation entity(m_gameWorld);
                 serializer.readObjectList("entities", entity);
-
-                fe::baseEntity *ent = m_gameWorld.getObject(m_gameWorld.getGameState().addObject(entity.m_name.c_str()));
-                ent->setPosition(entity.m_positionX, entity.m_positionY);
-                ent->enable(entity.m_enabled);
-
-                ent->enablePhysics(!m_gameWorld.getGameState().isPaused());
-                ent->enableCollision(!m_gameWorld.getGameState().isPaused());
             }
     }
 
@@ -187,6 +181,12 @@ void fe::entityWorld::entityRepresentation::serialize(fe::serializerID &serializ
         serializer.write("name", m_name);
         serializer.write("positionX", m_positionX);
         serializer.write("positionY", m_positionY);
+
+        for (unsigned int i = 0; i < m_components.size(); i++)
+            {
+                fe::componentBase *comp = m_gameWorld.getComponentManager().getComponent(m_components[i].first);
+                serializer.writeObjectList("components", *comp);
+            }
     }
 
 void fe::entityWorld::entityRepresentation::deserialize(fe::serializerID &serializer)
@@ -196,4 +196,17 @@ void fe::entityWorld::entityRepresentation::deserialize(fe::serializerID &serial
         m_name = serializer.read<std::string>("name");
         m_positionX = serializer.read<float>("positionX");
         m_positionY = serializer.read<float>("positionY");
+
+        fe::baseEntity *ent = m_gameWorld.getObject(m_gameWorld.getGameState().addObject(m_name.c_str()));
+        ent->setPosition(m_positionX, m_positionY);
+        ent->enable(m_enabled);
+
+        ent->enablePhysics(!m_gameWorld.getGameState().isPaused());
+        ent->enableCollision(!m_gameWorld.getGameState().isPaused());
+
+        for (unsigned int i = 0; i < ent->getAllComponents().size(); i++)
+            {
+                fe::componentBase *comp = m_gameWorld.getComponentManager().getComponent(ent->getAllComponents()[i].first);
+                serializer.readObjectList("components", *comp);
+            }
     }

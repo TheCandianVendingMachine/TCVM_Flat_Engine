@@ -44,6 +44,8 @@ namespace fe
                     template<typename T = fe::feDataWriter>
                     serializerID();
 
+                    FLAT_ENGINE_API void setTitle(const std::string &title);
+
                     // Write a single objet to serializer
                     FLAT_ENGINE_API void writeObject(const std::string &id, const serializable &data);
                     // Write an array objects to serializer

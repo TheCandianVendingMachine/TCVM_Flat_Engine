@@ -38,6 +38,11 @@ std::string fe::serializerID::toPrimitive(const std::string &data, std::string)
         return data;
     }
 
+void fe::serializerID::setTitle(const std::string &title)
+    {
+        m_writer->setTitle(title);
+    }
+
 void fe::serializerID::writeObject(const std::string &id, const serializable &data)
     {
         m_writer->startObject(id);

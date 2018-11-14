@@ -1,8 +1,14 @@
 #include "fe/entity/component/componentManager.hpp"
 #include "fe/entity/baseEntity.hpp"
+#include "fe/subsystems/messaging/eventSender.hpp"
 
 void fe::componentManager::startUp()
     {
+    }
+
+fe::componentBase *fe::componentManager::getComponent(fe::Handle handle) const
+    {
+        return m_components.getObject(handle);
     }
 
 void fe::componentManager::addComponentToObject(fe::baseEntity *ent, const std::string &entName, const std::string &compName, const std::string &compLuaPath, sol::table table)
@@ -65,10 +71,19 @@ void fe::componentManager::postUpdate()
 
 void fe::componentManager::shutDown()
     {
-        m_components.clearAllObjects([](componentBase **c) { delete *c; *c = nullptr; });
+        clearAllComponents();
         for (auto &proxy : m_componentLookupTable)
             {
                 delete proxy.second;
                 proxy.second = nullptr;
             }
+    }
+
+void fe::componentManager::clearAllComponents()
+    {
+        m_components.clearAllObjects([this](componentBase **c) {
+            (*c)->engineOnRemove((*c)->getOwner()->getBaseEntity());
+            delete *c;
+            *c = nullptr;
+        });
     }

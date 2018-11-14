@@ -32,6 +32,7 @@ namespace fe
 
                     template<typename T>
                     T *getComponent(const char *id, fe::baseEntity *entity) const;
+                    FLAT_ENGINE_API fe::componentBase *getComponent(fe::Handle handle) const;
 
                     FLAT_ENGINE_API void addComponentToObject(fe::baseEntity *ent, const std::string &entName, const std::string &compName, const std::string &compLuaPath, sol::table table);
                     FLAT_ENGINE_API void removeComponentFromObject(fe::baseEntity *ent, fe::Handle handle);
@@ -41,6 +42,7 @@ namespace fe
                     FLAT_ENGINE_API void postUpdate();
 
                     FLAT_ENGINE_API void shutDown();
+                    FLAT_ENGINE_API void clearAllComponents();
 
             };
 

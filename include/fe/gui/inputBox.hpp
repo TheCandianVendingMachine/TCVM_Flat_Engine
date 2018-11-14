@@ -81,6 +81,9 @@ namespace fe
                             FLAT_ENGINE_API void setInput(const std::string &input);
                             FLAT_ENGINE_API void setCharacterSize(unsigned int size);
 
+                            FLAT_ENGINE_API bool isInputActive() const;
+                            FLAT_ENGINE_API void setInputActive(bool value);
+
                     };
         }
     }

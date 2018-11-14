@@ -6,6 +6,7 @@
 #include "fe/subsystems/scripting/luaFunctionReference.hpp"
 #include "fe/engine.hpp"
 #include "fe/entity/baseEntity.hpp"
+#include "fe/subsystems/serializer/serializable.hpp"
 #include <sol.hpp>
 #include <utility>
 
@@ -13,7 +14,7 @@ namespace fe
     {
         class baseEntity;
 
-        class componentBase
+        class componentBase : public fe::serializable
             {
                 protected:
                     fe::str m_id;
@@ -40,6 +41,9 @@ namespace fe
                     virtual void engineOnRemove(fe::baseEntity *ent) {}
                     virtual void engineUpdate() {}
                     virtual void engineFixedUpdate(float deltaTime) {}
+
+                    virtual void serialize(fe::serializerID &serializer) const {}
+                    virtual void deserialize(fe::serializerID &serializer) {}
 
             };
 

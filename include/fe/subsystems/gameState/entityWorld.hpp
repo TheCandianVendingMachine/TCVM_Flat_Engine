@@ -11,6 +11,7 @@
 #include "fe/entity/entityModules.hpp"
 #include "fe/subsystems/graphic/animation/animator.hpp"
 #include <stack>
+#include <vector>
 
 namespace fe
     {
@@ -28,7 +29,12 @@ namespace fe
                             float m_positionX;
                             float m_positionY;
                             fe::Handle m_handle;
+                            std::vector<std::pair<fe::Handle, bool>> m_components;
                             bool m_enabled;
+
+                            fe::gameWorld &m_gameWorld;
+
+                            entityRepresentation(fe::gameWorld &gameWorld) : m_gameWorld(gameWorld) {}
 
                             FLAT_ENGINE_API void serialize(fe::serializerID &serializer) const;
                             FLAT_ENGINE_API void deserialize(fe::serializerID &serializer);

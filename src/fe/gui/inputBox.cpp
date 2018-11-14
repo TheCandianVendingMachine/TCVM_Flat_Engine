@@ -243,6 +243,10 @@ std::string fe::gui::inputBox::getDisplayedInput() const
 
 void fe::gui::inputBox::setInput(const std::string &input)
     {
+        m_inputText.clear();
+        m_inputTextDisplayed.clear();
+        m_textBounds.x = 0;
+        m_textBounds.y = 0;
         for (auto &c : input)
             {
                 handleCharacter(c);
@@ -255,5 +259,15 @@ void fe::gui::inputBox::setCharacterSize(unsigned int size)
     {
         m_text.setCharacterSize(size);
         forceBoundUpdate();
+    }
+
+bool fe::gui::inputBox::isInputActive() const
+    {
+        return m_active;
+    }
+
+void fe::gui::inputBox::setInputActive(bool value)
+    {
+        m_active = value;
     }
 

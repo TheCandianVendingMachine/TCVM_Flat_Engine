@@ -2,11 +2,17 @@
 #include "fe/subsystems/serializer/serializable.hpp"
 #include "fe/feAssert.hpp"
 #include <memory>
+#include <algorithm>
 #include <cstring>
 
 void fe::feDataWriter::dataBlock::outData(std::ostream &out, const char *preDataText)
     {
-        out << preDataText << "obj " << m_id << "{\n";
+        out << preDataText << "obj " << m_id;
+        if (!m_title.empty())
+            {
+                out << ":" << m_title;
+            }
+        out << "{\n";
         for (auto &dat : m_mappedData)
             {
                 out << preDataText << "\tdat " << dat.first << ":" << dat.second << ";\n";
@@ -267,18 +273,31 @@ void fe::feDataWriter::interpretData(const char *dataBlock)
 
                                     bool hasAlias = false;
                                     char idName[512] = "\0";
+                                    char title[512] = "\0";
                                     for (unsigned int i = startIndex; i < endIndex; i++)
                                         {
                                             if (dataBlock[i] == ':')
                                                 {
                                                     hasAlias = true;
                                                     startIndex = i + 1;
-                                                    break;
+                                                    continue;
                                                 }
-                                            idName[i - startIndex] = dataBlock[i];
+
+                                            if (!hasAlias) 
+                                                {
+                                                    idName[i - startIndex] = dataBlock[i];
+                                                }
+                                            else
+                                                {
+                                                    title[i - startIndex] = dataBlock[i];
+                                                }
                                         }
 
                                     currentBlock.top()->m_id = idName;
+                                    if (hasAlias)
+                                        {
+                                            currentBlock.top()->m_title = title;
+                                        }
                                 }
                                 break;
                             case OBJ_NAME_END:
@@ -303,7 +322,7 @@ void fe::feDataWriter::interpretData(const char *dataBlock)
                                 break;
                             case LIST_END:
                                 currentListID.pop();
-                                //currentStorageRead.pop();
+                                currentStorageRead.pop();
                                 break;
                             case LIST_NAME_START:
                                 {
@@ -344,7 +363,7 @@ void fe::feDataWriter::interpretData(const char *dataBlock)
             }
     }
 
-fe::feDataWriter::feDataWriter() : m_baseDataBlock(new dataBlock("serialized_items"))
+fe::feDataWriter::feDataWriter() : m_baseDataBlock(new dataBlock("serialized_items")), m_firstRead(false)
     {
         m_currentBlock.push(m_baseDataBlock.get());
     }
@@ -352,6 +371,21 @@ fe::feDataWriter::feDataWriter() : m_baseDataBlock(new dataBlock("serialized_ite
 fe::feDataWriter::~feDataWriter()
     {
         clearData();
+    }
+
+void fe::feDataWriter::setTitle(const std::string &title)
+    {
+        if (m_firstRead)
+            {
+                auto it = std::find_if(m_wantedData->begin(), m_wantedData->end(), [title](const std::unique_ptr<dataBlock> &data) { return data->m_title == title; });
+                m_currentBlock.push(it->release());
+                m_wantedData->erase(it);
+                m_firstRead = false;
+            }
+        else 
+            {
+                m_currentBlock.top()->m_title = title;
+            }
     }
 
 void fe::feDataWriter::startObject(const std::string &id)
@@ -385,8 +419,8 @@ void fe::feDataWriter::startObjectListRead(const std::string &id)
         if (m_currentBlock.top()->m_mappedListObjectData.find(id) != m_currentBlock.top()->m_mappedListObjectData.end())
             {
                 fe::feDataWriter::dataBlock *currentBlock = m_currentBlock.top();
-                m_currentBlock.push(m_currentBlock.top()->m_mappedListObjectData[id].back().release());
-                currentBlock->m_mappedListObjectData[id].erase(m_currentBlock.top()->m_mappedListObjectData[id].end() - 1);
+                m_wantedData = &currentBlock->m_mappedListObjectData[id];
+                m_firstRead = true;
             }
     }
 
@@ -407,11 +441,25 @@ void fe::feDataWriter::writeList(const std::string &id, const std::string &value
 
 std::string fe::feDataWriter::read(const std::string &id)
     {
+        if (m_firstRead)
+            {
+                // no title has been set so we take the last value of the vector
+                m_currentBlock.push(m_wantedData->back().release());
+                m_wantedData->erase(m_wantedData->end() - 1);
+                m_firstRead = false;
+            }
         return m_currentBlock.top()->m_mappedData[id];
     }
 
 std::string fe::feDataWriter::readList(const std::string &id)
     {
+        if (m_firstRead)
+            {
+                // no title has been set so we take the last value of the vector
+                m_currentBlock.push(m_wantedData->back().release());
+                m_wantedData->erase(m_wantedData->end() - 1);
+                m_firstRead = false;
+            }
         std::string lastData = m_currentBlock.top()->m_mappedListPrimitiveData[id].back();
         m_currentBlock.top()->m_mappedListPrimitiveData[id].erase(m_currentBlock.top()->m_mappedListPrimitiveData[id].end() - 1);
         return lastData;
@@ -438,6 +486,7 @@ void fe::feDataWriter::readData(std::istream &in)
 
 bool fe::feDataWriter::listHasItems(const std::string &list)
     {
+        if (m_currentBlock.empty()) return false;
         if (m_currentBlock.top()->m_mappedListObjectData.find(list) != m_currentBlock.top()->m_mappedListObjectData.end())
             {
                 return !m_currentBlock.top()->m_mappedListObjectData[list].empty();

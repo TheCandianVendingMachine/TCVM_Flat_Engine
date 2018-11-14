@@ -196,6 +196,7 @@ void fe::gameWorld::load()
         m_tileMap.deserialize(*m_serializer);
         m_tileMap.rebuildTilemap();
         FE_LOG("Loading Entities");
+        m_componentManager.clearAllComponents();
         m_entityWorld.clearAllObjects();
         m_entityWorld.deserialize(*m_serializer);
         FE_LOG("Loading AI tilemap");

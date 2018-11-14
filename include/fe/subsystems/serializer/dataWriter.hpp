@@ -10,6 +10,8 @@ namespace fe
         class dataWriter
             {
                 public:
+                    virtual void setTitle(const std::string &title) = 0;
+
                     virtual void startObject(const std::string &id) = 0;
                     virtual void startObjectList(const std::string &id) = 0;
                     virtual void startObjectRead(const std::string &id) = 0;
