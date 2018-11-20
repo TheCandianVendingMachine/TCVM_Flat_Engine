@@ -14,6 +14,7 @@ void fe::tileMap::onAdd(fe::imp::tileWorld *object, fe::Handle objectHandle)
         object->colliderPtr->m_aabb.m_offsetY = object->colliderOffsetY;
         object->colliderPtr->m_aabb.m_globalPositionX = object->xPosition + object->colliderPtr->m_aabb.m_offsetX;
         object->colliderPtr->m_aabb.m_globalPositionY = object->yPosition + object->colliderPtr->m_aabb.m_offsetY;
+        object->handle = objectHandle;
 
         fe::gameEvent event(fe::engineEvent::TILE_PLACED, 1);
         event.args[0].arg.TYPE_VOIDP = object;
@@ -45,20 +46,20 @@ void fe::tileMap::rebuildTilemap()
         int index = 0;
         for (auto &tileHandle : m_objects)
             {
-                if (tileHandle.handle < 0)
+                if (tileHandle.prefabIndex < 0)
                     {
                         // slow to do, but will get the right handle if not loaded
                         for (unsigned int i = 0; i < m_fabrications.size(); i++)
                             {
                                 if (FE_STR(m_fabrications[i].id) == tileHandle.id)
                                     {
-                                        tileHandle.handle = i;
+                                        tileHandle.prefabIndex = i;
                                         break;
                                     }
                             }
                     }
 
-                fe::imp::tile *tile = &m_fabrications[tileHandle.handle];
+                fe::imp::tile *tile = &m_fabrications[tileHandle.prefabIndex];
                 auto size = fe::Vector2<unsigned int>(tile->xSize, tile->ySize);
                 auto texturePos = fe::Vector2d(static_cast<float>(tile->xTexturePosition), static_cast<float>(tile->yTexturePosition)) + m_textureOffset;
                 auto pos = fe::Vector2d(tileHandle.xPosition, tileHandle.yPosition);
@@ -275,6 +276,11 @@ void fe::tileMap::saveFabrications(const char *filepath)
 const std::vector<fe::imp::tile> &fe::tileMap::getFabrications()
     {
         return m_fabrications;
+    }
+
+const std::vector<fe::imp::tileWorld> &fe::tileMap::getTiles() const
+    {
+        return getObjects();
     }
 
 void fe::tileMap::clearMap()

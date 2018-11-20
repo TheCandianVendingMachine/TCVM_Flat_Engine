@@ -38,7 +38,8 @@ namespace fe
                 struct tileWorld : public fe::guid, public fe::serializable
                     {
                         fe::str id;
-                        int handle = -1;
+                        fe::Handle handle;
+                        int prefabIndex = -1;
                         float xPosition;
                         float yPosition;
 
@@ -101,6 +102,7 @@ namespace fe
 
                     // Returns a vector of all fabricated tiles
                     FLAT_ENGINE_API const std::vector<fe::imp::tile> &getFabrications();
+                    FLAT_ENGINE_API const std::vector<fe::imp::tileWorld> &getTiles() const;
 
                     // Clears tilemap of all verticies
                     FLAT_ENGINE_API void clearMap();

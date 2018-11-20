@@ -82,17 +82,17 @@ void fe::baseEntity::deinitialize(fe::gameWorld &world)
                 m_animationActor = nullptr;
             }
 
-        m_entityScriptObject->shutDown();
+        if (m_entityScriptObject) { m_entityScriptObject->shutDown(); }
     }
 
 void fe::baseEntity::onAdd(fe::gameWorld &world)
     {
-        m_entityScriptObject->onAdd(this, world);
+        if (m_entityScriptObject) { m_entityScriptObject->onAdd(this, world); }
     }
 
 void fe::baseEntity::onRemove(fe::gameWorld &world)
     {
-        m_entityScriptObject->onRemove(this, world);
+        if (m_entityScriptObject) { m_entityScriptObject->onRemove(this, world); }
     }
 
 void fe::baseEntity::enable(bool value)
@@ -173,17 +173,17 @@ void fe::baseEntity::onDestroy(fe::baseGameState &state)
 void fe::baseEntity::update()
     {
         m_baseEntityUtility.update();
-        m_entityScriptObject->update(this);
+        if (m_entityScriptObject) { m_entityScriptObject->update(this); }
     }
 
 void fe::baseEntity::fixedUpdate(float deltaTime)
     {
-        m_entityScriptObject->fixedUpdate(this, deltaTime);
+        if (m_entityScriptObject) { m_entityScriptObject->fixedUpdate(this, deltaTime);}
     }
 
 void fe::baseEntity::postUpdate()
     {
-        m_entityScriptObject->postUpdate(this);
+        if (m_entityScriptObject) { m_entityScriptObject->postUpdate(this); }
     }
 
 void fe::baseEntity::updateModules()
