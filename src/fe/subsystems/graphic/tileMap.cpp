@@ -37,6 +37,19 @@ fe::tileMap::tileMap() :
     {
     }
 
+void fe::tileMap::updateTile(fe::Handle handle)
+    {
+        fe::imp::tileWorld *tile = getObject(handle);
+        fe::imp::tile *tilePrefab = &m_fabrications[tile->prefabIndex];
+        auto size = fe::Vector2<unsigned int>(tilePrefab->xSize, tilePrefab->ySize);
+        auto pos = fe::Vector2d(tile->xPosition, tile->yPosition);
+
+        m_verticies[tile->tilemapIndex + 0].position = fe::Vector2d(pos.x,               pos.y).convertToSfVec2();
+        m_verticies[tile->tilemapIndex + 1].position = fe::Vector2d(pos.x + size.x,      pos.y).convertToSfVec2();
+        m_verticies[tile->tilemapIndex + 2].position = fe::Vector2d(pos.x + size.x,      pos.y + size.y).convertToSfVec2();
+        m_verticies[tile->tilemapIndex + 3].position = fe::Vector2d(pos.x,               pos.y + size.y).convertToSfVec2();
+    }
+
 void fe::tileMap::rebuildTilemap()
     {
         m_verticies.clear();
@@ -58,6 +71,8 @@ void fe::tileMap::rebuildTilemap()
                                     }
                             }
                     }
+
+                tileHandle.tilemapIndex = index;
 
                 fe::imp::tile *tile = &m_fabrications[tileHandle.prefabIndex];
                 auto size = fe::Vector2<unsigned int>(tile->xSize, tile->ySize);

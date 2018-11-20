@@ -40,6 +40,7 @@ namespace fe
                         fe::str id;
                         fe::Handle handle;
                         int prefabIndex = -1;
+                        unsigned int tilemapIndex;
                         float xPosition;
                         float yPosition;
 
@@ -71,6 +72,7 @@ namespace fe
                 public:
                     FLAT_ENGINE_API tileMap();
 
+                    FLAT_ENGINE_API void updateTile(fe::Handle handle);
                     FLAT_ENGINE_API void rebuildTilemap();
 
                     FLAT_ENGINE_API void addGlobalTexture(const std::string &textureName);
