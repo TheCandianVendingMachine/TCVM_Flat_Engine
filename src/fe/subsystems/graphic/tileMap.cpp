@@ -189,7 +189,7 @@ fe::Handle fe::tileMap::add(fe::Vector2d position, fe::str tileId)
         return -1;
     }
 
-fe::imp::tileWorld fe::tileMap::get(fe::Handle handle)
+fe::imp::tileWorld &fe::tileMap::get(fe::Handle handle)
     {
         return *getObject(handle);
     }
