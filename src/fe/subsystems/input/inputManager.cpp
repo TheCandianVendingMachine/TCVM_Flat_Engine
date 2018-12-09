@@ -242,7 +242,7 @@ void fe::inputManager::remove(fe::Handle handle)
         m_realtimeInputs.erase(std::find(m_realtimeInputs.begin(), m_realtimeInputs.end(), handle), m_realtimeInputs.end());
         for (auto &eventInput : m_eventInputs)
             {
-                eventInput.second.erase(std::find(eventInput.second.begin(), eventInput.second.end(), handle), eventInput.second.end());
+                eventInput.second.erase(std::remove(eventInput.second.begin(), eventInput.second.end(), handle), eventInput.second.end());
             }
     }
 

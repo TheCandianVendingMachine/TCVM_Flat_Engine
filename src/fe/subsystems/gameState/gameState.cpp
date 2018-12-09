@@ -25,7 +25,16 @@ int fe::baseGameState::addDialog(fe::gui::dialog *panel, int connected, int zPos
 
 void fe::baseGameState::removeDialog(fe::gui::dialog *panel)
     {
-        panel->kill();
+        auto it = std::find(m_dialogs.begin(), m_dialogs.end(), panel);
+        if (it != m_dialogs.end())
+            {
+                m_guiGraph.removeObjectFromGraph(panel);
+                m_dialogs.erase(it);
+            }
+        else
+            {
+                FE_LOG_WARNING("Attempting to delete dialog that was not added");
+            }
     }
 
 void fe::baseGameState::changeScreen(fe::baseGameScreen *newScreen)
