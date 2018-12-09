@@ -44,7 +44,9 @@ namespace fe
 #if _DEBUG
     #define FE_STR(input) fe::hashImpl(input)
     #define FE_GET_STR(hash) fe::impl::g_debugStrings.strs[hash]
+    #define FE_STR_CONST(input) fe::hash(input, 5381)
 #else
     #define FE_STR(input) fe::hash(input, 5381)
     #define FE_GET_STR(hash) "DEBUG STRINGS UNAVALIABLE"
+    #define FE_STR_CONST(input) fe::hash(input, 5381)
 #endif

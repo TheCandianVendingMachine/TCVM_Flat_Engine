@@ -121,9 +121,9 @@ namespace fe
     #define FE_LOG(...) fe::logger::get().log(__VA_ARGS__)
 
     // Log values to the output file with an error prefix
-    #define FE_LOG_ERROR(...) fe::logger::get().log("Error: ", __VA_ARGS__)
+    #define FE_LOG_ERROR(...) fe::logger::get().log("ERROR: ", __VA_ARGS__)
     // Log values to the output file with a warning prefix
-    #define FE_LOG_WARNING(...) fe::logger::get().log("Warning: ", __VA_ARGS__)
+    #define FE_LOG_WARNING(...) fe::logger::get().log("WARNING: ", __VA_ARGS__)
 
     #define FE_LOG_DEBUG(...) ;
 

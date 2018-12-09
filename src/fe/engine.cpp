@@ -18,7 +18,6 @@
 #include "fe/subsystems/scripting/commonScriptFunctions.hpp"
 #include "fe/entity/scriptObject.hpp"
 #include "fe/entity/component/component.hpp"
-#include "fe/engineCompileHelper.hpp"
 
 #include "fe/feAssert.hpp"
 
@@ -216,8 +215,6 @@ void fe::engine::registerLua()
         m_scriptManager->runLua(R"(error_func = function()
     return 0 
 end)");
-
-        fe::compileLuaKeybinds(m_scriptManager);
 
         m_scriptManager->getEnumHandler().registerEnum("gameEventArgumentType",
             "bool", fe::gameEventArgument::type::TYPE_BOOL,

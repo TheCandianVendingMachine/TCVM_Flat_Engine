@@ -395,6 +395,7 @@ fe::Handle fe::entitySpawner::spawn(const char *luaName)
 
 void fe::entitySpawner::despawn(fe::Handle object)
     {
+        if (!m_world->getObject(object)->getEntityObject()) return;
         m_objects[m_world->getObject(object)->getEntityObject()->index()].shutDown();
     }
 

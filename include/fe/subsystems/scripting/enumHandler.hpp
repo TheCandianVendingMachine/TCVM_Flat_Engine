@@ -17,6 +17,9 @@ namespace fe
                     template<typename T, typename ...Args>
                     void registerEnum(const char *enumName, const char *valueName, T &&enumValue, Args &&...args);
 
+                    template<typename T>
+                    void addEnumValue(const char *enumName, const char *valueName, T &&enumValue);
+
             };
 
 
@@ -24,5 +27,11 @@ namespace fe
         void enumHandler::registerEnum(const char *enumName, const char *valueName, T &&enumValue, Args &&...args)
             {
                 m_state.new_enum(enumName, valueName, enumValue, std::forward<Args>(args)...);
+            }
+
+        template<typename T>
+        void enumHandler::addEnumValue(const char *enumName, const char *valueName, T &&enumValue)
+            {
+                m_state[enumName].get<sol::table>().add(valueName, enumValue);
             }
     }
