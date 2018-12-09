@@ -37,6 +37,11 @@ void fe::collisionWorld::handleCollision(fe::collider *a, fe::collider *b)
             positionB + fe::lightVector2d(0, sizeB.y)
         };
 
+        if (std::abs(first->perimeter()) <= 0.f || std::abs(second->perimeter()) <= 0.f)
+            {
+                return;
+            }
+
         if (((sizeA.x + positionA.x >= positionB.x && positionA.x < sizeB.x + positionB.x) &&
              (sizeA.y + positionA.y >= positionB.y && positionA.y < sizeB.y + positionB.y)) || 
             ((sizeB.x + positionB.x >= positionA.x && positionB.x < sizeA.x + positionA.x) &&
