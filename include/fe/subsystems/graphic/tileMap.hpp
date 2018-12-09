@@ -18,6 +18,7 @@ namespace sf
 
 namespace fe
     {
+        class gameWorld;
         namespace imp
             {
                 struct tile : public fe::serializable
@@ -38,6 +39,7 @@ namespace fe
                 struct tileWorld : public fe::guid, public fe::serializable
                     {
                         fe::str id;
+                        fe::str collisionGroup;
                         fe::Handle handle;
                         int prefabIndex = -1;
                         unsigned int tilemapIndex;
@@ -63,6 +65,8 @@ namespace fe
                     sf::VertexArray m_verticies;
                     fe::Vector2<unsigned int> m_textureOffset; // offset of texture in texture packer
 
+                    fe::gameWorld &m_world;
+
                     char m_textureName[64];
                     char m_fabricationFilepath[128];
 
@@ -70,7 +74,7 @@ namespace fe
                     FLAT_ENGINE_API void onRemove(fe::imp::tileWorld *object, fe::Handle objectHandle);
 
                 public:
-                    FLAT_ENGINE_API tileMap();
+                    FLAT_ENGINE_API tileMap(fe::gameWorld &world);
 
                     FLAT_ENGINE_API void updateTile(fe::Handle handle);
                     FLAT_ENGINE_API void rebuildTilemap();

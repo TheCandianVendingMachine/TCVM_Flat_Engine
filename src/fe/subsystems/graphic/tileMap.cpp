@@ -4,6 +4,8 @@
 #include "fe/subsystems/collision/collisionWorld.hpp"
 #include "fe/engineEvents.hpp"
 #include "fe/subsystems/messaging/eventSender.hpp"
+#include "fe/subsystems/gameState/gameWorld.hpp"
+#include "fe/subsystems/collision/broadphaseAbstract.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <algorithm>
 
@@ -14,7 +16,13 @@ void fe::tileMap::onAdd(fe::imp::tileWorld *object, fe::Handle objectHandle)
         object->colliderPtr->m_aabb.m_offsetY = object->colliderOffsetY;
         object->colliderPtr->m_aabb.m_globalPositionX = object->xPosition + object->colliderPtr->m_aabb.m_offsetX;
         object->colliderPtr->m_aabb.m_globalPositionY = object->yPosition + object->colliderPtr->m_aabb.m_offsetY;
+        object->colliderPtr->m_collisionGroup = object->collisionGroup;
         object->handle = objectHandle;
+
+        if (m_world.getDynamicBroadphase()) 
+            {
+                m_world.getDynamicBroadphase()->add(object->colliderPtr);
+            }
 
         fe::gameEvent event(fe::engineEvent::TILE_PLACED, 1);
         event.args[0].arg.TYPE_VOIDP = object;
@@ -28,12 +36,19 @@ void fe::tileMap::onRemove(fe::imp::tileWorld *object, fe::Handle objectHandle)
         event.args[0].arg.TYPE_VOIDP = object;
         event.args[0].argType = fe::gameEventArgument::type::TYPE_VOIDP;
         fe::engine::get().getEventSender().sendEngineEvent(event, fe::engineEvent::TILE_REMOVED);
+
+        if (m_world.getDynamicBroadphase()) 
+            {
+                m_world.getDynamicBroadphase()->remove(object->colliderPtr);
+            }
+
         fe::engine::get().getCollisionWorld().deleteCollider(object->colliderPtr);
     }
 
-fe::tileMap::tileMap() :
+fe::tileMap::tileMap(fe::gameWorld &world) :
     m_fabricationFilepath{"\0"},
-    m_textureName{"\0"}
+    m_textureName{"\0"},
+    m_world(world)
     {
     }
 
@@ -48,6 +63,9 @@ void fe::tileMap::updateTile(fe::Handle handle)
         m_verticies[tile->tilemapIndex + 1].position = fe::Vector2d(pos.x + size.x,      pos.y).convertToSfVec2();
         m_verticies[tile->tilemapIndex + 2].position = fe::Vector2d(pos.x + size.x,      pos.y + size.y).convertToSfVec2();
         m_verticies[tile->tilemapIndex + 3].position = fe::Vector2d(pos.x,               pos.y + size.y).convertToSfVec2();
+
+        tile->colliderPtr->m_aabb.m_globalPositionX = tile->xPosition + tile->colliderPtr->m_aabb.m_offsetX;
+        tile->colliderPtr->m_aabb.m_globalPositionY = tile->yPosition + tile->colliderPtr->m_aabb.m_offsetY;
     }
 
 void fe::tileMap::rebuildTilemap()
@@ -179,6 +197,7 @@ fe::Handle fe::tileMap::add(fe::Vector2d position, fe::str tileId)
                         tileWorld.colliderSizeY = tile.collider.m_aabb.m_sizeY;
                         tileWorld.colliderOffsetX = tile.collider.m_aabb.m_offsetX;
                         tileWorld.colliderOffsetY = tile.collider.m_aabb.m_offsetY;
+                        tileWorld.collisionGroup = tile.collider.m_collisionGroup;
                         fe::Handle retHandle = addObject(tileWorld);
                         rebuildTilemap();
                         return retHandle;
@@ -321,6 +340,7 @@ void fe::imp::tileWorld::serialize(fe::serializerID &serializer) const
         serializer.write("handle", handle);
         serializer.write("x", xPosition);
         serializer.write("y", yPosition);
+        serializer.write("collisionGroup", collisionGroup);
     }
 
 void fe::imp::tileWorld::deserialize(fe::serializerID &serializer)
@@ -329,6 +349,7 @@ void fe::imp::tileWorld::deserialize(fe::serializerID &serializer)
         handle = serializer.read<fe::Handle>("handle");
         xPosition = serializer.read<float>("x");
         yPosition = serializer.read<float>("y");
+        collisionGroup = serializer.read<unsigned int>("collisionGroup");
     }
 
 void fe::imp::tile::serialize(fe::serializerID &serializer) const

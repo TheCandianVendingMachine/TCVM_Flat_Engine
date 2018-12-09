@@ -34,6 +34,12 @@ void fe::baseGameState::changeScreen(fe::baseGameScreen *newScreen)
         m_newScreenAvaliable = true;
     }
 
+void fe::baseGameState::popScreen()
+    {
+        m_nextGameScreen = nullptr;
+        m_newScreenAvaliable = true;
+    }
+
 void fe::baseGameState::startUp()
     {
         m_guiGraph.startUp();
@@ -64,8 +70,11 @@ void fe::baseGameState::preUpdateDefined()
                     }
 
                 m_currentScreen.reset(m_nextGameScreen);
-                m_currentScreen->setState(this);
-                m_currentScreen->init();
+                if (m_currentScreen) 
+                    {
+                        m_currentScreen->setState(this);
+                        m_currentScreen->init();
+                    }
                 m_newScreenAvaliable = false;
             }
 

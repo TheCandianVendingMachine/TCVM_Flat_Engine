@@ -9,7 +9,8 @@
 
 fe::gameWorld::gameWorld(baseGameState *gameState) :
     m_entityWorld(*this),
-    m_gameState(gameState)
+    m_gameState(gameState),
+    m_tileMap(*this)
     {
     }
 
