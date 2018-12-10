@@ -70,6 +70,7 @@ namespace fe
                     FLAT_ENGINE_API void update(fe::collider *collider);
 
                     FLAT_ENGINE_API void colliderAABB(fe::AABB &testAABB, std::function<void(fe::collider*)> callback) const;
+                    FLAT_ENGINE_API void colliderCircle(fe::circle &testCircle, std::function<void(fe::collider*)> callback) const;
 
                     // Returns the collider that is at the point
                     FLAT_ENGINE_API void *colliderAtPoint(float x, float y) const;

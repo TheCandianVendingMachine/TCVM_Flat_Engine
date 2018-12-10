@@ -11,6 +11,10 @@ namespace fe
             {
                 float m_sizeX = 0.f;
                 float m_sizeY = 0.f;
+
+                AABB() {}
+                AABB(float sizeX, float sizeY) : m_sizeX(sizeX), m_sizeY(sizeY) {}
+
                 FLAT_ENGINE_API fe::AABB merge(const fe::AABB &other);
                 FLAT_ENGINE_API float volume() const;
                 FLAT_ENGINE_API float perimeter() const;

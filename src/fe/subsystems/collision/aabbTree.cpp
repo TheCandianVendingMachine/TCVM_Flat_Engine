@@ -1,6 +1,9 @@
 #include "fe/subsystems/collision/aabbTree.hpp"
 #include "fe/subsystems/collision/collisionBody.hpp"
 #include "fe/subsystems/collision/bounds/aabbTests.hpp"
+#include "fe/subsystems/collision/bounds/circle.hpp"
+#include "fe/subsystems/collision/bounds/circleTests.hpp"
+#include "fe/subsystems/collision/bounds/mixedTests.hpp"
 
 #include "fe/debug/debugDraw.hpp"
 #include "fe/debug/profiler.hpp"
@@ -479,7 +482,45 @@ void fe::aabbTree::colliderAABB(fe::AABB &testAABB, std::function<void(fe::colli
             }
         FE_END_PROFILE;
 
-        FE_ENGINE_PROFILE("aabb_tree", "collider_callback_calls");
+        FE_ENGINE_PROFILE("aabb_tree", "collider_callback_calls_aabb");
+        for (int i = 0; i < colliderCallbackIndex; i++)
+            {
+                callback(colliderCallbacks[i]);
+            }
+        FE_END_PROFILE;
+    }
+
+void fe::aabbTree::colliderCircle(fe::circle &testCircle, std::function<void(fe::collider*)> callback) const
+    {
+        fe::collider *colliderCallbacks[FE_MAX_GAME_OBJECTS];
+        int colliderCallbackIndex = 0;
+        FE_ENGINE_PROFILE("aabb_tree", "test_circle_against_tree");
+        int stack[(FE_MAX_GAME_OBJECTS * 2) - 1];
+        int stackTop = 0;
+        stack[stackTop++] = m_base;
+        int iteration = 0;
+        while (stackTop > 0)
+            {
+                iteration++;
+                int currentNode = stack[stackTop - 1];
+                stackTop--;
+                if (currentNode >= 0 && fe::intersects(m_nodes[currentNode].m_fatAABB, testCircle))
+                    {
+                        if (m_nodes[currentNode].isLeaf())
+                            {
+                                colliderCallbacks[colliderCallbackIndex++] = m_nodes[currentNode].m_userData;
+                            }
+                        else
+                            {
+                                stack[stackTop++] = m_nodes[currentNode].m_left;
+                                stack[stackTop++] = m_nodes[currentNode].m_right;
+                            }
+                    }
+                
+            }
+        FE_END_PROFILE;
+
+        FE_ENGINE_PROFILE("aabb_tree", "collider_callback_calls_circle");
         for (int i = 0; i < colliderCallbackIndex; i++)
             {
                 callback(colliderCallbacks[i]);

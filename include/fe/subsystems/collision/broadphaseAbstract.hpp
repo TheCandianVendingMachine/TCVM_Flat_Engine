@@ -14,6 +14,7 @@ namespace fe
     {
         struct collider;
         struct AABB;
+        struct circle;
         class broadphaseAbstract
             {
                 protected:
@@ -32,6 +33,9 @@ namespace fe
 
                     // Returns user data containing what is needed to resolve the query
                     virtual void colliderAABB(fe::AABB &testAABB, std::function<void(fe::collider*)> callback) const = 0;
+
+                    // Runs callback function on all colliders that get hit by the circle
+                    virtual void colliderCircle(fe::circle &testCircle, std::function<void(fe::collider*)> callback) const = 0;
 
                     // Returns the collider that is at the point
                     virtual void *colliderAtPoint(float x, float y) const = 0;
