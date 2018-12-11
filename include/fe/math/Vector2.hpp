@@ -30,6 +30,7 @@ namespace fe
 
                 Vector2 &operator=(const Vector2<dataType> &copy) { if (&copy != this) { x = copy.x; y = copy.y; } return *this; }
                 bool operator==(const Vector2<dataType> &rhs) const { return rhs.x == x && rhs.y == y; }
+                bool operator!=(const Vector2<dataType> &rhs) const { return !(rhs == *this); }
 
                 Vector2<dataType> operator+(const Vector2<dataType> &rhs) const { return Vector2<dataType>(rhs.x + x, rhs.y + y); }
                 Vector2<dataType> operator-(const Vector2<dataType> &rhs) const { return Vector2<dataType>(x - rhs.x, y - rhs.y); }
