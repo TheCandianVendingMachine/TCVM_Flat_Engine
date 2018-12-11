@@ -59,6 +59,7 @@ namespace fe
                     bool m_enabled;
                     bool m_moved;
                     bool m_static;
+                    bool m_serialize;
 
                     bool m_allocatedModules;
 
@@ -134,6 +135,9 @@ namespace fe
                     FLAT_ENGINE_API void enableAllComponents(bool value);
                     FLAT_ENGINE_API bool isComponentEnabled(fe::Handle handle) const;
                     FLAT_ENGINE_API const std::vector<std::pair<fe::Handle, bool>> &getAllComponents() const;
+
+                    FLAT_ENGINE_API void enableSerialization(bool value);
+                    FLAT_ENGINE_API bool isSerializable() const;
 
             };
     }

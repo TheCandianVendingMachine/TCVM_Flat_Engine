@@ -18,6 +18,7 @@ fe::baseEntity::baseEntity(fe::entityModules modules, fe::userEntityObject *scri
     m_animationActor(nullptr),
     m_moved(false),
     m_allocatedModules(false),
+    m_serialize(true),
     m_static(staticObject),
     m_positionX(0.f),
     m_positionY(0.f),
@@ -478,6 +479,16 @@ void fe::baseEntity::enableAllComponents(bool value)
 const std::vector<std::pair<fe::Handle, bool>> &fe::baseEntity::getAllComponents() const
     {
         return m_components;
+    }
+
+void fe::baseEntity::enableSerialization(bool value)
+    {
+        m_serialize = value;
+    }
+
+bool fe::baseEntity::isSerializable() const
+    {
+        return m_serialize;
     }
 
 bool fe::baseEntity::isComponentEnabled(fe::Handle handle) const

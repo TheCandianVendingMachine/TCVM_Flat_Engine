@@ -144,7 +144,7 @@ void fe::entityWorld::serialize(fe::serializerID &serializer)
     {
         for (unsigned int i = 0; i < objectCount(); i++)
             {
-                if (m_objects[i])
+                if (m_objects[i] && m_objects[i]->isSerializable())
                     {
                         entityRepresentation entity(m_gameWorld);
                         entity.m_enabled = m_objects[i]->getEnabled();
