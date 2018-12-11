@@ -13,10 +13,12 @@
 namespace fe
     {
         class baseEntity;
+        class baseGameState;
 
         class componentBase : public fe::serializable
             {
                 protected:
+                    fe::baseGameState *m_state;
                     fe::str m_id;
                     fe::luaFunctionReference *m_onAdd;
                     fe::luaFunctionReference *m_onRemove;
@@ -36,6 +38,9 @@ namespace fe
 
                     FLAT_ENGINE_API fe::scriptObject *getOwner();
                     FLAT_ENGINE_API fe::str getID() const;
+
+                    FLAT_ENGINE_API void setState(fe::baseGameState *state);
+                    FLAT_ENGINE_API fe::baseGameState *getState() const;
 
                     virtual void engineOnAdd(fe::baseEntity *ent) {}
                     virtual void engineOnRemove(fe::baseEntity *ent) {}

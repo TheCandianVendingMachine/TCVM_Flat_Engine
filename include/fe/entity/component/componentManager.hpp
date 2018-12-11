@@ -12,6 +12,8 @@
 
 namespace fe
     {
+        class baseGameState;
+
         class componentManager
             {
                 private:
@@ -25,8 +27,11 @@ namespace fe
                     fe::handleManager<componentBase*, 0> m_components;
                     std::unordered_map<fe::str, componentProxyBase*> m_componentLookupTable;
 
+                    fe::baseGameState *m_state;
+
                 public:
-                    FLAT_ENGINE_API void startUp();
+                    FLAT_ENGINE_API void startUp(fe::baseGameState *state);
+                    FLAT_ENGINE_API fe::baseGameState *getState() const;
 
                     template<typename T>
                     void setComponentProxy(const std::string &name);

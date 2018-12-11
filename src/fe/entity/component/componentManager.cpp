@@ -2,8 +2,14 @@
 #include "fe/entity/baseEntity.hpp"
 #include "fe/subsystems/messaging/eventSender.hpp"
 
-void fe::componentManager::startUp()
+void fe::componentManager::startUp(fe::baseGameState *state)
     {
+        m_state = state;
+    }
+
+fe::baseGameState *fe::componentManager::getState() const
+    {
+        return m_state;
     }
 
 fe::componentBase *fe::componentManager::getComponent(fe::Handle handle) const
@@ -33,6 +39,7 @@ void fe::componentManager::addComponentToObject(fe::baseEntity *ent, const std::
             {
                 fe::Handle compHandle = m_components.addObject(m_componentLookupTable[str]->create());
                 
+                m_components.getObject(compHandle)->setState(m_state);
                 m_components.getObject(compHandle)->engineInitLuaValues(table, compLuaPath.c_str(), entName.c_str());
                 m_components.getObject(compHandle)->engineOnAdd(ent);
 

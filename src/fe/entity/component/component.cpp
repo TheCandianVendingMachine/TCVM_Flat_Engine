@@ -46,6 +46,16 @@ fe::str fe::componentBase::getID() const
         return m_id;
     }
 
+void fe::componentBase::setState(fe::baseGameState *state)
+    {
+        m_state = state;
+    }
+
+fe::baseGameState *fe::componentBase::getState() const
+    {
+        return m_state;
+    }
+
 sol::object fe::componentBase::makeIntoLuaObject(sol::state_view state) const
     {
         return sol::make_object(state.lua_state(), this);

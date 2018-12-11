@@ -22,12 +22,14 @@ void fe::gameWorld::startUp()
         m_dynamicBroadphase = nullptr;
         m_staticBroadphase = nullptr;
         m_serializer = new fe::serializerID();
+        m_componentManager.startUp(m_gameState);
 
         fe::engine::get().getScriptManager().getFunctionHandler().registerCPPObjectFunction("getComponent", &m_componentManager, &fe::componentManager::getLuaComponent);
     }
 
 void fe::gameWorld::shutDown()
     {
+        m_componentManager.shutDown();
         m_sceneGraph.shutDown();
         delete m_serializer;
         m_serializer = nullptr;
