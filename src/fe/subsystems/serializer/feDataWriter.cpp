@@ -251,7 +251,7 @@ void fe::feDataWriter::interpretData(const char *dataBlock)
                                                         // if this is empty to avoid a access error
                                                         if (!currentSize.empty()) 
                                                             {
-                                                            currentBlock.top()->m_size = currentSize.top();
+                                                                currentBlock.top()->m_size = currentSize.top();
                                                                 currentSize.pop();
                                                             }
                                                         break;
@@ -316,6 +316,7 @@ void fe::feDataWriter::interpretData(const char *dataBlock)
                             case DAT_END:
                                 break;
                             case PRIMITIVE_LIST_START:
+                                currentStorageRead.push(LIST);
                                 break;
                             case OBJECT_LIST_START:
                                 currentStorageRead.push(LIST);
