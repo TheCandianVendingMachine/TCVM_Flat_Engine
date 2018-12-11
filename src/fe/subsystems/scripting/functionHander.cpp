@@ -33,10 +33,13 @@ fe::luaFunctionReference &fe::functionHandler::getLuaFunction(const std::string 
         if (func == m_registeredFunctions.end())
             {
                 m_registeredFunctions.emplace_back(new fe::luaFunctionReference(fe::imp::getTableFromPath(luaPathName, m_state)[functionName], luaPathName, functionName, *this));
+                func = m_registeredFunctions.end() - 1;
             }
 
-        reloadLuaFunction(*m_registeredFunctions.back());
-        return *m_registeredFunctions.back();
+        fe::luaFunctionReference *funcPtr = *func;
+
+        reloadLuaFunction(*funcPtr);
+        return *funcPtr;
     }
 
 void fe::functionHandler::shutDown()
