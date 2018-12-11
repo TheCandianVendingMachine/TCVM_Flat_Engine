@@ -90,7 +90,7 @@ void fe::handleManager<T, TObjectCount>::removeObject(Handle handle, std::functi
     }
 
 template<typename T, unsigned int objectCount>
-bool fe::handleManager<T, objectCount>::handleActive(Handle handle)
+bool fe::handleManager<T, objectCount>::handleActive(Handle handle) const
     {
         if (handle < 0) return false;
         return m_handles[handle].active;

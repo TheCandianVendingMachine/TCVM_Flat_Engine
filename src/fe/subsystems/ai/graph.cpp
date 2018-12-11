@@ -50,12 +50,12 @@ void fe::graph::removeEdge(int nodeID, int edge)
         node->m_connectedNodes.erase(std::remove(node->m_connectedNodes.begin(), node->m_connectedNodes.end(), edge), node->m_connectedNodes.end());
     }
 
-fe::ai::node *fe::graph::getNode(int nodeID)
+fe::ai::node *fe::graph::getNode(int nodeID) const
     {
         return getObject(nodeID);
     }
 
-const std::vector<int> fe::graph::getAllNodes()
+const std::vector<int> fe::graph::getAllNodes() const
     {
         std::vector<int> nodes;
 

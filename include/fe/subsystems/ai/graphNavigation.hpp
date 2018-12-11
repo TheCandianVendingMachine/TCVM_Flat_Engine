@@ -10,7 +10,7 @@ namespace fe
 
         namespace graphNav 
             {
-                FLAT_ENGINE_API void aStar(std::vector<int> &&waypoints, graph &graph, int start, int end, float alpha = 1.f);
+                FLAT_ENGINE_API void aStar(std::vector<int> &&waypoints, const graph &graph, int start, int end, float alpha = 1.f);
 
             }
     }

@@ -5,7 +5,7 @@
 #include <memory>
 #include <algorithm>
 
-void fe::graphNav::aStar(std::vector<int> &&waypoints, graph &graph, int start, int end, float alpha)
+void fe::graphNav::aStar(std::vector<int> &&waypoints, const graph &graph, int start, int end, float alpha)
     {
         std::vector<unsigned int> open;
         std::vector<unsigned int> closed;

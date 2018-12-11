@@ -118,7 +118,7 @@ void fe::handleManager<T, 0>::removeObject(Handle handle, std::function<void(T*)
     }
 
 template<typename T>
-bool fe::handleManager<T, 0>::handleActive(Handle handle)
+bool fe::handleManager<T, 0>::handleActive(Handle handle) const
     {
         if (handle >= m_handles.size())
             {

@@ -82,7 +82,7 @@ void fe::baseEntityUtilities::update()
                         else
                             {
                                 m_targeted = false;
-                                m_baseEntity->getRigidBody()->setVelocity(0.f, 0.f);
+                                //m_baseEntity->getRigidBody()->setVelocity(0.f, 0.f);
                                 //m_baseEntity->setPosition(m_targetPosition);
                                 m_arrived = true;
                             }

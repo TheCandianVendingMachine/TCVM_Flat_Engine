@@ -51,13 +51,13 @@ namespace fe
                 public:
                     handleManager();
 
-                    inline unsigned int objectCount() { return m_maxIndex; }
+                    inline unsigned int objectCount() const { return m_maxIndex; }
 
                     Handle addObject(T object);
                     Handle addObject(T object, Handle handle);
                     void removeObject(Handle handle);
                     void removeObject(Handle handle, std::function<void(T*)> onRemoveFunc);
-                    bool handleActive(Handle handle);
+                    bool handleActive(Handle handle) const;
                     void clearAllObjects();
                     void clearAllObjects(std::function<void(T*)> onRemoveFunc);
 
@@ -96,13 +96,13 @@ namespace fe
                     virtual void onRemove(T *object, fe::Handle objectHandle) {}
 
                 public:
-                    inline unsigned int objectCount() { return m_handles.size(); }
+                    inline unsigned int objectCount() const { return m_handles.size(); }
 
                     Handle addObject(T object);
                     Handle addObject(T object, Handle handle);
                     void removeObject(Handle handle);
                     void removeObject(Handle handle, std::function<void(T*)> onRemoveFunc);
-                    bool handleActive(Handle handle);
+                    bool handleActive(Handle handle) const;
                     void clearAllObjects();
                     void clearAllObjects(std::function<void(T*)> onRemoveFunc);
 
