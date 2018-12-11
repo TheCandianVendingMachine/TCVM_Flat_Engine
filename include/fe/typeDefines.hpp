@@ -42,6 +42,14 @@
     #define FE_DEBUG_ALLOCATER true
 #endif
 
+#ifndef FE_THREAD_COUNT
+    #define FE_THREAD_COUNT 8
+#endif
+
+#ifndef FE_THREAD_HERTZ
+    #define FE_THREAD_HERTZ 60
+#endif
+
 namespace fe
     {
         using Handle = int;

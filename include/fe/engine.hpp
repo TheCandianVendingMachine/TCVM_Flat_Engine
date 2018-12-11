@@ -26,7 +26,7 @@ namespace fe
         class baseGameState;
         class physicsEngine;
         class collisionWorld;
-        template<unsigned int>
+        template<unsigned int, unsigned int>
         class threadPool;
         class debugDraw;
         class profilerLogger;
@@ -44,7 +44,7 @@ namespace fe
                     fe::renderer m_renderer;
                     fe::random m_random;
 
-                    fe::threadPool<8> *m_threadPool;
+                    fe::threadPool<FE_THREAD_COUNT, FE_THREAD_HERTZ> *m_threadPool;
                     fe::eventSender *m_eventSender;
                     fe::gameStateMachine *m_gameStateMachine;
                     fe::logger *m_logger;
@@ -121,7 +121,7 @@ namespace fe
                     FLAT_ENGINE_API fe::eventSender &getEventSender() const;
                     FLAT_ENGINE_API fe::physicsEngine &getPhysicsEngine() const;
                     FLAT_ENGINE_API fe::collisionWorld &getCollisionWorld() const;
-                    FLAT_ENGINE_API fe::threadPool<8> &getThreadPool() const;
+                    FLAT_ENGINE_API fe::threadPool<FE_THREAD_COUNT, FE_THREAD_HERTZ> &getThreadPool() const;
                     FLAT_ENGINE_API fe::localizationStorage &getLocalization() const;
                     FLAT_ENGINE_API fe::guiPrefabricatedElements &getPrefabGui() const;
                     FLAT_ENGINE_API const fe::camera &getDefaultCamera() const;

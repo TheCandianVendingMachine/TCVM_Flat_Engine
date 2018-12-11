@@ -318,7 +318,7 @@ void fe::engine::startUp(fe::uInt64 totalMemory, fe::uInt64 stackMemory, fe::uIn
                 m_memoryManager.startUp(totalMemory);
                 m_memoryManager.startUpStack(stackMemory);
 
-                m_threadPool = new(m_memoryManager.getStackAllocater().alloc(sizeof(fe::threadPool<8>))) fe::threadPool<8>();
+                m_threadPool = new(m_memoryManager.getStackAllocater().alloc(sizeof(fe::threadPool<FE_THREAD_COUNT, FE_THREAD_HERTZ>))) fe::threadPool<FE_THREAD_COUNT, FE_THREAD_HERTZ>();
                 m_threadPool->startUp();
 
                 m_logger = new(m_memoryManager.alloc(sizeof(fe::logger))) fe::logger;
@@ -480,7 +480,7 @@ fe::collisionWorld &fe::engine::getCollisionWorld() const
        return *m_collisionWorld;
     }
 
-fe::threadPool<8> &fe::engine::getThreadPool() const
+fe::threadPool<FE_THREAD_COUNT, FE_THREAD_HERTZ> &fe::engine::getThreadPool() const
     {
         return *m_threadPool;
     }

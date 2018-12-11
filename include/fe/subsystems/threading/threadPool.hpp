@@ -11,7 +11,7 @@
 
 namespace fe
     {
-        template<unsigned int threadCount = 4>
+        template<unsigned int threadCount = 4, unsigned int hertz = 100>
         class threadPool
             {
                 private:
@@ -22,6 +22,7 @@ namespace fe
                             std::deque<threadJob*> m_jobs;
                             std::queue<threadJob*> m_queuedJobs;
                             unsigned int m_jobCount;
+                            std::chrono::microseconds m_tickRate;
 
                             bool m_running;
 
@@ -42,20 +43,22 @@ namespace fe
 
             };
 
-        template<unsigned int threadCount>
-        void threadPool<threadCount>::startUp()
+        template<unsigned int threadCount, unsigned int hertz>
+        void threadPool<threadCount, hertz>::startUp()
             {
+                std::chrono::microseconds tickRate(1000000 / hertz);
                 for (unsigned int i = 0; i < threadCount; i++)
                     {
                         m_pool[i].m_running = true;
                         m_pool[i].m_thread = std::thread(&threadPool::threadObj::update, &m_pool[i]);
                         m_pool[i].m_jobCount = 0;
+                        m_pool[i].m_tickRate = tickRate;
                     }
             }
 
         // adds a job to a thread for future calculations
-        template<unsigned int threadCount>
-        void threadPool<threadCount>::addJob(threadJob &job)
+        template<unsigned int threadCount, unsigned int hertz>
+        void threadPool<threadCount, hertz>::addJob(threadJob &job)
             {
                 if (job.m_active) return;
                 job.m_active = true;
@@ -74,15 +77,15 @@ namespace fe
             }
 
         // blocking function that halts the program until the job is complete
-        template<unsigned int threadCount>
-        void threadPool<threadCount>::waitFor(threadJob &job)
+        template<unsigned int threadCount, unsigned int hertz>
+        void threadPool<threadCount, hertz>::waitFor(threadJob &job)
             {
                 while (!job.isDone()) {}
                 job.m_started = false;
             }
 
-        template<unsigned int threadCount>
-        void threadPool<threadCount>::shutDown()
+        template<unsigned int threadCount, unsigned int hertz>
+        void threadPool<threadCount, hertz>::shutDown()
             {
                 for (unsigned int i = 0; i < threadCount; i++)
                     {
@@ -95,8 +98,8 @@ namespace fe
                     }
             }
 
-        template<unsigned int threadCount>
-        void threadPool<threadCount>::threadObj::runJob(threadJob *newJob)
+        template<unsigned int threadCount, unsigned int hertz>
+        void threadPool<threadCount, hertz>::threadObj::runJob(threadJob *newJob)
             {
                 m_jobLock.lock();
                 m_queuedJobs.push(newJob);
@@ -104,43 +107,41 @@ namespace fe
                 m_jobCount++;
             }
 
-        template<unsigned int threadCount>
-        void threadPool<threadCount>::threadObj::update()
+        template<unsigned int threadCount, unsigned int hertz>
+        void threadPool<threadCount, hertz>::threadObj::update()
             {
                 while (m_running)
                     {
-                        // wait for a job
-                        while (m_jobs.empty() && m_queuedJobs.empty()) 
+                        if (!m_jobs.empty() || !m_queuedJobs.empty())
                             {
-                                if (!m_running) return; 
-                                std::this_thread::sleep_for(std::chrono::microseconds(1)); 
+                                if (!m_queuedJobs.empty())
+                                    {
+                                        m_jobLock.lock();
+                                        while (!m_queuedJobs.empty())
+                                            {
+                                                m_jobs.push_back(m_queuedJobs.front());
+                                                m_queuedJobs.pop();
+                                            }
+                                        m_jobLock.unlock();
+                                    }
+
+                                for (auto it = m_jobs.begin(); it != m_jobs.end();)
+                                    {
+                                        auto job = (*it);
+                                        if (job->execute() || job->isDone())
+                                            {
+                                                job->m_active = false;
+                                                job->m_done = true;
+                                                it = m_jobs.erase(it);
+                                            }
+                                        else
+                                            {
+                                                ++it;
+                                            }
+                                    }
                             }
 
-                        if (!m_queuedJobs.empty())
-                            {
-                                m_jobLock.lock();
-                                while (!m_queuedJobs.empty())
-                                    {
-                                        m_jobs.push_back(m_queuedJobs.front());
-                                        m_queuedJobs.pop();
-                                    }
-                                m_jobLock.unlock();
-                            }
-
-                        for (auto it = m_jobs.begin(); it != m_jobs.end();)
-                            {
-                                auto job = (*it);
-                                if (job->execute() || job->isDone())
-                                    {
-                                        job->m_active = false;
-                                        job->m_done = true;
-                                        it = m_jobs.erase(it);
-                                    }
-                                else
-                                    {
-                                        ++it;
-                                    }
-                            }    
+                        std::this_thread::sleep_for(m_tickRate);
                     }
             }
     }
