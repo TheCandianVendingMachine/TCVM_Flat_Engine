@@ -467,6 +467,14 @@ void fe::baseEntity::enableComponent(fe::Handle handle, bool value)
             }
     }
 
+void fe::baseEntity::enableAllComponents(bool value)
+    {
+        for (auto &pair : m_components)
+            {
+                pair.second = value;
+            }
+    }
+
 const std::vector<std::pair<fe::Handle, bool>> &fe::baseEntity::getAllComponents() const
     {
         return m_components;

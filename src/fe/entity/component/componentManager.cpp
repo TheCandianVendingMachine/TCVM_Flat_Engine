@@ -54,17 +54,25 @@ void fe::componentManager::removeComponentFromObject(fe::baseEntity *ent, fe::Ha
 
 void fe::componentManager::update()
     {
-        for (auto &component : m_components.getObjects())
+        for (unsigned int i = 0; i < m_components.objectCount(); i++)
             {
-                component->engineUpdate();
+                fe::componentBase *component = m_components.getObject(i);
+                if (component->getOwner()->getBaseEntity()->isComponentEnabled(i))
+                    {
+                        component->engineUpdate();
+                    }
             }
     }
 
 void fe::componentManager::fixedUpdate(float deltaTime)
     {
-        for (auto &component : m_components.getObjects())
+        for (unsigned int i = 0; i < m_components.objectCount(); i++)
             {
-                component->engineFixedUpdate(deltaTime);
+                fe::componentBase *component = m_components.getObject(i);
+                if (component->getOwner()->getBaseEntity()->isComponentEnabled(i))
+                    {
+                        component->engineFixedUpdate(deltaTime);
+                    }
             }
     }
 

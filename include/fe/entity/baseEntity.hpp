@@ -131,6 +131,7 @@ namespace fe
                     FLAT_ENGINE_API void addComponent(fe::Handle handle);
                     FLAT_ENGINE_API void removeComponent(fe::Handle handle);
                     FLAT_ENGINE_API void enableComponent(fe::Handle handle, bool value);
+                    FLAT_ENGINE_API void enableAllComponents(bool value);
                     FLAT_ENGINE_API bool isComponentEnabled(fe::Handle handle) const;
                     FLAT_ENGINE_API const std::vector<std::pair<fe::Handle, bool>> &getAllComponents() const;
 
