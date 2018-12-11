@@ -44,6 +44,8 @@ namespace fe
                 float m_maxSpeed = 0.f;
                 float m_mass = 1.f;
                 float m_frictionCoef = 0.f;
+                float m_completionRadius = 0.f;
+                float m_slowdownDistance = 0.f;
                 fe::entityModules m_modules = fe::entityModules::NONE;
                 bool m_solid = true;
 

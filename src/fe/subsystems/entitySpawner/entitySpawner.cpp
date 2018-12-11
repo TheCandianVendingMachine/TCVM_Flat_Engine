@@ -279,6 +279,20 @@ fe::prefabObject &fe::entitySpawner::createPrefab(const char *luaName)
                     }
             }
 
+        if (luaTable["utility"].get_type() == sol::type::table)
+            {
+                sol::table utility = fe::engine::get().getScriptManager().getValueFromTable(luaTable, "utility");
+                if (utility["completionRadius"].get_type() == sol::type::number)
+                    {
+                        prefab.m_completionRadius = utility["completionRadius"].get<float>();
+                    }
+
+                if (utility["slowdownDistance"].get_type() == sol::type::number)
+                    {
+                        prefab.m_slowdownDistance = utility["slowdownDistance"].get<float>();
+                    }
+            }
+
         if (luaTable["components"].get_type() == sol::type::table)
             {
                 sol::table components = luaTable["components"];
@@ -377,6 +391,9 @@ fe::Handle fe::entitySpawner::spawn(const char *luaName)
                 entity->getRigidBody()->setMass(prefab.m_mass);
                 entity->getRigidBody()->setFrictionCoefficient(prefab.m_frictionCoef);
             }
+
+        entity->getUtilities().setCompletionRadius(prefab.m_completionRadius);
+        entity->getUtilities().setSlowdownDistance(prefab.m_slowdownDistance);
 
         for (auto &component : prefab.m_components)
             {
