@@ -36,7 +36,7 @@ void fe::graph::removeNode(int nodeHandle)
 
 void fe::graph::addEdge(int nodeA, int nodeB)
     {
-        if (!(nodeA >= 0 && nodeB >= 0 && nodeA < m_objects.size() && nodeB < m_objects.size())) return;
+        if (!(nodeA >= 0 && nodeB >= 0)) return;
 
         getObject(nodeA)->m_connectedNodes.push_back(nodeB);
         getObject(nodeB)->m_connectedNodes.push_back(nodeA);
