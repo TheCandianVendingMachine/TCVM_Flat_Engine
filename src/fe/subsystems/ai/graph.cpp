@@ -61,7 +61,11 @@ const std::vector<int> fe::graph::getAllNodes()
 
         for (auto &obj : getObjects())
             {
-                nodes.push_back(getHandle(obj));
+                fe::Handle objHandle = getHandle(obj);
+                if (handleActive(objHandle))
+                    {
+                        nodes.push_back(objHandle);
+                    }
             }
 
         return nodes;
