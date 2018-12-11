@@ -59,16 +59,20 @@ const std::vector<int> fe::graph::getAllNodes()
     {
         std::vector<int> nodes;
 
-        for (auto &obj : getObjects())
+        for (unsigned int i = 0; i < objectCount(); i++)
             {
-                fe::Handle objHandle = getHandle(obj);
-                if (handleActive(objHandle))
+                if (handleActive(i))
                     {
-                        nodes.push_back(objHandle);
+                        nodes.push_back(i);
                     }
             }
 
         return nodes;
+    }
+
+void fe::graph::clear()
+    {
+        clearAllObjects();
     }
 
 void fe::graph::serialize(fe::serializerID &serializer) const

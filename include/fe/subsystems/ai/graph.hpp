@@ -33,6 +33,8 @@ namespace fe
                     FLAT_ENGINE_API ai::node *getNode(int nodeID);
                     FLAT_ENGINE_API const std::vector<int> getAllNodes();
 
+                    FLAT_ENGINE_API void clear();
+
                     FLAT_ENGINE_API void serialize(fe::serializerID &serializer) const;
                     FLAT_ENGINE_API void deserialize(fe::serializerID &serializer);
 

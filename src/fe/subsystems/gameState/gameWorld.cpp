@@ -172,7 +172,7 @@ void fe::gameWorld::save()
         m_tileMap.serialize(*m_serializer);
         FE_LOG("Saving Entities");
         m_entityWorld.serialize(*m_serializer);
-        FE_LOG("Loading AI tilemap");
+        FE_LOG("Saving AI tilemap");
         m_aiGraph.serialize(*m_serializer);
     }
 
@@ -203,6 +203,7 @@ void fe::gameWorld::load()
         m_entityWorld.clearAllObjects();
         m_entityWorld.deserialize(*m_serializer);
         FE_LOG("Loading AI tilemap");
+        m_aiGraph.clear();
         m_aiGraph.deserialize(*m_serializer);
     }
 
