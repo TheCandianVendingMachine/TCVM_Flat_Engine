@@ -11,6 +11,21 @@ fe::componentBase *fe::componentManager::getComponent(fe::Handle handle) const
         return m_components.getObject(handle);
     }
 
+sol::object fe::componentManager::getLuaComponent(const char *id, fe::scriptObject *entity, sol::this_state state) const
+    {
+        fe::str idStr = FE_STR(id);
+        for (auto &compPair : entity->getBaseEntity()->getAllComponents())
+            {
+                fe::componentBase *comp = m_components.getObject(compPair.first);
+                if (comp->getID() == idStr)
+                    {
+                        return comp->makeIntoLuaObject(sol::state_view(state.L));
+                    }
+            }
+
+        return sol::object();
+    }
+
 void fe::componentManager::addComponentToObject(fe::baseEntity *ent, const std::string &entName, const std::string &compName, const std::string &compLuaPath, sol::table table)
     {
         fe::str str = FE_STR(compName.c_str());

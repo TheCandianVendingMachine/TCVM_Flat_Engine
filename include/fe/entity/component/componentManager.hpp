@@ -5,6 +5,7 @@
 #include "fe/subsystems/memory/poolAllocater.hpp"
 #include <memory>
 #include <type_traits>
+#include <sol.hpp>
 #include <unordered_map>
 #include "fe/entity/component/component.hpp"
 #include "fe/objectManagement/handleManager.hpp"
@@ -33,6 +34,7 @@ namespace fe
                     template<typename T>
                     T *getComponent(const char *id, fe::baseEntity *entity) const;
                     FLAT_ENGINE_API fe::componentBase *getComponent(fe::Handle handle) const;
+                    FLAT_ENGINE_API sol::object getLuaComponent(const char *id, fe::scriptObject *entity, sol::this_state state) const;
 
                     FLAT_ENGINE_API void addComponentToObject(fe::baseEntity *ent, const std::string &entName, const std::string &compName, const std::string &compLuaPath, sol::table table);
                     FLAT_ENGINE_API void removeComponentFromObject(fe::baseEntity *ent, fe::Handle handle);

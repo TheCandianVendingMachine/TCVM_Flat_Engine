@@ -45,6 +45,8 @@ namespace fe
                     virtual void serialize(fe::serializerID &serializer) const {}
                     virtual void deserialize(fe::serializerID &serializer) {}
 
+                    virtual sol::object makeIntoLuaObject(sol::state_view state) const;
+
             };
 
         template<typename TObj>
@@ -64,6 +66,8 @@ namespace fe
                     void engineOnRemove(fe::baseEntity *ent);
                     void engineUpdate();
                     void engineFixedUpdate(float deltaTime);
+
+                    sol::object makeIntoLuaObject(sol::state_view state) const override final;
 
             };
 
@@ -106,6 +110,12 @@ namespace fe
                         m_fixedUpdate->call(static_cast<TObj*>(this), deltaTime);
                     }
                 fixedUpdate(deltaTime);
+            }
+
+        template<typename TObj>
+        inline sol::object component<TObj>::makeIntoLuaObject(sol::state_view state) const
+            {
+                return sol::make_object(state.lua_state(), static_cast<const TObj* const>(this));
             }
 
         template<typename TObj>

@@ -45,3 +45,8 @@ fe::str fe::componentBase::getID() const
     {
         return m_id;
     }
+
+sol::object fe::componentBase::makeIntoLuaObject(sol::state_view state) const
+    {
+        return sol::make_object(state.lua_state(), this);
+    }
