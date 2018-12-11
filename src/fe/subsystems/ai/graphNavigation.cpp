@@ -58,10 +58,11 @@ void fe::graphNav::aStar(std::vector<int> &&waypoints, const graph &graph, int s
         
         waypoints.push_back(end);
         ai::node *currentNode = endNode;
-        while (currentNode->m_parent >= 0)
+        while (currentNode->m_parent >= 0 && currentNode->m_parent != start)
             {
                 waypoints.push_back(currentNode->m_parent);
                 currentNode = graph.getNode(currentNode->m_parent);
             }
+        waypoints.push_back(start);
         std::reverse(waypoints.begin(), waypoints.end());
     }
