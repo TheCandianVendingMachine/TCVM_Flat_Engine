@@ -1,6 +1,5 @@
 set(FE_SRC
        fe/engine.cpp
-       fe/engineCompileHelper.cpp
        fe/dataStructures/tree.cpp
        fe/debug/debugDraw.cpp
        fe/debug/logger.cpp
@@ -82,6 +81,7 @@ set(FE_SRC
        fe/subsystems/serializer/feDataWriter.cpp
        fe/subsystems/serializer/serializerID.cpp
        fe/subsystems/threading/rayJob.cpp
+       fe/subsystems/threading/threadJob.cpp
        fe/time/clock.cpp
        fe/time/countdown.cpp
        fe/time/time.cpp
