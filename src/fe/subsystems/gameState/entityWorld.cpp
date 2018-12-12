@@ -140,6 +140,22 @@ void fe::entityWorld::getAllObjects(std::vector<fe::baseEntity*> &objects)
             }
     }
 
+void fe::entityWorld::getAllObjectsByTag(std::vector<fe::baseEntity*> &objects, const char *tag)
+    {
+        getAllObjectsByTag(objects, FE_STR(tag));
+    }
+
+void fe::entityWorld::getAllObjectsByTag(std::vector<fe::baseEntity*> &objects, fe::str tag)
+    {
+        for (unsigned int i = 0; i < m_entityAllocater.getObjectAllocCount(); i++)
+                {
+                    if (m_entityAllocater.allocatedAt(i) && m_entityAllocater.at(i)->getTag() == tag)
+                        {
+                            objects.push_back(m_entityAllocater.at(i));
+                        }
+                }
+    }
+
 void fe::entityWorld::serialize(fe::serializerID &serializer)
     {
         for (unsigned int i = 0; i < objectCount(); i++)
@@ -172,6 +188,11 @@ void fe::entityWorld::deserialize(fe::serializerID &serializer)
 fe::animator &fe::entityWorld::getAnimator()
     {
         return m_animator;
+    }
+
+bool fe::entityWorld::isEntity(void *ptr) const
+    {
+        return m_entityAllocater.inRange(ptr);
     }
 
 void fe::entityWorld::entityRepresentation::serialize(fe::serializerID &serializer) const

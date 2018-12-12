@@ -305,6 +305,11 @@ fe::prefabObject &fe::entitySpawner::createPrefab(const char *luaName)
                     }
             }
 
+        if (luaTable["tag"].get_type() == sol::type::string)
+            {
+                prefab.m_tag = FE_STR(luaTable["tag"].get<const char*>());
+            }
+
         for (auto &value : luaTable)
             {
                 if (value.second.get_type() == sol::type::function)
@@ -345,6 +350,8 @@ fe::Handle fe::entitySpawner::spawn(const char *luaName)
 
         fe::Handle objectHandle = m_world->addGameObject(prefab.m_modules, object, prefab.m_connected, prefab.m_font);
         fe::baseEntity *entity = m_world->getObject(objectHandle);
+
+        entity->setTag(prefab.m_tag);
 
         entity->setSize(prefab.m_size);
         entity->setColour(prefab.m_colour);

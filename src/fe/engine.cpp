@@ -269,6 +269,8 @@ end)");
         m_scriptManager->getUserTypeHandler().addCustomType<scriptObject>(
             "scriptObject",
             "getName", &scriptObject::scriptObjectGetName,
+            "setTag", &scriptObject::scriptObjectSetTag,
+            "getTag", &scriptObject::scriptObjectGetTag,
             "setForce", sol::overload(sol::resolve<void(float, float)>(&scriptObject::scriptObjectSetForce), sol::resolve<void(fe::Vector2d)>(&scriptObject::scriptObjectSetForce)),
             "setVelocity", sol::overload(sol::resolve<void(float, float)>(&scriptObject::scriptObjectSetVelocity), sol::resolve<void(fe::Vector2d)>(&scriptObject::scriptObjectSetVelocity)),
             "setOrigin", &scriptObject::scriptObjectSetOrigin,

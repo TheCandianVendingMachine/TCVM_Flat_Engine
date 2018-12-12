@@ -11,6 +11,7 @@
 #include "fe/subsystems/resourceManager/fontData.hpp"
 #include "fe/entity/entityModules.hpp"
 #include "fe/entity/component/componentManager.hpp"
+#include <functional>
 
 namespace sf
     {
@@ -87,6 +88,16 @@ namespace fe
                     FLAT_ENGINE_API void removeGameObject(Handle handle);
 
                     FLAT_ENGINE_API fe::baseEntity *getObject(Handle handle) const;
+                    
+                    FLAT_ENGINE_API void getEntitiesWithinArea(std::vector<fe::baseEntity*> *entities, float xPos, float yPos, float xSize, float ySize);
+                    FLAT_ENGINE_API void getEntitiesWithinArea(std::vector<fe::baseEntity*> *entities, fe::Vector2d pos, fe::Vector2d size);
+                    FLAT_ENGINE_API void getEntitiesWithinArea(std::vector<fe::baseEntity*> *entities, float xPos, float yPos, float xSize, float ySize, fe::str tag);
+                    FLAT_ENGINE_API void getEntitiesWithinArea(std::vector<fe::baseEntity*> *entities, fe::Vector2d pos, fe::Vector2d size, fe::str tag);
+
+                    FLAT_ENGINE_API void getEntitiesWithinRange(std::vector<fe::baseEntity*> *entities, float xPos, float yPos, float range);
+                    FLAT_ENGINE_API void getEntitiesWithinRange(std::vector<fe::baseEntity*> *entities, fe::Vector2d pos, float range);
+                    FLAT_ENGINE_API void getEntitiesWithinRange(std::vector<fe::baseEntity*> *entities, float xPos, float yPos, float range, fe::str tag);
+                    FLAT_ENGINE_API void getEntitiesWithinRange(std::vector<fe::baseEntity*> *entities, fe::Vector2d pos, float range, fe::str tag);
 
             };
     }

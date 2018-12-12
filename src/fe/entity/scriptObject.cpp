@@ -21,6 +21,16 @@ fe::baseEntity *fe::scriptObject::getBaseEntity() const
         return m_entity;
     }
 
+void fe::scriptObject::scriptObjectSetTag(const char *tag)
+    {
+        m_entity->setTag(tag);
+    }
+
+unsigned int fe::scriptObject::scriptObjectGetTag() const
+    {
+        return m_entity->getTag();
+    }
+
 void fe::scriptObject::scriptObjectSetOrigin(float x, float y)
     {
         if (m_entity->getRenderObject())

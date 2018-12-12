@@ -46,6 +46,8 @@ namespace fe
                     const fe::uInt8 *getBuffer();
                     fe::uInt64 byteSize();
 
+                    bool inRange(void *ptr) const;
+
             };
 
         template<typename T>
@@ -154,5 +156,11 @@ namespace fe
         fe::uInt64 poolAllocater<T>::byteSize()
             {
                 return m_bufferSize;
+            }
+
+        template<typename T>
+        inline bool poolAllocater<T>::inRange(void *ptr) const
+            {
+                return (ptr >= m_buffer) && (ptr < m_buffer + m_bufferSize);
             }
     }

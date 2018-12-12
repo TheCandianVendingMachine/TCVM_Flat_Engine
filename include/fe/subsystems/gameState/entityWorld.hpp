@@ -65,11 +65,15 @@ namespace fe
                     FLAT_ENGINE_API void removeObject(fe::Handle handle);
                     FLAT_ENGINE_API fe::baseEntity *getObject(fe::Handle handle) const;
                     FLAT_ENGINE_API void getAllObjects(std::vector<fe::baseEntity*> &objects);
+                    FLAT_ENGINE_API void getAllObjectsByTag(std::vector<fe::baseEntity*> &objects, const char *tag);
+                    FLAT_ENGINE_API void getAllObjectsByTag(std::vector<fe::baseEntity*> &objects, fe::str tag);
 
                     FLAT_ENGINE_API void serialize(fe::serializerID &serializer);
                     FLAT_ENGINE_API void deserialize(fe::serializerID &serializer);
 
                     FLAT_ENGINE_API fe::animator &getAnimator();
+
+                    FLAT_ENGINE_API bool isEntity(void *ptr) const;
 
             };
     }

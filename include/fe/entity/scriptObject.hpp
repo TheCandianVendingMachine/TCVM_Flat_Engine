@@ -19,6 +19,9 @@ namespace fe
                     FLAT_ENGINE_API void setEntityDefinition(sol::table table);
                     FLAT_ENGINE_API fe::baseEntity *getBaseEntity() const;
 
+                    FLAT_ENGINE_API void scriptObjectSetTag(const char *tag);
+                    FLAT_ENGINE_API unsigned int scriptObjectGetTag() const;
+
                     FLAT_ENGINE_API void scriptObjectSetOrigin(float x, float y);
 
                     FLAT_ENGINE_API std::string scriptObjectGetName();

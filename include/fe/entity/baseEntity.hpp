@@ -46,6 +46,7 @@ namespace fe
                     fe::Handle m_handle;
 
                     std::string m_name;
+                    fe::str m_tag;
 
                     // Local variables to keep updated for debugging. Is only used to set position on initialization
                     float m_positionX;
@@ -87,6 +88,10 @@ namespace fe
 
                     FLAT_ENGINE_API void setHandle(fe::Handle handle);
                     FLAT_ENGINE_API fe::Handle getHandle() const;
+
+                    FLAT_ENGINE_API void setTag(const char *tag);
+                    FLAT_ENGINE_API void setTag(fe::str tag);
+                    FLAT_ENGINE_API fe::str getTag() const;
 
                     FLAT_ENGINE_API void onDestroy(fe::baseGameState &state);
 

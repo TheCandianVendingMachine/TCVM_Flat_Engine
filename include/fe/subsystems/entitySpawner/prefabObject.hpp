@@ -28,6 +28,7 @@ namespace fe
 
                 std::vector<std::pair<std::string, sol::table>> m_components;
 
+                fe::str m_tag = 0;
                 fe::fontData m_font = fe::fontData();
                 sf::Color m_colour;
                 fe::lightVector2<unsigned int> m_size;

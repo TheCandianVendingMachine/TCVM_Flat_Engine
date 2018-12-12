@@ -166,6 +166,21 @@ void fe::baseEntity::enableCollision(bool value)
             }
     }
 
+void fe::baseEntity::setTag(const char *tag)
+    {
+        setTag(FE_STR(tag));
+    }
+
+void fe::baseEntity::setTag(fe::str tag)
+    {
+        m_tag = tag;
+    }
+
+fe::str fe::baseEntity::getTag() const
+    {
+        return m_tag;
+    }
+
 void fe::baseEntity::onDestroy(fe::baseGameState &state)
     {
         int i = 0;
