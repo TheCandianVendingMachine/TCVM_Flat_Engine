@@ -470,7 +470,10 @@ void fe::aabbTree::colliderAABB(fe::AABB &testAABB, std::function<void(fe::colli
                     {
                         if (m_nodes[currentNode].isLeaf())
                             {
-                                colliderCallbacks[colliderCallbackIndex++] = m_nodes[currentNode].m_userData;
+                                if (/*m_nodes[currentNode].m_userData->m_collisionGroup != 0 &&*/ m_nodes[currentNode].m_userData->m_aabb.perimeter() > 0)
+                                    {
+                                        colliderCallbacks[colliderCallbackIndex++] = m_nodes[currentNode].m_userData;
+                                    }
                             }
                         else
                             {
@@ -508,7 +511,10 @@ void fe::aabbTree::colliderCircle(fe::circle &testCircle, std::function<void(fe:
                     {
                         if (m_nodes[currentNode].isLeaf())
                             {
-                                colliderCallbacks[colliderCallbackIndex++] = m_nodes[currentNode].m_userData;
+                                if (/*m_nodes[currentNode].m_userData->m_collisionGroup != 0 &&*/ m_nodes[currentNode].m_userData->m_aabb.perimeter() > 0)
+                                    {
+                                        colliderCallbacks[colliderCallbackIndex++] = m_nodes[currentNode].m_userData;
+                                    }
                             }
                         else
                             {
@@ -558,7 +564,7 @@ fe::raycastResult fe::aabbTree::raycast(float x, float y, float dirX, float dirY
                     {
                         if (m_nodes[currentNode].isLeaf())
                             {
-                                if (m_nodes[currentNode].m_userData->m_collisionGroup != ignoreGroup)
+                                if (m_nodes[currentNode].m_userData->m_collisionGroup != ignoreGroup && m_nodes[currentNode].m_userData->m_aabb.perimeter() > 0)
                                     {
                                         fe::raycastResult ray = fe::lineIntersects(m_nodes[currentNode].m_userData->m_aabb, x, y, dirX, dirY);
                                         ray.m_colliderHit = m_nodes[currentNode].m_userData;
@@ -601,7 +607,7 @@ fe::raycastResult fe::aabbTree::linecast(float x0, float y0, float x1, float y1,
                     {
                         if (m_nodes[currentNode].isLeaf())
                             {
-                                if (m_nodes[currentNode].m_userData->m_collisionGroup != ignoreGroup)
+                                if (m_nodes[currentNode].m_userData->m_collisionGroup != ignoreGroup && m_nodes[currentNode].m_userData->m_aabb.perimeter() > 0)
                                     {
                                         fe::raycastResult ray = fe::lineIntersects(m_nodes[currentNode].m_userData->m_aabb, x0, y0, x1, y1);
                                         ray.m_colliderHit = m_nodes[currentNode].m_userData;

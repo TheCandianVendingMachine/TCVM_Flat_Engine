@@ -383,3 +383,8 @@ void fe::gameWorld::getEntitiesWithinRange(std::vector<fe::baseEntity*> *entitie
                 m_staticBroadphase->colliderCircle(circle, std::bind(&addTaggedEntityToVector, &circle, entities, m_entityWorld, tag, std::placeholders::_1));
             }
     }
+
+void fe::gameWorld::getEntitiesByTag(std::vector<fe::baseEntity*> *entities, fe::str tag)
+    {
+        m_entityWorld.getAllObjectsByTag(*entities, tag);
+    }

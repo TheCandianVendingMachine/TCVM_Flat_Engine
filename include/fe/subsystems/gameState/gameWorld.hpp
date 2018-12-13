@@ -99,5 +99,7 @@ namespace fe
                     FLAT_ENGINE_API void getEntitiesWithinRange(std::vector<fe::baseEntity*> *entities, float xPos, float yPos, float range, fe::str tag);
                     FLAT_ENGINE_API void getEntitiesWithinRange(std::vector<fe::baseEntity*> *entities, fe::Vector2d pos, float range, fe::str tag);
 
+                    FLAT_ENGINE_API void getEntitiesByTag(std::vector<fe::baseEntity*> *entities, fe::str tag);
+
             };
     }
