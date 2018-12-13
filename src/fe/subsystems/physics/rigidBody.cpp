@@ -117,7 +117,7 @@ float fe::rigidBody::getMass() const
         return m_mass;
     }
 
-float fe::rigidBody::getMaxVelocity() const
+float fe::rigidBody::getMaxSpeed() const
     {
         return m_maxSpeed;
     }

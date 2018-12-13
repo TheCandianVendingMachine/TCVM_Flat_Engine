@@ -71,7 +71,7 @@ namespace fe
                     FLAT_ENGINE_API float getHeading() const;
 
                     FLAT_ENGINE_API float getMass() const;
-                    FLAT_ENGINE_API float getMaxVelocity() const;
+                    FLAT_ENGINE_API float getMaxSpeed() const;
                     FLAT_ENGINE_API float getFrictionCoefficient() const;
 
                     FLAT_ENGINE_API fe::Vector2d getVelocity() const;

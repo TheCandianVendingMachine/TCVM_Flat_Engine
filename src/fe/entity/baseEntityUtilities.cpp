@@ -69,7 +69,7 @@ void fe::baseEntityUtilities::update()
                         float distance = std::sqrt(targetLine.x * targetLine.x + targetLine.y * targetLine.y);
                         if (distance > m_completionRadius) // if its less than the completion radius the ent is at the position. Since we round to an integer there wont be any stutter
                             {
-                                float maxSpeed = m_baseEntity->getRigidBody()->getMaxVelocity();
+                                float maxSpeed = m_baseEntity->getRigidBody()->getMaxSpeed();
 
                                 float possibleSpeed = maxSpeed * (distance / m_slowdownDistance);
                                 float speed = std::min(possibleSpeed, maxSpeed);

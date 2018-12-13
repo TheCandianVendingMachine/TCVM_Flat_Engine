@@ -7,6 +7,12 @@
 
 void fe::graphNav::aStar(std::vector<int> &&waypoints, const graph &graph, int start, int end, float alpha)
     {
+        if (start == end)
+            {
+                waypoints.push_back(end);
+                return;
+            }
+
         std::vector<unsigned int> open;
         std::vector<unsigned int> closed;
 
@@ -15,6 +21,10 @@ void fe::graphNav::aStar(std::vector<int> &&waypoints, const graph &graph, int s
         ai::node *endNode = graph.getNode(end);
 
         const float H_COST_MOD = 1.f;
+
+        float dx = abs(graph.getNode(current)->m_posX - endNode->m_posX);
+        float dy = abs(graph.getNode(current)->m_posY - endNode->m_posY);
+        graph.getNode(current)->m_fCost = (1.f + alpha * (graph.getNode(end)->m_gCost - 1.f)) + graph.getNode(end)->m_hCost;
 
         while (!open.empty() && current != end)
             {
@@ -28,32 +38,35 @@ void fe::graphNav::aStar(std::vector<int> &&waypoints, const graph &graph, int s
                             }
                     }
 
-                open.erase(std::remove(open.begin(), open.end(), current), open.end());
-                closed.push_back(current);
-
-                for (auto &neighbor : graph.getNode(current)->m_connectedNodes)
+                if (current != end)
                     {
-                        if (std::find(closed.begin(), closed.end(), neighbor) == closed.end())
+                        open.erase(std::remove(open.begin(), open.end(), current), open.end());
+                        closed.push_back(current);
+
+                        for (auto &neighbor : graph.getNode(current)->m_connectedNodes)
                             {
-                                bool inOpenList = std::find(open.begin(), open.end(), neighbor) != open.end();
-                                if (!inOpenList)
+                                if (std::find(closed.begin(), closed.end(), neighbor) == closed.end())
                                     {
-                                        open.push_back(neighbor);
+                                        float dx = abs(graph.getNode(neighbor)->m_posX - endNode->m_posX);
+                                        float dy = abs(graph.getNode(neighbor)->m_posY - endNode->m_posY);
+                                        float newCost = graph.getNode(current)->m_gCost + (std::sqrt(dx * dx + dy * dy) * H_COST_MOD);
+
+                                        bool inOpenList = std::find(open.begin(), open.end(), neighbor) != open.end();
+                                        if (!inOpenList)
+                                            {
+                                                open.push_back(neighbor);
+                                            }
+                                        else if (newCost >= graph.getNode(neighbor)->m_hCost)
+                                            {   
+                                                continue;
+                                            }
+
+                                        graph.getNode(neighbor)->m_hCost = newCost;
                                         graph.getNode(neighbor)->m_parent = current;
+                                        graph.getNode(neighbor)->m_fCost = (1.f + alpha * (graph.getNode(neighbor)->m_gCost - 1.f)) + graph.getNode(neighbor)->m_hCost;
                                     }
-
-                                float dx = abs(graph.getNode(neighbor)->m_posX - endNode->m_posX);
-                                float dy = abs(graph.getNode(neighbor)->m_posY - endNode->m_posY);
-                                graph.getNode(neighbor)->m_hCost = std::sqrt(dx * dx + dy * dy) * H_COST_MOD;
-
-                                if (inOpenList && graph.getNode(neighbor)->m_gCost < graph.getNode(current)->m_gCost)
-                                    {
-                                        graph.getNode(neighbor)->m_parent = current;
-                                    }
-
-                                graph.getNode(neighbor)->m_fCost = (1.f + alpha * (graph.getNode(neighbor)->m_gCost - 1.f)) + graph.getNode(neighbor)->m_hCost;
-                            }
-                    }
+                        }
+                }
             }
         
         waypoints.push_back(end);
