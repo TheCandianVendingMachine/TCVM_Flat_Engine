@@ -112,9 +112,9 @@ fe::raycastResult fe::lineIntersects(const fe::AABB &a, float x0, float y0, floa
         fe::lightVector2d aMin(a.m_globalPositionX, a.m_globalPositionY);
         fe::lightVector2d aMax(a.m_globalPositionX + a.m_sizeX, a.m_globalPositionY + a.m_sizeY);
 
-        fe::lightVector2d extent = aMax - aMin;
-        fe::lightVector2d lineMid = fe::lightVector2d(x0, y0) + fe::lightVector2d(x1, y1) - aMin - aMax;
-        fe::lightVector2d dir = fe::lightVector2d(x1, y1) - fe::lightVector2d(x0, y0);
+        fe::lightVector2d extent(a.m_sizeX, a.m_sizeY);
+        fe::lightVector2d dir(x1 - x0, y1 - y0);
+        fe::lightVector2d lineMid(x0 + x1 - aMin.x - aMax.x, y0 + y1 - aMin.y - aMax.y);
 
         float adx = std::abs(dir.x);
         float ady = std::abs(dir.y);
