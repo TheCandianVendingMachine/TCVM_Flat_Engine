@@ -8,6 +8,8 @@
 #include "fe/debug/debugDraw.hpp"
 #include "fe/debug/profiler.hpp"
 
+#include "fe/dataStructures/stack.hpp"
+
 #include <stack>
 
 void fe::aabbTree::debugDrawAABB(int node)
@@ -454,31 +456,27 @@ void fe::aabbTree::update(fe::collider *collider)
 
 void fe::aabbTree::colliderAABB(fe::AABB &testAABB, std::function<void(fe::collider*)> callback) const
     {
-        fe::collider *colliderCallbacks[FE_MAX_GAME_OBJECTS];
-        int colliderCallbackIndex = 0;
+        fe::semiFixedStack<FE_MAX_GAME_OBJECTS, fe::collider*> colliderCallbacks;
         FE_ENGINE_PROFILE("aabb_tree", "test_aabb_against_tree");
-        int stack[(FE_MAX_GAME_OBJECTS * 2) - 1];
-        int stackTop = 0;
-        stack[stackTop++] = m_base;
-        int iteration = 0;
-        while (stackTop > 0)
+        fe::semiFixedStack<(FE_MAX_GAME_OBJECTS * 2) - 1, int> stack;
+        stack.push(m_base);
+        while (!stack.empty())
             {
-                iteration++;
-                int currentNode = stack[stackTop - 1];
-                stackTop--;
+                int currentNode = stack.top();
+                stack.pop();
                 if (currentNode >= 0 && &m_nodes[currentNode].m_userData->m_aabb != &testAABB && fe::intersects(m_nodes[currentNode].m_fatAABB, testAABB))
                     {
                         if (m_nodes[currentNode].isLeaf())
                             {
                                 if (/*m_nodes[currentNode].m_userData->m_collisionGroup != 0 &&*/ m_nodes[currentNode].m_userData->m_aabb.perimeter() > 0)
                                     {
-                                        colliderCallbacks[colliderCallbackIndex++] = m_nodes[currentNode].m_userData;
+                                        colliderCallbacks.push(m_nodes[currentNode].m_userData);
                                     }
                             }
                         else
                             {
-                                stack[stackTop++] = m_nodes[currentNode].m_left;
-                                stack[stackTop++] = m_nodes[currentNode].m_right;
+                                stack.push(m_nodes[currentNode].m_left);
+                                stack.push(m_nodes[currentNode].m_right);
                             }
                     }
                 
@@ -486,50 +484,48 @@ void fe::aabbTree::colliderAABB(fe::AABB &testAABB, std::function<void(fe::colli
         FE_END_PROFILE;
 
         FE_ENGINE_PROFILE("aabb_tree", "collider_callback_calls_aabb");
-        for (int i = 0; i < colliderCallbackIndex; i++)
+        while (!colliderCallbacks.empty())
             {
-                callback(colliderCallbacks[i]);
+                callback(colliderCallbacks.top());
+                colliderCallbacks.pop();
             }
         FE_END_PROFILE;
     }
 
 void fe::aabbTree::colliderCircle(fe::circle &testCircle, std::function<void(fe::collider*)> callback) const
     {
-        fe::collider *colliderCallbacks[FE_MAX_GAME_OBJECTS];
-        int colliderCallbackIndex = 0;
-        FE_ENGINE_PROFILE("aabb_tree", "test_circle_against_tree");
-        int stack[(FE_MAX_GAME_OBJECTS * 2) - 1];
-        int stackTop = 0;
-        stack[stackTop++] = m_base;
-        int iteration = 0;
-        while (stackTop > 0)
+        fe::semiFixedStack<FE_MAX_GAME_OBJECTS, fe::collider*> colliderCallbacks;
+        FE_ENGINE_PROFILE("aabb_tree", "test_aabb_against_tree");
+        fe::semiFixedStack<(FE_MAX_GAME_OBJECTS * 2) - 1, int> stack;
+        stack.push(m_base);
+        while (!stack.empty())
             {
-                iteration++;
-                int currentNode = stack[stackTop - 1];
-                stackTop--;
+                int currentNode = stack.top();
+                stack.pop();
                 if (currentNode >= 0 && fe::intersects(m_nodes[currentNode].m_fatAABB, testCircle))
                     {
                         if (m_nodes[currentNode].isLeaf())
                             {
                                 if (/*m_nodes[currentNode].m_userData->m_collisionGroup != 0 &&*/ m_nodes[currentNode].m_userData->m_aabb.perimeter() > 0)
                                     {
-                                        colliderCallbacks[colliderCallbackIndex++] = m_nodes[currentNode].m_userData;
+                                        colliderCallbacks.push(m_nodes[currentNode].m_userData);
                                     }
                             }
                         else
                             {
-                                stack[stackTop++] = m_nodes[currentNode].m_left;
-                                stack[stackTop++] = m_nodes[currentNode].m_right;
+                                stack.push(m_nodes[currentNode].m_left);
+                                stack.push(m_nodes[currentNode].m_right);
                             }
                     }
                 
             }
         FE_END_PROFILE;
 
-        FE_ENGINE_PROFILE("aabb_tree", "collider_callback_calls_circle");
-        for (int i = 0; i < colliderCallbackIndex; i++)
+        FE_ENGINE_PROFILE("aabb_tree", "collider_callback_calls_aabb");
+        while (!colliderCallbacks.empty())
             {
-                callback(colliderCallbacks[i]);
+                callback(colliderCallbacks.top());
+                colliderCallbacks.pop();
             }
         FE_END_PROFILE;
     }
@@ -550,15 +546,12 @@ fe::raycastResult fe::aabbTree::raycast(float x, float y, float dirX, float dirY
                 FE_DEBUG_DRAW_LINE(x, y, x + (dirX * 100.f), y + (dirY * 100.f), sf::Color::Red);
             }
         
-        int stack[(FE_MAX_GAME_OBJECTS * 2) - 1];
-        int stackTop = 0;
-        stack[stackTop++] = m_base;
-        int iteration = 0;
-        while (stackTop > 0)
+        fe::semiFixedStack<(FE_MAX_GAME_OBJECTS * 2) - 1, int> stack;
+        stack.push(m_base);
+        while (!stack.empty())
             {
-                iteration++;
-                int currentNode = stack[stackTop - 1];
-                stackTop--;
+                int currentNode = stack.top();
+                stack.pop();
                 fe::raycastResult result = fe::rayIntersects(m_nodes[currentNode].m_fatAABB, x, y, dirX, dirY);
                 if (currentNode >= 0 && result.m_hit)
                     {
@@ -576,8 +569,8 @@ fe::raycastResult fe::aabbTree::raycast(float x, float y, float dirX, float dirY
                             }
                         else
                             {
-                                stack[stackTop++] = m_nodes[currentNode].m_left;
-                                stack[stackTop++] = m_nodes[currentNode].m_right;
+                                stack.push(m_nodes[currentNode].m_left);
+                                stack.push(m_nodes[currentNode].m_right);
                             }
                     }
 
@@ -596,15 +589,12 @@ fe::raycastResult fe::aabbTree::linecast(float x0, float y0, float x1, float y1,
                 FE_DEBUG_DRAW_LINE(x0, y0, x1, y1, sf::Color::Red);
             }
 
-        int stack[(FE_MAX_GAME_OBJECTS * 2) - 1];
-        int stackTop = 0;
-        stack[stackTop++] = m_base;
-        int iteration = 0;
-        while (stackTop > 0)
+        fe::semiFixedStack<(FE_MAX_GAME_OBJECTS * 2) - 1, int> stack;
+        stack.push(m_base);
+        while (!stack.empty())
             {
-                iteration++;
-                int currentNode = stack[stackTop - 1];
-                stackTop--;
+                int currentNode = stack.top();
+                stack.pop();
                 fe::raycastResult result = fe::lineIntersects(m_nodes[currentNode].m_fatAABB, x0, y0, x1, y1);
                 if (currentNode >= 0 && result.m_hit)
                     {
@@ -622,8 +612,8 @@ fe::raycastResult fe::aabbTree::linecast(float x0, float y0, float x1, float y1,
                             }
                         else
                             {
-                                stack[stackTop++] = m_nodes[currentNode].m_left;
-                                stack[stackTop++] = m_nodes[currentNode].m_right;
+                                stack.push(m_nodes[currentNode].m_left);
+                                stack.push(m_nodes[currentNode].m_right);
                             }
                     }
 

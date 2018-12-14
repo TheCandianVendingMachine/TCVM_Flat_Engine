@@ -11,15 +11,18 @@
 
 void fe::tileMap::onAdd(fe::imp::tileWorld *object, fe::Handle objectHandle)
     {
-        object->colliderPtr = fe::engine::get().getCollisionWorld().createCollider(object->colliderSizeX, object->colliderSizeY);
-        object->colliderPtr->m_aabb.m_offsetX = object->colliderOffsetX;
-        object->colliderPtr->m_aabb.m_offsetY = object->colliderOffsetY;
-        object->colliderPtr->m_aabb.m_globalPositionX = object->xPosition + object->colliderPtr->m_aabb.m_offsetX;
-        object->colliderPtr->m_aabb.m_globalPositionY = object->yPosition + object->colliderPtr->m_aabb.m_offsetY;
-        object->colliderPtr->m_collisionGroup = object->collisionGroup;
+        if ((object->colliderSizeX + object->colliderSizeY) > 0.f)
+            {
+                object->colliderPtr = fe::engine::get().getCollisionWorld().createCollider(object->colliderSizeX, object->colliderSizeY);
+                object->colliderPtr->m_aabb.m_offsetX = object->colliderOffsetX;
+                object->colliderPtr->m_aabb.m_offsetY = object->colliderOffsetY;
+                object->colliderPtr->m_aabb.m_globalPositionX = object->xPosition + object->colliderPtr->m_aabb.m_offsetX;
+                object->colliderPtr->m_aabb.m_globalPositionY = object->yPosition + object->colliderPtr->m_aabb.m_offsetY;
+                object->colliderPtr->m_collisionGroup = object->collisionGroup;
+            }
         object->handle = objectHandle;
 
-        if (m_world.getDynamicBroadphase()) 
+        if (m_world.getDynamicBroadphase() && object->colliderPtr)
             {
                 m_world.getDynamicBroadphase()->add(object->colliderPtr);
             }
@@ -37,12 +40,15 @@ void fe::tileMap::onRemove(fe::imp::tileWorld *object, fe::Handle objectHandle)
         event.args[0].argType = fe::gameEventArgument::type::TYPE_VOIDP;
         fe::engine::get().getEventSender().sendEngineEvent(event, fe::engineEvent::TILE_REMOVED);
 
-        if (m_world.getDynamicBroadphase()) 
+        if (object->colliderPtr) 
             {
-                m_world.getDynamicBroadphase()->remove(object->colliderPtr);
-            }
+                if (m_world.getDynamicBroadphase())
+                    {
+                        m_world.getDynamicBroadphase()->remove(object->colliderPtr);
+                    }
 
-        fe::engine::get().getCollisionWorld().deleteCollider(object->colliderPtr);
+                fe::engine::get().getCollisionWorld().deleteCollider(object->colliderPtr);
+            }
     }
 
 fe::tileMap::tileMap(fe::gameWorld &world) :
