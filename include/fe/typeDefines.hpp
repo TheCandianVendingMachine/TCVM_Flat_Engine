@@ -30,7 +30,7 @@
     #define FE_DEFAULT_RANDOM_SEED 555
 #endif
 
-#define FE_MAX_GAME_OBJECTS 1024 // Max = 2^16
+#define FE_MAX_GAME_OBJECTS 16384 // Max = 2^16
 #define FE_MAX_TEXT_OBJECTS 64
 #define FE_MAX_Z_ORDER 64 // Maximum amount of Z-Order
 
