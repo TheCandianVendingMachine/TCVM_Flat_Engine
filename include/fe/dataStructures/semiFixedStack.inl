@@ -41,8 +41,8 @@ inline void fe::semiFixedStack<size, TDataType>::push(TDataType value)
 template<fe::uInt64 size, typename TDataType>
 inline TDataType fe::semiFixedStack<size, TDataType>::top() const
     {
-        FE_ASSERT(m_pointer != 0, "Stack Overflow!");
-        if (m_pointer < size)
+        FE_ASSERT(m_pointer != 0, "No Data");
+        if (m_pointer <= size)
             {
                 return m_fixedData[m_pointer - 1];
             }
@@ -53,8 +53,8 @@ inline TDataType fe::semiFixedStack<size, TDataType>::top() const
 template<fe::uInt64 size, typename TDataType>
 inline void fe::semiFixedStack<size, TDataType>::pop()
     {
-        FE_ASSERT(m_pointer != 0, "Stack Overflow!");
-        if (m_pointer >= size)
+        FE_ASSERT(m_pointer != 0, "Stack Overflow");
+        if (m_pointer > size)
             {
                 node *newNode = m_nonFixedData->m_previous;
                 delete m_nonFixedData;

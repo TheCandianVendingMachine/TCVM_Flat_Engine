@@ -1,5 +1,7 @@
 #include "fe/subsystems/memory/stackAllocater.hpp"
 #include "fe/feAssert.hpp"
+#include "fe/debug/logger.hpp"
+#include <cstring>
 
 void fe::stackAllocater::startUp(fe::uInt8 *buffer, fe::uInt64 bufferSize)
     {

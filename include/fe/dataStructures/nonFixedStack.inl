@@ -34,14 +34,14 @@ inline void fe::nonFixedStack<TDataType>::push(TDataType value)
 template<typename TDataType>
 inline TDataType fe::nonFixedStack<TDataType>::top() const
     {
-        FE_ASSERT(m_data, "No data allocated!");
+        FE_ASSERT(m_data, "No Data");
         return m_data->m_value;
     }
 
 template<typename TDataType>
 inline void fe::nonFixedStack<TDataType>::pop()
     {
-        FE_ASSERT(m_data, "No data allocated!");
+        FE_ASSERT(m_data, "Stack Overflow");
         node *newNode = m_data->m_previous;
         delete m_data;
         m_data = newNode;

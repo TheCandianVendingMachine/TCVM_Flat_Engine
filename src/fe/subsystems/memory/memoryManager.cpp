@@ -1,6 +1,7 @@
 #include "fe/subsystems/memory/memoryManager.hpp"
 #include <cstdlib>
 #include "fe/feAssert.hpp"
+#include "fe/debug/logger.hpp"
 
 fe::memoryManager *fe::memoryManager::m_instance = nullptr;
 

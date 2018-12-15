@@ -17,7 +17,7 @@ inline fe::fixedStack<size, TDataType>::~fixedStack()
 template<fe::uInt64 size, typename TDataType>
 inline void fe::fixedStack<size, TDataType>::push(TDataType value)
     {
-        FE_ASSERT((m_pointer + 1) < size, "Stack Overflow");
+        FE_ASSERT(m_pointer < size, "Stack Overflow");
         m_data[m_pointer++] = value;
     }
 
