@@ -22,12 +22,13 @@ namespace fe
                 private:
                     struct node
                         {
-                            TDataType m_value;
                             node *m_previous = nullptr;
+                            TDataType m_value;
+                            node(node *p, TDataType v) : m_previous(p), m_value(v) {}
+                            ~node() {}
                         };
                     // The top of the non-fixed stack
                     node *m_data;
-                    unsigned int m_size;
 
                 public:
                     nonFixedStack();

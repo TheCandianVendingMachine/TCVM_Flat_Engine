@@ -5,8 +5,7 @@
 
 template<typename TDataType>
 inline fe::nonFixedStack<TDataType>::nonFixedStack() : 
-    m_data(nullptr),
-    m_size(0)
+    m_data(nullptr)
     {
     }
 
@@ -22,13 +21,9 @@ inline fe::nonFixedStack<TDataType>::~nonFixedStack()
     }
 
 template<typename TDataType>
-inline void fe::nonFixedStack<TDataType>::push(TDataType value)
+void fe::nonFixedStack<TDataType>::push(TDataType value)
     {
-        node *dat = new node;
-        dat->m_value = value;
-        dat->m_previous = m_data;
-        m_data = dat;
-        m_size++;
+        m_data = new node(m_data, value);
     }
 
 template<typename TDataType>
@@ -45,11 +40,10 @@ inline void fe::nonFixedStack<TDataType>::pop()
         node *newNode = m_data->m_previous;
         delete m_data;
         m_data = newNode;
-        m_size--;
     }
 
 template<typename TDataType>
 inline bool fe::nonFixedStack<TDataType>::empty() const
     {
-        return m_size == 0;
+        return m_data == nullptr;
     }
