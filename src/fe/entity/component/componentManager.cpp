@@ -63,10 +63,13 @@ void fe::componentManager::update()
     {
         for (unsigned int i = 0; i < m_components.objectCount(); i++)
             {
-                fe::componentBase *component = m_components.getObject(i);
-                if (component->getOwner()->getBaseEntity()->isComponentEnabled(i))
+                if (m_components.handleActive(i))
                     {
-                        component->engineUpdate();
+                        fe::componentBase *component = m_components.getObject(i);
+                        if (component->getOwner()->getBaseEntity()->isComponentEnabled(i))
+                            {
+                                component->engineUpdate();
+                            }
                     }
             }
     }
@@ -75,10 +78,13 @@ void fe::componentManager::fixedUpdate(float deltaTime)
     {
         for (unsigned int i = 0; i < m_components.objectCount(); i++)
             {
-                fe::componentBase *component = m_components.getObject(i);
-                if (component->getOwner()->getBaseEntity()->isComponentEnabled(i))
+                if (m_components.handleActive(i))
                     {
-                        component->engineFixedUpdate(deltaTime);
+                        fe::componentBase *component = m_components.getObject(i);
+                        if (component->getOwner()->getBaseEntity()->isComponentEnabled(i))
+                            {
+                                component->engineFixedUpdate(deltaTime);
+                            }
                     }
             }
     }

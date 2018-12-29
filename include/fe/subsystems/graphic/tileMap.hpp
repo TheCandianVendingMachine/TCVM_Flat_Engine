@@ -43,9 +43,12 @@ namespace fe
                         fe::Handle handle;
                         int prefabIndex = -1;
                         unsigned int tilemapIndex;
+                        unsigned int textureIndex[4];
+                        unsigned int rotation;
                         float xPosition;
                         float yPosition;
 
+                        // Temporary values used to initialize new tiles and tile rotation
                         float colliderOffsetX;
                         float colliderOffsetY;
                         float colliderSizeX;
@@ -77,6 +80,8 @@ namespace fe
                     FLAT_ENGINE_API tileMap(fe::gameWorld &world);
 
                     FLAT_ENGINE_API void updateTile(fe::Handle handle);
+                    // Sets the texture index to rotate the tile. Tiles needs to be updated in order to render as rotated
+                    FLAT_ENGINE_API void rotateTile(fe::Handle handle, int direction);
                     FLAT_ENGINE_API void rebuildTilemap();
 
                     FLAT_ENGINE_API void addGlobalTexture(const std::string &textureName);

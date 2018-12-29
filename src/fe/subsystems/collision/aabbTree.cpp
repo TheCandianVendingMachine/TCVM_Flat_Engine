@@ -23,10 +23,26 @@ void fe::aabbTree::debugDrawAABB(int node)
                 debugDrawAABB(m_nodes[node].m_right);
             }
 
-        fe::AABB &currentNodeAABB = m_nodes[node].m_fatAABB;
-        FE_DEBUG_DRAW_SQUARE(   static_cast<int>(std::ceilf(currentNodeAABB.m_sizeX)), static_cast<int>(std::ceilf(currentNodeAABB.m_sizeY)),
-                                static_cast<int>(std::ceilf(currentNodeAABB.m_globalPositionX + currentNodeAABB.m_offsetX)), static_cast<int>(std::ceilf(currentNodeAABB.m_globalPositionY + currentNodeAABB.m_offsetY)),
-                                sf::Color::Red);
+        fe::AABB &currentNodeFatAABB = m_nodes[node].m_fatAABB;
+
+        int xPos = static_cast<int>(std::ceilf(currentNodeFatAABB.m_globalPositionX + currentNodeFatAABB.m_offsetX));
+        int yPos = static_cast<int>(std::ceilf(currentNodeFatAABB.m_globalPositionY + currentNodeFatAABB.m_offsetY));
+        int xSize = static_cast<int>(std::ceilf(currentNodeFatAABB.m_sizeX));
+        int ySize = static_cast<int>(std::ceilf(currentNodeFatAABB.m_sizeY));
+
+        FE_DEBUG_DRAW_SQUARE(xSize, ySize, xPos, yPos, sf::Color::Red);
+
+        if (m_nodes[node].m_userData)
+            {
+                fe::AABB &currentNodeAABB = m_nodes[node].m_userData->m_aabb;
+
+                xPos = static_cast<int>(std::ceilf(currentNodeAABB.m_globalPositionX + currentNodeAABB.m_offsetX));
+                yPos = static_cast<int>(std::ceilf(currentNodeAABB.m_globalPositionY + currentNodeAABB.m_offsetY));
+                xSize = static_cast<int>(std::ceilf(currentNodeAABB.m_sizeX));
+                ySize = static_cast<int>(std::ceilf(currentNodeAABB.m_sizeY));
+
+                FE_DEBUG_DRAW_SQUARE(xSize, ySize, xPos, yPos, sf::Color(255, 221, 221));
+            }
     }
 
 void fe::aabbTree::freeNode(int node)
