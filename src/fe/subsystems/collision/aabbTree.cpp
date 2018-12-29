@@ -25,7 +25,7 @@ void fe::aabbTree::debugDrawAABB(int node)
 
         fe::AABB &currentNodeAABB = m_nodes[node].m_fatAABB;
         FE_DEBUG_DRAW_SQUARE(   static_cast<int>(std::ceilf(currentNodeAABB.m_sizeX)), static_cast<int>(std::ceilf(currentNodeAABB.m_sizeY)),
-                                static_cast<int>(std::ceilf(currentNodeAABB.m_globalPositionX)), static_cast<int>(std::ceilf(currentNodeAABB.m_globalPositionY)),
+                                static_cast<int>(std::ceilf(currentNodeAABB.m_globalPositionX + currentNodeAABB.m_offsetX)), static_cast<int>(std::ceilf(currentNodeAABB.m_globalPositionY + currentNodeAABB.m_offsetY)),
                                 sf::Color::Red);
     }
 
@@ -416,8 +416,8 @@ void fe::aabbTree::add(fe::collider *collider)
         m_nodes[colliderId].m_height = 0;
         
         treeNode *currentNode = &m_nodes[colliderId];
-        currentNode->m_fatAABB.m_globalPositionX = collider->m_aabb.m_globalPositionX - m_fatness;
-        currentNode->m_fatAABB.m_globalPositionY = collider->m_aabb.m_globalPositionY - m_fatness;
+        currentNode->m_fatAABB.m_globalPositionX = collider->m_aabb.m_globalPositionX - m_fatness + collider->m_aabb.m_offsetX;
+        currentNode->m_fatAABB.m_globalPositionY = collider->m_aabb.m_globalPositionY - m_fatness + collider->m_aabb.m_offsetY;
         currentNode->m_fatAABB.m_sizeX = collider->m_aabb.m_sizeX + m_fatness + m_fatness;
         currentNode->m_fatAABB.m_sizeY = collider->m_aabb.m_sizeY + m_fatness + m_fatness;
 
@@ -445,8 +445,8 @@ void fe::aabbTree::update(fe::collider *collider)
             {
                 remove(nodeIndex);
                 treeNode *currentNode = &m_nodes[nodeIndex];
-                currentNode->m_fatAABB.m_globalPositionX = collider->m_aabb.m_globalPositionX - m_fatness;
-                currentNode->m_fatAABB.m_globalPositionY = collider->m_aabb.m_globalPositionY - m_fatness;
+                currentNode->m_fatAABB.m_globalPositionX = collider->m_aabb.m_globalPositionX - m_fatness + collider->m_aabb.m_offsetX;
+                currentNode->m_fatAABB.m_globalPositionY = collider->m_aabb.m_globalPositionY - m_fatness + collider->m_aabb.m_offsetY;
                 currentNode->m_fatAABB.m_sizeX = collider->m_aabb.m_sizeX + m_fatness + m_fatness;
                 currentNode->m_fatAABB.m_sizeY = collider->m_aabb.m_sizeY + m_fatness + m_fatness;
                 insert(nodeIndex);

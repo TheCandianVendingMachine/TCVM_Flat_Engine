@@ -7,9 +7,9 @@
 
 bool fe::intersects(const fe::AABB &a, const fe::circle &b)
     {
-        fe::Vector2d point = fe::closestPoint(a, b.m_globalPositionX, b.m_globalPositionY);
+        fe::Vector2d point = fe::closestPoint(a, b.m_globalPositionX + b.m_offsetX, b.m_globalPositionY + b.m_offsetY);
 
-        fe::Vector2d v = point - fe::Vector2d(b.m_globalPositionX, b.m_globalPositionY);
+        fe::Vector2d v = point - fe::Vector2d(b.m_globalPositionX + b.m_offsetX, b.m_globalPositionY + b.m_offsetY);
         return v.dot(v) <= (b.m_radius * b.m_radius);
     }
 

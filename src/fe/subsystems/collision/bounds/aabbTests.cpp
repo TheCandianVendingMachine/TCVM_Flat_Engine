@@ -7,19 +7,19 @@
 
 bool fe::intersects(const fe::AABB &a, const fe::AABB &b)
     {
-        return  !((a.m_globalPositionX + a.m_sizeX < b.m_globalPositionX || a.m_globalPositionX > b.m_globalPositionX + b.m_sizeX) ||
-                  (a.m_globalPositionY + a.m_sizeY < b.m_globalPositionY || a.m_globalPositionY > b.m_globalPositionY + b.m_sizeY));
+        return  !((a.m_globalPositionX + a.m_sizeX + a.m_offsetX < b.m_globalPositionX + b.m_offsetX || a.m_globalPositionX + a.m_offsetX > b.m_globalPositionX + b.m_sizeX + b.m_offsetX) ||
+                  (a.m_globalPositionY + a.m_sizeY + a.m_offsetY < b.m_globalPositionY + b.m_offsetY || a.m_globalPositionY + a.m_offsetX > b.m_globalPositionY + b.m_sizeY + b.m_offsetY));
     }
 
 bool fe::contains(const fe::AABB &a, const fe::AABB &b)
     {
-        return  (b.m_globalPositionX >= a.m_globalPositionX && b.m_globalPositionX + b.m_sizeX <= a.m_globalPositionX + a.m_sizeX) &&
-                (b.m_globalPositionY >= a.m_globalPositionY && b.m_globalPositionY + b.m_sizeY <= a.m_globalPositionY + a.m_sizeY);
+        return  (b.m_globalPositionX + b.m_offsetX >= a.m_globalPositionX + a.m_offsetX && b.m_globalPositionX + b.m_sizeX + b.m_offsetX <= a.m_globalPositionX + a.m_sizeX + a.m_offsetX) &&
+                (b.m_globalPositionY + b.m_offsetX >= a.m_globalPositionY + a.m_offsetY && b.m_globalPositionY + b.m_sizeY + b.m_offsetY <= a.m_globalPositionY + a.m_sizeY + a.m_offsetY);
     }
 
 bool fe::contains(const fe::AABB &a, float x, float y)
     {
-        return x >= a.m_globalPositionX && y >= a.m_globalPositionY && x < a.m_globalPositionX + a.m_sizeX && y < a.m_globalPositionY + a.m_sizeY;
+        return x >= a.m_globalPositionX + a.m_offsetX && y >= a.m_globalPositionY + a.m_offsetX && x < a.m_globalPositionX + a.m_sizeX + a.m_offsetX && y < a.m_globalPositionY + a.m_sizeY + a.m_offsetX;
     }
 
 fe::raycastResult fe::rayIntersects(const fe::AABB &a, float x, float y, float dirX, float dirY)
@@ -32,8 +32,8 @@ fe::raycastResult fe::rayIntersects(const fe::AABB &a, float x, float y, float d
         float min = 0.f;
         float max = std::numeric_limits<float>::max();
 
-        fe::lightVector2d aMin(a.m_globalPositionX, a.m_globalPositionY);
-        fe::lightVector2d aMax(a.m_globalPositionX + a.m_sizeX, a.m_globalPositionY + a.m_sizeY);
+        fe::lightVector2d aMin(a.m_globalPositionX + a.m_offsetX, a.m_globalPositionY + a.m_offsetY);
+        fe::lightVector2d aMax(a.m_globalPositionX + a.m_sizeX + a.m_offsetX, a.m_globalPositionY + a.m_sizeY + a.m_offsetY);
 
         // test X slab
         if (std::abs(dirX) < epsilon)
@@ -109,8 +109,8 @@ fe::raycastResult fe::lineIntersects(const fe::AABB &a, float x0, float y0, floa
 
         constexpr float epsilon = fe::FE_EPSILON;
 
-        fe::lightVector2d aMin(a.m_globalPositionX, a.m_globalPositionY);
-        fe::lightVector2d aMax(a.m_globalPositionX + a.m_sizeX, a.m_globalPositionY + a.m_sizeY);
+        fe::lightVector2d aMin(a.m_globalPositionX + a.m_offsetX, a.m_globalPositionY + a.m_offsetY);
+        fe::lightVector2d aMax(a.m_globalPositionX + a.m_sizeX + a.m_offsetX, a.m_globalPositionY + a.m_sizeY + a.m_offsetY);
 
         fe::lightVector2d extent(a.m_sizeX, a.m_sizeY);
         fe::lightVector2d dir(x1 - x0, y1 - y0);

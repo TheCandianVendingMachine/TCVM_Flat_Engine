@@ -245,8 +245,8 @@ void fe::baseEntity::updateModules()
 
         if (m_collisionBody)
             {
-                m_collisionBody->m_aabb.m_globalPositionX += m_collisionBody->m_aabb.m_offsetX;
-                m_collisionBody->m_aabb.m_globalPositionY += m_collisionBody->m_aabb.m_offsetY;
+                //m_collisionBody->m_aabb.m_globalPositionX += m_collisionBody->m_aabb.m_offsetX;
+                //m_collisionBody->m_aabb.m_globalPositionY += m_collisionBody->m_aabb.m_offsetY;
             }
     }
 

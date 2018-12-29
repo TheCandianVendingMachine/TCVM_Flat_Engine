@@ -21,7 +21,7 @@ inline fe::nonFixedStack<TDataType>::~nonFixedStack()
     }
 
 template<typename TDataType>
-void fe::nonFixedStack<TDataType>::push(TDataType value)
+inline void fe::nonFixedStack<TDataType>::push(TDataType value)
     {
         m_data = new node(m_data, value);
     }

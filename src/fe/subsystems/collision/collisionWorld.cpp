@@ -1,5 +1,6 @@
 #include "fe/subsystems/collision/collisionWorld.hpp"
 #include "fe/subsystems/collision/aabbTree.hpp"
+#include "fe/subsystems/collision/bounds/aabbTests.hpp"
 #include "fe/debug/profiler.hpp"
 #include "fe/engine.hpp"
 #include "fe/subsystems/threading/threadPool.hpp"
@@ -19,7 +20,7 @@ void fe::collisionWorld::handleCollision(fe::collider *a, fe::collider *b)
         fe::collisionData dataFirst;
         fe::collisionData dataSecond;
 
-        fe::lightVector2d positionA(first->m_globalPositionX, first->m_globalPositionY);
+        fe::lightVector2d positionA(first->m_globalPositionX + first->m_offsetX, first->m_globalPositionY + first->m_offsetY);
         fe::lightVector2d sizeA(first->m_sizeX, first->m_sizeY);
         fe::lightVector2d cornersA[4] = {
             positionA,
@@ -28,7 +29,7 @@ void fe::collisionWorld::handleCollision(fe::collider *a, fe::collider *b)
             positionA + fe::lightVector2d(0, sizeA.y)
         };
 
-        fe::lightVector2d positionB(second->m_globalPositionX, second->m_globalPositionY);
+        fe::lightVector2d positionB(second->m_globalPositionX + second->m_offsetX, second->m_globalPositionY + second->m_offsetY);
         fe::lightVector2d sizeB(second->m_sizeX, second->m_sizeY);
         fe::lightVector2d cornersB[4] = {
             positionB,
@@ -42,10 +43,7 @@ void fe::collisionWorld::handleCollision(fe::collider *a, fe::collider *b)
                 return;
             }
 
-        if (((sizeA.x + positionA.x >= positionB.x && positionA.x < sizeB.x + positionB.x) &&
-             (sizeA.y + positionA.y >= positionB.y && positionA.y < sizeB.y + positionB.y)) || 
-            ((sizeB.x + positionB.x >= positionA.x && positionB.x < sizeA.x + positionA.x) &&
-             (sizeB.y + positionB.y >= positionA.y && positionB.y < sizeA.y + positionA.y)))
+        if (fe::intersects(*first, *second))
             {
                 fe::Vector2d centerFirst(positionA.x + (sizeA.x / 2),
                                          positionA.y + (sizeA.y / 2));
@@ -59,8 +57,8 @@ void fe::collisionWorld::handleCollision(fe::collider *a, fe::collider *b)
                
                 dataFirst.m_penetrationX = (distance.x > 0 ? minDistance.x - distance.x : -minDistance.x - distance.x) / 2.f;
                 dataFirst.m_penetrationY = (distance.y > 0 ? minDistance.y - distance.y : -minDistance.y - distance.y) / 2.f;
-                dataFirst.m_colliderPositionX = b->m_aabb.m_globalPositionX;
-                dataFirst.m_colliderPositionY = b->m_aabb.m_globalPositionY;
+                dataFirst.m_colliderPositionX = positionB.x;
+                dataFirst.m_colliderPositionY = positionB.y;
                 
                 fe::Vector2d edgeCollided;
                 int leftHanded = 0;
@@ -101,8 +99,8 @@ void fe::collisionWorld::handleCollision(fe::collider *a, fe::collider *b)
 
                 dataSecond.m_penetrationX = -(distance.x > 0 ? minDistance.x - distance.x : -minDistance.x - distance.x) / 2.f;
                 dataSecond.m_penetrationY = -(distance.y > 0 ? minDistance.y - distance.y : -minDistance.y - distance.y) / 2.f;
-                dataSecond.m_colliderPositionX = a->m_aabb.m_globalPositionX;
-                dataSecond.m_colliderPositionY = a->m_aabb.m_globalPositionY;
+                dataSecond.m_colliderPositionX = positionA.x;
+                dataSecond.m_colliderPositionY = positionA.y;
 
                 if (std::abs(dataSecond.m_penetrationX) < std::abs(dataSecond.m_penetrationY))
                     {

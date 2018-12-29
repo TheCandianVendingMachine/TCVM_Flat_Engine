@@ -10,26 +10,31 @@
 
 unsigned long fe::serializerID::toPrimitive(const std::string &data, unsigned long)
     {
+        if (data == "") return 0;
         return std::stoul(data);
     }
 
 int fe::serializerID::toPrimitive(const std::string &data, int)
     {
+        if (data == "") return 0;
         return std::stoi(data);
     }
 
 unsigned int fe::serializerID::toPrimitive(const std::string &data, unsigned int)
     {
+        if (data == "") return 0;
         return std::stoul(data);
     }
 
 float fe::serializerID::toPrimitive(const std::string &data, float)
     {
+        if (data == "") return 0.f;
         return std::stof(data);
     }
 
 bool fe::serializerID::toPrimitive(const std::string &data, bool)
     {
+        if (data == "") return false;
         return bool(std::stoi(data));
     }
 

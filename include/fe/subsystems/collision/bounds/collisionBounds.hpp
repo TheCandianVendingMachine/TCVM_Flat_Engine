@@ -8,8 +8,9 @@ namespace fe
     {
         struct collisionBounds : public fe::serializable
             {
-                float m_offsetX = 0.f; // position of the collider on the entity
-                float m_offsetY = 0.f; // position of the collider on the entity
+                // Offsets are NOT added to the global position of the collision bound. Instead they are represented only during collision calculations
+                float m_offsetX = 0.f;
+                float m_offsetY = 0.f;
                 float m_globalPositionX = 0.f;
                 float m_globalPositionY = 0.f;
 
