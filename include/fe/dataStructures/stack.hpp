@@ -24,7 +24,8 @@ namespace fe
                         {
                             node *m_previous = nullptr;
                             TDataType m_value;
-                            node(node *p, TDataType v) : m_previous(p), m_value(v) {}
+                            template<typename ...Args>
+                            node(node *p, Args &&...args) : m_previous(p), m_value(std::forward<Args>(args)...) {}
                             ~node() {}
                         };
                     // The top of the non-fixed stack
@@ -38,8 +39,11 @@ namespace fe
                     nonFixedStack<TDataType> &operator=(const nonFixedStack<TDataType>&) = delete;
                     nonFixedStack<TDataType> &operator=(nonFixedStack<TDataType>&&) = delete;
 
+                    template<typename ...Args>
+                    void emplace(Args &&...args);
                     void push(TDataType value);
-                    TDataType top() const;
+                    const TDataType &top() const;
+                    TDataType &top();
                     void pop();
                     bool empty() const;
             };
@@ -68,8 +72,11 @@ namespace fe
                     semiFixedStack<expectedSize, TDataType> &operator=(const semiFixedStack<expectedSize, TDataType>&) = delete;
                     semiFixedStack<expectedSize, TDataType> &operator=(semiFixedStack<expectedSize, TDataType>&&) = delete;
 
+                    template<typename ...Args>
+                    void emplace(Args &&...args);
                     void push(TDataType value);
-                    TDataType top() const;
+                    const TDataType &top() const;
+                    TDataType &top();
                     void pop();
                     bool empty() const;
             };
@@ -90,8 +97,11 @@ namespace fe
                     fixedStack<size, TDataType> &operator=(const fixedStack<size, TDataType>&) = delete;
                     fixedStack<size, TDataType> &operator=(fixedStack<size, TDataType>&&) = delete;
 
+                    template<typename ...Args>
+                    void emplace(Args &&...args);
                     void push(TDataType value);
-                    TDataType top() const;
+                    const TDataType &top() const;
+                    TDataType &top();
                     void pop();
                     bool empty() const;
 

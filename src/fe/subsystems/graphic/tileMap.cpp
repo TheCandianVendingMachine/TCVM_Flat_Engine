@@ -305,12 +305,12 @@ void fe::tileMap::draw(sf::RenderTarget &target, sf::RenderStates states)
 
 void fe::tileMap::serialize(fe::serializerID &serializer) const
     {
+        serializer.write("textureName", m_textureName);
+        serializer.write("fabricationPath", m_fabricationFilepath);
         for (auto &tile : m_objects)
             {
                 serializer.writeObjectList("tiles", tile);
             }
-        serializer.write("textureName", m_textureName);
-        serializer.write("fabricationPath", m_fabricationFilepath);
     }
 
 void fe::tileMap::deserialize(fe::serializerID &serializer)

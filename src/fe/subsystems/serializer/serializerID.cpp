@@ -59,7 +59,7 @@ void fe::serializerID::writeObjectList(const std::string &id, const serializable
     {
         m_writer->startObjectList(id);
         data.serialize(*this);
-        m_writer->endObject();
+        m_writer->endObjectList();
     }
 
 void fe::serializerID::readObject(const std::string &id, serializable &data)
@@ -73,7 +73,7 @@ void fe::serializerID::readObjectList(const std::string &id, serializable &data)
     {
         m_writer->startObjectListRead(id);
         data.deserialize(*this);
-        m_writer->endObject();
+        m_writer->endObjectList();
     }
 
 bool fe::serializerID::listHasItems(const std::string &listID)

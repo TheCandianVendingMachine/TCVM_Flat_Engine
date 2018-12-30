@@ -16,6 +16,7 @@ namespace fe
                     virtual void startObjectList(const std::string &id) = 0;
                     virtual void startObjectRead(const std::string &id) = 0;
                     virtual void startObjectListRead(const std::string &id) = 0;
+                    virtual void endObjectList() = 0;
                     virtual void endObject() = 0;
 
                     virtual void write(const std::string &id, const std::string &value) = 0;

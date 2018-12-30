@@ -21,13 +21,27 @@ inline fe::nonFixedStack<TDataType>::~nonFixedStack()
     }
 
 template<typename TDataType>
+template<typename ...Args>
+inline void fe::nonFixedStack<TDataType>::emplace(Args &&...args)
+    {
+        m_data = new node(m_data, std::forward<Args>(args)...);
+    }
+
+template<typename TDataType>
 inline void fe::nonFixedStack<TDataType>::push(TDataType value)
     {
         m_data = new node(m_data, value);
     }
 
 template<typename TDataType>
-inline TDataType fe::nonFixedStack<TDataType>::top() const
+const inline TDataType &fe::nonFixedStack<TDataType>::top() const
+    {
+        FE_ASSERT(m_data, "No Data");
+        return m_data->m_value;
+    }
+
+template<typename TDataType>
+inline TDataType &fe::nonFixedStack<TDataType>::top()
     {
         FE_ASSERT(m_data, "No Data");
         return m_data->m_value;

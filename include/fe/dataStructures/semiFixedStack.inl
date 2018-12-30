@@ -10,8 +10,8 @@ inline fe::semiFixedStack<size, TDataType>::semiFixedStack() :
     {
     }
 
-template<fe::uInt64 size, typename TDataType>
-inline fe::semiFixedStack<size, TDataType>::~semiFixedStack()
+template<fe::uInt64 expectedSize, typename TDataType>
+inline fe::semiFixedStack<expectedSize, TDataType>::~semiFixedStack()
     {
         while (m_nonFixedData)
             {
@@ -21,10 +21,28 @@ inline fe::semiFixedStack<size, TDataType>::~semiFixedStack()
             }
     }
 
-template<fe::uInt64 size, typename TDataType>
-inline void fe::semiFixedStack<size, TDataType>::push(TDataType value)
+template<fe::uInt64 expectedSize, typename TDataType>
+template<typename ...Args>
+inline void fe::semiFixedStack<expectedSize, TDataType>::emplace(Args &&...args)
     {
-        if (m_pointer < size)
+        if (m_pointer < expectedSize)
+            {
+                m_fixedData[m_pointer] = TDataType(std::forward<Args>(args)...);
+            }
+        else
+            {
+                node *dat = new node;
+                dat->m_value = TDataType(std::forward<Args>(args)...);
+                dat->m_previous = m_nonFixedData;
+                m_nonFixedData = dat;
+            }
+        m_pointer++;
+    }
+
+template<fe::uInt64 expectedSize, typename TDataType>
+inline void fe::semiFixedStack<expectedSize, TDataType>::push(TDataType value)
+    {
+        if (m_pointer < expectedSize)
             {
                 m_fixedData[m_pointer] = value;
             }
@@ -38,11 +56,11 @@ inline void fe::semiFixedStack<size, TDataType>::push(TDataType value)
         m_pointer++;
     }
 
-template<fe::uInt64 size, typename TDataType>
-inline TDataType fe::semiFixedStack<size, TDataType>::top() const
+template<fe::uInt64 expectedSize, typename TDataType>
+const inline TDataType &fe::semiFixedStack<expectedSize, TDataType>::top() const
     {
         FE_ASSERT(m_pointer != 0, "No Data");
-        if (m_pointer <= size)
+        if (m_pointer <= expectedSize)
             {
                 return m_fixedData[m_pointer - 1];
             }
@@ -50,11 +68,23 @@ inline TDataType fe::semiFixedStack<size, TDataType>::top() const
         return m_nonFixedData->m_value;
     }
 
-template<fe::uInt64 size, typename TDataType>
-inline void fe::semiFixedStack<size, TDataType>::pop()
+template<fe::uInt64 expectedSize, typename TDataType>
+inline TDataType &fe::semiFixedStack<expectedSize, TDataType>::top()
+    {
+        FE_ASSERT(m_pointer != 0, "No Data");
+        if (m_pointer <= expectedSize)
+            {
+                return m_fixedData[m_pointer - 1];
+            }
+
+        return m_nonFixedData->m_value;
+    }
+
+template<fe::uInt64 expectedSize, typename TDataType>
+inline void fe::semiFixedStack<expectedSize, TDataType>::pop()
     {
         FE_ASSERT(m_pointer != 0, "Stack Overflow");
-        if (m_pointer > size)
+        if (m_pointer > expectedSize)
             {
                 node *newNode = m_nonFixedData->m_previous;
                 delete m_nonFixedData;
@@ -64,8 +94,8 @@ inline void fe::semiFixedStack<size, TDataType>::pop()
         m_pointer--;
     }
 
-template<fe::uInt64 size, typename TDataType>
-inline bool fe::semiFixedStack<size, TDataType>::empty() const
+template<fe::uInt64 expectedSize, typename TDataType>
+inline bool fe::semiFixedStack<expectedSize, TDataType>::empty() const
     {
         return m_pointer == 0;
     }
