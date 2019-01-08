@@ -242,6 +242,13 @@ void fe::tileMap::create(fe::imp::tile &tile)
 
 fe::Handle fe::tileMap::add(fe::Vector2d position, fe::str tileId)
     {
+        fe::Handle ret = addWithoutRebuild(position, tileId);
+        rebuildTilemap();
+        return ret;
+    }
+
+fe::Handle fe::tileMap::addWithoutRebuild(fe::Vector2d position, fe::str tileId)
+    {
         auto it = std::find_if(m_fabrications.begin(), m_fabrications.end(), [tileId](fe::imp::tile &tile) { return FE_STR(tile.id) == tileId; });
         if (it != m_fabrications.end())
             {
@@ -264,7 +271,6 @@ fe::Handle fe::tileMap::add(fe::Vector2d position, fe::str tileId)
                 tileWorld.rotation = 0;
                 tileWorld.prefabIndex = it - m_fabrications.begin();
                 fe::Handle retHandle = addObject(tileWorld);
-                rebuildTilemap();
                 return retHandle;
             }
 
