@@ -282,9 +282,14 @@ fe::imp::tileWorld &fe::tileMap::get(fe::Handle handle)
         return *getObject(handle);
     }
 
-void fe::tileMap::remove(fe::Handle handle)
+void fe::tileMap::removeWithoutRebuild(fe::Handle handle)
     {
         removeObject(handle);
+    }
+
+void fe::tileMap::remove(fe::Handle handle)
+    {
+        removeWithoutRebuild(handle);
         rebuildTilemap();
     }
 
