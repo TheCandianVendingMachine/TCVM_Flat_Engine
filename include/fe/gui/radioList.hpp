@@ -45,6 +45,8 @@ namespace fe
 
                             FLAT_ENGINE_API fe::gui::radioButton &getSelection(unsigned int index);
 
+                            // Sets the button at the index to the value
+                            FLAT_ENGINE_API void setSelected(unsigned int index, bool value);
                             // Returns all check box inputs from Left -> Right / Top -> Down
                             FLAT_ENGINE_API void getSelected(std::vector<bool> &selected) const;
                             FLAT_ENGINE_API std::vector<bool> getSelected() const;

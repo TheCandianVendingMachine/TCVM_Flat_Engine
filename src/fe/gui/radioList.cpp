@@ -93,6 +93,19 @@ fe::gui::radioButton &fe::gui::radioList::getSelection(unsigned int index)
         return m_selections[index];
     }
 
+void fe::gui::radioList::setSelected(unsigned int index, bool value)
+    {
+        for (auto &selection : m_selections)
+            {
+                selection.setSelected(false);
+            }
+
+        if (index < m_selections.size()) 
+            {
+                m_selections[index].setSelected(value);
+            }
+    }
+
 void fe::gui::radioList::getSelected(std::vector<bool> &selected) const
     {
         for (unsigned int i = 0; i < m_selections.size(); i++)
