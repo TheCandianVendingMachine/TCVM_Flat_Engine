@@ -61,7 +61,7 @@ void fe::gui::radioButton::createButton(float radius, float outlineWidth, float 
         for (unsigned int i = 0; i <= m_points; i++)
             {
                 fe::lightVector2d coord = getCirclePoint(i, radius - outlineWidth - markWidthFromSide);
-                addMarkPoint(coord.x + radius - outlineWidth, coord.y + radius - outlineWidth);
+                addMarkPoint(coord.x + radius, coord.y + radius);
             }
         createMark();
 
