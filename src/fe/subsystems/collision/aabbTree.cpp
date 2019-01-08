@@ -381,7 +381,10 @@ void *fe::aabbTree::pointCollideBranch(float x, float y, int branch) const
             {
                 if (m_nodes[branch].isLeaf())
                     {
-                        return (void*)(&m_nodes[branch]);
+                        if (fe::contains(m_nodes[branch].m_userData->m_aabb, x, y))
+                            {
+                                return (void*)(&m_nodes[branch]);
+                            }
                     }
                 else
                     {
