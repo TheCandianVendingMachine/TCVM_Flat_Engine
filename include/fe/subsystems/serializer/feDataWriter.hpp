@@ -109,11 +109,11 @@ namespace fe
                     void startItem(Args &&...args);
 
                     // Extracts all whitespace until next character is alphanumeric
-                    void ignoreWhiteSpace(std::istream &in);
+                    FLAT_ENGINE_API void ignoreWhiteSpace(std::istream &in);
 
             public:
-                    feDataWriter();
-                    feDataWriter(const char *initialName);
+                    FLAT_ENGINE_API feDataWriter();
+                    FLAT_ENGINE_API feDataWriter(const char *initialName);
 
                     FLAT_ENGINE_API void setTitle(const std::string &title) override final;
 

@@ -133,6 +133,7 @@ void fe::feDataWriter::writeList(const std::string &id, const std::string &value
         if (!list)
             {
                 object->m_memberItems.emplace_back(new ListType(id.c_str()));
+                list = static_cast<ListType*>(object->m_memberItems.back().get());
             }
 
         list->m_storedItems.emplace(new DataType(id.c_str(), value.c_str()));
@@ -186,6 +187,9 @@ void fe::feDataWriter::readData(std::istream &in)
         fe::nonFixedStack<ItemEnum> itemStack;
         itemStack.push(ItemEnum::OBJECT);
 
+        // Backwards Compatability
+        std::string currentListName = "";
+
         while (!itemStack.empty())
             {
                 ignoreWhiteSpace(in);
@@ -199,10 +203,12 @@ void fe::feDataWriter::readData(std::istream &in)
                     }
                 else
                     {
+                        bool oldListVersion = false;
                         in.getline(&line[0], bufferSize, ' ');
                         switch (FE_STR_CONST(std::string(line.data()).c_str()))
                             {
                                 case FE_STR_CONST("itm"):
+                                    oldListVersion = true;
                                 case FE_STR_CONST("dat"):
                                     itemStack.push(ItemEnum::DATA);
                                     break;
@@ -222,8 +228,13 @@ void fe::feDataWriter::readData(std::istream &in)
                             {
                                 case ItemEnum::DATA:
                                     {
-                                        in.getline(&line[0], bufferSize, ':');
-                                        std::string name = line.data();
+                                        std::string name = currentListName;
+                                        if (!oldListVersion)
+                                            {
+                                                in.getline(&line[0], bufferSize, ':');
+                                                name = line.data();
+                                            }
+
                                         in.getline(&line[0], bufferSize, ';');
                                         std::string data = line.data();
 
@@ -268,6 +279,7 @@ void fe::feDataWriter::readData(std::istream &in)
                                 case ItemEnum::LIST:
                                     in.getline(&line[0], bufferSize, '[');
                                     startItem<ListType>(std::string(line.data()).c_str());
+                                    currentListName = line.data();
                                     break;
                                 default:
                                     break;
