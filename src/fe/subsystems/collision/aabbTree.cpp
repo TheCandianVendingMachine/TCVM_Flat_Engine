@@ -51,13 +51,35 @@ void fe::aabbTree::freeNode(int node)
         m_nodes[node].m_next = m_freeList;
         m_nodes[node].m_height = -1;
         m_freeList = node;
+        --m_nodeCount;
         FE_END_PROFILE;
     }
 
 int fe::aabbTree::allocateNode()
     {
         FE_ENGINE_PROFILE("aabb_tree", "allocate_node");
-        FE_ASSERT(m_freeList != treeNode::Null, "Free-List of nodes is empty");
+        
+        if (m_freeList == treeNode::Null)
+            {
+                FE_ASSERT(m_nodeCount == m_nodeCapacity, "Allocation Failure");
+
+                treeNode *oldNodes = m_nodes;
+
+                m_nodeCapacity *= 2;
+                m_nodes = (treeNode*)calloc(m_nodeCapacity, sizeof(treeNode));
+                std::memcpy(m_nodes, oldNodes, m_nodeCount * sizeof(treeNode));
+                free(oldNodes);
+
+                for (unsigned int i = m_nodeCount; i < m_nodeCapacity - 1; i++)
+                    {
+                        m_nodes[i].m_next = i + 1;
+                        m_nodes[i].m_height = -1;
+                    }
+
+                m_nodes[m_nodeCapacity - 1].m_next = treeNode::Null;
+                m_nodes[m_nodeCapacity - 1].m_height = -1;
+                m_freeList = m_nodeCount;
+            }
 
         int nodeId = m_freeList;
         m_freeList = m_nodes[nodeId].m_next;
@@ -66,6 +88,7 @@ int fe::aabbTree::allocateNode()
         m_nodes[nodeId].m_right = treeNode::Null;
         m_nodes[nodeId].m_height = 0;
         m_nodes[nodeId].m_userData = nullptr;
+        ++m_nodeCount;
         return nodeId;
         FE_END_PROFILE;
     }
@@ -396,34 +419,35 @@ void *fe::aabbTree::pointCollideBranch(float x, float y, int branch) const
         return nullptr;
     }
 
-fe::aabbTree::aabbTree() : m_base(treeNode::Null), m_fatness(5.f)
+fe::aabbTree::aabbTree() : 
+    m_nodes(nullptr),
+    m_base(treeNode::Null),
+    m_fatness(5.f),
+    m_nodeCapacity(20),
+    m_nodeCount(0)
     {
-        for (unsigned int i = 0; i < m_nodeCapacity - 1; i++)
-            {
-                m_nodes[i].m_next = i + 1;
-                m_nodes[i].m_height = -1;
-                m_nodes[i].m_fatAABB.m_offsetX = 0.f;
-                m_nodes[i].m_fatAABB.m_offsetY = 0.f;
-                m_nodes[i].m_fatAABB.m_globalPositionX = 0.f;
-                m_nodes[i].m_fatAABB.m_globalPositionX = 0.f;
-                m_nodes[i].m_fatAABB.m_sizeX = 0.f;
-                m_nodes[i].m_fatAABB.m_sizeY = 0.f;
-            }
-        m_nodes[m_nodeCapacity - 1].m_next = treeNode::Null;
-        m_nodes[m_nodeCapacity - 1].m_height = -1;
-        m_nodes[m_nodeCapacity - 1].m_fatAABB.m_offsetX = 0.f;
-        m_nodes[m_nodeCapacity - 1].m_fatAABB.m_offsetY = 0.f;
-        m_nodes[m_nodeCapacity - 1].m_fatAABB.m_globalPositionX = 0.f;
-        m_nodes[m_nodeCapacity - 1].m_fatAABB.m_globalPositionX = 0.f;
-        m_nodes[m_nodeCapacity - 1].m_fatAABB.m_sizeX = 0.f;
-        m_nodes[m_nodeCapacity - 1].m_fatAABB.m_sizeY = 0.f;
+        int i = 0;
+    }
 
-        m_freeList = 0;
+fe::aabbTree::~aabbTree()
+    {
+        free(m_nodes);
     }
 
 void fe::aabbTree::startUp()
     {
-        
+        m_nodes = (treeNode*)malloc(m_nodeCapacity * sizeof(treeNode));
+        std::memset(m_nodes, 0, m_nodeCapacity * sizeof(treeNode));
+
+        for (unsigned int i = 0; i < m_nodeCapacity - 1; i++)
+            {
+                m_nodes[i].m_next = i + 1;
+                m_nodes[i].m_height = -1;
+            }
+        m_nodes[m_nodeCapacity - 1].m_next = treeNode::Null;
+        m_nodes[m_nodeCapacity - 1].m_height = -1;
+
+        m_freeList = 0;
     }
 
 void fe::aabbTree::add(fe::collider *collider)
@@ -608,7 +632,7 @@ fe::raycastResult fe::aabbTree::linecast(float x0, float y0, float x1, float y1,
                 FE_DEBUG_DRAW_LINE(x0, y0, x1, y1, sf::Color::Red);
             }
 
-        fe::semiFixedStack<(FE_MAX_GAME_OBJECTS * 2) - 1, int> stack;
+        fe::nonFixedStack<int> stack;
         stack.push(m_base);
         while (!stack.empty())
             {

@@ -35,9 +35,10 @@ namespace fe
                             int m_height;
 
                             bool isLeaf() const { return m_right == treeNode::Null; }
-                        } m_nodes[(FE_MAX_GAME_OBJECTS * 2) - 1];
+                        } *m_nodes;
 
-                    const unsigned int m_nodeCapacity = (FE_MAX_GAME_OBJECTS * 2) - 1;
+                    unsigned int m_nodeCapacity;
+                    unsigned int m_nodeCount;
                     unsigned int m_freeList;
 
                     int m_base;
@@ -57,6 +58,7 @@ namespace fe
 
                 public:
                     FLAT_ENGINE_API aabbTree();
+                    FLAT_ENGINE_API ~aabbTree();
 
                     FLAT_ENGINE_API void startUp();
 

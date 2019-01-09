@@ -19,7 +19,7 @@ bool fe::contains(const fe::AABB &a, const fe::AABB &b)
 
 bool fe::contains(const fe::AABB &a, float x, float y)
     {
-        return x >= a.m_globalPositionX + a.m_offsetX && y >= a.m_globalPositionY + a.m_offsetX && x < a.m_globalPositionX + a.m_sizeX + a.m_offsetX && y < a.m_globalPositionY + a.m_sizeY + a.m_offsetX;
+        return x >= a.m_globalPositionX + a.m_offsetX && y >= a.m_globalPositionY + a.m_offsetY && x < a.m_globalPositionX + a.m_sizeX + a.m_offsetX && y < a.m_globalPositionY + a.m_sizeY + a.m_offsetY;
     }
 
 fe::raycastResult fe::rayIntersects(const fe::AABB &a, float x, float y, float dirX, float dirY)
