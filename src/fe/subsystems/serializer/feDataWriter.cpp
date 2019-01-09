@@ -2,8 +2,6 @@
 #include "fe/objectManagement/str.hpp"
 #include "fe/debug/logger.hpp"
 #include <algorithm>
-#include <ostream>
-#include <istream>
 #include <array>
 
 void fe::feDataWriter::ignoreWhiteSpace(std::istream &in)
@@ -465,3 +463,4 @@ void fe::imp::dataWriter::data::output(std::ostream &out, const std::string &ind
     {
         out << indent << "dat " << m_name << ":" << m_data << ";\n";
     }
+    

@@ -2,6 +2,7 @@
 // base class for all data writers for serializer
 #pragma once
 #include <ostream>
+#include <istream>
 #include <string>
 
 namespace fe

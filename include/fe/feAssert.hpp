@@ -1,10 +1,10 @@
 // feAssert.hpp
 // defines a assert Macro to assert a value, and print a message through the logger
 #pragma once
-#include <assert.h>
 
 // define a custom ASSERT macro to allow us to push the message to the logger if needed
 #ifdef _DEBUG
+    #include <assert.h>
     #define FE_ASSERT(check, message) assert(check && message)
 #else
     #include "debug/logger.hpp"

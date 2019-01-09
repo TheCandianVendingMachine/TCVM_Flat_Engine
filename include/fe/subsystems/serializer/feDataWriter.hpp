@@ -9,6 +9,8 @@
 
 #include <vector>
 #include <memory>
+#include <ostream>
+#include <istream>
 #include <string>
 #include <type_traits>
 
@@ -161,3 +163,4 @@ namespace fe
             }
     }
 
+    
