@@ -423,7 +423,7 @@ fe::aabbTree::aabbTree() :
     m_nodes(nullptr),
     m_base(treeNode::Null),
     m_fatness(5.f),
-    m_nodeCapacity(20),
+    m_nodeCapacity((FE_MAX_GAME_OBJECTS * 2) - 1),
     m_nodeCount(0)
     {
         int i = 0;
