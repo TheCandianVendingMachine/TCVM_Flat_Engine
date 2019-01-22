@@ -35,7 +35,7 @@ namespace fe
                     FLAT_ENGINE_API priv::node *getNode(int node);
 
                     // Returns if the node is avaliable in the highest-root
-                    FLAT_ENGINE_API bool nodeExists(int node, int nodeCheck);
+                    FLAT_ENGINE_API bool isChildOf(int node, int nodeCheck);
 
                     // Sorts the current node by node children
                     FLAT_ENGINE_API void sort(int node);

@@ -14,6 +14,7 @@ void fe::sceneGraph::createRenderTextObject(sceneGraphObject *obj, const fe::fon
 int fe::sceneGraph::deleteRenderObject(renderObject *obj)
     {
         int parentNode = m_sceneRenderTree.getNode(obj->m_graphNode)->m_parent;
+        m_sceneRenderTree.removeNode(obj->m_graphNode);
         m_renderObjects.free(obj);
         return parentNode;
     }
@@ -21,6 +22,7 @@ int fe::sceneGraph::deleteRenderObject(renderObject *obj)
 int fe::sceneGraph::deleteRenderTextObject(renderText *obj)
     {
         int parentNode = m_sceneRenderTree.getNode(obj->m_graphNode)->m_parent;
+        m_sceneRenderTree.removeNode(obj->m_graphNode);
         m_renderTextObjects.free(obj);
         return parentNode;
     }
@@ -37,6 +39,11 @@ void fe::sceneGraph::addZ(int z)
 int fe::sceneGraph::getZ(int z)
     {
         return m_zOrderMap[z];
+    }
+
+bool fe::sceneGraph::doesZExist(int z)
+    {
+        return m_zOrderMap.find(z) != m_zOrderMap.end();
     }
 
 fe::sceneGraph::sceneGraph() :
@@ -224,17 +231,31 @@ int fe::sceneGraph::getConnected(sceneGraphObject *object)
 
 void fe::sceneGraph::setZOrder(int node, int z)
     {
-        if (!m_sceneRenderTree.nodeExists(m_baseNode.m_graphNode, getZ(z)))
+        if (!doesZExist(z))
             {
                 addZ(z);
             }
+        int zNode = getZ(z);
         disconnect(node);
-        if (!m_sceneRenderTree.nodeExists(getZ(z), node)) 
+        if (!m_sceneRenderTree.isChildOf(zNode, node))
             {
-                connect(node, getZ(z));
+                connect(node, zNode);
             }
         m_sceneRenderTree.sort(m_baseNode.m_graphNode, [this](int a, int b) {
-            return getZ(a) < getZ(b);
+            int zA = -1;
+            int zB = -1;
+            for (auto &zPair : m_zOrderMap)
+                {
+                    if (zPair.second == a)
+                        {
+                            zA = zPair.first;
+                        }
+                    else if (zPair.second == b)
+                        {
+                            zB = zPair.first;
+                        }
+                }
+            return zA > zB;
         });
     }
 

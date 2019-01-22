@@ -247,10 +247,10 @@ fe::prefabObject &fe::entitySpawner::createPrefab(const char *luaName)
                         prefab.m_colliderSize = prefab.m_size;
                     }
 
-                if (collisionData["position"].get_type() == sol::type::table)
+                if (collisionData["offset"].get_type() == sol::type::table)
                     {
-                        prefab.m_colliderPosition.x = collisionData["position"]["x"].get<float>();
-                        prefab.m_colliderPosition.y = collisionData["position"]["y"].get<float>();
+                        prefab.m_colliderPosition.x = collisionData["offset"]["x"].get<float>();
+                        prefab.m_colliderPosition.y = collisionData["offset"]["y"].get<float>();
                     }
                 else
                     {

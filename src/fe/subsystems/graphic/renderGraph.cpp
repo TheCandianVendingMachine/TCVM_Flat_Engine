@@ -150,12 +150,12 @@ void fe::renderGraph::draw(sf::RenderTarget &window, const fe::transformable &ma
 
 void fe::renderGraph::setZOrder(int node, int z)
     {
-        if (!m_sceneRenderTree.nodeExists(m_baseNode, getZ(z)))
+        if (!m_sceneRenderTree.isChildOf(m_baseNode, getZ(z)))
             {
                 addZ(z);
             }
         disconnect(node);
-        if (!m_sceneRenderTree.nodeExists(getZ(z), node)) 
+        if (!m_sceneRenderTree.isChildOf(getZ(z), node)) 
             {
                 connect(node, getZ(z));
             }

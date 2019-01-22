@@ -18,7 +18,7 @@ void fe::tree::removeNode(int node)
             {
                 getObject(childChild)->m_parent = getObject(node)->m_parent;
             }
-        removeObject(node);
+        removeObject(node, [](fe::priv::node **node) { delete (*node); (*node) = nullptr; });
     }
 
 void fe::tree::addChild(int node, int child)
@@ -45,7 +45,7 @@ fe::priv::node *fe::tree::getNode(int node)
         return getObject(node);
     }
 
-bool fe::tree::nodeExists(int node, int nodeCheck)
+bool fe::tree::isChildOf(int node, int nodeCheck)
     {
         std::vector<int> &children = getNode(node)->m_children;
         return std::find(children.begin(), children.end(), nodeCheck) != children.end();

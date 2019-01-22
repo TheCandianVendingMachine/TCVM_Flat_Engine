@@ -43,7 +43,7 @@ void fe::collisionWorld::handleCollision(fe::collider *a, fe::collider *b)
                 return;
             }
 
-        if (fe::intersects(*first, *second))
+        if (fe::intersects(*first, *second) && a->m_collisionGroup != b->m_collisionGroup)
             {
                 fe::Vector2d centerFirst(positionA.x + (sizeA.x / 2),
                                          positionA.y + (sizeA.y / 2));

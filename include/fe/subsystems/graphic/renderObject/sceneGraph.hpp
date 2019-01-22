@@ -24,7 +24,9 @@ namespace fe
             {
                 private:
                     fe::sceneGraphObject m_baseNode;
+                    // The immediate children of this tree are all Z Position nodes
                     fe::tree m_sceneRenderTree;
+                    // A map in the form of { Z Position, Node the Z is represented by }
                     std::unordered_map<int, int> m_zOrderMap;
 
                     fe::poolAllocater<sceneGraphObject> m_sceneGraphObjects; // Generic scene graph allocater so we can have some Z-Order
@@ -39,7 +41,9 @@ namespace fe
                     FLAT_ENGINE_API int deleteRenderTextObject(renderText *obj); // returns the parent node of the render object
 
                     FLAT_ENGINE_API void addZ(int z);
+                    // Returns the node that the Z positon is mapped to
                     FLAT_ENGINE_API int getZ(int z);
+                    FLAT_ENGINE_API bool doesZExist(int z);
 
                 public:
                     FLAT_ENGINE_API sceneGraph();

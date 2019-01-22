@@ -101,8 +101,8 @@ void fe::handleManager<T, 0>::removeObject(Handle handle, std::function<void(T*)
                 FE_LOG_WARNING("Handle out of range");
                 return;
             }
-        onRemoveFunc(&m_objects[m_handles[handle].handle]);
         onRemove(&m_objects[m_handles[handle].handle], m_handles[handle].handle);
+        onRemoveFunc(&m_objects[m_handles[handle].handle]);
         if (m_handles.begin() + handle < m_handles.end())
             {
                 removeHandle(handle);
