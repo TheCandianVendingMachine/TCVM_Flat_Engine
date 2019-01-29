@@ -141,7 +141,7 @@ void fe::aabbTree::insert(int node)
                     {
                         float newArea = leafAABB.merge(m_nodes[right].m_fatAABB).perimeter() + inheritCost;
                         float oldArea = m_nodes[right].m_fatAABB.perimeter();
-                        cost2 = newArea - oldArea + inheritCost;
+                        cost2 = (newArea - oldArea) + inheritCost;
                     }
 
                 if (cost < cost1 && cost < cost2)
@@ -158,7 +158,6 @@ void fe::aabbTree::insert(int node)
                         index = right;
                     }
             }
-
         int sibling = index;
 
         int oldParent = m_nodes[sibling].m_parent;

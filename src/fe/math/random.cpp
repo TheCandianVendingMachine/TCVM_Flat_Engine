@@ -10,12 +10,8 @@ void fe::random::startUp()
         if (!m_instance)
             {
                 m_instance = this;
-        #ifdef _DEBUG
-            #if FE_DEBUG_NO_SEED
+        #ifdef _DEBUG and FE_DEBUG_NO_SEED
                 m_seed = FE_DEFAULT_RANDOM_SEED;
-            #else
-                m_seed = std::random_device{}();
-            #endif
         #else
                 m_seed = std::random_device{}();
         #endif

@@ -13,8 +13,14 @@ bool fe::intersects(const fe::AABB &a, const fe::AABB &b)
 
 bool fe::contains(const fe::AABB &a, const fe::AABB &b)
     {
-        return  (b.m_globalPositionX + b.m_offsetX >= a.m_globalPositionX + a.m_offsetX && b.m_globalPositionX + b.m_sizeX + b.m_offsetX <= a.m_globalPositionX + a.m_sizeX + a.m_offsetX) &&
-                (b.m_globalPositionY + b.m_offsetX >= a.m_globalPositionY + a.m_offsetY && b.m_globalPositionY + b.m_sizeY + b.m_offsetY <= a.m_globalPositionY + a.m_sizeY + a.m_offsetY);
+        /*
+            AABB is contained within another AABB when:
+                * Left-most point of B is greater than left-most point of A
+                * Right-most point of B is less than left-most point of B
+        */
+
+        return ((b.m_globalPositionX + b.m_offsetX) > (a.m_globalPositionX + a.m_offsetX) && (b.m_globalPositionX + b.m_sizeX + b.m_offsetX) < (a.m_globalPositionX + a.m_sizeX + a.m_offsetX) &&
+                (b.m_globalPositionY + b.m_offsetY) > (a.m_globalPositionY + a.m_offsetY) && (b.m_globalPositionY + b.m_sizeY + b.m_offsetY) < (a.m_globalPositionY + a.m_sizeY + a.m_offsetY));
     }
 
 bool fe::contains(const fe::AABB &a, float x, float y)

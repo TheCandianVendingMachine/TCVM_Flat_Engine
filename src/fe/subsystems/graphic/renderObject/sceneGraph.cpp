@@ -34,6 +34,11 @@ void fe::sceneGraph::addZ(int z)
         /* set user data 1 */
         m_sceneRenderTree.getNode(newNode)->m_userData = m_sceneGraphObjects.alloc();
         m_zOrderMap[z] = newNode;
+        m_reversedZOrderMap[newNode] = z;
+
+        m_sceneRenderTree.sort(m_baseNode.m_graphNode, [this](int a, int b) {
+            return m_reversedZOrderMap[a] > m_reversedZOrderMap[b];
+        });
     }
 
 int fe::sceneGraph::getZ(int z)
@@ -241,22 +246,6 @@ void fe::sceneGraph::setZOrder(int node, int z)
             {
                 connect(node, zNode);
             }
-        m_sceneRenderTree.sort(m_baseNode.m_graphNode, [this](int a, int b) {
-            int zA = -1;
-            int zB = -1;
-            for (auto &zPair : m_zOrderMap)
-                {
-                    if (zPair.second == a)
-                        {
-                            zA = zPair.first;
-                        }
-                    else if (zPair.second == b)
-                        {
-                            zB = zPair.first;
-                        }
-                }
-            return zA > zB;
-        });
     }
 
 void fe::sceneGraph::connect(int a, int b)

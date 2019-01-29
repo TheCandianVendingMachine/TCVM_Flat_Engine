@@ -296,12 +296,12 @@ fe::baseEntity *fe::gameWorld::getObject(Handle handle) const
         return m_entityWorld.getObject(handle);
     }
 
-void fe::gameWorld::getEntitiesWithinArea(std::vector<fe::baseEntity*> *entities, float xPos, float yPos, float xSize, float ySize)
+void fe::gameWorld::getEntitiesWithinArea(std::vector<fe::baseEntity*> &entities, float xPos, float yPos, float xSize, float ySize)
     {
         getEntitiesWithinArea(entities, fe::Vector2d(xPos, yPos), fe::Vector2d(xSize, ySize));
     }
 
-void fe::gameWorld::getEntitiesWithinArea(std::vector<fe::baseEntity*> *entities, fe::Vector2d pos, fe::Vector2d size)
+void fe::gameWorld::getEntitiesWithinArea(std::vector<fe::baseEntity*> &entities, fe::Vector2d pos, fe::Vector2d size)
     {
         fe::AABB aabb(size.x, size.y);
         aabb.m_globalPositionX = pos.x;
@@ -309,21 +309,21 @@ void fe::gameWorld::getEntitiesWithinArea(std::vector<fe::baseEntity*> *entities
 
         if (m_dynamicBroadphase) 
             {
-                m_dynamicBroadphase->colliderAABB(aabb, std::bind(&addEntityToVector, &aabb, entities, m_entityWorld, std::placeholders::_1));
+                m_dynamicBroadphase->colliderAABB(aabb, std::bind(&addEntityToVector, &aabb, &entities, m_entityWorld, std::placeholders::_1));
             }
 
         if (m_staticBroadphase)
             {
-                m_staticBroadphase->colliderAABB(aabb, std::bind(&addEntityToVector, &aabb, entities, m_entityWorld, std::placeholders::_1));
+                m_staticBroadphase->colliderAABB(aabb, std::bind(&addEntityToVector, &aabb, &entities, m_entityWorld, std::placeholders::_1));
             }
     }
 
-void fe::gameWorld::getEntitiesWithinArea(std::vector<fe::baseEntity*> *entities, float xPos, float yPos, float xSize, float ySize, fe::str tag)
+void fe::gameWorld::getEntitiesWithinArea(std::vector<fe::baseEntity*> &entities, float xPos, float yPos, float xSize, float ySize, fe::str tag)
     {
         getEntitiesWithinArea(entities, fe::Vector2d(xPos, yPos), fe::Vector2d(xSize, ySize), tag);
     }
 
-void fe::gameWorld::getEntitiesWithinArea(std::vector<fe::baseEntity*> *entities, fe::Vector2d pos, fe::Vector2d size, fe::str tag)
+void fe::gameWorld::getEntitiesWithinArea(std::vector<fe::baseEntity*> &entities, fe::Vector2d pos, fe::Vector2d size, fe::str tag)
     {
         fe::AABB aabb(size.x, size.y);
         aabb.m_globalPositionX = pos.x;
@@ -331,21 +331,21 @@ void fe::gameWorld::getEntitiesWithinArea(std::vector<fe::baseEntity*> *entities
 
         if (m_dynamicBroadphase) 
             {
-                m_dynamicBroadphase->colliderAABB(aabb, std::bind(&addTaggedEntityToVector, &aabb, entities, m_entityWorld, tag, std::placeholders::_1));
+                m_dynamicBroadphase->colliderAABB(aabb, std::bind(&addTaggedEntityToVector, &aabb, &entities, m_entityWorld, tag, std::placeholders::_1));
             }
 
         if (m_staticBroadphase)
             {
-                m_staticBroadphase->colliderAABB(aabb, std::bind(&addTaggedEntityToVector, &aabb, entities, m_entityWorld, tag, std::placeholders::_1));
+                m_staticBroadphase->colliderAABB(aabb, std::bind(&addTaggedEntityToVector, &aabb, &entities, m_entityWorld, tag, std::placeholders::_1));
             }
     }
 
-void fe::gameWorld::getEntitiesWithinRange(std::vector<fe::baseEntity*> *entities, float xPos, float yPos, float range)
+void fe::gameWorld::getEntitiesWithinRange(std::vector<fe::baseEntity*> &entities, float xPos, float yPos, float range)
     {
         getEntitiesWithinRange(entities, fe::Vector2d(xPos, yPos), range);
     }
 
-void fe::gameWorld::getEntitiesWithinRange(std::vector<fe::baseEntity*> *entities, fe::Vector2d pos, float range)
+void fe::gameWorld::getEntitiesWithinRange(std::vector<fe::baseEntity*> &entities, fe::Vector2d pos, float range)
     {
         fe::circle circle(range);
         circle.m_globalPositionX = pos.x;
@@ -353,21 +353,22 @@ void fe::gameWorld::getEntitiesWithinRange(std::vector<fe::baseEntity*> *entitie
 
         if (m_dynamicBroadphase)
             {
-                m_dynamicBroadphase->colliderCircle(circle, std::bind(&addEntityToVector, &circle, entities, m_entityWorld, std::placeholders::_1));
+                m_dynamicBroadphase->colliderCircle(circle, std::bind(&addEntityToVector, &circle, &entities, m_entityWorld, std::placeholders::_1));
             }
 
         if (m_staticBroadphase)
             {
-                m_staticBroadphase->colliderCircle(circle, std::bind(&addEntityToVector, &circle, entities, m_entityWorld, std::placeholders::_1));
+                //m_staticBroadphase->colliderCircle(circle, std::bind(&addEntityToVector, &circle, entities, m_entityWorld, std::placeholders::_1));
+                FE_LOG_ERROR("no clue whats happening");
             }
     }
 
-void fe::gameWorld::getEntitiesWithinRange(std::vector<fe::baseEntity*> *entities, float xPos, float yPos, float range, fe::str tag)
+void fe::gameWorld::getEntitiesWithinRange(std::vector<fe::baseEntity*> &entities, float xPos, float yPos, float range, fe::str tag)
     {
         getEntitiesWithinRange(entities, fe::Vector2d(xPos, yPos), range, tag);
     }
 
-void fe::gameWorld::getEntitiesWithinRange(std::vector<fe::baseEntity*> *entities, fe::Vector2d pos, float range, fe::str tag)
+void fe::gameWorld::getEntitiesWithinRange(std::vector<fe::baseEntity*> &entities, fe::Vector2d pos, float range, fe::str tag)
     {
         fe::circle circle(range);
         circle.m_globalPositionX = pos.x;
@@ -375,16 +376,16 @@ void fe::gameWorld::getEntitiesWithinRange(std::vector<fe::baseEntity*> *entitie
 
         if (m_dynamicBroadphase)
             {
-                m_dynamicBroadphase->colliderCircle(circle, std::bind(&addTaggedEntityToVector, &circle, entities, m_entityWorld, tag, std::placeholders::_1));
+                m_dynamicBroadphase->colliderCircle(circle, std::bind(&addTaggedEntityToVector, &circle, &entities, m_entityWorld, tag, std::placeholders::_1));
             }
 
         if (m_staticBroadphase)
             {
-                m_staticBroadphase->colliderCircle(circle, std::bind(&addTaggedEntityToVector, &circle, entities, m_entityWorld, tag, std::placeholders::_1));
+                m_staticBroadphase->colliderCircle(circle, std::bind(&addTaggedEntityToVector, &circle, &entities, m_entityWorld, tag, std::placeholders::_1));
             }
     }
 
-void fe::gameWorld::getEntitiesByTag(std::vector<fe::baseEntity*> *entities, fe::str tag)
+void fe::gameWorld::getEntitiesByTag(std::vector<fe::baseEntity*> &entities, fe::str tag)
     {
-        m_entityWorld.getAllObjectsByTag(*entities, tag);
+        m_entityWorld.getAllObjectsByTag(entities, tag);
     }

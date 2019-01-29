@@ -28,6 +28,8 @@ namespace fe
                     fe::tree m_sceneRenderTree;
                     // A map in the form of { Z Position, Node the Z is represented by }
                     std::unordered_map<int, int> m_zOrderMap;
+                    // Reversed Z-Order map. Opposite key-value structure as m_zOrderMap
+                    std::unordered_map<int, int> m_reversedZOrderMap;
 
                     fe::poolAllocater<sceneGraphObject> m_sceneGraphObjects; // Generic scene graph allocater so we can have some Z-Order
                     fe::poolAllocater<renderObject> m_renderObjects;
